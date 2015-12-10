@@ -1,0 +1,23 @@
+{
+	"name": "waud.js",
+	"license": "MIT",
+	"tags": [
+		"haxe",
+		"javascript",
+		"audio",
+		"web",
+		"sounds",
+		"audiocontext",
+		"library",
+		"waud.js",
+		"waud"
+	],
+	"description": "Web Audio Library",
+	"contributors": [
+		"adireddy"
+	],
+	"releasenote": "initial release",
+	"version": "0.0.1",
+	"url": "https://github.com/adireddy/waud",
+	"dependencies": {}
+}
