@@ -1,0 +1,42 @@
+{
+	"name": "waud",
+	"version": "0.0.1",
+	"description": "Web Audio Library",
+	"main": "Waud.hx",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/adireddy/waud"
+	},
+	"keywords": [
+		"haxe",
+		"javascript",
+		"audio",
+		"web",
+		"sounds",
+		"audiocontext",
+		"library",
+		"waud.js",
+		"waud"
+	],
+	"author": {
+		"name": "Adi Reddy Mora",
+		"email": "adiinteractive@gmail.com"
+	},
+	"dependencies": {
+		"grunt": "latest",
+		"grunt-cli": "latest",
+		"grunt-haxe": "latest",
+		"browserify": "latest",
+		"grunt-contrib-uglify": "latest",
+		"grunt-browserify": "latest",
+		"grunt-contrib-copy": "latest",
+		"grunt-contrib-clean": "latest"
+	},
+	"license": "ISC",
+	"devDependencies": {
+
+	}
+}
