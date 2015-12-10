@@ -1,0 +1,15 @@
+-cp src
+Waud
+-dce full
+-js dist/waud.js
+
+-debug
+-D source-map-content
+
+--next
+
+-cp src
+Waud
+-js dist/waud.min.js
+-dce full
+--no-traces
