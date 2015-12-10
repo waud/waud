@@ -28,7 +28,7 @@ module.exports = function (grunt) {
         },
 
         zip: {
-            "waud.zip": ["Perf.hx", "haxelib.json", "README.md"]
+            "waud.zip": ["src/*", "haxelib.json", "README.md"]
         }
     });
 
