@@ -1,9 +1,9 @@
 # waud.js
 Web audio library
 
-**Experimental - needs a lot of testing on various devices**
+**Experimental - device testing in progress**
 
-Devices tested:
+Tested on:
 
 | Device        | OS            | Browser        |
 | ------------- |:-------------:| --------------:|
