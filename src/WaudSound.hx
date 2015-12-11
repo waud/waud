@@ -16,7 +16,7 @@ import js.html.Document;
 	var sound:AudioElement;
 	var source:SourceElement;
 
-	public function new(src:String, ?options:SoundOptions = null) {
+	public function new(src:String, ?options:WaudSoundOptions = null) {
 		if (Waud.defaults == null) {
 			trace("Initialise Waud using Waud.init() before loading sounds");
 			return;
@@ -123,7 +123,7 @@ import js.html.Document;
 	}
 }
 
-typedef SoundOptions = {
+typedef WaudSoundOptions = {
 	@:optional var autoplay:Bool;
 	@:optional var formats:Array<String>;
 	@:optional var loop:Bool;

@@ -29,7 +29,7 @@ module.exports = function (grunt) {
 
         exec: {
             copy: "mkdir npm-publish || true && cp -r src dist package.json LICENSE README.md ./npm-publish/",
-            //npm: "npm publish ./npm-publish/ && rm -r npm-publish"
+            npm: "npm publish ./npm-publish/ && rm -r npm-publish"
         },
 
         zip: {
@@ -41,5 +41,5 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-uglify");
     grunt.loadNpmTasks("grunt-zip");
     grunt.loadNpmTasks("grunt-exec");
-    grunt.registerTask("default", ["haxe", "uglify"]);
+    grunt.registerTask("default", ["haxe", "uglify", "exec"]);
 };

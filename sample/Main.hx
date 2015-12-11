@@ -1,6 +1,8 @@
+import js.Browser;
 class Main {
 
 	public function new() {
+		Waud.webAudioAPI = false;
 		Waud.init();
 		var snd1 = new WaudSound("assets/loop", { autoplay: false, formats: ["mp3"], loop: true, volume: 1});
 		var snd2 = new WaudSound("assets/sound1.wav", {

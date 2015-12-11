@@ -1,14 +1,17 @@
 {
 	"name": "waud.js",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "Web Audio Library",
-	"main": "Waud.hx",
+	"main": "dist/waud.min.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/adireddy/waud"
+	},
+	"bugs": {
+		"url": "https://github.com/adireddy/waud/issues"
 	},
 	"keywords": [
 		"haxe",
@@ -35,7 +38,7 @@
 		"grunt-contrib-copy": "latest",
 		"grunt-contrib-clean": "latest"
 	},
-	"license": "ISC",
+	"license": "MIT",
 	"devDependencies": {
 
 	}

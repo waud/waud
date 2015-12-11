@@ -73,8 +73,6 @@ Waud.__name__ = true;
 Waud.init = function() {
 	Waud.audioContext = Waud.createAudioContext();
 	Waud.checkAudioContext(Waud.sampleRate);
-	Waud.webAudioAPI = false;
-	Waud.defaults = new WaudDefaults();
 	Waud.defaults.autoplay = false;
 	Waud.defaults.formats = [];
 	Waud.defaults.loop = false;
@@ -150,7 +148,7 @@ Waud.unlockAudio = function() {
 	var src = Waud.audioContext.createBufferSource();
 	src.buffer = bfr;
 	src.connect(Waud.audioContext.destination);
-	if(src.noteOn != null) src.noteOn(0); else src.start(0);
+	if(src.start != null) src.start(0); else src.noteOn(0);
 	haxe_Timer.delay(function() {
 		if(src.playbackState == src.PLAYING_STATE || src.playbackState == src.FINISHED_STATE) {
 			Waud.unlocked = true;
@@ -181,12 +179,6 @@ Waud.isAACSupported = function() {
 Waud.isM4ASupported = function() {
 	var canPlay = Waud.audioElement.canPlayType("audio/x-m4a;");
 	return ($_=Waud.audioElement,$bind($_,$_.canPlayType)) != null && canPlay != null && (canPlay == "probably" || canPlay == "maybe");
-};
-var WaudDefaults = function() {
-};
-WaudDefaults.__name__ = true;
-WaudDefaults.prototype = {
-	__class__: WaudDefaults
 };
 var WaudSound = $hx_exports.WaudSound = function(src,options) {
 	var _g = this;
@@ -528,7 +520,9 @@ Bool.__ename__ = ["Bool"];
 var Class = { __name__ : ["Class"]};
 var Enum = { };
 var __map_reserved = {}
+Waud.webAudioAPI = false;
 Waud.sampleRate = 44100;
+Waud.defaults = { };
 Waud.ac = Reflect.field(window,"AudioContext") != null?Reflect.field(window,"AudioContext"):Reflect.field(window,"webkitAudioContext");
 Waud.audioElement = (function($this) {
 	var $r;

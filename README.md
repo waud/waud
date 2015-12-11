@@ -3,7 +3,11 @@ Web Audio Library
 
 ### Installation ###
 
-coming soon
+`npm install waud.js`
+
+For haxe users:
+
+`haxelib install waud.js`
 
 ### API Documentation ###
 
@@ -21,7 +25,8 @@ Tested on:
 
 | Device        | OS            | Browser        |
 | ------------- |:-------------:| --------------:|
-| iPad 2        | 9+            | Safari, Chrome |
+| iPad 2        | 6+            | Safari         |
+| iPad Mini     | 9+            | Safari, Chrome |
 | iPad Air 1    | 9+            | Safari, Chrome |
 
 ### Usage ###

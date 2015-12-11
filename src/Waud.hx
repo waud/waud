@@ -1,3 +1,4 @@
+import WaudSound.WaudSoundOptions;
 import js.html.audio.AudioBufferSourceNode;
 import js.html.Document;
 import js.html.audio.AudioContext;
@@ -6,10 +7,10 @@ import js.html.AudioElement;
 
 @:expose @:keep class Waud {
 
-	public static var webAudioAPI:Bool;
+	public static var webAudioAPI:Bool = false;
 	public static var sampleRate:Int = 44100;
 	public static var audioContext:AudioContext;
-	public static var defaults:WaudDefaults;
+	public static var defaults:WaudSoundOptions = {};
 	public static var sounds:Map<String, WaudSound>;
 	public static var types:Map<String, String>;
 	public static var touchUnlock:Void -> Void;
@@ -23,9 +24,6 @@ import js.html.AudioElement;
 		audioContext = createAudioContext();
 		checkAudioContext(sampleRate);
 
-		webAudioAPI = false;
-
-		defaults = new WaudDefaults();
 		defaults.autoplay = false;
 		defaults.formats = [];
 		defaults.loop = false;
@@ -107,8 +105,8 @@ import js.html.AudioElement;
 		var src:Dynamic = audioContext.createBufferSource();
 		src.buffer = bfr;
 		src.connect(audioContext.destination);
-		if (src.noteOn != null) src.noteOn(0);
-		else src.start(0);
+		if (src.start != null) src.start(0);
+		else src.noteOn(0);
 
 		haxe.Timer.delay(function() {
 			if(src.playbackState == src.PLAYING_STATE || src.playbackState == src.FINISHED_STATE) {
@@ -147,18 +145,4 @@ import js.html.AudioElement;
 		var canPlay = audioElement.canPlayType('audio/x-m4a;');
 		return (isSupported() && canPlay != null && (canPlay == "probably" || canPlay == "maybe"));
 	}
-}
-
-class WaudDefaults {
-	public var autoplay:Bool;
-	public var formats:Array<String>;
-	public var loop:Bool;
-	public var onload:WaudSound -> Void;
-	public var onend:WaudSound -> Void;
-	public var onerror:WaudSound -> Void;
-	public var preload:String;
-	public var volume:Int;
-	public var document:Document;
-
-	public function new() {}
 }
