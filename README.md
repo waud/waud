@@ -1,7 +1,22 @@
 # waud.js [![experimental](http://badges.github.io/stability-badges/dist/experimental.svg)](http://github.com/badges/stability-badges)
-Web audio library
+=========
+Web Audio Library
 
-**Experimental - device testing in progress**
+### Installation ###
+
+coming soon
+
+### API Documentation ###
+
+coming soon
+
+### Issues ###
+
+Found any bug? Please create a new [issue](https://github.com/adireddy/waud/issues/new).
+
+### Demo ###
+
+[Sample](http://adireddy.github.io/demos/waud/)
 
 Tested on:
 
@@ -10,33 +25,9 @@ Tested on:
 | iPad 2        | 9+            | Safari, Chrome |
 | iPad Air 1    | 9+            | Safari, Chrome |
 
-**Sample - JavaScript**
+### Usage ###
 
-```js
-Waud.init();
-var snd1 = new Waud.Sound("assets/loop", {
-        "autoplay": false, "formats": ["mp3"], "loop":true, "volume": 1
-});
-
-var snd2 = new Waud.Sound("assets/sound1.wav", {
-    "autoplay": false,
-    "loop":true,
-    "onload": function (snd) { console.log("loaded"); },
-    "onend": function (snd) { console.log("ended"); },
-    "onerror": function (snd) { console.log("error"); }
-});
-
-snd1.play();
-snd2.play();
-
-//Touch unlock event for iOS devices
-Waud.touchUnlock = function() {
-    snd1.play();
-    snd2.play();
-}
-```
-
-**Sample - Haxe**
+##### Haxe #####
 
 ```haxe
 class Main {
@@ -68,5 +59,35 @@ class Main {
 }
 ```
 
+##### JavaScript #####
 
-**Full API - coming soon**
+```js
+Waud.init();
+var snd1 = new Waud.Sound("assets/loop", {
+        "autoplay": false, "formats": ["mp3"], "loop":true, "volume": 1
+});
+
+var snd2 = new Waud.Sound("assets/sound1.wav", {
+    "autoplay": false,
+    "loop":true,
+    "onload": function (snd) { console.log("loaded"); },
+    "onend": function (snd) { console.log("ended"); },
+    "onerror": function (snd) { console.log("error"); }
+});
+
+snd1.play();
+snd2.play();
+
+//Touch unlock event for iOS devices
+Waud.touchUnlock = function() {
+    snd1.play();
+    snd2.play();
+}
+```
+
+### Licensing Information ###
+
+<a rel="license" href="http://opensource.org/licenses/MIT">
+<img alt="MIT license" height="40" src="http://upload.wikimedia.org/wikipedia/commons/c/c3/License_icon-mit.svg" /></a>
+
+This content is released under the [MIT](http://opensource.org/licenses/MIT) License.
