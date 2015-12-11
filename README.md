@@ -1,4 +1,4 @@
-# waud.js
+# waud.js [![experimental](http://badges.github.io/stability-badges/dist/experimental.svg)](http://github.com/badges/stability-badges)
 Web audio library
 
 **Experimental - device testing in progress**
