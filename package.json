@@ -1,5 +1,5 @@
 {
-	"name": "waud",
+	"name": "waud.js",
 	"version": "0.0.1",
 	"description": "Web Audio Library",
 	"main": "Waud.hx",

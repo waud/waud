@@ -13,7 +13,12 @@ module.exports = function (grunt) {
             options: {
                 compress: {
                     drop_console: true
-                }
+                },
+                banner: "/*!" +
+                        "\n * <%= pkg.name %> - v<%= pkg.version %>" +
+                        "\n * Compiled on <%= grunt.template.today('dd-mm-yyyy hh:mm:ss') %>" +
+                        "\n * <%= pkg.name %> is licensed under the MIT License." +
+                        "\n * Copyright (c) 2015-2016 <%= pkg.author.name %>\n*/\n"
             },
             target: {
                 files: {
