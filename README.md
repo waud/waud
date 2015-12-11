@@ -43,10 +43,10 @@ class Main {
 
     public function new() {
         Waud.init();
-        var snd1 = new WaudSound("assets/loop", { "autoplay": false, "formats": ["mp3"], "loop":true, "volume": 1});
+        var snd1 = new WaudSound("assets/loop", { "autoplay": false, "formats": ["mp3"], "loop": true, "volume": 1});
         var snd2 = new WaudSound("assets/sound1.wav", {
             "autoplay": false,
-            "loop":true,
+            "loop": true,
             "onload": function (snd) { console.log("loaded"); },
             "onend": function (snd) { console.log("ended"); },
             "onerror": function (snd) { console.log("error"); }
