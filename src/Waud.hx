@@ -7,7 +7,7 @@ import js.html.AudioElement;
 @:expose @:keep class Waud {
 
 	public static var Sound:Class<WaudSound> = WaudSound;
-	public static var webAudio:Bool;
+	public static var webAudioAPI:Bool;
 	public static var sampleRate:Int = 44100;
 	public static var audioContext:AudioContext;
 	public static var defaults:WaudDefaults;
@@ -24,7 +24,7 @@ import js.html.AudioElement;
 		audioContext = createAudioContext();
 		checkAudioContext(sampleRate);
 
-		webAudio = false;
+		webAudioAPI = false;
 
 		defaults = new WaudDefaults();
 		defaults.autoplay = false;

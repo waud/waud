@@ -1,3 +1,4 @@
+import js.html.Console;
 import js.html.audio.MediaElementAudioSourceNode;
 import js.html.SourceElement;
 import js.Browser;
@@ -17,6 +18,10 @@ import js.html.Document;
 	var source:SourceElement;
 
 	public function new(src:String, ?options:SoundOptions = null) {
+		if (Waud.defaults == null) {
+			trace("Initialise Waud using Waud.init() before loading sounds");
+			return;
+		}
 		if (options == null) options = {};
 		doc = (options.document != null) ? options.document : Waud.defaults.document;
 		pid = 0;
@@ -31,7 +36,7 @@ import js.html.Document;
 
 		if (supported && src != null && src != "") {
 			sound = Browser.document.createAudioElement();
-			if (Waud.webAudio && Waud.audioContext != null) {
+			if (Waud.webAudioAPI && Waud.audioContext != null) {
 				if (Waud.audioContext != null) {
 					source = cast Waud.audioContext.createMediaElementSource(sound);
 					cast(source, MediaElementAudioSourceNode).connect(Waud.audioContext.destination);

@@ -70,6 +70,10 @@ Utils.isiOS = function() {
 };
 var WaudSound = function(src,options) {
 	var _g = this;
+	if(Waud.defaults == null) {
+		console.log("Initialise Waud using Waud.init() before loading sounds");
+		return;
+	}
 	if(options == null) options = { };
 	if(options.document != null) this.doc = options.document; else this.doc = Waud.defaults.document;
 	this.pid = 0;
@@ -83,7 +87,7 @@ var WaudSound = function(src,options) {
 	if(this.supported && src != null && src != "") {
 		var _this = window.document;
 		this.sound = _this.createElement("audio");
-		if(Waud.webAudio && Waud.audioContext != null) {
+		if(Waud.webAudioAPI && Waud.audioContext != null) {
 			if(Waud.audioContext != null) {
 				this.source = Waud.audioContext.createMediaElementSource(this.sound);
 				(js_Boot.__cast(this.source , MediaElementAudioSourceNode)).connect(Waud.audioContext.destination);
@@ -165,7 +169,7 @@ Waud.__name__ = true;
 Waud.init = function() {
 	Waud.audioContext = Waud.createAudioContext();
 	Waud.checkAudioContext(Waud.sampleRate);
-	Waud.webAudio = false;
+	Waud.webAudioAPI = false;
 	Waud.defaults = new WaudDefaults();
 	Waud.defaults.autoplay = false;
 	Waud.defaults.formats = [];
