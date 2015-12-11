@@ -13,3 +13,15 @@ Waud
 -js dist/waud.min.js
 -dce full
 --no-traces
+
+--next
+
+-cp src
+-cp sample
+
+-main Main
+
+-js sample/sample.js
+-dce full
+-debug
+-D source-map-content

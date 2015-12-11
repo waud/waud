@@ -6,7 +6,6 @@ import js.html.AudioElement;
 
 @:expose @:keep class Waud {
 
-	public static var Sound:Class<WaudSound> = WaudSound;
 	public static var webAudioAPI:Bool;
 	public static var sampleRate:Int = 44100;
 	public static var audioContext:AudioContext;

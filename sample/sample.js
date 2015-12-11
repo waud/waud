@@ -19,6 +19,30 @@ EReg.prototype = {
 	}
 	,__class__: EReg
 };
+var Main = function() {
+	Waud.init();
+	var snd1 = new WaudSound("assets/loop",{ autoplay : false, formats : ["mp3"], loop : true, volume : 1});
+	var snd21 = new WaudSound("assets/sound1.wav",{ autoplay : false, loop : true, onload : function(snd) {
+		console.log("loaded");
+	}, onend : function(snd2) {
+		console.log("ended");
+	}, onerror : function(snd3) {
+		console.log("error");
+	}});
+	snd1.play();
+	snd21.play();
+	Waud.touchUnlock = function() {
+		snd1.play();
+		snd21.play();
+	};
+};
+Main.__name__ = true;
+Main.main = function() {
+	new Main();
+};
+Main.prototype = {
+	__class__: Main
+};
 Math.__name__ = true;
 var Reflect = function() { };
 Reflect.__name__ = true;
@@ -539,6 +563,7 @@ Waud.audioElement = (function($this) {
 Waud.iOS = Utils.isiOS();
 Waud.unlocked = false;
 js_Boot.__toStr = {}.toString;
+Main.main();
 })(typeof console != "undefined" ? console : {log:function(){}}, typeof window != "undefined" ? window : exports);
 
-//# sourceMappingURL=waud.js.map
+//# sourceMappingURL=sample.js.map

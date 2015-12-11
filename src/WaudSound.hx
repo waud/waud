@@ -1,11 +1,10 @@
-import js.html.Console;
 import js.html.audio.MediaElementAudioSourceNode;
 import js.html.SourceElement;
 import js.Browser;
 import js.html.AudioElement;
 import js.html.Document;
 
-@:keep class WaudSound {
+@:expose @:keep class WaudSound {
 
 	public var volume(default, set):Float;
 
@@ -36,6 +35,7 @@ import js.html.Document;
 
 		if (supported && src != null && src != "") {
 			sound = Browser.document.createAudioElement();
+			sound.crossOrigin = "anonymous";
 			if (Waud.webAudioAPI && Waud.audioContext != null) {
 				if (Waud.audioContext != null) {
 					source = cast Waud.audioContext.createMediaElementSource(sound);
@@ -73,6 +73,8 @@ import js.html.Document;
 			}
 
 			Waud.sounds.set(src, this);
+
+			sound.load();
 		}
 	}
 
