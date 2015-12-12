@@ -1,4 +1,3 @@
-import WaudSound.WaudSoundOptions;
 import js.html.audio.AudioBufferSourceNode;
 import js.html.Document;
 import js.html.audio.AudioContext;
@@ -7,6 +6,7 @@ import js.html.AudioElement;
 
 @:expose @:keep class Waud {
 
+	public static var audioManager:AudioManager;
 	public static var webAudioAPI:Bool = false;
 	public static var sampleRate:Int = 44100;
 	public static var audioContext:AudioContext;
@@ -24,8 +24,9 @@ import js.html.AudioElement;
 		audioContext = createAudioContext();
 		checkAudioContext(sampleRate);
 
+		if (Waud.audioManager == null) Waud.audioManager = new AudioManager(audioContext);
+
 		defaults.autoplay = false;
-		defaults.formats = [];
 		defaults.loop = false;
 		defaults.preload = "metadata";
 		defaults.volume = 1;
@@ -44,12 +45,8 @@ import js.html.AudioElement;
 		Browser.window.addEventListener("unload", destroyContext, true);
 	}
 
-	public static function mute() {
-		for (sound in sounds) sound.mute();
-	}
-
-	public static function unmute() {
-		for (sound in sounds) sound.unmute();
+	public static function mute(val:Bool) {
+		for (sound in sounds) sound.mute(val);
 	}
 
 	public static function destroyContext() {
