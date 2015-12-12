@@ -8,7 +8,7 @@ import js.html.AudioElement;
 	public static var isAudioSupported:Bool;
 	public static var audioManager:AudioManager;
 	public static var defaults:WaudSoundOptions = {};
-	public static var sounds:Map<String, HTML5Sound>;
+	public static var sounds:Map<String, ISound>;
 	public static var types:Map<String, String>;
 	public static var dom:Document;
 
@@ -56,6 +56,10 @@ import js.html.AudioElement;
 
 	public static function mute(val:Bool) {
 		for (sound in sounds) sound.mute(val);
+	}
+
+	public static function stop() {
+		for (sound in sounds) sound.stop();
 	}
 
 	public static function getSupportString():String {

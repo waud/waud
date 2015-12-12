@@ -1,12 +1,19 @@
 class BaseSound {
 
 	var _options:WaudSoundOptions;
+	var _isPlaying:Bool;
 
-	public function new(src:String, ?options:WaudSoundOptions = null) {
+	public function new(url:String, ?options:WaudSoundOptions = null) {
+		trace(url);
+		if (url == null || url == "") {
+			trace("invalid sound url");
+			return;
+		}
 		if (Waud.defaults == null) {
 			trace("Initialise Waud using Waud.init() before loading sounds");
 			return;
 		}
+		_isPlaying = false;
 		if (options == null) options = {};
 
 		options.autoplay = (options.autoplay != null) ? options.autoplay : Waud.defaults.autoplay;

@@ -20,8 +20,12 @@
 		_snd.mute(val);
 	}
 
-	public function play(?loop:Bool = false) {
-		_snd.play(loop);
+	public function play() {
+		_snd.play();
+	}
+
+	public function isPlaying():Bool {
+		return _snd.isPlaying();
 	}
 
 	public function loop(val:Bool) {

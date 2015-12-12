@@ -10,39 +10,36 @@ import js.Browser;
 	public function new(url:String, ?options:WaudSoundOptions = null) {
 		super(url, options);
 
-		if (url != null && url != "") {
-			_snd = Browser.document.createAudioElement();
-			addSource(url);
+		_snd = Browser.document.createAudioElement();
+		addSource(url);
 
-			if (options.autoplay) _snd.autoplay = true;
-			_snd.volume = options.volume;
+		if (_options.autoplay) _snd.autoplay = true;
+		_snd.volume = _options.volume;
 
-			if (Std.string(options.preload) == "true") _snd.preload = "auto";
-			else if (Std.string(options.preload) == "false") _snd.preload = "none";
-			else _snd.preload = "metadata";
+		if (Std.string(_options.preload) == "true") _snd.preload = "auto";
+		else if (Std.string(_options.preload) == "false") _snd.preload = "none";
+		else _snd.preload = "metadata";
 
-			if (options.onload != null) {
-				_snd.onloadeddata = function() {
-					options.onload(this);
-				}
+		if (_options.onload != null) {
+			_snd.onloadeddata = function() {
+				_options.onload(this);
 			}
-
-			if (options.onend != null) {
-				_snd.onended = function() {
-					options.onend(this);
-				}
-			}
-
-			if (options.onerror != null) {
-				_snd.onerror = function() {
-					options.onerror(this);
-				}
-			}
-
-			Waud.sounds.set(url, this);
-
-			_snd.load();
 		}
+
+		_snd.onended = function() {
+			_isPlaying = false;
+			if (_options.onend != null) _options.onend(this);
+		}
+
+		if (_options.onerror != null) {
+			_snd.onerror = function() {
+				_options.onerror(this);
+			}
+		}
+
+		Waud.sounds.set(url, this);
+
+		_snd.load();
 	}
 
 	function addSource(src:String):SourceElement {
@@ -74,9 +71,12 @@ import js.Browser;
 		_snd.muted = val;
 	}
 
-	public function play(?loop:Bool = false) {
+	public function play() {
 		_snd.play();
-		_snd.loop = loop;
+	}
+
+	public function isPlaying():Bool {
+		return _isPlaying;
 	}
 
 	public function loop(val:Bool) {

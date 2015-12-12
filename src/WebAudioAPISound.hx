@@ -23,6 +23,8 @@ import js.html.audio.AudioBuffer;
 		request.onload = _onSoundLoaded;
 		request.onerror = _error;
 		request.send();
+
+		Waud.sounds.set(url, this);
 	}
 
 	function _onSoundLoaded(evt) {
@@ -37,7 +39,7 @@ import js.html.audio.AudioBuffer;
 		}
 		_manager.bufferList.set(_url, buffer);
 		if (_options.onload != null) _options.onload(this);
-		if (_options.autoplay) play(_options.loop);
+		if (_options.autoplay) play();
 	}
 
 	inline function _error() {
@@ -54,23 +56,34 @@ import js.html.audio.AudioBuffer;
 		return source;
 	}
 
-	public function play(?loop:Bool = false) {
+	public function play() {
 		var buffer = _manager.bufferList.get(_url);
 		if (buffer != null) {
 			_snd = _makeSource(buffer);
-			_snd.loop = loop;
+			_snd.loop = _options.loop;
 			_snd.start(0);
+			_isPlaying = true;
+			_snd.onended = function() {
+				_isPlaying = false;
+				if (_options.onend != null) _options.onend(this);
+			}
 
 			if(_manager.playingSounds.get(_url) == null) _manager.playingSounds.set(_url, []);
 			_manager.playingSounds.get(_url).push(_snd);
 		}
 	}
 
+	public function isPlaying():Bool {
+		return _isPlaying;
+	}
+
 	public function loop(val:Bool) {
+		if (_snd == null) return;
 		_snd.loop = val;
 	}
 
 	public function setVolume(val:Float) {
+		if (_gainNode == null) return;
 		_options.volume = val;
 		_gainNode.gain.value = _options.volume;
 	}
@@ -80,11 +93,13 @@ import js.html.audio.AudioBuffer;
 	}
 
 	public function mute(val:Bool) {
+		if (_gainNode == null) return;
 		if (val) _gainNode.gain.value = 0;
 		else _gainNode.gain.value = _options.volume;
 	}
 
 	public function stop() {
+		if (_snd == null) return;
 		_snd.stop(0);
 	}
 }

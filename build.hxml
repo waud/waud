@@ -1,3 +1,7 @@
+-cmd haxelib newrepo
+-cmd haxelib install pixijs
+-cmd haxelib install msignal
+
 -cp src
 Waud
 -dce full
@@ -20,7 +24,8 @@ Waud
 -cp sample
 
 -main Main
-
+-lib pixijs
+-lib msignal
 -js sample/sample.js
 -dce full
 -debug
