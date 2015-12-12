@@ -5,44 +5,151 @@ function $extend(from, fields) {
 	if( fields.toString !== Object.prototype.toString ) proto.toString = fields.toString;
 	return proto;
 }
-var EReg = function(r,opt) {
-	opt = opt.split("u").join("");
-	this.r = new RegExp(r,opt);
+var AudioManager = function() {
+	this.bufferList = new haxe_ds_StringMap();
+	this.playingSounds = new haxe_ds_StringMap();
 };
-EReg.__name__ = true;
-EReg.prototype = {
-	match: function(s) {
-		if(this.r.global) this.r.lastIndex = 0;
-		this.r.m = this.r.exec(s);
-		this.r.s = s;
-		return this.r.m != null;
+AudioManager.__name__ = true;
+AudioManager.prototype = {
+	checkWebAudioAPISupport: function() {
+		if(Reflect.field(window,"AudioContext") != null) {
+			AudioManager.AudioContextClass = Reflect.field(window,"AudioContext");
+			return true;
+		} else if(Reflect.field(window,"webkitAudioContext") != null) {
+			AudioManager.AudioContextClass = Reflect.field(window,"webkitAudioContext");
+			return true;
+		}
+		return false;
 	}
-	,__class__: EReg
+	,unlockAudio: function() {
+		var _g = this;
+		if(this.audioContext == null) return;
+		var bfr = this.audioContext.createBuffer(1,1,44100);
+		var src = this.audioContext.createBufferSource();
+		src.buffer = bfr;
+		src.connect(this.audioContext.destination);
+		src.start(0);
+		src.onended = function() {
+			if(Waud.__touchUnlockCallback != null) Waud.__touchUnlockCallback();
+			Waud.dom.removeEventListener("touchend",$bind(_g,_g.unlockAudio),true);
+		};
+	}
+	,createAudioContext: function() {
+		if(this.audioContext == null) try {
+			if(AudioManager.AudioContextClass != null) this.audioContext = Type.createInstance(AudioManager.AudioContextClass,[]);
+		} catch( e ) {
+			if (e instanceof js__$Boot_HaxeError) e = e.val;
+			this.audioContext = null;
+		}
+	}
 };
+var BaseSound = function(src,options) {
+	if(Waud.defaults == null) {
+		console.log("Initialise Waud using Waud.init() before loading sounds");
+		return;
+	}
+	if(options == null) options = { };
+	if(options.autoplay != null) options.autoplay = options.autoplay; else options.autoplay = Waud.defaults.autoplay;
+	if(options.preload != null) options.preload = options.preload; else options.preload = Waud.defaults.preload;
+	if(options.loop != null) options.loop = options.loop; else options.loop = Waud.defaults.loop;
+	if(options.volume != null && options.volume >= 0 && options.volume <= 1) options.volume = options.volume; else options.volume = Waud.defaults.volume;
+	this._options = options;
+};
+BaseSound.__name__ = true;
+var ISound = function() { };
+ISound.__name__ = true;
+var HTML5Sound = $hx_exports.HTML5Sound = function(url,options) {
+	var _g = this;
+	BaseSound.call(this,url,options);
+	if(($_=Waud.audioElement,$bind($_,$_.canPlayType)) != null && url != null && url != "") {
+		var _this = window.document;
+		this._snd = _this.createElement("audio");
+		this.addSource(url);
+		if(options.autoplay) this._snd.autoplay = true;
+		this._snd.volume = options.volume;
+		if(Std.string(options.preload) == "true") this._snd.preload = "auto"; else if(Std.string(options.preload) == "false") this._snd.preload = "none"; else this._snd.preload = "metadata";
+		if(options.onload != null) this._snd.onloadeddata = function() {
+			options.onload(_g);
+		};
+		if(options.onend != null) this._snd.onended = function() {
+			options.onend(_g);
+		};
+		if(options.onerror != null) this._snd.onerror = function() {
+			options.onerror(_g);
+		};
+		Waud.sounds.set(url,this);
+		this._snd.load();
+	}
+};
+HTML5Sound.__name__ = true;
+HTML5Sound.__interfaces__ = [ISound];
+HTML5Sound.__super__ = BaseSound;
+HTML5Sound.prototype = $extend(BaseSound.prototype,{
+	addSource: function(src) {
+		var _this = window.document;
+		this._src = _this.createElement("source");
+		this._src.src = src;
+		if((function($this) {
+			var $r;
+			var key = $this._getExt(src);
+			$r = Waud.types.get(key);
+			return $r;
+		}(this)) != null) {
+			var key1 = this._getExt(src);
+			this._src.type = Waud.types.get(key1);
+		}
+		this._snd.appendChild(this._src);
+		return this._src;
+	}
+	,_getExt: function(filename) {
+		return filename.split(".").pop();
+	}
+	,setVolume: function(val) {
+		if(val >= 0 && val <= 1) {
+			this._snd.volume = val;
+			this._options.volume = val;
+		}
+	}
+	,getVolume: function() {
+		return this._options.volume;
+	}
+	,mute: function(val) {
+		this._snd.muted = val;
+	}
+	,play: function(loop) {
+		if(loop == null) loop = false;
+		this._snd.play();
+		this._snd.loop = loop;
+	}
+	,loop: function(val) {
+		this._snd.loop = val;
+	}
+	,stop: function() {
+		this._snd.pause();
+		this._snd.currentTime = 0;
+	}
+});
 var Main = function() {
-	Waud.webAudioAPI = false;
 	Waud.init();
-	var snd1 = new WaudSound("assets/loop",{ autoplay : false, formats : ["mp3"], loop : true, volume : 1});
-	var snd21 = new WaudSound("assets/sound1.wav",{ autoplay : false, loop : true, onload : function(snd) {
+	Waud.enableTouchUnlock($bind(this,this.touchUnlock));
+	this.snd1 = new WaudSound("assets/loop.mp3",{ autoplay : false, volume : 0.5});
+	this.snd2 = new WebAudioAPISound("assets/sound1.wav",{ autoplay : true, loop : false, onload : function(snd) {
 		console.log("loaded");
-	}, onend : function(snd2) {
+	}, onend : function(snd1) {
 		console.log("ended");
-	}, onerror : function(snd3) {
+	}, onerror : function(snd2) {
 		console.log("error");
 	}});
-	snd1.play();
-	snd21.play();
-	Waud.touchUnlock = function() {
-		snd1.play();
-		snd21.play();
-	};
 };
 Main.__name__ = true;
 Main.main = function() {
 	new Main();
 };
 Main.prototype = {
-	__class__: Main
+	touchUnlock: function() {
+		this.snd1.play();
+		this.snd2.play(true);
+	}
 };
 Math.__name__ = true;
 var Reflect = function() { };
@@ -88,22 +195,20 @@ Type.createInstance = function(cl,args) {
 	}
 	return null;
 };
-var Utils = function() { };
-Utils.__name__ = true;
-Utils.isiOS = function() {
-	return new EReg("(iPad|iPhone|iPod)","i").match(window.navigator.userAgent);
-};
 var Waud = $hx_exports.Waud = function() { };
 Waud.__name__ = true;
-Waud.init = function() {
-	Waud.audioContext = Waud.createAudioContext();
-	Waud.checkAudioContext(Waud.sampleRate);
+Waud.init = function(d) {
+	if(d == null) d = window.document;
+	Waud.dom = d;
+	var _this = window.document;
+	Waud.audioElement = _this.createElement("audio");
+	if(Waud.audioManager == null) Waud.audioManager = new AudioManager();
+	Waud.isWebAudioSupported = Waud.audioManager.checkWebAudioAPISupport();
+	Waud.audioManager.createAudioContext();
 	Waud.defaults.autoplay = false;
-	Waud.defaults.formats = [];
 	Waud.defaults.loop = false;
 	Waud.defaults.preload = "metadata";
 	Waud.defaults.volume = 1;
-	Waud.defaults.document = window.document;
 	Waud.sounds = new haxe_ds_StringMap();
 	Waud.types = new haxe_ds_StringMap();
 	Waud.types.set("mp3","audio/mpeg");
@@ -111,37 +216,16 @@ Waud.init = function() {
 	Waud.types.set("wav","audio/wav");
 	Waud.types.set("aac","audio/aac");
 	Waud.types.set("m4a","audio/x-m4a");
-	if(Waud.iOS) window.document.addEventListener("touchend",Waud.unlockAudio,true);
-	window.addEventListener("unload",Waud.destroyContext,true);
 };
-Waud.mute = function() {
+Waud.enableTouchUnlock = function(callback) {
+	Waud.__touchUnlockCallback = callback;
+	Waud.dom.addEventListener("touchend",($_=Waud.audioManager,$bind($_,$_.unlockAudio)),true);
+};
+Waud.mute = function(val) {
 	var $it0 = Waud.sounds.iterator();
 	while( $it0.hasNext() ) {
 		var sound = $it0.next();
-		sound.mute();
-	}
-};
-Waud.unmute = function() {
-	var $it0 = Waud.sounds.iterator();
-	while( $it0.hasNext() ) {
-		var sound = $it0.next();
-		sound.unmute();
-	}
-};
-Waud.destroyContext = function() {
-	if(Waud.audioContext != null) {
-		if(Waud.audioContext.close != null) Waud.audioContext.close();
-		Waud.audioContext = null;
-	}
-};
-Waud.suspendContext = function() {
-	if(Waud.audioContext != null) {
-		if(Waud.audioContext.suspend != null) Waud.audioContext.suspend();
-	}
-};
-Waud.resumeContext = function() {
-	if(Waud.audioContext != null) {
-		if(Waud.audioContext.resume != null) Waud.audioContext.resume();
+		sound.mute(val);
 	}
 };
 Waud.getSupportString = function() {
@@ -151,36 +235,6 @@ Waud.getSupportString = function() {
 	support += ", AAC: " + Waud.audioElement.canPlayType("audio/aac;");
 	support += ", M4A: " + Waud.audioElement.canPlayType("audio/x-m4a;");
 	return support;
-};
-Waud.createAudioContext = function() {
-	if(Waud.audioContext == null) try {
-		if(Waud.ac != null) Waud.audioContext = Type.createInstance(Waud.ac,[]);
-	} catch( e ) {
-		if (e instanceof js__$Boot_HaxeError) e = e.val;
-		Waud.audioContext = null;
-	}
-	return Waud.audioContext;
-};
-Waud.checkAudioContext = function(sampleRate) {
-	if(Waud.audioContext != null && Waud.audioContext.sampleRate != sampleRate) {
-		Waud.destroyContext();
-		Waud.audioContext = Waud.createAudioContext();
-	}
-};
-Waud.unlockAudio = function() {
-	if(Waud.unlocked || Waud.audioContext == null) return;
-	var bfr = Waud.audioContext.createBuffer(1,1,Waud.sampleRate);
-	var src = Waud.audioContext.createBufferSource();
-	src.buffer = bfr;
-	src.connect(Waud.audioContext.destination);
-	if(src.start != null) src.start(0); else src.noteOn(0);
-	haxe_Timer.delay(function() {
-		if(src.playbackState == src.PLAYING_STATE || src.playbackState == src.FINISHED_STATE) {
-			Waud.unlocked = true;
-			if(Waud.touchUnlock != null) Waud.touchUnlock();
-			window.document.removeEventListener("touchend",Waud.unlockAudio,true);
-		}
-	},1);
 };
 Waud.isSupported = function() {
 	return ($_=Waud.audioElement,$bind($_,$_.canPlayType)) != null;
@@ -206,130 +260,101 @@ Waud.isM4ASupported = function() {
 	return ($_=Waud.audioElement,$bind($_,$_.canPlayType)) != null && canPlay != null && (canPlay == "probably" || canPlay == "maybe");
 };
 var WaudSound = $hx_exports.WaudSound = function(src,options) {
-	var _g = this;
-	if(Waud.defaults == null) {
-		console.log("Initialise Waud using Waud.init() before loading sounds");
-		return;
-	}
-	if(options == null) options = { };
-	if(options.document != null) this.doc = options.document; else this.doc = Waud.defaults.document;
-	this.pid = 0;
-	this.events = [];
-	this.supported = ($_=Waud.audioElement,$bind($_,$_.canPlayType)) != null;
-	if(options.autoplay != null) options.autoplay = options.autoplay; else options.autoplay = Waud.defaults.autoplay;
-	if(options.formats != null) options.formats = options.formats; else options.formats = Waud.defaults.formats;
-	if(options.loop != null) options.loop = options.loop; else options.loop = Waud.defaults.loop;
-	if(options.preload != null) options.preload = options.preload; else options.preload = Waud.defaults.preload;
-	if(options.volume != null && options.volume >= 0 && options.volume <= 1) options.volume = options.volume; else options.volume = Waud.defaults.volume;
-	if(this.supported && src != null && src != "") {
-		var _this = window.document;
-		this.sound = _this.createElement("audio");
-		this.sound.crossOrigin = "anonymous";
-		if(Waud.webAudioAPI && Waud.audioContext != null) {
-			if(Waud.audioContext != null) {
-				this.source = Waud.audioContext.createMediaElementSource(this.sound);
-				(js_Boot.__cast(this.source , MediaElementAudioSourceNode)).connect(Waud.audioContext.destination);
-			}
-		}
-		if(options.formats.length > 0) {
-			var _g1 = 0;
-			var _g11 = options.formats;
-			while(_g1 < _g11.length) {
-				var format = _g11[_g1];
-				++_g1;
-				this.addSource(src + "." + format);
-			}
-		} else this.addSource(src);
-		if(options.loop) this.sound.loop = true;
-		if(options.autoplay) this.sound.autoplay = true;
-		this.sound.volume = options.volume;
-		if(Std.string(options.preload) == "true") this.sound.preload = "auto"; else if(Std.string(options.preload) == "false") this.sound.preload = "none"; else this.sound.preload = "metadata";
-		if(options.onload != null) this.sound.onloadeddata = function() {
-			options.onload(_g);
-		};
-		if(options.onend != null) this.sound.onended = function() {
-			options.onend(_g);
-		};
-		if(options.onerror != null) this.sound.onerror = function() {
-			options.onerror(_g);
-		};
-		Waud.sounds.set(src,this);
-		this.sound.load();
-	}
+	if(Waud.isWebAudioSupported) this._snd = new WebAudioAPISound(src,options); else this._snd = new HTML5Sound(src,options);
 };
 WaudSound.__name__ = true;
+WaudSound.__interfaces__ = [ISound];
 WaudSound.prototype = {
-	addSource: function(src) {
-		var _this = window.document;
-		this.source = _this.createElement("source");
-		this.source.src = src;
-		if((function($this) {
-			var $r;
-			var key = $this.getExt(src);
-			$r = Waud.types.get(key);
-			return $r;
-		}(this)) != null) {
-			var key1 = this.getExt(src);
-			this.source.type = Waud.types.get(key1);
-		}
-		this.sound.appendChild(this.source);
-		return this.source;
+	setVolume: function(val) {
+		this._snd.setVolume(val);
 	}
-	,getExt: function(filename) {
-		return filename.split(".").pop();
+	,getVolume: function() {
+		return this._snd.getVolume();
 	}
-	,set_volume: function(val) {
-		if(val >= 0 && val <= 1) this.sound.volume = val;
-		return this.volume = val;
+	,mute: function(val) {
+		this._snd.mute(val);
 	}
-	,mute: function() {
-		this.sound.muted = true;
+	,play: function(loop) {
+		if(loop == null) loop = false;
+		this._snd.play(loop);
 	}
-	,unmute: function() {
-		this.sound.muted = false;
-	}
-	,loop: function() {
-		this.sound.loop = true;
-	}
-	,unloop: function() {
-		this.sound.loop = false;
-	}
-	,play: function() {
-		this.sound.play();
+	,loop: function(val) {
+		this._snd.loop(val);
 	}
 	,stop: function() {
-		this.sound.pause();
-		this.sound.currentTime = 0;
+		this._snd.stop();
 	}
-	,__class__: WaudSound
 };
+var WebAudioAPISound = $hx_exports.WebAudioAPISound = function(url,options) {
+	BaseSound.call(this,url,options);
+	this._url = url;
+	this._manager = Waud.audioManager;
+	var request = new XMLHttpRequest();
+	request.open("GET",this._url,true);
+	request.responseType = "arraybuffer";
+	request.onload = $bind(this,this._onSoundLoaded);
+	request.onerror = $bind(this,this._error);
+	request.send();
+};
+WebAudioAPISound.__name__ = true;
+WebAudioAPISound.__interfaces__ = [ISound];
+WebAudioAPISound.__super__ = BaseSound;
+WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
+	_onSoundLoaded: function(evt) {
+		this._manager.audioContext.decodeAudioData(evt.target.response,$bind(this,this._decodeSuccess),$bind(this,this._error));
+	}
+	,_decodeSuccess: function(buffer) {
+		if(buffer == null) {
+			console.log("empty buffer: " + this._url);
+			if(this._options.onerror != null) this._options.onerror(this);
+			return;
+		}
+		this._manager.bufferList.set(this._url,buffer);
+		if(this._options.onload != null) this._options.onload(this);
+		if(this._options.autoplay) this.play(this._options.loop);
+	}
+	,_error: function() {
+		if(this._options.onerror != null) this._options.onerror(this);
+	}
+	,_makeSource: function(buffer) {
+		var source = this._manager.audioContext.createBufferSource();
+		this._gainNode = this._manager.audioContext.createGain();
+		this._gainNode.gain.value = this._options.volume;
+		source.buffer = buffer;
+		source.connect(this._gainNode);
+		this._gainNode.connect(this._manager.audioContext.destination);
+		return source;
+	}
+	,play: function(loop) {
+		if(loop == null) loop = false;
+		var buffer = this._manager.bufferList.get(this._url);
+		if(buffer != null) {
+			this._snd = this._makeSource(buffer);
+			this._snd.loop = loop;
+			this._snd.start(0);
+			if(this._manager.playingSounds.get(this._url) == null) this._manager.playingSounds.set(this._url,[]);
+			this._manager.playingSounds.get(this._url).push(this._snd);
+		}
+	}
+	,loop: function(val) {
+		this._snd.loop = val;
+	}
+	,setVolume: function(val) {
+		this._options.volume = val;
+		this._gainNode.gain.value = this._options.volume;
+	}
+	,getVolume: function() {
+		return this._options.volume;
+	}
+	,mute: function(val) {
+		if(val) this._gainNode.gain.value = 0; else this._gainNode.gain.value = this._options.volume;
+	}
+	,stop: function() {
+		this._snd.stop(0);
+	}
+});
 var haxe_IMap = function() { };
 haxe_IMap.__name__ = true;
-var haxe_Timer = function(time_ms) {
-	var me = this;
-	this.id = setInterval(function() {
-		me.run();
-	},time_ms);
-};
-haxe_Timer.__name__ = true;
-haxe_Timer.delay = function(f,time_ms) {
-	var t = new haxe_Timer(time_ms);
-	t.run = function() {
-		t.stop();
-		f();
-	};
-	return t;
-};
-haxe_Timer.prototype = {
-	stop: function() {
-		if(this.id == null) return;
-		clearInterval(this.id);
-		this.id = null;
-	}
-	,run: function() {
-	}
-	,__class__: haxe_Timer
-};
 var haxe_ds__$StringMap_StringMapIterator = function(map,keys) {
 	this.map = map;
 	this.keys = keys;
@@ -344,7 +369,6 @@ haxe_ds__$StringMap_StringMapIterator.prototype = {
 	,next: function() {
 		return this.map.get(this.keys[this.index++]);
 	}
-	,__class__: haxe_ds__$StringMap_StringMapIterator
 };
 var haxe_ds_StringMap = function() {
 	this.h = { };
@@ -381,7 +405,6 @@ haxe_ds_StringMap.prototype = {
 	,iterator: function() {
 		return new haxe_ds__$StringMap_StringMapIterator(this,this.arrayKeys());
 	}
-	,__class__: haxe_ds_StringMap
 };
 var js__$Boot_HaxeError = function(val) {
 	Error.call(this);
@@ -392,19 +415,9 @@ var js__$Boot_HaxeError = function(val) {
 js__$Boot_HaxeError.__name__ = true;
 js__$Boot_HaxeError.__super__ = Error;
 js__$Boot_HaxeError.prototype = $extend(Error.prototype,{
-	__class__: js__$Boot_HaxeError
 });
 var js_Boot = function() { };
 js_Boot.__name__ = true;
-js_Boot.getClass = function(o) {
-	if((o instanceof Array) && o.__enum__ == null) return Array; else {
-		var cl = o.__class__;
-		if(cl != null) return cl;
-		var name = js_Boot.__nativeClassName(o);
-		if(name != null) return js_Boot.__resolveNativeClass(name);
-		return null;
-	}
-};
 js_Boot.__string_rec = function(o,s) {
 	if(o == null) return "null";
 	if(s.length >= 5) return "<...>";
@@ -473,91 +486,15 @@ js_Boot.__string_rec = function(o,s) {
 		return String(o);
 	}
 };
-js_Boot.__interfLoop = function(cc,cl) {
-	if(cc == null) return false;
-	if(cc == cl) return true;
-	var intf = cc.__interfaces__;
-	if(intf != null) {
-		var _g1 = 0;
-		var _g = intf.length;
-		while(_g1 < _g) {
-			var i = _g1++;
-			var i1 = intf[i];
-			if(i1 == cl || js_Boot.__interfLoop(i1,cl)) return true;
-		}
-	}
-	return js_Boot.__interfLoop(cc.__super__,cl);
-};
-js_Boot.__instanceof = function(o,cl) {
-	if(cl == null) return false;
-	switch(cl) {
-	case Int:
-		return (o|0) === o;
-	case Float:
-		return typeof(o) == "number";
-	case Bool:
-		return typeof(o) == "boolean";
-	case String:
-		return typeof(o) == "string";
-	case Array:
-		return (o instanceof Array) && o.__enum__ == null;
-	case Dynamic:
-		return true;
-	default:
-		if(o != null) {
-			if(typeof(cl) == "function") {
-				if(o instanceof cl) return true;
-				if(js_Boot.__interfLoop(js_Boot.getClass(o),cl)) return true;
-			} else if(typeof(cl) == "object" && js_Boot.__isNativeObj(cl)) {
-				if(o instanceof cl) return true;
-			}
-		} else return false;
-		if(cl == Class && o.__name__ != null) return true;
-		if(cl == Enum && o.__ename__ != null) return true;
-		return o.__enum__ == cl;
-	}
-};
-js_Boot.__cast = function(o,t) {
-	if(js_Boot.__instanceof(o,t)) return o; else throw new js__$Boot_HaxeError("Cannot cast " + Std.string(o) + " to " + Std.string(t));
-};
-js_Boot.__nativeClassName = function(o) {
-	var name = js_Boot.__toStr.call(o).slice(8,-1);
-	if(name == "Object" || name == "Function" || name == "Math" || name == "JSON") return null;
-	return name;
-};
-js_Boot.__isNativeObj = function(o) {
-	return js_Boot.__nativeClassName(o) != null;
-};
-js_Boot.__resolveNativeClass = function(name) {
-	return (Function("return typeof " + name + " != \"undefined\" ? " + name + " : null"))();
-};
 var $_, $fid = 0;
 function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id__ = $fid++; var f; if( o.hx__closures__ == null ) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__]; if( f == null ) { f = function(){ return f.method.apply(f.scope, arguments); }; f.scope = o; f.method = m; o.hx__closures__[m.__id__] = f; } return f; }
-String.prototype.__class__ = String;
 String.__name__ = true;
 Array.__name__ = true;
-var Int = { __name__ : ["Int"]};
-var Dynamic = { __name__ : ["Dynamic"]};
-var Float = Number;
-Float.__name__ = ["Float"];
-var Bool = Boolean;
-Bool.__ename__ = ["Bool"];
-var Class = { __name__ : ["Class"]};
-var Enum = { };
 var __map_reserved = {}
-Waud.webAudioAPI = false;
+Waud.isWebAudioSupported = false;
 Waud.sampleRate = 44100;
 Waud.defaults = { };
-Waud.ac = Reflect.field(window,"AudioContext") != null?Reflect.field(window,"AudioContext"):Reflect.field(window,"webkitAudioContext");
-Waud.audioElement = (function($this) {
-	var $r;
-	var _this = window.document;
-	$r = _this.createElement("audio");
-	return $r;
-}(this));
-Waud.iOS = Utils.isiOS();
 Waud.unlocked = false;
-js_Boot.__toStr = {}.toString;
 Main.main();
 })(typeof console != "undefined" ? console : {log:function(){}}, typeof window != "undefined" ? window : exports);
 

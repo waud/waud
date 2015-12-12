@@ -1,26 +1,25 @@
-import js.Browser;
 class Main {
 
+	var snd1:ISound;
+	var snd2:ISound;
+
 	public function new() {
-		Waud.webAudioAPI = false;
 		Waud.init();
-		var snd1 = new WaudSound("assets/loop", { autoplay: false, formats: ["mp3"], loop: true, volume: 1});
-		var snd2 = new WaudSound("assets/sound1.wav", {
-			autoplay: false,
-			loop: true,
-			onload: function (snd) { trace("loaded"); },
-			onend: function (snd) { trace("ended"); },
-			onerror: function (snd) { trace("error"); }
+		Waud.enableTouchUnlock(touchUnlock);
+		snd1 = new WaudSound("assets/loop.mp3", { autoplay: false, volume: 0.5 });
+		snd2 = new WaudSound("assets/sound1.wav", {
+			autoplay: true,
+			loop: false,
+			onload: function(snd) { trace("loaded"); },
+			onend: function(snd) { trace("ended"); },
+			onerror: function(snd) { trace("error"); }
 		});
+	}
 
+	// for iOS devices
+	function touchUnlock() {
 		snd1.play();
-		snd2.play();
-
-		//Touch unlock event for iOS devices
-		Waud.touchUnlock = function() {
-			snd1.play();
-			snd2.play();
-		}
+		snd2.play(true);
 	}
 
 	static function main() {
