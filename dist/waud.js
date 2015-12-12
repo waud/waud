@@ -24,7 +24,7 @@ AudioManager.prototype = {
 	,unlockAudio: function() {
 		var _g = this;
 		if(this.audioContext == null) return;
-		var bfr = this.audioContext.createBuffer(1,1,44100);
+		var bfr = this.audioContext.createBuffer(1,1,Waud.preferredSampleRate);
 		var src = this.audioContext.createBufferSource();
 		src.buffer = bfr;
 		src.connect(this.audioContext.destination);
@@ -42,10 +42,29 @@ AudioManager.prototype = {
 			this.audioContext = null;
 		}
 	}
+	,iOSSafeSampleRateCheck: function() {
+		haxe_Log.trace($bind(this,this.iOSSafeSampleRateCheck),{ fileName : "AudioManager.hx", lineNumber : 55, className : "AudioManager", methodName : "iOSSafeSampleRateCheck", customParams : [this.audioContext.sampleRate]});
+		if(this.audioContext != null && Waud.iOSSafeSampleRateCheck && this.audioContext.sampleRate != Waud.preferredSampleRate) {
+			var bfr = this.audioContext.createBuffer(1,1,Waud.preferredSampleRate);
+			var src = this.audioContext.createBufferSource();
+			src.buffer = bfr;
+			src.connect(this.audioContext.destination);
+			src.start(0);
+			src.disconnect();
+			this.destroyContext();
+			this.createAudioContext();
+		}
+	}
+	,destroyContext: function() {
+		if(this.audioContext != null) {
+			if(Waud.audioContext.close != null) Waud.audioContext.close();
+			this.audioContext = null;
+		}
+	}
 };
 var BaseSound = function(src,options) {
 	if(Waud.defaults == null) {
-		console.log("Initialise Waud using Waud.init() before loading sounds");
+		haxe_Log.trace("Initialise Waud using Waud.init() before loading sounds",{ fileName : "BaseSound.hx", lineNumber : 9, className : "BaseSound", methodName : "new"});
 		return;
 	}
 	if(options == null) options = { };
@@ -56,6 +75,19 @@ var BaseSound = function(src,options) {
 	this._options = options;
 };
 BaseSound.__name__ = true;
+var EReg = function(r,opt) {
+	opt = opt.split("u").join("");
+	this.r = new RegExp(r,opt);
+};
+EReg.__name__ = true;
+EReg.prototype = {
+	match: function(s) {
+		if(this.r.global) this.r.lastIndex = 0;
+		this.r.m = this.r.exec(s);
+		this.r.s = s;
+		return this.r.m != null;
+	}
+};
 var ISound = function() { };
 ISound.__name__ = true;
 var HTML5Sound = $hx_exports.HTML5Sound = function(url,options) {
@@ -173,6 +205,11 @@ Type.createInstance = function(cl,args) {
 	}
 	return null;
 };
+var Utils = function() { };
+Utils.__name__ = true;
+Utils.isiOS = function() {
+	return new EReg("(iPad|iPhone|iPod)","i").match(window.navigator.userAgent);
+};
 var Waud = $hx_exports.Waud = function() { };
 Waud.__name__ = true;
 Waud.init = function(d) {
@@ -182,7 +219,10 @@ Waud.init = function(d) {
 	Waud.audioElement = _this.createElement("audio");
 	if(Waud.audioManager == null) Waud.audioManager = new AudioManager();
 	Waud.isWebAudioSupported = Waud.audioManager.checkWebAudioAPISupport();
-	Waud.audioManager.createAudioContext();
+	if(Waud.isWebAudioSupported) {
+		Waud.audioManager.createAudioContext();
+		if(Utils.isiOS()) Waud.audioManager.iOSSafeSampleRateCheck();
+	}
 	Waud.defaults.autoplay = false;
 	Waud.defaults.loop = false;
 	Waud.defaults.preload = "metadata";
@@ -239,6 +279,11 @@ Waud.isM4ASupported = function() {
 };
 var haxe_IMap = function() { };
 haxe_IMap.__name__ = true;
+var haxe_Log = function() { };
+haxe_Log.__name__ = true;
+haxe_Log.trace = function(v,infos) {
+	js_Boot.__trace(v,infos);
+};
 var haxe_ds__$StringMap_StringMapIterator = function(map,keys) {
 	this.map = map;
 	this.keys = keys;
@@ -302,6 +347,25 @@ js__$Boot_HaxeError.prototype = $extend(Error.prototype,{
 });
 var js_Boot = function() { };
 js_Boot.__name__ = true;
+js_Boot.__unhtml = function(s) {
+	return s.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;");
+};
+js_Boot.__trace = function(v,i) {
+	var msg;
+	if(i != null) msg = i.fileName + ":" + i.lineNumber + ": "; else msg = "";
+	msg += js_Boot.__string_rec(v,"");
+	if(i != null && i.customParams != null) {
+		var _g = 0;
+		var _g1 = i.customParams;
+		while(_g < _g1.length) {
+			var v1 = _g1[_g];
+			++_g;
+			msg += "," + js_Boot.__string_rec(v1,"");
+		}
+	}
+	var d;
+	if(typeof(document) != "undefined" && (d = document.getElementById("haxe:trace")) != null) d.innerHTML += js_Boot.__unhtml(msg) + "<br/>"; else if(typeof console != "undefined" && console.log != null) console.log(msg);
+};
 js_Boot.__string_rec = function(o,s) {
 	if(o == null) return "null";
 	if(s.length >= 5) return "<...>";
@@ -375,9 +439,9 @@ function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id
 String.__name__ = true;
 Array.__name__ = true;
 var __map_reserved = {}
-Waud.isWebAudioSupported = false;
-Waud.sampleRate = 44100;
 Waud.defaults = { };
+Waud.iOSSafeSampleRateCheck = true;
+Waud.preferredSampleRate = 44100;
 Waud.unlocked = false;
 })(typeof console != "undefined" ? console : {log:function(){}}, typeof window != "undefined" ? window : exports);
 

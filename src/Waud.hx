@@ -4,13 +4,15 @@ import js.html.AudioElement;
 
 @:expose @:keep class Waud {
 
-	public static var isWebAudioSupported:Bool = false;
+	public static var isWebAudioSupported:Bool;
 	public static var audioManager:AudioManager;
-	public static var sampleRate:Int = 44100;
 	public static var defaults:WaudSoundOptions = {};
 	public static var sounds:Map<String, HTML5Sound>;
 	public static var types:Map<String, String>;
 	public static var dom:Document;
+
+	public static var iOSSafeSampleRateCheck:Bool = true;
+	public static var preferredSampleRate:Int = 44100;
 
 	static var audioElement:AudioElement;
 	static var unlocked:Bool = false;
@@ -24,7 +26,10 @@ import js.html.AudioElement;
 		if (Waud.audioManager == null) Waud.audioManager = new AudioManager();
 		isWebAudioSupported = Waud.audioManager.checkWebAudioAPISupport();
 
-		Waud.audioManager.createAudioContext();
+		if (isWebAudioSupported) {
+			Waud.audioManager.createAudioContext();
+			if (Utils.isiOS()) Waud.audioManager.iOSSafeSampleRateCheck();
+		}
 
 		defaults.autoplay = false;
 		defaults.loop = false;

@@ -29,7 +29,7 @@ class AudioManager {
 
 	public function unlockAudio() {
 		if (audioContext == null) return;
-		var bfr = audioContext.createBuffer(1, 1, 44100);
+		var bfr = audioContext.createBuffer(1, 1, Waud.preferredSampleRate);
 		var src:AudioBufferSourceNode = audioContext.createBufferSource();
 		src.buffer = bfr;
 		src.connect(audioContext.destination);
@@ -48,6 +48,19 @@ class AudioManager {
 			catch(e:Dynamic) {
 				audioContext = null;
 			}
+		}
+	}
+
+	public function iOSSafeSampleRateCheck() {
+		if (audioContext != null && Waud.iOSSafeSampleRateCheck && audioContext.sampleRate != Waud.preferredSampleRate) {
+			var bfr = audioContext.createBuffer(1, 1, Waud.preferredSampleRate);
+			var src:AudioBufferSourceNode = audioContext.createBufferSource();
+			src.buffer = bfr;
+			src.connect(audioContext.destination);
+			src.start(0);
+			src.disconnect();
+			destroyContext();
+			createAudioContext();
 		}
 	}
 
