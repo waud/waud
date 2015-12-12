@@ -3,7 +3,9 @@
 	var _snd:ISound;
 
 	public function new(src:String, ?options:WaudSoundOptions = null) {
-		_snd = (Waud.isWebAudioSupported) ? new WebAudioAPISound(src, options) : new HTML5Sound(src, options);
+		if (Waud.isWebAudioSupported) _snd = new WebAudioAPISound(src, options);
+		else if (Waud.isAudioSupported) _snd = new HTML5Sound(src, options);
+		else trace("no audio support in this browser");
 	}
 
 	public function setVolume(val:Float) {

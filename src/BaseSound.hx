@@ -1,5 +1,3 @@
-import js.html.Document;
-
 class BaseSound {
 
 	var _options:WaudSoundOptions;

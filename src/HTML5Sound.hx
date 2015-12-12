@@ -10,7 +10,7 @@ import js.Browser;
 	public function new(url:String, ?options:WaudSoundOptions = null) {
 		super(url, options);
 
-		if (Waud.isSupported() && url != null && url != "") {
+		if (url != null && url != "") {
 			_snd = Browser.document.createAudioElement();
 			addSource(url);
 

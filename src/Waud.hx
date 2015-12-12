@@ -5,6 +5,7 @@ import js.html.AudioElement;
 @:expose @:keep class Waud {
 
 	public static var isWebAudioSupported:Bool;
+	public static var isAudioSupported:Bool;
 	public static var audioManager:AudioManager;
 	public static var defaults:WaudSoundOptions = {};
 	public static var sounds:Map<String, HTML5Sound>;
@@ -25,11 +26,13 @@ import js.html.AudioElement;
 		audioElement = Browser.document.createAudioElement();
 		if (Waud.audioManager == null) Waud.audioManager = new AudioManager();
 		isWebAudioSupported = Waud.audioManager.checkWebAudioAPISupport();
+		isAudioSupported = (Reflect.field(Browser.window, "Audio") != null);
 
 		if (isWebAudioSupported) {
 			Waud.audioManager.createAudioContext();
 			if (Utils.isiOS()) Waud.audioManager.iOSSafeSampleRateCheck();
 		}
+		else if (!isAudioSupported) trace("no audio support in this browser");
 
 		defaults.autoplay = false;
 		defaults.loop = false;
@@ -64,32 +67,28 @@ import js.html.AudioElement;
 		return support;
 	}
 
-	public static inline function isSupported():Bool {
-		return (audioElement.canPlayType != null);
-	}
-
 	public static function isOGGSupported():Bool {
 		var canPlay = audioElement.canPlayType('audio/ogg; codecs="vorbis"');
-		return (isSupported() && canPlay != null && (canPlay == "probably" || canPlay == "maybe"));
+		return (isAudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe"));
 	}
 
 	public static function isWAVSupported():Bool {
 		var canPlay = audioElement.canPlayType('audio/wav; codecs="1"');
-		return (isSupported() && canPlay != null && (canPlay == "probably" || canPlay == "maybe"));
+		return (isAudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe"));
 	}
 
 	public static function isMP3Supported():Bool {
 		var canPlay = audioElement.canPlayType('audio/mpeg;');
-		return (isSupported() && canPlay != null && (canPlay == "probably" || canPlay == "maybe"));
+		return (isAudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe"));
 	}
 
 	public static function isAACSupported():Bool {
 		var canPlay = audioElement.canPlayType('audio/aac;');
-		return (isSupported() && canPlay != null && (canPlay == "probably" || canPlay == "maybe"));
+		return (isAudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe"));
 	}
 
 	public static function isM4ASupported():Bool {
 		var canPlay = audioElement.canPlayType('audio/x-m4a;');
-		return (isSupported() && canPlay != null && (canPlay == "probably" || canPlay == "maybe"));
+		return (isAudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe"));
 	}
 }
