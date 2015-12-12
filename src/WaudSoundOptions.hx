@@ -1,5 +1,3 @@
-import js.html.Document;
-
 typedef WaudSoundOptions = {
 	@:optional var autoplay:Bool;
 	@:optional var loop:Bool;
@@ -8,5 +6,4 @@ typedef WaudSoundOptions = {
 	@:optional var onerror:Dynamic -> Void;
 	@:optional var preload:Dynamic;
 	@:optional var volume:Float;
-	@:optional var document:Document;
 }
