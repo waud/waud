@@ -56,7 +56,7 @@ AudioManager.prototype = {
 	}
 	,destroyContext: function() {
 		if(this.audioContext != null) {
-			if(Waud.audioContext.close != null) Waud.audioContext.close();
+			if(Waud.audioManager.audioContext.close != null) Waud.audioContext.close();
 			this.audioContext = null;
 		}
 	}
@@ -331,7 +331,6 @@ pixi_plugins_app_Application.prototype = {
 var Main = function() {
 	var _g = this;
 	pixi_plugins_app_Application.call(this);
-	this.autoResize = false;
 	this.pixelRatio = Math.floor(window.devicePixelRatio);
 	PIXI.RESOLUTION = this.pixelRatio;
 	this.backgroundColor = 6227124;

@@ -67,29 +67,22 @@ class AudioManager {
 		}
 	}
 
-	function _checkAudioContext(sampleRate:Int) {
-		if (audioContext != null && audioContext.sampleRate != sampleRate) {
-			destroyContext();
-			createAudioContext();
-		}
-	}
-
 	public function destroyContext() {
 		if (audioContext != null) {
-			if (untyped __js__("Waud.audioContext").close != null) untyped __js__("Waud.audioContext").close();
+			if (untyped __js__("Waud.audioManager.audioContext").close != null) untyped __js__("Waud.audioContext").close();
 			audioContext = null;
 		}
 	}
 
 	public function suspendContext() {
 		if (audioContext != null) {
-			if (untyped __js__("Waud.audioContext").suspend != null) untyped __js__("Waud.audioContext").suspend();
+			if (untyped __js__("Waud.audioManager.audioContext").suspend != null) untyped __js__("Waud.audioContext").suspend();
 		}
 	}
 
 	public function resumeContext() {
 		if (audioContext != null) {
-			if (untyped __js__("Waud.audioContext").resume != null) untyped __js__("Waud.audioContext").resume();
+			if (untyped __js__("Waud.audioManager.audioContext").resume != null) untyped __js__("Waud.audioContext").resume();
 		}
 	}
 }

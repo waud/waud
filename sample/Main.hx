@@ -15,7 +15,6 @@ class Main extends Application {
 
 	public function new() {
 		super();
-		autoResize = false;
 		pixelRatio = Math.floor(Browser.window.devicePixelRatio);
 		Pixi.RESOLUTION = pixelRatio;
 		backgroundColor = 0x5F04B4;
@@ -82,6 +81,8 @@ class Main extends Application {
 		button.enable();
 		_btnContainer.addChild(button);
 	}
+
+
 
 	static function main() {
 		new Main();

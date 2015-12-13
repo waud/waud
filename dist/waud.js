@@ -56,7 +56,7 @@ AudioManager.prototype = {
 	}
 	,destroyContext: function() {
 		if(this.audioContext != null) {
-			if(Waud.audioContext.close != null) Waud.audioContext.close();
+			if(Waud.audioManager.audioContext.close != null) Waud.audioContext.close();
 			this.audioContext = null;
 		}
 	}
