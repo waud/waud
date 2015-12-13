@@ -8,7 +8,6 @@ class Main extends Application {
 	var _btnContainer:Container;
 
 	var _bgSnd:ISound;
-	var _snd2:ISound;
 
 	var _glass:ISound;
 	var _bell:ISound;
@@ -16,6 +15,7 @@ class Main extends Application {
 
 	public function new() {
 		super();
+		autoResize = false;
 		pixelRatio = Math.floor(Browser.window.devicePixelRatio);
 		Pixi.RESOLUTION = pixelRatio;
 		backgroundColor = 0x5F04B4;
@@ -29,17 +29,17 @@ class Main extends Application {
 		_addButton("Can", 120, 0, 60, 30, _playSound3);
 		_addButton("Mute", 200, 0, 60, 30, _mute);
 		_addButton("Unmute", 260, 0, 60, 30, _unmute);
-		_addButton("Stop", 320, 0, 60, 30, _stop);
-		_btnContainer.position.set((Browser.window.innerWidth - 380) / 2, (Browser.window.innerHeight - 30) / 2);
+		_addButton("BG Vol 0", 320, 0, 60, 30, function() { _bgSnd.setVolume(0); });
+		_addButton("BG Vol 1", 380, 0, 60, 30, function() { _bgSnd.setVolume(1); });
+		_addButton("Stop", 440, 0, 60, 30, _stop);
+		_btnContainer.position.set((Browser.window.innerWidth - 500) / 2, (Browser.window.innerHeight - 30) / 2);
 
 		Waud.init();
 		Waud.enableTouchUnlock(touchUnlock);
-		_bgSnd = new HTML5Sound("assets/loop.mp3", { loop:true, autoplay: false, volume: 0.5, onload: _playBgSound });
-		_snd2 = new HTML5Sound("assets/sound1.wav");
-
-		_glass = new HTML5Sound("assets/glass.aac");
-		_bell = new HTML5Sound("assets/bell.aac");
-		_can = new HTML5Sound("assets/canopening.mp3");
+		_bgSnd = new WaudSound("assets/loop.mp3", { loop:true, autoplay: false, volume: 0.5, onload: _playBgSound });
+		_glass = new WaudSound("assets/glass.aac");
+		_bell = new WaudSound("assets/bell.aac");
+		_can = new WaudSound("assets/canopening.mp3");
 	}
 
 	// for iOS devices
