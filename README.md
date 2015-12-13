@@ -36,6 +36,15 @@ There are 3 classes available for audio playback.
 
 `HTML5Sound` on iOS devices have some [limitations](https://developer.apple.com/library/safari/documentation/AudioVideo/Conceptual/Using_HTML5_Audio_Video/Device-SpecificConsiderations/Device-SpecificConsiderations.html) you should be aware of. Setting volume audio is not possible and mute is implemented by pausing and replaying the sound if it's already playing.
 
+The following are the options available when creating sound instabce:
+
+- `autoplay` - true or false (default: false)
+- `loop` - true or false (default: false)
+- `volume` - between 0 and 1 (default: 1)
+- `onload` - callback function when the sounad is loaded with sound instance as parameter (default: none)
+- `onend` - callback function when the sound playback ends with sound instance as parameter (default: none)
+- `onerror` - callback function when there is an error in loading/decoding with sound instance as parameter (default: none)
+
 Available functions on sound instance:
 
 - `play()`
