@@ -11,9 +11,9 @@ For haxe users:
 
 ### API Documentation ###
 
-`Waud.init()` - To initialise the library, make sure you call this first
+`Waud.init()` - To initialise the library, make sure you call this first.
 
-`Waud.enableTouchUnlock(callback)` - Helper function to unlock audio on iOS
+`Waud.enableTouchUnlock(callback)` - Helper function to unlock audio on iOS.
 
 `Waud.isWebAudioSupported` & `Waud.isAudioSupported` to check web audio and html5 audio support.
 
