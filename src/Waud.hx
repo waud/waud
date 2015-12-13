@@ -1,4 +1,4 @@
-import js.html.Document;
+import js.html.HTMLDocument;
 import js.Browser;
 import js.html.AudioElement;
 
@@ -10,7 +10,7 @@ import js.html.AudioElement;
 	public static var defaults:WaudSoundOptions = {};
 	public static var sounds:Map<String, ISound>;
 	public static var types:Map<String, String>;
-	public static var dom:Document;
+	public static var dom:HTMLDocument;
 
 	public static var iOSSafeSampleRateCheck:Bool = true;
 	public static var preferredSampleRate:Int = 44100;
@@ -20,10 +20,10 @@ import js.html.AudioElement;
 
 	public static var __touchUnlockCallback:Void -> Void;
 
-	public static function init(?d:Document) {
+	public static function init(?d:HTMLDocument) {
 		if (d == null) d = Browser.document;
 		dom = d;
-		audioElement = Browser.document.createAudioElement();
+		audioElement = dom.createAudioElement();
 		if (Waud.audioManager == null) Waud.audioManager = new AudioManager();
 		isWebAudioSupported = Waud.audioManager.checkWebAudioAPISupport();
 		isAudioSupported = (Reflect.field(Browser.window, "Audio") != null);

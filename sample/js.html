@@ -18,27 +18,28 @@
 </head>
 <body>
 <script>
-    /*Waud.init();
-
-    var a = new WaudSound("assets/loop", {
-            "autoplay": false, "formats": ["mp3"], "loop":true, "volume": 1
+    Waud.init();
+    Waud.enableTouchUnlock(touchUnlock);
+    var _bgSnd = new WaudSound("assets/loop.mp3", {
+        "autoplay": false, "loop":true, "volume": 0.5, "onload": _playBgSound
     });
 
-    var b = new WaudSound("assets/sound1.wav", {
+    var snd2 = new WaudSound("assets/sound1.wav", {
         "autoplay": false,
         "loop":true,
-        "onload": function (s) { console.log("loaded"); },
-        "onend": function (s) { console.log("ended"); },
-        "onerror": function (s) { console.log("error"); }
+        "onload": function (snd) { snd.play(); },
+        "onend": function (snd) { console.log("ended"); },
+        "onerror": function (snd) { console.log("error"); }
     });
 
-    a.play();
-    b.play();
+    //Touch unlock event for iOS devices
+    function touchUnlock() {
+        if (_bgSnd.isPlaying()) _bgSnd.play();
+    }
 
-    Waud.touchUnlock = function() {
-        a.play();
-        b.play();
-    }*/
+    function _playBgSound(snd) {
+        if (!snd.isPlaying()) snd.play();
+    }
 
 </script>
 </body>

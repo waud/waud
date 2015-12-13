@@ -1,6 +1,5 @@
 import js.html.SourceElement;
 import js.html.AudioElement;
-import js.Browser;
 
 @:expose @:keep class HTML5Sound extends BaseSound implements ISound {
 
@@ -10,7 +9,7 @@ import js.Browser;
 	public function new(url:String, ?options:WaudSoundOptions = null) {
 		super(url, options);
 
-		_snd = Browser.document.createAudioElement();
+		_snd = Waud.dom.createAudioElement();
 		addSource(url);
 
 		if (_options.autoplay) _snd.autoplay = true;
@@ -43,7 +42,7 @@ import js.Browser;
 	}
 
 	function addSource(src:String):SourceElement {
-		_src = Browser.document.createSourceElement();
+		_src = Waud.dom.createSourceElement();
 		_src.src = src;
 
 		if (Waud.types.get(_getExt(src)) != null) _src.type = Waud.types.get(_getExt(src));

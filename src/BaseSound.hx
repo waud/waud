@@ -1,4 +1,4 @@
-class BaseSound {
+@:keep class BaseSound {
 
 	var _options:WaudSoundOptions;
 	var _isPlaying:Bool;

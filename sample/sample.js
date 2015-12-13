@@ -78,7 +78,6 @@ var BaseSound = function(url,options) {
 	if(options.loop != null) options.loop = options.loop; else options.loop = Waud.defaults.loop;
 	if(options.volume != null && options.volume >= 0 && options.volume <= 1) options.volume = options.volume; else options.volume = Waud.defaults.volume;
 	this._options = options;
-	console.log(options);
 };
 BaseSound.__name__ = true;
 var Button = function(label,width,height,data,fontSize) {
@@ -179,8 +178,7 @@ ISound.__name__ = true;
 var HTML5Sound = $hx_exports.HTML5Sound = function(url,options) {
 	var _g = this;
 	BaseSound.call(this,url,options);
-	var _this = window.document;
-	this._snd = _this.createElement("audio");
+	this._snd = Waud.dom.createElement("audio");
 	this.addSource(url);
 	if(this._options.autoplay) this._snd.autoplay = true;
 	this._snd.volume = this._options.volume;
@@ -203,8 +201,7 @@ HTML5Sound.__interfaces__ = [ISound];
 HTML5Sound.__super__ = BaseSound;
 HTML5Sound.prototype = $extend(BaseSound.prototype,{
 	addSource: function(src) {
-		var _this = window.document;
-		this._src = _this.createElement("source");
+		this._src = Waud.dom.createElement("source");
 		this._src.src = src;
 		if((function($this) {
 			var $r;
@@ -441,8 +438,7 @@ Waud.__name__ = true;
 Waud.init = function(d) {
 	if(d == null) d = window.document;
 	Waud.dom = d;
-	var _this = window.document;
-	Waud.audioElement = _this.createElement("audio");
+	Waud.audioElement = Waud.dom.createElement("audio");
 	if(Waud.audioManager == null) Waud.audioManager = new AudioManager();
 	Waud.isWebAudioSupported = Waud.audioManager.checkWebAudioAPISupport();
 	Waud.isAudioSupported = Reflect.field(window,"Audio") != null;

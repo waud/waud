@@ -1,5 +1,5 @@
 {
-	"name": "waud.js",
+	"name": "waud",
 	"license": "MIT",
 	"tags": [
 		"haxe",
@@ -17,7 +17,7 @@
 		"adireddy"
 	],
 	"releasenote": "initial release",
-	"version": "0.0.2",
+	"version": "0.0.4",
 	"url": "https://github.com/adireddy/waud",
 	"dependencies": {}
 }

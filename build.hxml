@@ -2,8 +2,13 @@
 -cmd haxelib install pixijs
 -cmd haxelib install msignal
 
+--next
+
 -cp src
 Waud
+WaudSound
+HTML5Sound
+WebAudioAPISound
 -dce full
 -js dist/waud.js
 
@@ -14,6 +19,9 @@ Waud
 
 -cp src
 Waud
+WaudSound
+HTML5Sound
+WebAudioAPISound
 -js dist/waud.min.js
 -dce full
 --no-traces
