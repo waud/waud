@@ -34,10 +34,13 @@ class AudioManager {
 		src.buffer = bfr;
 		src.connect(audioContext.destination);
 		src.start(0);
-		src.onended = function() {
-			if (Waud.__touchUnlockCallback != null) Waud.__touchUnlockCallback();
-			Waud.dom.removeEventListener("touchend", unlockAudio, true);
-		}
+		if (src.onended != null) src.onended = _unlockCallback;
+		else haxe.Timer.delay(_unlockCallback, 1);
+	}
+
+	inline function _unlockCallback() {
+		if (Waud.__touchUnlockCallback != null) Waud.__touchUnlockCallback();
+		Browser.window.ontouchend = null;
 	}
 
 	public function createAudioContext() {
