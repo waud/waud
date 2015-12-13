@@ -16,13 +16,13 @@ For haxe users:
 
 `Waud.enableTouchUnlock(callback)` - Helper function to unlock audio on iOS.
 
-`Waud.isWebAudioSupported` & `Waud.isAudioSupported` to check web audio and html5 audio support.
+`Waud.isWebAudioSupported` & `Waud.isAudioSupported` to check web audio and HTML5 audio support.
 
 There are 3 classes available for audio playback.
 
 - `WaudSound` **(recommended)** - to automatically use web audio api with HTML5 audio fallback.
 - `WebAudioAPISound` - to force web audio api
-- `HTML5Sound` - to force html5 audio
+- `HTML5Sound` - to force HTML5 audio
 
 Available functions on sound instance:
 
