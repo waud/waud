@@ -5,4 +5,4 @@ node_js:
 before_install: npm install -g grunt-cli
 install: npm install
 before_script: npm install --save-dev
-script: grunt uglify
+script: grunt dist

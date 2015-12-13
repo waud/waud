@@ -2,6 +2,8 @@
 	"name": "waud",
 	"license": "MIT",
 	"tags": [
+		"web audio",
+		"web audio api",
 		"haxe",
 		"javascript",
 		"audio",
@@ -16,8 +18,8 @@
 	"contributors": [
 		"adireddy"
 	],
-	"releasenote": "initial release",
-	"version": "0.0.7",
+	"releasenote": "improved api and bug fixes",
+	"version": "0.0.8",
 	"url": "https://github.com/adireddy/waud",
 	"dependencies": {}
 }
