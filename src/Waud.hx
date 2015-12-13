@@ -51,7 +51,7 @@ import js.html.AudioElement;
 
 	public static function enableTouchUnlock(callback:Void -> Void) {
 		__touchUnlockCallback = callback;
-		dom.addEventListener("touchend", Waud.audioManager.unlockAudio, true);
+		dom.ontouchend = Waud.audioManager.unlockAudio;
 	}
 
 	public static function mute(val:Bool) {
@@ -62,7 +62,7 @@ import js.html.AudioElement;
 		for (sound in sounds) sound.stop();
 	}
 
-	public static function getSupportString():String {
+	public static function getFormatSupportString():String {
 		var support:String = "OGG: " + audioElement.canPlayType('audio/ogg; codecs="vorbis"');
 		support += ", WAV: " + audioElement.canPlayType('audio/wav; codecs="1"');
 		support += ", MP3: " + audioElement.canPlayType('audio/mpeg;');

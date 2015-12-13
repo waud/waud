@@ -5,14 +5,17 @@ import js.html.AudioElement;
 
 	var _snd:AudioElement;
 	var _src:SourceElement;
+	var _muted:Bool;
 
 	public function new(url:String, ?options:WaudSoundOptions = null) {
 		super(url, options);
 
+		_muted = false;
 		_snd = Waud.dom.createAudioElement();
 		addSource(url);
 
-		if (_options.autoplay) _snd.autoplay = true;
+		_snd.autoplay = _options.autoplay;
+		_snd.loop = _options.loop;
 		_snd.volume = _options.volume;
 
 		if (Std.string(_options.preload) == "true") _snd.preload = "auto";
@@ -23,6 +26,10 @@ import js.html.AudioElement;
 			_snd.onloadeddata = function() {
 				_options.onload(this);
 			}
+		}
+
+		_snd.onplaying = function() {
+			_isPlaying = true;
 		}
 
 		_snd.onended = function() {
@@ -68,6 +75,16 @@ import js.html.AudioElement;
 
 	public function mute(val:Bool) {
 		_snd.muted = val;
+		if (Utils.isiOS()) {
+			if (val && isPlaying()) {
+				_muted = true;
+				_snd.pause();
+			}
+			else if (_muted) {
+				_muted = false;
+				_snd.play();
+			}
+		}
 	}
 
 	public function play() {

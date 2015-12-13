@@ -40,7 +40,7 @@ class AudioManager {
 
 	inline function _unlockCallback() {
 		if (Waud.__touchUnlockCallback != null) Waud.__touchUnlockCallback();
-		Browser.window.ontouchend = null;
+		Waud.dom.ontouchend = null;
 	}
 
 	public function createAudioContext() {

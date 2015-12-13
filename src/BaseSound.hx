@@ -4,7 +4,6 @@
 	var _isPlaying:Bool;
 
 	public function new(url:String, ?options:WaudSoundOptions = null) {
-		trace(url);
 		if (url == null || url == "") {
 			trace("invalid sound url");
 			return;
