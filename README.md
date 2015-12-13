@@ -25,13 +25,13 @@ There are 3 classes available for audio playback.
 
 Available functions on sound instance:
 
-- play()
-- stop()
-- mute(true/false)
-- loop(true/false)
-- setVolume(val) - between 0 and 1
-- getVolume()
-- isPlaying() - returns true/false
+- `play()`
+- `stop()`
+- `mute(true/false)`
+- `loop(true/false)`
+- `setVolume(val)` - between 0 and 1
+- `getVolume()`
+- `isPlaying()` - returns true/false
 
 ### Issues ###
 
