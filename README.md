@@ -14,9 +14,19 @@ For haxe users:
 
 `Waud.init()` - To initialise the library, make sure you call this first.
 
-`Waud.enableTouchUnlock(callback)` - Helper function to unlock audio on iOS.
+`Waud.enableTouchUnlock(callback)` - Helper function to unlock audio on iOS devices.
 
 `Waud.isWebAudioSupported` & `Waud.isAudioSupported` to check web audio and HTML5 audio support.
+
+The following functions can be used to check format support (returns true or false):
+
+- `Waud.isOGGSupported()`
+- `Waud.isWAVSupported()`
+- `Waud.isMP3Supported()`
+- `Waud.isAACSupported()`
+- `Waud.isM4ASupported()`
+
+`Waud.getFormatSupportString()` return a string with all the above support information.
 
 There are 3 classes available for audio playback.
 
@@ -24,17 +34,17 @@ There are 3 classes available for audio playback.
 - `WebAudioAPISound` - to force web audio api
 - `HTML5Sound` - to force HTML5 audio
 
-`HTML5Sound` on iOS devices have some [limitations](https://developer.apple.com/library/safari/documentation/AudioVideo/Conceptual/Using_HTML5_Audio_Video/Device-SpecificConsiderations/Device-SpecificConsiderations.html) you should be aware of.
+`HTML5Sound` on iOS devices have some [limitations](https://developer.apple.com/library/safari/documentation/AudioVideo/Conceptual/Using_HTML5_Audio_Video/Device-SpecificConsiderations/Device-SpecificConsiderations.html) you should be aware of. Setting volume audio is not possible and mute is implemented by pausing and replaying the sound if it's already playing.
 
 Available functions on sound instance:
 
 - `play()`
 - `stop()`
-- `mute(true/false)`
-- `loop(true/false)`
+- `mute(val)` - true or false
+- `loop(val)` - true or false
 - `setVolume(val)` - between 0 and 1
-- `getVolume()`
-- `isPlaying()` - returns true/false
+- `getVolume()` - returna value between 0 and 1
+- `isPlaying()` - returns true or false
 
 ### Issues ###
 
@@ -64,7 +74,7 @@ class Main {
 
 	public function new() {
 		Waud.init();
-        Waud.enableTouchUnlock(touchUnlock);
+        	Waud.enableTouchUnlock(touchUnlock);
 		_bgSnd = new WaudSound("assets/loop.mp3", { autoplay: false, loop: true, volume: 0.5, onload: _playBgSound });
 		_snd2 = new WaudSound("assets/sound1.wav", {
 			autoplay: false,
