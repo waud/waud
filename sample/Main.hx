@@ -1,3 +1,4 @@
+import pixi.core.text.Text;
 import pixi.core.Pixi;
 import pixi.core.display.Container;
 import pixi.plugins.app.Application;
@@ -12,6 +13,8 @@ class Main extends Application {
 	var _glass:ISound;
 	var _bell:ISound;
 	var _can:ISound;
+
+	var _ua:Text;
 
 	public function new() {
 		super();
@@ -31,6 +34,9 @@ class Main extends Application {
 		_addButton("BG Vol 0", 320, 0, 60, 30, function() { _bgSnd.setVolume(0); });
 		_addButton("BG Vol 1", 380, 0, 60, 30, function() { _bgSnd.setVolume(1); });
 		_addButton("Stop", 440, 0, 60, 30, _stop);
+
+		_ua = new Text(Browser.navigator.userAgent, { font: "12px Tahoma", fill:"#FFFFFF" });
+		stage.addChild(_ua);
 		_btnContainer.position.set((Browser.window.innerWidth - 500) / 2, (Browser.window.innerHeight - 30) / 2);
 
 		Waud.init();

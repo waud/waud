@@ -335,6 +335,8 @@ var Main = function() {
 		_g._bgSnd.setVolume(1);
 	});
 	this._addButton("Stop",440,0,60,30,$bind(this,this._stop));
+	this._ua = new PIXI.Text(window.navigator.userAgent,{ font : "12px Tahoma", fill : "#FFFFFF"});
+	this.stage.addChild(this._ua);
 	this._btnContainer.position.set((window.innerWidth - 500) / 2,(window.innerHeight - 30) / 2);
 	Waud.init();
 	Waud.enableTouchUnlock($bind(this,this.touchUnlock));
