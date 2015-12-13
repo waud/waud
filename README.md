@@ -19,19 +19,19 @@ For haxe users:
 
 There are 3 classes available for audio playback.
 
--`WaudSound` (recommended) - to automatically use web audio api with HTML5 audio fallback.
--`WebAudioAPISound` - to force web audio api
--`HTML5Sound` - to force html5 audio
+- `WaudSound` **(recommended)** - to automatically use web audio api with HTML5 audio fallback.
+- `WebAudioAPISound` - to force web audio api
+- `HTML5Sound` - to force html5 audio
 
 Available functions on sound instance:
 
--play()
--stop()
--mute(true/false)
--loop(true/false)
--setVolume(val) - between 0 and 1
--getVolume()
--isPlaying() - returns true/false
+- play()
+- stop()
+- mute(true/false)
+- loop(true/false)
+- setVolume(val) - between 0 and 1
+- getVolume()
+- isPlaying() - returns true/false
 
 ### Issues ###
 
