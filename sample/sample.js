@@ -43,31 +43,17 @@ AudioManager.prototype = {
 		}
 	}
 	,iOSSafeSampleRateCheck: function() {
-		if(this.audioContext != null && Waud.iOSSafeSampleRateCheck && this.audioContext.sampleRate != Waud.preferredSampleRate) {
-			var bfr = this.audioContext.createBuffer(1,1,Waud.preferredSampleRate);
-			var src = this.audioContext.createBufferSource();
-			src.buffer = bfr;
-			src.connect(this.audioContext.destination);
-			src.start(0);
-			src.disconnect();
-			this.destroyContext();
-			this.createAudioContext();
-		}
-	}
-	,destroyContext: function() {
-		if(this.audioContext != null) {
-			if(Waud.audioManager.audioContext.close != null) Waud.audioContext.close();
-			this.audioContext = null;
-		}
+		haxe_Log.trace(this.audioContext.sampleRate,{ fileName : "AudioManager.hx", lineNumber : 58, className : "AudioManager", methodName : "iOSSafeSampleRateCheck", customParams : [Waud.preferredSampleRate]});
+		if(this.audioContext != null && Waud.iOSSafeSampleRateCheck && this.audioContext.sampleRate != Waud.preferredSampleRate) Waud.isWebAudioSupported = false;
 	}
 };
 var BaseSound = function(url,options) {
 	if(url == null || url == "") {
-		console.log("invalid sound url");
+		haxe_Log.trace("invalid sound url",{ fileName : "BaseSound.hx", lineNumber : 8, className : "BaseSound", methodName : "new"});
 		return;
 	}
 	if(Waud.defaults == null) {
-		console.log("Initialise Waud using Waud.init() before loading sounds");
+		haxe_Log.trace("Initialise Waud using Waud.init() before loading sounds",{ fileName : "BaseSound.hx", lineNumber : 12, className : "BaseSound", methodName : "new"});
 		return;
 	}
 	this._isPlaying = false;
@@ -280,7 +266,7 @@ pixi_plugins_app_Application.prototype = {
 	}
 	,set_skipFrame: function(val) {
 		if(val) {
-			console.log("pixi.plugins.app.Application > Deprecated: skipFrame - use fps property and set it to 30 instead");
+			haxe_Log.trace("pixi.plugins.app.Application > Deprecated: skipFrame - use fps property and set it to 30 instead",{ fileName : "Application.hx", lineNumber : 149, className : "pixi.plugins.app.Application", methodName : "set_skipFrame"});
 			this.set_fps(30);
 		}
 		return this.skipFrame = val;
@@ -464,7 +450,7 @@ Waud.init = function(d) {
 	if(Waud.isWebAudioSupported) {
 		Waud.audioManager.createAudioContext();
 		if(Utils.isiOS()) Waud.audioManager.iOSSafeSampleRateCheck();
-	} else if(!Waud.isAudioSupported) console.log("no audio support in this browser");
+	} else if(!Waud.isAudioSupported) haxe_Log.trace("no audio support in this browser",{ fileName : "Waud.hx", lineNumber : 35, className : "Waud", methodName : "init"});
 	Waud.defaults.autoplay = false;
 	Waud.defaults.loop = false;
 	Waud.defaults.preload = "metadata";
@@ -524,7 +510,7 @@ Waud.isM4ASupported = function() {
 	return Waud.isAudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe");
 };
 var WaudSound = $hx_exports.WaudSound = function(src,options) {
-	if(Waud.isWebAudioSupported) this._snd = new WebAudioAPISound(src,options); else if(Waud.isAudioSupported) this._snd = new HTML5Sound(src,options); else console.log("no audio support in this browser");
+	if(Waud.isWebAudioSupported) this._snd = new WebAudioAPISound(src,options); else if(Waud.isAudioSupported) this._snd = new HTML5Sound(src,options); else haxe_Log.trace("no audio support in this browser",{ fileName : "WaudSound.hx", lineNumber : 8, className : "WaudSound", methodName : "new"});
 };
 WaudSound.__name__ = true;
 WaudSound.__interfaces__ = [ISound];
@@ -572,7 +558,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 	}
 	,_decodeSuccess: function(buffer) {
 		if(buffer == null) {
-			console.log("empty buffer: " + this._url);
+			haxe_Log.trace("empty buffer: " + this._url,{ fileName : "WebAudioAPISound.hx", lineNumber : 36, className : "WebAudioAPISound", methodName : "_decodeSuccess"});
 			if(this._options.onerror != null) this._options.onerror(this);
 			return;
 		}
@@ -634,6 +620,11 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 });
 var haxe_IMap = function() { };
 haxe_IMap.__name__ = true;
+var haxe_Log = function() { };
+haxe_Log.__name__ = true;
+haxe_Log.trace = function(v,infos) {
+	js_Boot.__trace(v,infos);
+};
 var haxe_Timer = function(time_ms) {
 	var me = this;
 	this.id = setInterval(function() {
@@ -721,6 +712,25 @@ js__$Boot_HaxeError.prototype = $extend(Error.prototype,{
 });
 var js_Boot = function() { };
 js_Boot.__name__ = true;
+js_Boot.__unhtml = function(s) {
+	return s.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;");
+};
+js_Boot.__trace = function(v,i) {
+	var msg;
+	if(i != null) msg = i.fileName + ":" + i.lineNumber + ": "; else msg = "";
+	msg += js_Boot.__string_rec(v,"");
+	if(i != null && i.customParams != null) {
+		var _g = 0;
+		var _g1 = i.customParams;
+		while(_g < _g1.length) {
+			var v1 = _g1[_g];
+			++_g;
+			msg += "," + js_Boot.__string_rec(v1,"");
+		}
+	}
+	var d;
+	if(typeof(document) != "undefined" && (d = document.getElementById("haxe:trace")) != null) d.innerHTML += js_Boot.__unhtml(msg) + "<br/>"; else if(typeof console != "undefined" && console.log != null) console.log(msg);
+};
 js_Boot.__string_rec = function(o,s) {
 	if(o == null) return "null";
 	if(s.length >= 5) return "<...>";

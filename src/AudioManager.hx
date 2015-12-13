@@ -55,34 +55,28 @@ class AudioManager {
 	}
 
 	public function iOSSafeSampleRateCheck() {
+		trace(audioContext.sampleRate, Waud.preferredSampleRate);
 		if (audioContext != null && Waud.iOSSafeSampleRateCheck && audioContext.sampleRate != Waud.preferredSampleRate) {
-			var bfr = audioContext.createBuffer(1, 1, Waud.preferredSampleRate);
-			var src:AudioBufferSourceNode = audioContext.createBufferSource();
-			src.buffer = bfr;
-			src.connect(audioContext.destination);
-			src.start(0);
-			src.disconnect();
-			destroyContext();
-			createAudioContext();
+			Waud.isWebAudioSupported = false;
 		}
 	}
 
 	public function destroyContext() {
-		if (audioContext != null) {
-			if (untyped __js__("Waud.audioManager.audioContext").close != null) untyped __js__("Waud.audioContext").close();
-			audioContext = null;
+		if (audioContext != null && untyped __js__("this.audioContext").close != null && untyped __js__("this.audioContext").close != "") {
+			untyped __js__("this.audioContext").close();
 		}
+		audioContext = null;
 	}
 
 	public function suspendContext() {
 		if (audioContext != null) {
-			if (untyped __js__("Waud.audioManager.audioContext").suspend != null) untyped __js__("Waud.audioContext").suspend();
+			if (untyped __js__("this.audioContext").suspend != null) untyped __js__("this.audioContext").suspend();
 		}
 	}
 
 	public function resumeContext() {
 		if (audioContext != null) {
-			if (untyped __js__("Waud.audioManager.audioContext").resume != null) untyped __js__("Waud.audioContext").resume();
+			if (untyped __js__("this.audioContext").resume != null) untyped __js__("this.audioContext").resume();
 		}
 	}
 }
