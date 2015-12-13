@@ -1,4 +1,5 @@
-# waud.js [![experimental](http://badges.github.io/stability-badges/dist/experimental.svg)](http://github.com/badges/stability-badges)
+# waud.js
+[![experimental](http://badges.github.io/stability-badges/dist/experimental.svg)](http://github.com/badges/stability-badges)
 Web Audio Library with HTML5 audio fallback. 
 
 ### Installation ###
