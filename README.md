@@ -24,6 +24,8 @@ There are 3 classes available for audio playback.
 - `WebAudioAPISound` - to force web audio api
 - `HTML5Sound` - to force HTML5 audio
 
+`HTML5Sound` on iOS devices have some [limitations](https://developer.apple.com/library/safari/documentation/AudioVideo/Conceptual/Using_HTML5_Audio_Video/Device-SpecificConsiderations/Device-SpecificConsiderations.html) you should be aware of.
+
 Available functions on sound instance:
 
 - `play()`
