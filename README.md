@@ -102,14 +102,14 @@ class Main {
 	}
 	
 	// for iOS devices
-    function touchUnlock() {
-    	if (!_bgSnd.isPlaying()) _bgSnd.play();
-    }
-    
-    function _playBgSound(snd:ISound) {
-    	if (!snd.isPlaying()) snd.play();
-    }
-
+	function touchUnlock() {
+		if (!_bgSnd.isPlaying()) _bgSnd.play();
+	}
+	
+	function _playBgSound(snd:ISound) {
+		if (!snd.isPlaying()) snd.play();
+	}
+	
 	static function main() {
 		new Main();
 	}
@@ -122,20 +122,20 @@ class Main {
 Waud.init();
 Waud.enableTouchUnlock(touchUnlock);
 var _bgSnd = new WaudSound("assets/loop.mp3", {
-        "autoplay": false, "loop":true, "volume": 0.5, "onload": _playBgSound
+	"autoplay": false, "loop":true, "volume": 0.5, "onload": _playBgSound
 });
 
 var snd2 = new WaudSound("assets/sound1.wav", {
-    "autoplay": false,
-    "loop":true,
-    "onload": function (snd) { snd.play(); },
-    "onend": function (snd) { console.log("ended"); },
-    "onerror": function (snd) { console.log("error"); }
+	"autoplay": false,
+	"loop":true,
+	"onload": function (snd) { snd.play(); },
+	"onend": function (snd) { console.log("ended"); },
+	"onerror": function (snd) { console.log("error"); }
 });
 
 //Touch unlock event for iOS devices
 function touchUnlock() {
-   if (_bgSnd.isPlaying()) _bgSnd.play();
+	if (_bgSnd.isPlaying()) _bgSnd.play();
 }
 
 function _playBgSound(snd) {
