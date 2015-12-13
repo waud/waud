@@ -45,6 +45,8 @@ The following are the options available when creating sound instabce:
 - `onend` - callback function when the sound playback ends with sound instance as parameter (default: none)
 - `onerror` - callback function when there is an error in loading/decoding with sound instance as parameter (default: none)
 
+Example: `new WaudSound("assets/loop.mp3", { autoplay: false, loop: true, volume: 0.5, onload: _playBgSound });`
+
 Available functions on sound instance:
 
 - `play()`
@@ -54,6 +56,8 @@ Available functions on sound instance:
 - `setVolume(val)` - between 0 and 1
 - `getVolume()` - returna value between 0 and 1
 - `isPlaying()` - returns true or false
+
+`Waud.sounds` will hold all the sounds that are loaded. To access any sound use `Waud.sounds.get(url)` where `url` is the path used to load the sound.
 
 ### Issues ###
 
