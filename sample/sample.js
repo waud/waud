@@ -317,33 +317,79 @@ pixi_plugins_app_Application.prototype = {
 var Main = function() {
 	var _g = this;
 	pixi_plugins_app_Application.call(this);
-	this.pixelRatio = Math.floor(window.devicePixelRatio);
-	PIXI.RESOLUTION = this.pixelRatio;
+	this.pixelRatio = 1;
+	this.autoResize = true;
 	this.backgroundColor = 6227124;
+	this.roundPixels = true;
+	this.onResize = $bind(this,this._resize);
 	pixi_plugins_app_Application.prototype.start.call(this);
 	this._btnContainer = new PIXI.Container();
 	this.stage.addChild(this._btnContainer);
-	this._addButton("Glass",0,0,60,30,$bind(this,this._playSound1));
-	this._addButton("Bell",60,0,60,30,$bind(this,this._playSound2));
-	this._addButton("Can",120,0,60,30,$bind(this,this._playSound3));
-	this._addButton("Mute",200,0,60,30,$bind(this,this._mute));
-	this._addButton("Unmute",260,0,60,30,$bind(this,this._unmute));
-	this._addButton("BG Vol 0",320,0,60,30,function() {
+	var label = new PIXI.Text("MP3: ",{ font : "26px Tahoma", fill : "#FFFFFF"});
+	this._btnContainer.addChild(label);
+	this._addButton("Glass",100,0,60,30,function() {
+		_g._glassMP3.play();
+	});
+	this._addButton("Bell",160,0,60,30,function() {
+		_g._bellMP3.play();
+	});
+	this._addButton("Can",220,0,60,30,function() {
+		_g._canMP3.play();
+	});
+	label = new PIXI.Text("AAC",{ font : "26px Tahoma", fill : "#FFFFFF"});
+	this._btnContainer.addChild(label);
+	label.position.y = 50;
+	this._addButton("Glass",100,50,60,30,function() {
+		_g._glassAAC.play();
+	});
+	this._addButton("Bell",160,50,60,30,function() {
+		_g._bellAAC.play();
+	});
+	this._addButton("Can",220,50,60,30,function() {
+		_g._canAAC.play();
+	});
+	label = new PIXI.Text("OGG",{ font : "26px Tahoma", fill : "#FFFFFF"});
+	this._btnContainer.addChild(label);
+	label.position.y = 100;
+	this._addButton("Glass",100,100,60,30,function() {
+		_g._glassOGG.play();
+	});
+	this._addButton("Bell",160,100,60,30,function() {
+		_g._bellOGG.play();
+	});
+	this._addButton("Can",220,100,60,30,function() {
+		_g._canOGG.play();
+	});
+	label = new PIXI.Text("Controls",{ font : "26px Tahoma", fill : "#FFFFFF"});
+	this._btnContainer.addChild(label);
+	label.position.y = 150;
+	this._addButton("Mute",100,150,60,30,$bind(this,this._mute));
+	this._addButton("Unmute",160,150,60,30,$bind(this,this._unmute));
+	this._addButton("BG Vol 0",220,150,60,30,function() {
 		_g._bgSnd.setVolume(0);
 	});
-	this._addButton("BG Vol 1",380,0,60,30,function() {
+	this._addButton("BG Vol 1",280,150,60,30,function() {
 		_g._bgSnd.setVolume(1);
 	});
-	this._addButton("Stop",440,0,60,30,$bind(this,this._stop));
+	this._addButton("Stop",340,150,60,30,$bind(this,this._stop));
 	this._ua = new PIXI.Text(window.navigator.userAgent,{ font : "12px Tahoma", fill : "#FFFFFF"});
 	this.stage.addChild(this._ua);
-	this._btnContainer.position.set((window.innerWidth - 500) / 2,(window.innerHeight - 30) / 2);
 	Waud.init();
 	Waud.enableTouchUnlock($bind(this,this.touchUnlock));
 	this._bgSnd = new WaudSound("assets/loop.mp3",{ loop : true, autoplay : false, volume : 0.5, onload : $bind(this,this._playBgSound)});
-	this._glass = new WaudSound("assets/glass.aac");
-	this._bell = new WaudSound("assets/bell.aac");
-	this._can = new WaudSound("assets/canopening.mp3");
+	this._glassMP3 = new WaudSound("assets/canopening.mp3");
+	this._bellMP3 = new WaudSound("assets/bell.mp3");
+	this._canMP3 = new WaudSound("assets/canopening.mp3");
+	this._glassAAC = new WaudSound("assets/glass.aac");
+	this._bellAAC = new WaudSound("assets/bell.aac");
+	this._canAAC = new WaudSound("assets/canopening.aac");
+	this._glassOGG = new WaudSound("assets/glass.ogg");
+	this._bellOGG = new WaudSound("assets/bell.ogg");
+	this._canOGG = new WaudSound("assets/canopening.ogg");
+	this._ua.text += "\n" + Waud.getFormatSupportString();
+	this._ua.text += "\nWeb Audio API: " + Std.string(Waud.isWebAudioSupported);
+	this._ua.text += "\nHTML5 Audio: " + Std.string(Waud.isAudioSupported);
+	this._resize();
 };
 Main.__name__ = true;
 Main.main = function() {
@@ -356,15 +402,6 @@ Main.prototype = $extend(pixi_plugins_app_Application.prototype,{
 	}
 	,_playBgSound: function(snd) {
 		if(!snd.isPlaying()) snd.play();
-	}
-	,_playSound1: function() {
-		this._glass.play();
-	}
-	,_playSound2: function() {
-		this._bell.play();
-	}
-	,_playSound3: function() {
-		this._can.play();
 	}
 	,_mute: function() {
 		Waud.mute(true);
@@ -381,6 +418,10 @@ Main.prototype = $extend(pixi_plugins_app_Application.prototype,{
 		button.action.add(callback);
 		button._enabled = true;
 		this._btnContainer.addChild(button);
+	}
+	,_resize: function() {
+		haxe_Log.trace(window.innerWidth,{ fileName : "Main.hx", lineNumber : 122, className : "Main", methodName : "_resize", customParams : [window.innerHeight]});
+		this._btnContainer.position.set((window.innerWidth - this._btnContainer.width) / 2,(window.innerHeight - this._btnContainer.height) / 2);
 	}
 });
 Math.__name__ = true;

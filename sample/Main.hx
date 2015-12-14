@@ -1,5 +1,4 @@
 import pixi.core.text.Text;
-import pixi.core.Pixi;
 import pixi.core.display.Container;
 import pixi.plugins.app.Application;
 import js.Browser;
@@ -10,62 +9,93 @@ class Main extends Application {
 
 	var _bgSnd:ISound;
 
-	var _glass:ISound;
-	var _bell:ISound;
-	var _can:ISound;
+	var _glassAAC:ISound;
+	var _bellAAC:ISound;
+	var _canAAC:ISound;
+	var _glassMP3:ISound;
+	var _bellMP3:ISound;
+	var _canMP3:ISound;
+	var _glassOGG:ISound;
+	var _bellOGG:ISound;
+	var _canOGG:ISound;
 
 	var _ua:Text;
 
 	public function new() {
 		super();
-		pixelRatio = Math.floor(Browser.window.devicePixelRatio);
-		Pixi.RESOLUTION = pixelRatio;
+		pixelRatio = 1;
+		autoResize = true;
 		backgroundColor = 0x5F04B4;
+		roundPixels = true;
+		onResize = _resize;
 		super.start();
 
 		_btnContainer = new Container();
 		stage.addChild(_btnContainer);
 
-		_addButton("Glass", 0, 0, 60, 30, _playSound1);
-		_addButton("Bell", 60, 0, 60, 30, _playSound2);
-		_addButton("Can", 120, 0, 60, 30, _playSound3);
-		_addButton("Mute", 200, 0, 60, 30, _mute);
-		_addButton("Unmute", 260, 0, 60, 30, _unmute);
-		_addButton("BG Vol 0", 320, 0, 60, 30, function() { _bgSnd.setVolume(0); });
-		_addButton("BG Vol 1", 380, 0, 60, 30, function() { _bgSnd.setVolume(1); });
-		_addButton("Stop", 440, 0, 60, 30, _stop);
+		var label:Text = new Text("MP3: ", { font: "26px Tahoma", fill:"#FFFFFF" });
+		_btnContainer.addChild(label);
+		_addButton("Glass", 100, 0, 60, 30, function() { _glassMP3.play(); });
+		_addButton("Bell", 160, 0, 60, 30, function() { _bellMP3.play(); });
+		_addButton("Can", 220, 0, 60, 30, function() { _canMP3.play(); });
+
+		label = new Text("AAC", { font: "26px Tahoma", fill:"#FFFFFF" });
+		_btnContainer.addChild(label);
+		label.position.y = 50;
+		_addButton("Glass", 100, 50, 60, 30, function() { _glassAAC.play(); });
+		_addButton("Bell", 160, 50, 60, 30, function() { _bellAAC.play(); });
+		_addButton("Can", 220, 50, 60, 30, function() { _canAAC.play(); });
+
+		label = new Text("OGG", { font: "26px Tahoma", fill:"#FFFFFF" });
+		_btnContainer.addChild(label);
+		label.position.y = 100;
+		_addButton("Glass", 100, 100, 60, 30, function() { _glassOGG.play(); });
+		_addButton("Bell", 160, 100, 60, 30, function() { _bellOGG.play(); });
+		_addButton("Can", 220, 100, 60, 30, function() { _canOGG.play(); });
+
+		label = new Text("Controls", { font: "26px Tahoma", fill:"#FFFFFF" });
+		_btnContainer.addChild(label);
+		label.position.y = 150;
+		_addButton("Mute", 100, 150, 60, 30, _mute);
+		_addButton("Unmute", 160, 150, 60, 30, _unmute);
+		_addButton("BG Vol 0", 220, 150, 60, 30, function() { _bgSnd.setVolume(0); });
+		_addButton("BG Vol 1", 280, 150, 60, 30, function() { _bgSnd.setVolume(1); });
+		_addButton("Stop", 340, 150, 60, 30, _stop);
 
 		_ua = new Text(Browser.navigator.userAgent, { font: "12px Tahoma", fill:"#FFFFFF" });
 		stage.addChild(_ua);
-		_btnContainer.position.set((Browser.window.innerWidth - 500) / 2, (Browser.window.innerHeight - 30) / 2);
 
 		Waud.init();
 		Waud.enableTouchUnlock(touchUnlock);
 		_bgSnd = new WaudSound("assets/loop.mp3", { loop:true, autoplay: false, volume: 0.5, onload: _playBgSound });
-		_glass = new WaudSound("assets/glass.aac");
-		_bell = new WaudSound("assets/bell.aac");
-		_can = new WaudSound("assets/canopening.mp3");
+
+		_glassMP3 = new WaudSound("assets/glass.mp3");
+		_bellMP3 = new WaudSound("assets/bell.mp3");
+		_canMP3 = new WaudSound("assets/canopening.mp3");
+
+		_glassAAC = new WaudSound("assets/glass.aac");
+		_bellAAC = new WaudSound("assets/bell.aac");
+		_canAAC = new WaudSound("assets/canopening.aac");
+
+		_glassOGG = new WaudSound("assets/glass.ogg");
+		_bellOGG = new WaudSound("assets/bell.ogg");
+		_canOGG = new WaudSound("assets/canopening.ogg");
+
+		_ua.text += "\n" + Waud.getFormatSupportString();
+		_ua.text += "\nWeb Audio API: " + Waud.isWebAudioSupported;
+		_ua.text += "\nHTML5 Audio: " + Waud.isAudioSupported;
+
+		_resize();
 	}
 
 	// for iOS devices
+
 	function touchUnlock() {
 		if (!_bgSnd.isPlaying()) _bgSnd.play();
 	}
 
 	function _playBgSound(snd:ISound) {
 		if (!snd.isPlaying()) snd.play();
-	}
-
-	function _playSound1() {
-		_glass.play();
-	}
-
-	function _playSound2() {
-		_bell.play();
-	}
-
-	function _playSound3() {
-		_can.play();
 	}
 
 	function _mute() {
@@ -88,7 +118,10 @@ class Main extends Application {
 		_btnContainer.addChild(button);
 	}
 
-
+	function _resize() {
+		trace(Browser.window.innerWidth, Browser.window.innerHeight);
+		_btnContainer.position.set((Browser.window.innerWidth - _btnContainer.width) / 2, (Browser.window.innerHeight - _btnContainer.height) / 2);
+	}
 
 	static function main() {
 		new Main();
