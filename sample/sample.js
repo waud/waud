@@ -158,8 +158,8 @@ EReg.prototype = {
 		return this.r.m != null;
 	}
 };
-var ISound = function() { };
-ISound.__name__ = true;
+var IWaudSound = function() { };
+IWaudSound.__name__ = true;
 var HTML5Sound = $hx_exports.HTML5Sound = function(url,options) {
 	var _g = this;
 	BaseSound.call(this,url,options);
@@ -187,7 +187,7 @@ var HTML5Sound = $hx_exports.HTML5Sound = function(url,options) {
 	this._snd.load();
 };
 HTML5Sound.__name__ = true;
-HTML5Sound.__interfaces__ = [ISound];
+HTML5Sound.__interfaces__ = [IWaudSound];
 HTML5Sound.__super__ = BaseSound;
 HTML5Sound.prototype = $extend(BaseSound.prototype,{
 	addSource: function(src) {
@@ -377,7 +377,7 @@ var Main = function() {
 	Waud.init();
 	Waud.enableTouchUnlock($bind(this,this.touchUnlock));
 	this._bgSnd = new WaudSound("assets/loop.mp3",{ loop : true, autoplay : false, volume : 0.5, onload : $bind(this,this._playBgSound)});
-	this._glassMP3 = new WaudSound("assets/canopening.mp3");
+	this._glassMP3 = new WaudSound("assets/glass.mp3");
 	this._bellMP3 = new WaudSound("assets/bell.mp3");
 	this._canMP3 = new WaudSound("assets/canopening.mp3");
 	this._glassAAC = new WaudSound("assets/glass.aac");
@@ -420,7 +420,7 @@ Main.prototype = $extend(pixi_plugins_app_Application.prototype,{
 		this._btnContainer.addChild(button);
 	}
 	,_resize: function() {
-		haxe_Log.trace(window.innerWidth,{ fileName : "Main.hx", lineNumber : 122, className : "Main", methodName : "_resize", customParams : [window.innerHeight]});
+		haxe_Log.trace(window.innerWidth,{ fileName : "Main.hx", lineNumber : 120, className : "Main", methodName : "_resize", customParams : [window.innerHeight]});
 		this._btnContainer.position.set((window.innerWidth - this._btnContainer.width) / 2,(window.innerHeight - this._btnContainer.height) / 2);
 	}
 });
@@ -511,6 +511,7 @@ Waud.enableTouchUnlock = function(callback) {
 	Waud.dom.ontouchend = ($_=Waud.audioManager,$bind($_,$_.unlockAudio));
 };
 Waud.mute = function(val) {
+	if(val == null) val = true;
 	var $it0 = Waud.sounds.iterator();
 	while( $it0.hasNext() ) {
 		var sound = $it0.next();
@@ -556,7 +557,7 @@ var WaudSound = $hx_exports.WaudSound = function(src,options) {
 	if(Waud.isWebAudioSupported) this._snd = new WebAudioAPISound(src,options); else if(Waud.isAudioSupported) this._snd = new HTML5Sound(src,options); else haxe_Log.trace("no audio support in this browser",{ fileName : "WaudSound.hx", lineNumber : 8, className : "WaudSound", methodName : "new"});
 };
 WaudSound.__name__ = true;
-WaudSound.__interfaces__ = [ISound];
+WaudSound.__interfaces__ = [IWaudSound];
 WaudSound.prototype = {
 	setVolume: function(val) {
 		this._snd.setVolume(val);
@@ -593,7 +594,7 @@ var WebAudioAPISound = $hx_exports.WebAudioAPISound = function(url,options) {
 	Waud.sounds.set(url,this);
 };
 WebAudioAPISound.__name__ = true;
-WebAudioAPISound.__interfaces__ = [ISound];
+WebAudioAPISound.__interfaces__ = [IWaudSound];
 WebAudioAPISound.__super__ = BaseSound;
 WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 	_onSoundLoaded: function(evt) {

@@ -1,4 +1,4 @@
-interface ISound {
+interface IWaudSound {
 	function play():Void;
 	function stop():Void;
 	function mute(val:Bool):Void;

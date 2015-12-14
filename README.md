@@ -85,8 +85,8 @@ Tested on:
 ```haxe
 class Main {
 
-	var _bgSnd:ISound;
-	var _snd2:ISound;
+	var _bgSnd:IWaudSound;
+	var _snd2:IWaudSound;
 
 	public function new() {
 		Waud.init();
@@ -106,7 +106,7 @@ class Main {
 		if (!_bgSnd.isPlaying()) _bgSnd.play();
 	}
 	
-	function _playBgSound(snd:ISound) {
+	function _playBgSound(snd:IWaudSound) {
 		if (!snd.isPlaying()) snd.play();
 	}
 	

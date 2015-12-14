@@ -7,17 +7,17 @@ class Main extends Application {
 
 	var _btnContainer:Container;
 
-	var _bgSnd:ISound;
+	var _bgSnd:IWaudSound;
 
-	var _glassAAC:ISound;
-	var _bellAAC:ISound;
-	var _canAAC:ISound;
-	var _glassMP3:ISound;
-	var _bellMP3:ISound;
-	var _canMP3:ISound;
-	var _glassOGG:ISound;
-	var _bellOGG:ISound;
-	var _canOGG:ISound;
+	var _glassAAC:IWaudSound;
+	var _bellAAC:IWaudSound;
+	var _canAAC:IWaudSound;
+	var _glassMP3:IWaudSound;
+	var _bellMP3:IWaudSound;
+	var _canMP3:IWaudSound;
+	var _glassOGG:IWaudSound;
+	var _bellOGG:IWaudSound;
+	var _canOGG:IWaudSound;
 
 	var _ua:Text;
 
@@ -88,13 +88,11 @@ class Main extends Application {
 		_resize();
 	}
 
-	// for iOS devices
-
 	function touchUnlock() {
 		if (!_bgSnd.isPlaying()) _bgSnd.play();
 	}
 
-	function _playBgSound(snd:ISound) {
+	function _playBgSound(snd:IWaudSound) {
 		if (!snd.isPlaying()) snd.play();
 	}
 

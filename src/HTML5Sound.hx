@@ -1,7 +1,7 @@
 import js.html.SourceElement;
 import js.html.AudioElement;
 
-@:expose @:keep class HTML5Sound extends BaseSound implements ISound {
+@:expose @:keep class HTML5Sound extends BaseSound implements IWaudSound {
 
 	var _snd:AudioElement;
 	var _src:SourceElement;

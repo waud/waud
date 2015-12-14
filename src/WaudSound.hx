@@ -1,6 +1,6 @@
-@:expose @:keep class WaudSound implements ISound {
+@:expose @:keep class WaudSound implements IWaudSound {
 
-	var _snd:ISound;
+	var _snd:IWaudSound;
 
 	public function new(src:String, ?options:WaudSoundOptions = null) {
 		if (Waud.isWebAudioSupported) _snd = new WebAudioAPISound(src, options);

@@ -8,7 +8,7 @@ import js.html.AudioElement;
 	public static var isAudioSupported:Bool;
 	public static var audioManager:AudioManager;
 	public static var defaults:WaudSoundOptions = {};
-	public static var sounds:Map<String, ISound>;
+	public static var sounds:Map<String, IWaudSound>;
 	public static var types:Map<String, String>;
 	public static var dom:HTMLDocument;
 
@@ -54,7 +54,7 @@ import js.html.AudioElement;
 		dom.ontouchend = Waud.audioManager.unlockAudio;
 	}
 
-	public static function mute(val:Bool) {
+	public static function mute(?val:Bool = true) {
 		for (sound in sounds) sound.mute(val);
 	}
 
