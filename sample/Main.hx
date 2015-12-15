@@ -35,32 +35,32 @@ class Main extends Application {
 
 		var label:Text = new Text("MP3: ", { font: "26px Tahoma", fill:"#FFFFFF" });
 		_btnContainer.addChild(label);
-		_addButton("Glass", 100, 0, 60, 30, function() { _glassMP3.play(); });
-		_addButton("Bell", 160, 0, 60, 30, function() { _bellMP3.play(); });
-		_addButton("Can", 220, 0, 60, 30, function() { _canMP3.play(); });
+		_addButton("Glass", 120, 0, 60, 30, function() { _glassMP3.play(); });
+		_addButton("Bell", 180, 0, 60, 30, function() { _bellMP3.play(); });
+		_addButton("Can", 240, 0, 60, 30, function() { _canMP3.play(); });
 
 		label = new Text("AAC: ", { font: "26px Tahoma", fill:"#FFFFFF" });
 		_btnContainer.addChild(label);
 		label.position.y = 50;
-		_addButton("Glass", 100, 50, 60, 30, function() { _glassAAC.play(); });
-		_addButton("Bell", 160, 50, 60, 30, function() { _bellAAC.play(); });
-		_addButton("Can", 220, 50, 60, 30, function() { _canAAC.play(); });
+		_addButton("Glass", 120, 50, 60, 30, function() { _glassAAC.play(); });
+		_addButton("Bell", 180, 50, 60, 30, function() { _bellAAC.play(); });
+		_addButton("Can", 240, 50, 60, 30, function() { _canAAC.play(); });
 
 		label = new Text("OGG: ", { font: "26px Tahoma", fill:"#FFFFFF" });
 		_btnContainer.addChild(label);
 		label.position.y = 100;
-		_addButton("Glass", 100, 100, 60, 30, function() { _glassOGG.play(); });
-		_addButton("Bell", 160, 100, 60, 30, function() { _bellOGG.play(); });
-		_addButton("Can", 220, 100, 60, 30, function() { _canOGG.play(); });
+		_addButton("Glass", 120, 100, 60, 30, function() { _glassOGG.play(); });
+		_addButton("Bell", 180, 100, 60, 30, function() { _bellOGG.play(); });
+		_addButton("Can", 240, 100, 60, 30, function() { _canOGG.play(); });
 
 		label = new Text("Controls: ", { font: "26px Tahoma", fill:"#FFFFFF" });
 		_btnContainer.addChild(label);
 		label.position.y = 150;
-		_addButton("Mute", 100, 150, 60, 30, _mute);
-		_addButton("Unmute", 160, 150, 60, 30, _unmute);
-		_addButton("BG Vol 0", 220, 150, 60, 30, function() { _bgSnd.setVolume(0); });
-		_addButton("BG Vol 1", 280, 150, 60, 30, function() { _bgSnd.setVolume(1); });
-		_addButton("Stop", 340, 150, 60, 30, _stop);
+		_addButton("Mute", 120, 150, 60, 30, _mute);
+		_addButton("Unmute", 180, 150, 60, 30, _unmute);
+		_addButton("BG Vol 0", 240, 150, 60, 30, function() { _bgSnd.setVolume(0); });
+		_addButton("BG Vol 1", 300, 150, 60, 30, function() { _bgSnd.setVolume(1); });
+		_addButton("Stop", 360, 150, 60, 30, _stop);
 
 		_ua = new Text(Browser.navigator.userAgent, { font: "12px Tahoma", fill:"#FFFFFF" });
 		stage.addChild(_ua);
