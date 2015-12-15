@@ -1,6 +1,6 @@
 import js.html.HTMLDocument;
-import js.Browser;
 import js.html.AudioElement;
+import js.Browser;
 
 @:expose @:keep class Waud {
 
