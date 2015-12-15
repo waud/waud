@@ -19,8 +19,8 @@
 	"contributors": [
 		"adireddy"
 	],
-	"releasenote": "renamed interface ISound to IWaudSound",
-	"version": "0.1.1",
+	"releasenote": "minor tweaks",
+	"version": "0.1.7",
 	"url": "https://github.com/adireddy/waud",
 	"dependencies": {}
 }
