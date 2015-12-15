@@ -11,8 +11,6 @@ import js.html.AudioElement;
 	public static var sounds:Map<String, IWaudSound>;
 	public static var types:Map<String, String>;
 	public static var dom:HTMLDocument;
-
-	public static var iOSSafeSampleRateCheck:Bool = true;
 	public static var preferredSampleRate:Int = 44100;
 
 	static var audioElement:AudioElement;
@@ -28,10 +26,7 @@ import js.html.AudioElement;
 		isWebAudioSupported = Waud.audioManager.checkWebAudioAPISupport();
 		isAudioSupported = (Reflect.field(Browser.window, "Audio") != null);
 
-		if (isWebAudioSupported) {
-			Waud.audioManager.createAudioContext();
-			if (Utils.isiOS()) Waud.audioManager.iOSSafeSampleRateCheck();
-		}
+		if (isWebAudioSupported) Waud.audioManager.createAudioContext();
 		else if (!isAudioSupported) trace("no audio support in this browser");
 
 		defaults.autoplay = false;
@@ -49,7 +44,7 @@ import js.html.AudioElement;
 		types.set("m4a", "audio/x-m4a");
 	}
 
-	public static function enableTouchUnlock(callback:Void -> Void) {
+	public static function enableTouchUnlock(?callback:Void -> Void) {
 		__touchUnlockCallback = callback;
 		dom.ontouchend = Waud.audioManager.unlockAudio;
 	}

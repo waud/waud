@@ -3,6 +3,11 @@
 	var _snd:IWaudSound;
 
 	public function new(src:String, ?options:WaudSoundOptions = null) {
+		if (Waud.audioManager == null) {
+			trace("initialise Waud using Waud.init() before loading sounds");
+			return;
+		}
+
 		if (Waud.isWebAudioSupported) _snd = new WebAudioAPISound(src, options);
 		else if (Waud.isAudioSupported) _snd = new HTML5Sound(src, options);
 		else trace("no audio support in this browser");

@@ -54,13 +54,6 @@ class AudioManager {
 		}
 	}
 
-	public function iOSSafeSampleRateCheck() {
-		trace(audioContext.sampleRate, Waud.preferredSampleRate);
-		if (audioContext != null && Waud.iOSSafeSampleRateCheck && audioContext.sampleRate != Waud.preferredSampleRate) {
-			Waud.isWebAudioSupported = false;
-		}
-	}
-
 	public function destroyContext() {
 		if (audioContext != null && untyped __js__("this.audioContext").close != null && untyped __js__("this.audioContext").close != "") {
 			untyped __js__("this.audioContext").close();

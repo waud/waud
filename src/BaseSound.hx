@@ -8,8 +8,8 @@
 			trace("invalid sound url");
 			return;
 		}
-		if (Waud.defaults == null) {
-			trace("Initialise Waud using Waud.init() before loading sounds");
+		if (Waud.audioManager == null) {
+			trace("initialise Waud using Waud.init() before loading sounds");
 			return;
 		}
 		_isPlaying = false;

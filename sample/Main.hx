@@ -39,21 +39,21 @@ class Main extends Application {
 		_addButton("Bell", 160, 0, 60, 30, function() { _bellMP3.play(); });
 		_addButton("Can", 220, 0, 60, 30, function() { _canMP3.play(); });
 
-		label = new Text("AAC", { font: "26px Tahoma", fill:"#FFFFFF" });
+		label = new Text("AAC: ", { font: "26px Tahoma", fill:"#FFFFFF" });
 		_btnContainer.addChild(label);
 		label.position.y = 50;
 		_addButton("Glass", 100, 50, 60, 30, function() { _glassAAC.play(); });
 		_addButton("Bell", 160, 50, 60, 30, function() { _bellAAC.play(); });
 		_addButton("Can", 220, 50, 60, 30, function() { _canAAC.play(); });
 
-		label = new Text("OGG", { font: "26px Tahoma", fill:"#FFFFFF" });
+		label = new Text("OGG: ", { font: "26px Tahoma", fill:"#FFFFFF" });
 		_btnContainer.addChild(label);
 		label.position.y = 100;
 		_addButton("Glass", 100, 100, 60, 30, function() { _glassOGG.play(); });
 		_addButton("Bell", 160, 100, 60, 30, function() { _bellOGG.play(); });
 		_addButton("Can", 220, 100, 60, 30, function() { _canOGG.play(); });
 
-		label = new Text("Controls", { font: "26px Tahoma", fill:"#FFFFFF" });
+		label = new Text("Controls: ", { font: "26px Tahoma", fill:"#FFFFFF" });
 		_btnContainer.addChild(label);
 		label.position.y = 150;
 		_addButton("Mute", 100, 150, 60, 30, _mute);
