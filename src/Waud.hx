@@ -14,7 +14,6 @@ import js.html.AudioElement;
 	public static var preferredSampleRate:Int = 44100;
 
 	static var audioElement:AudioElement;
-	static var unlocked:Bool = false;
 
 	public static var __touchUnlockCallback:Void -> Void;
 

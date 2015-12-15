@@ -554,7 +554,6 @@ Array.__name__ = true;
 var __map_reserved = {}
 Waud.defaults = { };
 Waud.preferredSampleRate = 44100;
-Waud.unlocked = false;
 })(typeof console != "undefined" ? console : {log:function(){}}, typeof window != "undefined" ? window : exports);
 
 //# sourceMappingURL=waud.js.map

@@ -486,7 +486,7 @@ Waud.init = function(d) {
 	if(Waud.audioManager == null) Waud.audioManager = new AudioManager();
 	Waud.isWebAudioSupported = Waud.audioManager.checkWebAudioAPISupport();
 	Waud.isAudioSupported = Reflect.field(window,"Audio") != null;
-	if(Waud.isWebAudioSupported) Waud.audioManager.createAudioContext(); else if(!Waud.isAudioSupported) haxe_Log.trace("no audio support in this browser",{ fileName : "Waud.hx", lineNumber : 30, className : "Waud", methodName : "init"});
+	if(Waud.isWebAudioSupported) Waud.audioManager.createAudioContext(); else if(!Waud.isAudioSupported) haxe_Log.trace("no audio support in this browser",{ fileName : "Waud.hx", lineNumber : 29, className : "Waud", methodName : "init"});
 	Waud.defaults.autoplay = false;
 	Waud.defaults.loop = false;
 	Waud.defaults.preload = "metadata";
@@ -1003,7 +1003,6 @@ var __map_reserved = {}
 msignal_SlotList.NIL = new msignal_SlotList(null,null);
 Waud.defaults = { };
 Waud.preferredSampleRate = 44100;
-Waud.unlocked = false;
 Main.main();
 })(typeof console != "undefined" ? console : {log:function(){}}, typeof window != "undefined" ? window : exports);
 

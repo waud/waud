@@ -15,9 +15,9 @@ For haxe users:
 
 ### API Documentation ###
 
-`Waud.init()` - To initialise the library, make sure you call this first. You can also pass an optional parent `DOM` element to it where all the HTML5 sonds will be appended and also used for touch events to unlock audio on iOS devices.
+`Waud.init(?dom)` - To initialise the library, make sure you call this first. You can also pass an optional parent `DOM` element to it where all the HTML5 sonds will be appended and also used for touch events to unlock audio on iOS devices.
 
-`Waud.enableTouchUnlock(callback)` - Helper function to unlock audio on iOS devices.
+`Waud.enableTouchUnlock(?callback)` - Helper function to unlock audio on iOS devices. You can pass an optional callback which will be called on `touchend` event.
 
 `Waud.isWebAudioSupported` & `Waud.isAudioSupported` to check web audio and HTML5 audio support.
 
