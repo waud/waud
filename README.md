@@ -7,7 +7,7 @@ Web Audio Library with HTML5 audio fallback.
 
 ### Installation ###
 
-`npm install waud.js`
+[https://www.npmjs.com/package/waud.js](https://nodei.co/npm/waud.js.png?downloadRank=true&downloads=true&stars=true)
 
 For haxe users:
 
