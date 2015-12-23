@@ -38,3 +38,6 @@ WebAudioAPISound
 -dce full
 -debug
 -D source-map-content
+
+#--next
+#-cmd node audiosprite/generatesprite --loop loop --autoplay loop  -o sample/assets/sprite -e m4a sample/assets/*.mp3

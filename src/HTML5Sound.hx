@@ -87,7 +87,7 @@ import js.html.AudioElement;
 		}
 	}
 
-	public function play() {
+	public function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties) {
 		_snd.play();
 	}
 

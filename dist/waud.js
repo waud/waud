@@ -45,11 +45,11 @@ AudioManager.prototype = {
 };
 var BaseSound = function(url,options) {
 	if(url == null || url == "") {
-		console.log("invalid sound url");
+		haxe_Log.trace("invalid sound url",{ fileName : "BaseSound.hx", lineNumber : 8, className : "BaseSound", methodName : "new"});
 		return;
 	}
 	if(Waud.audioManager == null) {
-		console.log("initialise Waud using Waud.init() before loading sounds");
+		haxe_Log.trace("initialise Waud using Waud.init() before loading sounds",{ fileName : "BaseSound.hx", lineNumber : 12, className : "BaseSound", methodName : "new"});
 		return;
 	}
 	this._isPlaying = false;
@@ -145,7 +145,7 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 			}
 		}
 	}
-	,play: function() {
+	,play: function(spriteName,soundProps) {
 		this._snd.play();
 	}
 	,isPlaying: function() {
@@ -217,7 +217,7 @@ Waud.init = function(d) {
 	if(Waud.audioManager == null) Waud.audioManager = new AudioManager();
 	Waud.isWebAudioSupported = Waud.audioManager.checkWebAudioAPISupport();
 	Waud.isAudioSupported = Reflect.field(window,"Audio") != null;
-	if(Waud.isWebAudioSupported) Waud.audioManager.createAudioContext(); else if(!Waud.isAudioSupported) console.log("no audio support in this browser");
+	if(Waud.isWebAudioSupported) Waud.audioManager.createAudioContext(); else if(!Waud.isAudioSupported) haxe_Log.trace("no audio support in this browser",{ fileName : "Waud.hx", lineNumber : 29, className : "Waud", methodName : "init"});
 	Waud.defaults.autoplay = false;
 	Waud.defaults.loop = false;
 	Waud.defaults.preload = "metadata";
@@ -279,15 +279,32 @@ Waud.isM4ASupported = function() {
 };
 var WaudSound = $hx_exports.WaudSound = function(src,options) {
 	if(Waud.audioManager == null) {
-		console.log("initialise Waud using Waud.init() before loading sounds");
+		haxe_Log.trace("initialise Waud using Waud.init() before loading sounds",{ fileName : "WaudSound.hx", lineNumber : 14, className : "WaudSound", methodName : "new"});
 		return;
 	}
-	if(Waud.isWebAudioSupported) this._snd = new WebAudioAPISound(src,options); else if(Waud.isAudioSupported) this._snd = new HTML5Sound(src,options); else console.log("no audio support in this browser");
+	this._options = options;
+	if(src.indexOf(".json") > 0) this._loadSpriteJson(src); else this._init(src);
 };
 WaudSound.__name__ = true;
 WaudSound.__interfaces__ = [IWaudSound];
 WaudSound.prototype = {
-	setVolume: function(val) {
+	_loadSpriteJson: function(url) {
+		var _g = this;
+		var xobj = new XMLHttpRequest();
+		xobj.overrideMimeType("application/json");
+		xobj.open("GET",url,true);
+		xobj.onreadystatechange = function() {
+			if(xobj.readyState == 4 && xobj.status == 200) {
+				_g._spriteData = JSON.parse(xobj.response);
+				_g._init(_g._spriteData.src);
+			}
+		};
+		xobj.send(null);
+	}
+	,_init: function(src) {
+		if(Waud.isWebAudioSupported) this._snd = new WebAudioAPISound(src,this._options); else if(Waud.isAudioSupported) this._snd = new HTML5Sound(src,this._options); else haxe_Log.trace("no audio support in this browser",{ fileName : "WaudSound.hx", lineNumber : 42, className : "WaudSound", methodName : "_init"});
+	}
+	,setVolume: function(val) {
 		this._snd.setVolume(val);
 	}
 	,getVolume: function() {
@@ -296,8 +313,20 @@ WaudSound.prototype = {
 	,mute: function(val) {
 		this._snd.mute(val);
 	}
-	,play: function() {
-		this._snd.play();
+	,play: function(spriteName,soundProps) {
+		if(spriteName != null) {
+			var _g = 0;
+			var _g1 = this._spriteData.sprite;
+			while(_g < _g1.length) {
+				var snd = _g1[_g];
+				++_g;
+				if(snd.name == spriteName) {
+					soundProps = snd;
+					break;
+				}
+			}
+		}
+		this._snd.play(spriteName,soundProps);
 	}
 	,isPlaying: function() {
 		return this._snd.isPlaying();
@@ -330,7 +359,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 	}
 	,_decodeSuccess: function(buffer) {
 		if(buffer == null) {
-			console.log("empty buffer: " + this._url);
+			haxe_Log.trace("empty buffer: " + this._url,{ fileName : "WebAudioAPISound.hx", lineNumber : 36, className : "WebAudioAPISound", methodName : "_decodeSuccess"});
 			if(this._options.onerror != null) this._options.onerror(this);
 			return;
 		}
@@ -350,13 +379,21 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		this._gainNode.connect(this._manager.audioContext.destination);
 		return source;
 	}
-	,play: function() {
+	,play: function(spriteName,soundProps) {
 		var _g = this;
+		var start = 0;
+		var end = -1;
+		if(soundProps != null) {
+			start = soundProps.start;
+			end = soundProps.end;
+			if(soundProps.loop != null) this._options.loop = soundProps.loop;
+		}
 		var buffer = this._manager.bufferList.get(this._url);
 		if(buffer != null) {
 			this._snd = this._makeSource(buffer);
 			this._snd.loop = this._options.loop;
-			this._snd.start(0);
+			haxe_Log.trace(start,{ fileName : "WebAudioAPISound.hx", lineNumber : 71, className : "WebAudioAPISound", methodName : "play", customParams : [end]});
+			if(start >= 0 && end > -1) this._snd.start(0,start,end); else this._snd.start(0);
 			this._isPlaying = true;
 			this._snd.onended = function() {
 				_g._isPlaying = false;
@@ -392,6 +429,11 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 });
 var haxe_IMap = function() { };
 haxe_IMap.__name__ = true;
+var haxe_Log = function() { };
+haxe_Log.__name__ = true;
+haxe_Log.trace = function(v,infos) {
+	js_Boot.__trace(v,infos);
+};
 var haxe_Timer = function(time_ms) {
 	var me = this;
 	this.id = setInterval(function() {
@@ -479,6 +521,25 @@ js__$Boot_HaxeError.prototype = $extend(Error.prototype,{
 });
 var js_Boot = function() { };
 js_Boot.__name__ = true;
+js_Boot.__unhtml = function(s) {
+	return s.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;");
+};
+js_Boot.__trace = function(v,i) {
+	var msg;
+	if(i != null) msg = i.fileName + ":" + i.lineNumber + ": "; else msg = "";
+	msg += js_Boot.__string_rec(v,"");
+	if(i != null && i.customParams != null) {
+		var _g = 0;
+		var _g1 = i.customParams;
+		while(_g < _g1.length) {
+			var v1 = _g1[_g];
+			++_g;
+			msg += "," + js_Boot.__string_rec(v1,"");
+		}
+	}
+	var d;
+	if(typeof(document) != "undefined" && (d = document.getElementById("haxe:trace")) != null) d.innerHTML += js_Boot.__unhtml(msg) + "<br/>"; else if(typeof console != "undefined" && console.log != null) console.log(msg);
+};
 js_Boot.__string_rec = function(o,s) {
 	if(o == null) return "null";
 	if(s.length >= 5) return "<...>";

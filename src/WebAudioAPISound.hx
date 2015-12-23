@@ -56,12 +56,21 @@ import js.html.audio.AudioBuffer;
 		return source;
 	}
 
-	public function play() {
+	public function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties) {
+		var start:Float = 0;
+		var end:Float = -1;
+		if (soundProps != null) {
+			start = soundProps.start;
+			end = soundProps.end;
+			if (soundProps.loop != null) _options.loop = soundProps.loop;
+		}
 		var buffer = _manager.bufferList.get(_url);
 		if (buffer != null) {
 			_snd = _makeSource(buffer);
 			_snd.loop = _options.loop;
-			_snd.start(0);
+			if (start >= 0 && end > -1) _snd.start(0, start, end);
+			else _snd.start(0);
+
 			_isPlaying = true;
 			_snd.onended = function() {
 				_isPlaying = false;

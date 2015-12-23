@@ -1,3 +1,4 @@
+import pixi.loaders.Loader;
 import pixi.core.text.Text;
 import pixi.core.display.Container;
 import pixi.plugins.app.Application;
@@ -5,10 +6,45 @@ import js.Browser;
 
 class Main extends Application {
 
+	var _audioSprite:Dynamic = {
+		src: "assets/sprite.m4a",
+		sprite: [
+			{
+				name: "bell",
+				start: 0,
+				end: 2114.988662131519,
+				loop: false
+			},
+			{
+				name: "blank",
+				start: 4000,
+				end: 156.73469387755114,
+				loop: false
+			},
+			{
+				name: "canopening",
+				start: 6000,
+				end: 2000,
+				loop: false
+			},
+			{
+				name: "glass",
+				start: 9000,
+				end: 548.571428571428,
+				loop: false
+			},
+			{
+				name: "loop",
+				start: 11000,
+				end: 56032.6530612245,
+				loop: true
+			}
+		]
+	};
+
 	var _btnContainer:Container;
 
 	var _bgSnd:IWaudSound;
-
 	var _glassAAC:IWaudSound;
 	var _bellAAC:IWaudSound;
 	var _canAAC:IWaudSound;
@@ -18,6 +54,8 @@ class Main extends Application {
 	var _glassOGG:IWaudSound;
 	var _bellOGG:IWaudSound;
 	var _canOGG:IWaudSound;
+
+	var _audSprite:IWaudSound;
 
 	var _ua:Text;
 
@@ -62,6 +100,13 @@ class Main extends Application {
 		_addButton("BG Vol 1", 300, 150, 60, 30, function() { _bgSnd.setVolume(1); });
 		_addButton("Stop", 360, 150, 60, 30, _stop);
 
+		label = new Text("Sprite: ", { font: "26px Tahoma", fill:"#FFFFFF" });
+		_btnContainer.addChild(label);
+		label.position.y = 200;
+		_addButton("Glass", 120, 200, 60, 30, function() { _audSprite.play("glass"); });
+		_addButton("Bell", 180, 200, 60, 30, function() { _audSprite.play("bell"); });
+		_addButton("Can", 240, 200, 60, 30, function() { _audSprite.play("canopening"); });
+
 		_ua = new Text(Browser.navigator.userAgent, { font: "12px Tahoma", fill:"#FFFFFF" });
 		stage.addChild(_ua);
 
@@ -84,6 +129,8 @@ class Main extends Application {
 		_ua.text += "\n" + Waud.getFormatSupportString();
 		_ua.text += "\nWeb Audio API: " + Waud.isWebAudioSupported;
 		_ua.text += "\nHTML5 Audio: " + Waud.isAudioSupported;
+
+		_audSprite = new WaudSound("assets/sprite.json");
 
 		_resize();
 	}
@@ -117,7 +164,6 @@ class Main extends Application {
 	}
 
 	function _resize() {
-		trace(Browser.window.innerWidth, Browser.window.innerHeight);
 		_btnContainer.position.set((Browser.window.innerWidth - _btnContainer.width) / 2, (Browser.window.innerHeight - _btnContainer.height) / 2);
 	}
 

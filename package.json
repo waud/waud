@@ -31,17 +31,19 @@
 		"email": "adiinteractive@gmail.com"
 	},
 	"dependencies": {
+
+	},
+	"license": "MIT",
+	"devDependencies": {
 		"grunt": "latest",
 		"grunt-cli": "latest",
 		"grunt-haxe": "latest",
 		"browserify": "latest",
 		"grunt-contrib-uglify": "latest",
-		"grunt-browserify": "latest",
-		"grunt-contrib-copy": "latest",
-		"grunt-contrib-clean": "latest"
-	},
-	"license": "MIT",
-	"devDependencies": {
-
+		"async": "~0.9.0",
+		"mkdirp": "^0.5.0",
+		"optimist": "~0.6.1",
+		"underscore": "~1.8.3",
+		"winston": "~1.0.0"
 	}
 }
