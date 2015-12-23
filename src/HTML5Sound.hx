@@ -88,6 +88,14 @@ import js.html.AudioElement;
 	}
 
 	public function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties) {
+		/*var start:Float = 0;
+		var end:Float = -1;
+		if (soundProps != null) {
+			start = soundProps.start;
+			end = soundProps.end;
+			if (soundProps.loop != null) _options.loop = soundProps.loop;
+		}*/
+
 		_snd.play();
 	}
 
