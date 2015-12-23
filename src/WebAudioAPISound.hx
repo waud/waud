@@ -59,7 +59,7 @@ import js.html.audio.AudioBuffer;
 	public function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties) {
 		var start:Float = 0;
 		var end:Float = -1;
-		if (soundProps != null) {
+		if (isSpriteSound && soundProps != null) {
 			start = soundProps.start;
 			end = soundProps.end;
 		}
@@ -74,9 +74,9 @@ import js.html.audio.AudioBuffer;
 
 			_isPlaying = true;
 			_snd.onended = function() {
-				_snd.disconnect();
-				_snd = null;
-				if (soundProps != null && soundProps.loop && start >= 0 && end > -1) play(spriteName, soundProps);
+				if (isSpriteSound && soundProps != null && soundProps.loop && start >= 0 && end > -1) {
+					play(spriteName, soundProps);
+				}
 				_isPlaying = false;
 				if (_options.onend != null) _options.onend(this);
 			}
@@ -114,5 +114,17 @@ import js.html.audio.AudioBuffer;
 	public function stop() {
 		if (_snd == null) return;
 		_snd.stop(0);
+	}
+
+	public function destroy() {
+		if (_snd != null) {
+			_snd.stop(0);
+			_snd.disconnect();
+			_snd = null;
+		}
+		if (_gainNode != null) {
+			_gainNode.disconnect();
+			_gainNode = null;
+		}
 	}
 }

@@ -8,26 +8,20 @@
       "loop": false
     },
     {
-      "name": "blank",
+      "name": "canopening",
       "start": 4,
-      "end": 0.15673469387755112,
+      "end": 2,
       "loop": false
     },
     {
-      "name": "canopening",
-      "start": 6,
-      "end": 2,
-      "loop": true
-    },
-    {
       "name": "glass",
-      "start": 9,
-      "end": 0.548571428571428,
+      "start": 7,
+      "end": 0.5485714285714289,
       "loop": false
     },
     {
       "name": "loop",
-      "start": 11,
+      "start": 9,
       "end": 56.032653061224494,
       "loop": true
     }

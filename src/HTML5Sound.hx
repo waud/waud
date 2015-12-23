@@ -1,3 +1,4 @@
+import haxe.Timer;
 import js.html.SourceElement;
 import js.html.AudioElement;
 
@@ -6,13 +7,13 @@ import js.html.AudioElement;
 	var _snd:AudioElement;
 	var _src:SourceElement;
 	var _muted:Bool;
+	var _tmr:Timer;
 
 	public function new(url:String, ?options:WaudSoundOptions = null) {
 		super(url, options);
-
 		_muted = false;
 		_snd = Waud.dom.createAudioElement();
-		addSource(url);
+		_addSource(url);
 
 		_snd.autoplay = _options.autoplay;
 		_snd.loop = _options.loop;
@@ -48,7 +49,7 @@ import js.html.AudioElement;
 		_snd.load();
 	}
 
-	function addSource(src:String):SourceElement {
+	function _addSource(src:String):SourceElement {
 		_src = Waud.dom.createSourceElement();
 		_src.src = src;
 
@@ -88,14 +89,17 @@ import js.html.AudioElement;
 	}
 
 	public function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties) {
-		/*var start:Float = 0;
-		var end:Float = -1;
-		if (soundProps != null) {
-			start = soundProps.start;
-			end = soundProps.end;
-			if (soundProps.loop != null) _options.loop = soundProps.loop;
-		}*/
-
+		stop();
+		if (isSpriteSound && soundProps != null) {
+			_snd.currentTime = soundProps.start;
+			if (_tmr != null) _tmr.stop();
+			_tmr = Timer.delay(function() {
+				if (soundProps.loop != null && soundProps.loop) {
+					play(spriteName, soundProps);
+				}
+				else stop();
+			}, Math.ceil(soundProps.end * 1000));
+		}
 		_snd.play();
 	}
 
@@ -110,5 +114,14 @@ import js.html.AudioElement;
 	public function stop() {
 		_snd.pause();
 		_snd.currentTime = 0;
+	}
+
+	public function destroy() {
+		if (_snd != null) {
+			_snd.pause();
+			_snd.removeChild(_src);
+			_src = null;
+			_snd = null;
+		}
 	}
 }

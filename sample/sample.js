@@ -52,6 +52,7 @@ var BaseSound = function(url,options) {
 		console.log("initialise Waud using Waud.init() before loading sounds");
 		return;
 	}
+	this.isSpriteSound = false;
 	this._isPlaying = false;
 	if(options == null) options = { };
 	if(options.autoplay != null) options.autoplay = options.autoplay; else options.autoplay = Waud.defaults.autoplay;
@@ -161,7 +162,7 @@ var HTML5Sound = $hx_exports.HTML5Sound = function(url,options) {
 	BaseSound.call(this,url,options);
 	this._muted = false;
 	this._snd = Waud.dom.createElement("audio");
-	this.addSource(url);
+	this._addSource(url);
 	this._snd.autoplay = this._options.autoplay;
 	this._snd.loop = this._options.loop;
 	this._snd.volume = this._options.volume;
@@ -186,7 +187,7 @@ HTML5Sound.__name__ = true;
 HTML5Sound.__interfaces__ = [IWaudSound];
 HTML5Sound.__super__ = BaseSound;
 HTML5Sound.prototype = $extend(BaseSound.prototype,{
-	addSource: function(src) {
+	_addSource: function(src) {
 		this._src = Waud.dom.createElement("source");
 		this._src.src = src;
 		if((function($this) {
@@ -226,6 +227,15 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 		}
 	}
 	,play: function(spriteName,soundProps) {
+		var _g = this;
+		this.stop();
+		if(this.isSpriteSound && soundProps != null) {
+			this._snd.currentTime = soundProps.start;
+			if(this._tmr != null) this._tmr.stop();
+			this._tmr = haxe_Timer.delay(function() {
+				if(soundProps.loop != null && soundProps.loop) _g.play(spriteName,soundProps); else _g.stop();
+			},Math.ceil(soundProps.end * 1000));
+		}
 		this._snd.play();
 	}
 	,isPlaying: function() {
@@ -237,6 +247,14 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 	,stop: function() {
 		this._snd.pause();
 		this._snd.currentTime = 0;
+	}
+	,destroy: function() {
+		if(this._snd != null) {
+			this._snd.pause();
+			this._snd.removeChild(this._src);
+			this._src = null;
+			this._snd = null;
+		}
 	}
 });
 var pixi_plugins_app_Application = function() {
@@ -564,7 +582,13 @@ var WaudSound = $hx_exports.WaudSound = function(src,options) {
 		return;
 	}
 	this._options = options;
-	if(src.indexOf(".json") > 0) this._loadSpriteJson(src); else this._init(src);
+	if(src.indexOf(".json") > 0) {
+		this.isSpriteSound = true;
+		this._loadSpriteJson(src);
+	} else {
+		this.isSpriteSound = false;
+		this._init(src);
+	}
 };
 WaudSound.__name__ = true;
 WaudSound.__interfaces__ = [IWaudSound];
@@ -584,6 +608,7 @@ WaudSound.prototype = {
 	}
 	,_init: function(src) {
 		if(Waud.isWebAudioSupported) this._snd = new WebAudioAPISound(src,this._options); else if(Waud.isAudioSupported) this._snd = new HTML5Sound(src,this._options); else console.log("no audio support in this browser");
+		this._snd.isSpriteSound = this.isSpriteSound;
 	}
 	,setVolume: function(val) {
 		this._snd.setVolume(val);
@@ -617,6 +642,10 @@ WaudSound.prototype = {
 	}
 	,stop: function() {
 		this._snd.stop();
+	}
+	,destroy: function() {
+		this._snd.destroy();
+		this._snd = null;
 	}
 };
 var WebAudioAPISound = $hx_exports.WebAudioAPISound = function(url,options) {
@@ -664,7 +693,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		var _g = this;
 		var start = 0;
 		var end = -1;
-		if(soundProps != null) {
+		if(this.isSpriteSound && soundProps != null) {
 			start = soundProps.start;
 			end = soundProps.end;
 		}
@@ -677,9 +706,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 			}
 			this._isPlaying = true;
 			this._snd.onended = function() {
-				_g._snd.disconnect();
-				_g._snd = null;
-				if(soundProps != null && soundProps.loop && start >= 0 && end > -1) _g.play(spriteName,soundProps);
+				if(_g.isSpriteSound && soundProps != null && soundProps.loop && start >= 0 && end > -1) _g.play(spriteName,soundProps);
 				_g._isPlaying = false;
 				if(_g._options.onend != null) _g._options.onend(_g);
 			};
@@ -709,6 +736,17 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 	,stop: function() {
 		if(this._snd == null) return;
 		this._snd.stop(0);
+	}
+	,destroy: function() {
+		if(this._snd != null) {
+			this._snd.stop(0);
+			this._snd.disconnect();
+			this._snd = null;
+		}
+		if(this._gainNode != null) {
+			this._gainNode.disconnect();
+			this._gainNode = null;
+		}
 	}
 });
 var haxe_IMap = function() { };

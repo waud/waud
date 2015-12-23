@@ -1,4 +1,5 @@
 interface IWaudSound {
+	var isSpriteSound:Bool;
 	function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties):Void;
 	function stop():Void;
 	function mute(val:Bool):Void;
@@ -6,4 +7,5 @@ interface IWaudSound {
 	function setVolume(val:Float):Void;
 	function getVolume():Float;
 	function isPlaying():Bool;
+	function destroy():Void;
 }
