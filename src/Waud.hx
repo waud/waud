@@ -5,7 +5,7 @@ import js.Browser;
 @:expose @:keep class Waud {
 
 	public static var isWebAudioSupported:Bool;
-	public static var isAudioSupported:Bool;
+	public static var isHTML5AudioSupported:Bool;
 	public static var audioManager:AudioManager;
 	public static var defaults:WaudSoundOptions = {};
 	public static var sounds:Map<String, IWaudSound>;
@@ -23,10 +23,10 @@ import js.Browser;
 		audioElement = dom.createAudioElement();
 		if (Waud.audioManager == null) Waud.audioManager = new AudioManager();
 		isWebAudioSupported = Waud.audioManager.checkWebAudioAPISupport();
-		isAudioSupported = (Reflect.field(Browser.window, "Audio") != null);
+		isHTML5AudioSupported = (Reflect.field(Browser.window, "Audio") != null);
 
 		if (isWebAudioSupported) Waud.audioManager.createAudioContext();
-		else if (!isAudioSupported) trace("no audio support in this browser");
+		else if (!isHTML5AudioSupported) trace("no audio support in this browser");
 
 		defaults.autoplay = false;
 		defaults.loop = false;
@@ -65,28 +65,36 @@ import js.Browser;
 		return support;
 	}
 
+	public static function isSupported():Bool {
+		if (isWebAudioSupported == null || isHTML5AudioSupported == null) {
+			isWebAudioSupported = Waud.audioManager.checkWebAudioAPISupport();
+			isHTML5AudioSupported = (Reflect.field(Browser.window, "Audio") != null);
+		}
+		return (isWebAudioSupported || isHTML5AudioSupported);
+	}
+
 	public static function isOGGSupported():Bool {
 		var canPlay = audioElement.canPlayType('audio/ogg; codecs="vorbis"');
-		return (isAudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe"));
+		return (isHTML5AudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe"));
 	}
 
 	public static function isWAVSupported():Bool {
 		var canPlay = audioElement.canPlayType('audio/wav; codecs="1"');
-		return (isAudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe"));
+		return (isHTML5AudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe"));
 	}
 
 	public static function isMP3Supported():Bool {
 		var canPlay = audioElement.canPlayType('audio/mpeg;');
-		return (isAudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe"));
+		return (isHTML5AudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe"));
 	}
 
 	public static function isAACSupported():Bool {
 		var canPlay = audioElement.canPlayType('audio/aac;');
-		return (isAudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe"));
+		return (isHTML5AudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe"));
 	}
 
 	public static function isM4ASupported():Bool {
 		var canPlay = audioElement.canPlayType('audio/x-m4a;');
-		return (isAudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe"));
+		return (isHTML5AudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe"));
 	}
 }

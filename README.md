@@ -19,7 +19,7 @@ For haxe users:
 
 `Waud.enableTouchUnlock(?callback)` - Helper function to unlock audio on iOS devices. You can pass an optional callback which will be called on `touchend` event.
 
-`Waud.isWebAudioSupported` & `Waud.isAudioSupported` to check web audio and HTML5 audio support.
+`Waud.isWebAudioSupported` & `Waud.isHTML5AudioSupported` to check web audio and HTML5 audio support.
 
 The following functions can be used to check format support (returns true or false):
 

@@ -42,7 +42,7 @@ import haxe.Json;
 
 	function _init(src:String) {
 		if (Waud.isWebAudioSupported) _snd = new WebAudioAPISound(src, _options);
-		else if (Waud.isAudioSupported) _snd = new HTML5Sound(src, _options);
+		else if (Waud.isHTML5AudioSupported) _snd = new HTML5Sound(src, _options);
 		else trace("no audio support in this browser");
 
 		_snd.isSpriteSound = isSpriteSound;

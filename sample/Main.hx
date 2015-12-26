@@ -128,7 +128,7 @@ class Main extends Application {
 
 		_ua.text += "\n" + Waud.getFormatSupportString();
 		_ua.text += "\nWeb Audio API: " + Waud.isWebAudioSupported;
-		_ua.text += "\nHTML5 Audio: " + Waud.isAudioSupported;
+		_ua.text += "\nHTML5 Audio: " + Waud.isHTML5AudioSupported;
 
 		_audSprite = new WaudSound("assets/sprite.json");
 
