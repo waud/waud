@@ -70,14 +70,6 @@ Found any bug? Please create a new [issue](https://github.com/adireddy/waud/issu
 
 [Sample](http://adireddy.github.io/demos/waud/)
 
-Tested on:
-
-| Device        | OS            | Browser        |
-| ------------- |:-------------:| --------------:|
-| iPad 2        | 6+            | Safari         |
-| iPad Mini     | 9+            | Safari, Chrome |
-| iPad Air 1    | 9+            | Safari, Chrome |
-
 ### Usage ###
 
 ##### Haxe #####
@@ -135,7 +127,7 @@ var snd2 = new WaudSound("assets/sound1.wav", {
 
 //Touch unlock event for iOS devices
 function touchUnlock() {
-	if (_bgSnd.isPlaying()) _bgSnd.play();
+	if (!_bgSnd.isPlaying()) _bgSnd.play();
 }
 
 function _playBgSound(snd) {

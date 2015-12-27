@@ -22,11 +22,6 @@ var optimist = require('optimist')
         , 'default': 'ogg,m4a,mp3,ac3'
         , describe: 'Limit exported file types. Comma separated extension list.'
     })
-    .options('format', {
-        alias: 'f'
-        , 'default': 'waud'
-        , describe: 'Format of the output JSON file (waud, jukebox, howler, createjs).'
-    })
     .options('log', {
         alias: 'l'
         , 'default': 'info'
@@ -40,11 +35,6 @@ var optimist = require('optimist')
     .options('loop', {
         'default': null
         , describe: 'Loop sprite name, can be passed multiple times.'
-    })
-    .options('silence', {
-        alias: 's'
-        , 'default': 0
-        , describe: 'Add special "silence" track with specified duration.'
     })
     .options('gap', {
         alias: 'g'
@@ -114,7 +104,7 @@ if (argv.help || !files.length) {
     if (!argv.help) {
         winston.error('No input files specified.')
     }
-    winston.info('Usage: audiosprite [options] file1.mp3 file2.mp3 *.wav')
+    winston.info('Usage: audiosprite [options] *.mp3')
     winston.info(optimist.help())
     process.exit(1)
 }

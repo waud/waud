@@ -4,13 +4,12 @@ var async = require('async')
 var _ = require('underscore')._
 
 var defaults = {
-    output: 'output',
+    output: 'sprite',
     path: '',
     export: 'm4a,mp3,ac3,ogg',
     format: null,
     autoplay: null,
     loop: [],
-    silence: 0,
     gap: 1,
     minlength: 0,
     bitrate: 128,
@@ -52,27 +51,14 @@ module.exports = function(files) {
     opts.logger.debug('Created temporary file', { file: tempFile })
 
     var json = {
-        resources: []
-        , spritemap: {}
+        src: '', sprite: []
     }
 
     spawn('ffmpeg', ['-version']).on('exit', function(code) {
         if (code) {
             callback(new Error('ffmpeg was not found on your path'))
         }
-        if (opts.silence) {
-            json.spritemap.silence = {
-                start: 0
-                , end: opts.silence
-                , loop: true
-            }
-            if (!opts.autoplay) {
-                json.autoplay = 'silence'
-            }
-            appendSilence(opts.silence + opts.gap, tempFile, processFiles)
-        } else {
-            processFiles()
-        }
+        processFiles()
     })
 
     function mktemp(prefix) {
@@ -135,11 +121,13 @@ module.exports = function(files) {
             opts.logger.info('File added OK', { file: src, duration: originalDuration })
             var extraDuration = Math.max(0, opts.minlength - originalDuration)
             var duration = originalDuration + extraDuration
-            json.spritemap[name] = {
-                start: offsetCursor
-                , end: offsetCursor + duration
-                , loop: name === opts.autoplay || opts.loop.indexOf(name) !== -1
-            }
+
+            json.sprite.push({
+                name: name,
+                start: offsetCursor,
+                end: duration,
+                loop: name === opts.autoplay || opts.loop.indexOf(name) !== -1
+            });
             offsetCursor += originalDuration
             appendSilence(extraDuration + Math.ceil(duration) - duration + opts.gap, dest, cb)
         })
@@ -171,21 +159,12 @@ module.exports = function(files) {
                             signal: signal
                         })
                     }
-                    if (ext === 'aiff') {
-                        exportFileCaf(outfile, dest + '.caf', function(err) {
-                            if (!err && store) {
-                                json.resources.push(dest + '.caf')
-                            }
-                            fs.unlinkSync(outfile)
-                            cb()
-                        })
-                    } else {
+
                         opts.logger.info('Exported ' + ext + ' OK', { file: outfile })
                         if (store) {
-                            json.resources.push(outfile)
+                            json.src = outfile
                         }
                         cb()
-                    }
                 })
     }
 
@@ -264,6 +243,7 @@ module.exports = function(files) {
             })
         }, function(err) {
             if (err) {
+                console.log(err)
                 return callback(new Error('Error adding file'))
             }
             async.forEachSeries(Object.keys(formats), function(ext, cb) {
@@ -273,65 +253,8 @@ module.exports = function(files) {
                 if (err) {
                     return callback(new Error('Error exporting file'))
                 }
-                if (opts.autoplay) {
-                    json.autoplay = opts.autoplay
-                }
-
-                json.resources = json.resources.map(function(e) {
-                    return opts.path ? path.join(opts.path, path.basename(e)) : e
-                })
-
-                var finalJson = {}
-
-                switch (opts.format) {
-
-                    case 'waud':
-                        finalJson.src = json.resources[0]
-                        finalJson.sprite = []
-                        for (var sn in json.spritemap) {
-                            var spriteInfo = json.spritemap[sn]
-                            finalJson.sprite.push({
-                                name: sn,
-                                start: spriteInfo.start,
-                                end: (spriteInfo.end - spriteInfo.start),
-                                loop: spriteInfo.loop
-                            });
-                        }
-                        break
-
-                    case 'howler':
-                        finalJson.urls = [].concat(json.resources)
-                        finalJson.sprite = {}
-                        for (var sn in json.spritemap) {
-                            var spriteInfo = json.spritemap[sn]
-                            finalJson.sprite[sn] = [spriteInfo.start * 1000, (spriteInfo.end - spriteInfo.start) * 1000]
-                            if (spriteInfo.loop) {
-                                finalJson.sprite[sn].push(true)
-                            }
-                        }
-                        break
-
-                    case 'createjs':
-                        finalJson.src = json.resources[0]
-                        finalJson.data = {audioSprite: []}
-                        for (var sn in json.spritemap) {
-                            var spriteInfo = json.spritemap[sn]
-                            finalJson.data.audioSprite.push({
-                                id: sn,
-                                startTime: spriteInfo.start * 1000,
-                                duration: (spriteInfo.end - spriteInfo.start) * 1000
-                            })
-                        }
-                        break
-
-                    case 'default': // legacy support
-                    default:
-                        finalJson = json
-                        break
-                }
-
                 fs.unlinkSync(tempFile)
-                callback(null, finalJson)
+                callback(null, json)
             })
         })
     }
