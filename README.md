@@ -72,7 +72,7 @@ Found any bug? Please create a new [issue](https://github.com/adireddy/waud/issu
 
 ##### Haxe #####
 
-```haxe
+```js
 class Main {
 
 	var _bgSnd:IWaudSound;
