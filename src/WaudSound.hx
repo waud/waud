@@ -84,6 +84,10 @@ import haxe.Json;
 		_snd.stop();
 	}
 
+	public function onEnd(callback:IWaudSound -> Void) {
+		_snd.onEnd(callback);
+	}
+
 	public function destroy() {
 		_snd.destroy();
 		_snd = null;

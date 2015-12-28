@@ -30,7 +30,7 @@ import js.Browser;
 
 		defaults.autoplay = false;
 		defaults.loop = false;
-		defaults.preload = "metadata";
+		defaults.preload = "true";
 		defaults.volume = 1;
 
 		sounds = new Map();

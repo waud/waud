@@ -116,6 +116,10 @@ import js.html.audio.AudioBuffer;
 		_snd.stop(0);
 	}
 
+	public function onEnd(callback:IWaudSound -> Void) {
+		_options.onend = callback;
+	}
+
 	public function destroy() {
 		if (_snd != null) {
 			_snd.stop(0);

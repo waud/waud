@@ -116,6 +116,10 @@ import js.html.AudioElement;
 		_snd.currentTime = 0;
 	}
 
+	public function onEnd(callback:IWaudSound -> Void) {
+		_options.onend = callback;
+	}
+
 	public function destroy() {
 		if (_snd != null) {
 			_snd.pause();
