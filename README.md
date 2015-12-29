@@ -50,13 +50,14 @@ Example: `new WaudSound("assets/loop.mp3", { autoplay: false, loop: true, volume
 
 Available functions on sound instance:
 
-- `play()`
+- `play()` - returns sound instance for chaining if needed
 - `stop()`
 - `mute(val)` - true or false
 - `loop(val)` - true or false
 - `setVolume(val)` - between 0 and 1
 - `getVolume()` - returna value between 0 and 1
 - `isPlaying()` - returns true or false
+- `onEnd(callback)` - callback will get sound instance as parameter
 
 `Waud.sounds` will hold all the sounds that are loaded. To access any sound use `Waud.sounds.get(url)` where `url` is the path used to load the sound.
 
