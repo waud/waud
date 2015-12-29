@@ -1,46 +1,10 @@
-import pixi.loaders.Loader;
+import pixi.core.Pixi;
 import pixi.core.text.Text;
 import pixi.core.display.Container;
 import pixi.plugins.app.Application;
 import js.Browser;
 
 class Main extends Application {
-
-	var _audioSprite:Dynamic = {
-		src: "assets/sprite.m4a",
-		sprite: [
-			{
-				name: "bell",
-				start: 0,
-				end: 2114.988662131519,
-				loop: false
-			},
-			{
-				name: "blank",
-				start: 4000,
-				end: 156.73469387755114,
-				loop: false
-			},
-			{
-				name: "canopening",
-				start: 6000,
-				end: 2000,
-				loop: false
-			},
-			{
-				name: "glass",
-				start: 9000,
-				end: 548.571428571428,
-				loop: false
-			},
-			{
-				name: "loop",
-				start: 11000,
-				end: 56032.6530612245,
-				loop: true
-			}
-		]
-	};
 
 	var _btnContainer:Container;
 
@@ -61,7 +25,7 @@ class Main extends Application {
 
 	public function new() {
 		super();
-		pixelRatio = 1;
+		Pixi.RESOLUTION = pixelRatio = Browser.window.devicePixelRatio;
 		autoResize = true;
 		backgroundColor = 0x5F04B4;
 		roundPixels = true;
@@ -100,10 +64,11 @@ class Main extends Application {
 		_addButton("BG Vol 1", 300, 150, 60, 30, function() { _bgSnd.setVolume(1); });
 		_addButton("Stop", 360, 150, 60, 30, _stop);
 
+		// Audio Sprite
 		label = new Text("Sprite: ", { font: "26px Tahoma", fill:"#FFFFFF" });
 		_btnContainer.addChild(label);
 		label.position.y = 200;
-		_addButton("Glass", 120, 200, 60, 30, function() { _audSprite.play("glass"); });
+		_addButton("Glass", 120, 200, 60, 30, function() { _audSprite.play("glass").onEnd(function(s) { trace("ONEND"); }); });
 		_addButton("Bell", 180, 200, 60, 30, function() { _audSprite.play("bell"); });
 		_addButton("Can", 240, 200, 60, 30, function() { _audSprite.play("canopening"); });
 
@@ -156,11 +121,11 @@ class Main extends Application {
 	}
 
 	function _addButton(label:String, x:Float, y:Float, width:Float, height:Float, callback:Dynamic) {
-		var button = new Button(label, width, height);
-		button.position.set(x, y);
-		button.action.add(callback);
-		button.enable();
-		_btnContainer.addChild(button);
+		var btn:Button = new Button(label, width, height);
+		btn.position.set(x, y);
+		btn.action.add(callback);
+		btn.enable();
+		_btnContainer.addChild(btn);
 	}
 
 	function _resize() {
