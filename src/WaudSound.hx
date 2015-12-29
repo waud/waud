@@ -60,7 +60,7 @@ import haxe.Json;
 		_snd.mute(val);
 	}
 
-	public function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties = null) {
+	public function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties = null):IWaudSound {
 		if (spriteName != null) {
 			for (snd in _spriteData.sprite) {
 				if (snd.name == spriteName) {
@@ -70,6 +70,7 @@ import haxe.Json;
 			}
 		}
 		_snd.play(spriteName, soundProps);
+		return this;
 	}
 
 	public function isPlaying():Bool {
@@ -84,8 +85,9 @@ import haxe.Json;
 		_snd.stop();
 	}
 
-	public function onEnd(callback:IWaudSound -> Void) {
+	public function onEnd(callback:IWaudSound -> Void):IWaudSound {
 		_snd.onEnd(callback);
+		return this;
 	}
 
 	public function destroy() {

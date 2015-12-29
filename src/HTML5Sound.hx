@@ -88,7 +88,7 @@ import js.html.AudioElement;
 		}
 	}
 
-	public function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties) {
+	public function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties):IWaudSound {
 		stop();
 		if (isSpriteSound && soundProps != null) {
 			_snd.currentTime = soundProps.start;
@@ -101,6 +101,7 @@ import js.html.AudioElement;
 			}, Math.ceil(soundProps.end * 1000));
 		}
 		_snd.play();
+		return this;
 	}
 
 	public function isPlaying():Bool {
@@ -116,8 +117,9 @@ import js.html.AudioElement;
 		_snd.currentTime = 0;
 	}
 
-	public function onEnd(callback:IWaudSound -> Void) {
+	public function onEnd(callback:IWaudSound -> Void):IWaudSound {
 		_options.onend = callback;
+		return this;
 	}
 
 	public function destroy() {
