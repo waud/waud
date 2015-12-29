@@ -33,7 +33,7 @@ module.exports = function (grunt) {
         },
 
         zip: {
-            "waud.zip": ["src/*", "haxelib.json", "README.md"]
+            "waud.zip": ["src/*", "sprite.js", "waudaudiosprite.js", "haxelib.json", "README.md", "LICENSE"]
         }
     });
 

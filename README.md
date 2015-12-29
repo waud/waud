@@ -73,18 +73,18 @@ Found any bug? Please create a new [issue](https://github.com/adireddy/waud/issu
 
 ##### Haxe #####
 
-```js
+```haxe
 class Main {
 
 	var _bgSnd:IWaudSound;
 	var _snd2:IWaudSound;
 
 	public function new() {
-		Waud.init();
+        Waud.init();
         Waud.enableTouchUnlock(touchUnlock);
-		_bgSnd = new WaudSound("assets/loop.mp3", { autoplay: false, loop: true, volume: 0.5, onload: _playBgSound });
-		_snd2 = new WaudSound("assets/sound1.wav", {
-			autoplay: false,
+        _bgSnd = new WaudSound("assets/loop.mp3", { autoplay: false, loop: true, volume: 0.5, onload: _playBgSound });
+        _snd2 = new WaudSound("assets/sound1.wav", {
+            autoplay: false,
 			loop: false,
 			onload: function (snd) { snd.play(); },
 			onend: function (snd) { trace("ended"); },
