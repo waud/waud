@@ -1,3 +1,4 @@
+import pixi.core.Pixi;
 import pixi.core.text.Text;
 import pixi.core.display.Container;
 import pixi.plugins.app.Application;
@@ -8,7 +9,6 @@ class Main extends Application {
 	var _btnContainer:Container;
 
 	var _bgSnd:IWaudSound;
-
 	var _glassAAC:IWaudSound;
 	var _bellAAC:IWaudSound;
 	var _canAAC:IWaudSound;
@@ -19,11 +19,13 @@ class Main extends Application {
 	var _bellOGG:IWaudSound;
 	var _canOGG:IWaudSound;
 
+	var _audSprite:IWaudSound;
+
 	var _ua:Text;
 
 	public function new() {
 		super();
-		pixelRatio = 1;
+		Pixi.RESOLUTION = pixelRatio = Browser.window.devicePixelRatio;
 		autoResize = true;
 		backgroundColor = 0x5F04B4;
 		roundPixels = true;
@@ -62,6 +64,14 @@ class Main extends Application {
 		_addButton("BG Vol 1", 300, 150, 60, 30, function() { _bgSnd.setVolume(1); });
 		_addButton("Stop", 360, 150, 60, 30, _stop);
 
+		// Audio Sprite
+		label = new Text("Sprite: ", { font: "26px Tahoma", fill:"#FFFFFF" });
+		_btnContainer.addChild(label);
+		label.position.y = 200;
+		_addButton("Glass", 120, 200, 60, 30, function() { _audSprite.play("glass").onEnd(function(s) { trace("ONEND"); }); });
+		_addButton("Bell", 180, 200, 60, 30, function() { _audSprite.play("bell"); });
+		_addButton("Can", 240, 200, 60, 30, function() { _audSprite.play("canopening"); });
+
 		_ua = new Text(Browser.navigator.userAgent, { font: "12px Tahoma", fill:"#FFFFFF" });
 		stage.addChild(_ua);
 
@@ -83,7 +93,9 @@ class Main extends Application {
 
 		_ua.text += "\n" + Waud.getFormatSupportString();
 		_ua.text += "\nWeb Audio API: " + Waud.isWebAudioSupported;
-		_ua.text += "\nHTML5 Audio: " + Waud.isAudioSupported;
+		_ua.text += "\nHTML5 Audio: " + Waud.isHTML5AudioSupported;
+
+		_audSprite = new WaudSound("assets/sprite.json");
 
 		_resize();
 	}
@@ -109,15 +121,14 @@ class Main extends Application {
 	}
 
 	function _addButton(label:String, x:Float, y:Float, width:Float, height:Float, callback:Dynamic) {
-		var button = new Button(label, width, height);
-		button.position.set(x, y);
-		button.action.add(callback);
-		button.enable();
-		_btnContainer.addChild(button);
+		var btn:Button = new Button(label, width, height);
+		btn.position.set(x, y);
+		btn.action.add(callback);
+		btn.enable();
+		_btnContainer.addChild(btn);
 	}
 
 	function _resize() {
-		trace(Browser.window.innerWidth, Browser.window.innerHeight);
 		_btnContainer.position.set((Browser.window.innerWidth - _btnContainer.width) / 2, (Browser.window.innerHeight - _btnContainer.height) / 2);
 	}
 

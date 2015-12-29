@@ -3,8 +3,6 @@ Web Audio Library with HTML5 audio fallback.
 
 [![Build Status](https://travis-ci.org/adireddy/waud.svg?branch=master)](https://travis-ci.org/adireddy/waud) [![npm version](https://badge.fury.io/js/waud.js.svg)](https://badge.fury.io/js/waud.js)
 
-[![experimental](http://badges.github.io/stability-badges/dist/experimental.svg)](http://github.com/badges/stability-badges)
-
 ### Installation ###
 
 `npm install waud.js`
@@ -19,7 +17,7 @@ For haxe users:
 
 `Waud.enableTouchUnlock(?callback)` - Helper function to unlock audio on iOS devices. You can pass an optional callback which will be called on `touchend` event.
 
-`Waud.isWebAudioSupported` & `Waud.isAudioSupported` to check web audio and HTML5 audio support.
+`Waud.isWebAudioSupported` & `Waud.isHTML5AudioSupported` to check web audio and HTML5 audio support.
 
 The following functions can be used to check format support (returns true or false):
 
@@ -52,13 +50,14 @@ Example: `new WaudSound("assets/loop.mp3", { autoplay: false, loop: true, volume
 
 Available functions on sound instance:
 
-- `play()`
+- `play()` - returns sound instance for chaining if needed
 - `stop()`
 - `mute(val)` - true or false
 - `loop(val)` - true or false
 - `setVolume(val)` - between 0 and 1
 - `getVolume()` - returna value between 0 and 1
 - `isPlaying()` - returns true or false
+- `onEnd(callback)` - callback will get sound instance as parameter
 
 `Waud.sounds` will hold all the sounds that are loaded. To access any sound use `Waud.sounds.get(url)` where `url` is the path used to load the sound.
 
@@ -69,14 +68,6 @@ Found any bug? Please create a new [issue](https://github.com/adireddy/waud/issu
 ### Demo ###
 
 [Sample](http://adireddy.github.io/demos/waud/)
-
-Tested on:
-
-| Device        | OS            | Browser        |
-| ------------- |:-------------:| --------------:|
-| iPad 2        | 6+            | Safari         |
-| iPad Mini     | 9+            | Safari, Chrome |
-| iPad Air 1    | 9+            | Safari, Chrome |
 
 ### Usage ###
 
@@ -89,11 +80,11 @@ class Main {
 	var _snd2:IWaudSound;
 
 	public function new() {
-		Waud.init();
+        Waud.init();
         Waud.enableTouchUnlock(touchUnlock);
-		_bgSnd = new WaudSound("assets/loop.mp3", { autoplay: false, loop: true, volume: 0.5, onload: _playBgSound });
-		_snd2 = new WaudSound("assets/sound1.wav", {
-			autoplay: false,
+        _bgSnd = new WaudSound("assets/loop.mp3", { autoplay: false, loop: true, volume: 0.5, onload: _playBgSound });
+        _snd2 = new WaudSound("assets/sound1.wav", {
+            autoplay: false,
 			loop: false,
 			onload: function (snd) { snd.play(); },
 			onend: function (snd) { trace("ended"); },
@@ -135,7 +126,7 @@ var snd2 = new WaudSound("assets/sound1.wav", {
 
 //Touch unlock event for iOS devices
 function touchUnlock() {
-	if (_bgSnd.isPlaying()) _bgSnd.play();
+	if (!_bgSnd.isPlaying()) _bgSnd.play();
 }
 
 function _playBgSound(snd) {

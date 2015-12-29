@@ -56,14 +56,27 @@ import js.html.audio.AudioBuffer;
 		return source;
 	}
 
-	public function play() {
+	public function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties):IWaudSound {
+		var start:Float = 0;
+		var end:Float = -1;
+		if (isSpriteSound && soundProps != null) {
+			start = soundProps.start;
+			end = soundProps.end;
+		}
 		var buffer = _manager.bufferList.get(_url);
 		if (buffer != null) {
 			_snd = _makeSource(buffer);
-			_snd.loop = _options.loop;
-			_snd.start(0);
+			if (start >= 0 && end > -1) _snd.start(0, start, end);
+			else {
+				_snd.loop = _options.loop;
+				_snd.start(0);
+			}
+
 			_isPlaying = true;
 			_snd.onended = function() {
+				if (isSpriteSound && soundProps != null && soundProps.loop && start >= 0 && end > -1) {
+					play(spriteName, soundProps);
+				}
 				_isPlaying = false;
 				if (_options.onend != null) _options.onend(this);
 			}
@@ -71,6 +84,8 @@ import js.html.audio.AudioBuffer;
 			if(_manager.playingSounds.get(_url) == null) _manager.playingSounds.set(_url, []);
 			_manager.playingSounds.get(_url).push(_snd);
 		}
+
+		return this;
 	}
 
 	public function isPlaying():Bool {
@@ -101,5 +116,22 @@ import js.html.audio.AudioBuffer;
 	public function stop() {
 		if (_snd == null) return;
 		_snd.stop(0);
+	}
+
+	public function onEnd(callback:IWaudSound -> Void):IWaudSound {
+		_options.onend = callback;
+		return this;
+	}
+
+	public function destroy() {
+		if (_snd != null) {
+			_snd.stop(0);
+			_snd.disconnect();
+			_snd = null;
+		}
+		if (_gainNode != null) {
+			_gainNode.disconnect();
+			_gainNode = null;
+		}
 	}
 }

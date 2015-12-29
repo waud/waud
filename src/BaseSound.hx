@@ -1,5 +1,7 @@
 @:keep class BaseSound {
 
+	public var isSpriteSound:Bool;
+
 	var _options:WaudSoundOptions;
 	var _isPlaying:Bool;
 
@@ -12,6 +14,7 @@
 			trace("initialise Waud using Waud.init() before loading sounds");
 			return;
 		}
+		isSpriteSound = false;
 		_isPlaying = false;
 		if (options == null) options = {};
 
