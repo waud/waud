@@ -157,6 +157,7 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 			},Math.ceil(soundProps.end * 1000));
 		}
 		this._snd.play();
+		return this;
 	}
 	,isPlaying: function() {
 		return this._isPlaying;
@@ -167,6 +168,10 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 	,stop: function() {
 		this._snd.pause();
 		this._snd.currentTime = 0;
+	}
+	,onEnd: function(callback) {
+		this._options.onend = callback;
+		return this;
 	}
 	,destroy: function() {
 		if(this._snd != null) {
@@ -234,11 +239,11 @@ Waud.init = function(d) {
 	Waud.audioElement = Waud.dom.createElement("audio");
 	if(Waud.audioManager == null) Waud.audioManager = new AudioManager();
 	Waud.isWebAudioSupported = Waud.audioManager.checkWebAudioAPISupport();
-	Waud.isAudioSupported = Reflect.field(window,"Audio") != null;
-	if(Waud.isWebAudioSupported) Waud.audioManager.createAudioContext(); else if(!Waud.isAudioSupported) console.log("no audio support in this browser");
+	Waud.isHTML5AudioSupported = Reflect.field(window,"Audio") != null;
+	if(Waud.isWebAudioSupported) Waud.audioManager.createAudioContext(); else if(!Waud.isHTML5AudioSupported) console.log("no audio support in this browser");
 	Waud.defaults.autoplay = false;
 	Waud.defaults.loop = false;
-	Waud.defaults.preload = "metadata";
+	Waud.defaults.preload = "true";
 	Waud.defaults.volume = 1;
 	Waud.sounds = new haxe_ds_StringMap();
 	Waud.types = new haxe_ds_StringMap();
@@ -275,25 +280,32 @@ Waud.getFormatSupportString = function() {
 	support += ", M4A: " + Waud.audioElement.canPlayType("audio/x-m4a;");
 	return support;
 };
+Waud.isSupported = function() {
+	if(Waud.isWebAudioSupported == null || Waud.isHTML5AudioSupported == null) {
+		Waud.isWebAudioSupported = Waud.audioManager.checkWebAudioAPISupport();
+		Waud.isHTML5AudioSupported = Reflect.field(window,"Audio") != null;
+	}
+	return Waud.isWebAudioSupported || Waud.isHTML5AudioSupported;
+};
 Waud.isOGGSupported = function() {
 	var canPlay = Waud.audioElement.canPlayType("audio/ogg; codecs=\"vorbis\"");
-	return Waud.isAudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe");
+	return Waud.isHTML5AudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe");
 };
 Waud.isWAVSupported = function() {
 	var canPlay = Waud.audioElement.canPlayType("audio/wav; codecs=\"1\"");
-	return Waud.isAudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe");
+	return Waud.isHTML5AudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe");
 };
 Waud.isMP3Supported = function() {
 	var canPlay = Waud.audioElement.canPlayType("audio/mpeg;");
-	return Waud.isAudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe");
+	return Waud.isHTML5AudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe");
 };
 Waud.isAACSupported = function() {
 	var canPlay = Waud.audioElement.canPlayType("audio/aac;");
-	return Waud.isAudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe");
+	return Waud.isHTML5AudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe");
 };
 Waud.isM4ASupported = function() {
 	var canPlay = Waud.audioElement.canPlayType("audio/x-m4a;");
-	return Waud.isAudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe");
+	return Waud.isHTML5AudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe");
 };
 var WaudSound = $hx_exports.WaudSound = function(src,options) {
 	if(Waud.audioManager == null) {
@@ -326,7 +338,7 @@ WaudSound.prototype = {
 		xobj.send(null);
 	}
 	,_init: function(src) {
-		if(Waud.isWebAudioSupported) this._snd = new WebAudioAPISound(src,this._options); else if(Waud.isAudioSupported) this._snd = new HTML5Sound(src,this._options); else console.log("no audio support in this browser");
+		if(Waud.isWebAudioSupported) this._snd = new WebAudioAPISound(src,this._options); else if(Waud.isHTML5AudioSupported) this._snd = new HTML5Sound(src,this._options); else console.log("no audio support in this browser");
 		this._snd.isSpriteSound = this.isSpriteSound;
 	}
 	,setVolume: function(val) {
@@ -352,6 +364,7 @@ WaudSound.prototype = {
 			}
 		}
 		this._snd.play(spriteName,soundProps);
+		return this;
 	}
 	,isPlaying: function() {
 		return this._snd.isPlaying();
@@ -361,6 +374,10 @@ WaudSound.prototype = {
 	}
 	,stop: function() {
 		this._snd.stop();
+	}
+	,onEnd: function(callback) {
+		this._snd.onEnd(callback);
+		return this;
 	}
 	,destroy: function() {
 		this._snd.destroy();
@@ -432,6 +449,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 			if(this._manager.playingSounds.get(this._url) == null) this._manager.playingSounds.set(this._url,[]);
 			this._manager.playingSounds.get(this._url).push(this._snd);
 		}
+		return this;
 	}
 	,isPlaying: function() {
 		return this._isPlaying;
@@ -455,6 +473,10 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 	,stop: function() {
 		if(this._snd == null) return;
 		this._snd.stop(0);
+	}
+	,onEnd: function(callback) {
+		this._options.onend = callback;
+		return this;
 	}
 	,destroy: function() {
 		if(this._snd != null) {
