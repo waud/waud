@@ -19,8 +19,8 @@
 	"contributors": [
 		"adireddy"
 	],
-	"releasenote": "added audio sprite support",
-	"version": "0.2.0",
+	"releasenote": "mute bug fix",
+	"version": "0.2.1",
 	"url": "https://github.com/adireddy/waud",
 	"dependencies": {}
 }
