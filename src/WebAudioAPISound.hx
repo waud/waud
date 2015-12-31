@@ -57,6 +57,7 @@ import js.html.audio.AudioBuffer;
 	}
 
 	public function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties):IWaudSound {
+		if (_muted) return this;
 		var start:Float = 0;
 		var end:Float = -1;
 		if (isSpriteSound && soundProps != null) {
@@ -81,8 +82,7 @@ import js.html.audio.AudioBuffer;
 				if (_options.onend != null) _options.onend(this);
 			}
 
-			if(_manager.playingSounds.get(_url) == null) _manager.playingSounds.set(_url, []);
-			_manager.playingSounds.get(_url).push(_snd);
+			if(_manager.playingSounds.get(_url) == null) _manager.playingSounds.set(_url, _snd);
 		}
 
 		return this;
@@ -108,6 +108,7 @@ import js.html.audio.AudioBuffer;
 	}
 
 	public function mute(val:Bool) {
+		_muted = val;
 		if (_gainNode == null) return;
 		if (val) _gainNode.gain.value = 0;
 		else _gainNode.gain.value = _options.volume;

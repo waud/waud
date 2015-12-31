@@ -6,7 +6,7 @@ class AudioManager {
 
 	public var audioContext:AudioContext;
 	public var bufferList:Map<String, Dynamic>;
-	public var playingSounds:Map<String, Array<Dynamic>>;
+	public var playingSounds:Map<String, Dynamic>;
 
 	static var AudioContextClass:Dynamic;
 

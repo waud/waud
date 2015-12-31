@@ -6,12 +6,10 @@ import js.html.AudioElement;
 
 	var _snd:AudioElement;
 	var _src:SourceElement;
-	var _muted:Bool;
 	var _tmr:Timer;
 
 	public function new(url:String, ?options:WaudSoundOptions = null) {
 		super(url, options);
-		_muted = false;
 		_snd = Waud.dom.createAudioElement();
 		_addSource(url);
 
@@ -89,6 +87,7 @@ import js.html.AudioElement;
 	}
 
 	public function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties):IWaudSound {
+		if (_muted) return this;
 		stop();
 		if (isSpriteSound && soundProps != null) {
 			_snd.currentTime = soundProps.start;
