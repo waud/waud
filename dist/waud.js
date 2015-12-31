@@ -155,7 +155,7 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 			if(this._tmr != null) this._tmr.stop();
 			this._tmr = haxe_Timer.delay(function() {
 				if(soundProps.loop != null && soundProps.loop) _g.play(spriteName,soundProps); else _g.stop();
-			},Math.ceil(soundProps.end * 1000));
+			},Math.ceil(soundProps.duration * 1000));
 		}
 		this._snd.play();
 		return this;
@@ -433,7 +433,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		var end = -1;
 		if(this.isSpriteSound && soundProps != null) {
 			start = soundProps.start;
-			end = soundProps.end;
+			end = soundProps.duration;
 		}
 		var buffer = this._manager.bufferList.get(this._url);
 		if(buffer != null) {

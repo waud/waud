@@ -62,7 +62,7 @@ import js.html.audio.AudioBuffer;
 		var end:Float = -1;
 		if (isSpriteSound && soundProps != null) {
 			start = soundProps.start;
-			end = soundProps.end;
+			end = soundProps.duration;
 		}
 		var buffer = _manager.bufferList.get(_url);
 		if (buffer != null) {
