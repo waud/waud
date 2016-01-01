@@ -76,6 +76,7 @@ class Main extends Application {
 		stage.addChild(_ua);
 
 		Waud.init();
+		Waud.autoMute();
 		Waud.enableTouchUnlock(touchUnlock);
 		_bgSnd = new WaudSound("assets/loop.mp3", { loop:true, autoplay: false, volume: 0.5, onload: _playBgSound });
 

@@ -89,6 +89,7 @@
 
     function init() {
         Waud.init();
+        Waud.autoMute();
 
         document.getElementById("ua").innerHTML = navigator.userAgent;
         document.getElementById("ua").innerHTML += "<br/>" + Waud.getFormatSupportString();
