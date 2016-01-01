@@ -44,14 +44,20 @@ import js.Browser;
 		types.set("m4a", "audio/x-m4a");
 	}
 
-	public static function autoMute() {
-		Browser.window.onblur = function() {
-			for (sound in sounds) sound.mute(true);
-		};
+	public static function autoMute(?val:Bool = true) {
+		if (val) {
+			Browser.window.onblur = function() {
+				for (sound in sounds) sound.mute(true);
+			};
 
-		Browser.window.onfocus = function() {
-			if (!isMuted) for (sound in sounds) sound.mute(false);
-		};
+			Browser.window.onfocus = function() {
+				if (!isMuted) for (sound in sounds) sound.mute(false);
+			};
+		}
+		else {
+			Browser.window.onblur = null;
+			Browser.window.onfocus = null;
+		}
 	}
 
 	public static function enableTouchUnlock(?callback:Void -> Void) {
