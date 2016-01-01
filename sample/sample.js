@@ -661,23 +661,29 @@ Waud.init = function(d) {
 	Waud.types.set("aac","audio/aac");
 	Waud.types.set("m4a","audio/x-m4a");
 };
-Waud.autoMute = function() {
-	window.onblur = function() {
-		var $it0 = Waud.sounds.iterator();
-		while( $it0.hasNext() ) {
-			var sound = $it0.next();
-			sound.mute(true);
-		}
-	};
-	window.onfocus = function() {
-		if(!Waud.isMuted) {
-			var $it1 = Waud.sounds.iterator();
-			while( $it1.hasNext() ) {
-				var sound1 = $it1.next();
-				sound1.mute(false);
+Waud.autoMute = function(val) {
+	if(val == null) val = true;
+	if(val) {
+		window.onblur = function() {
+			var $it0 = Waud.sounds.iterator();
+			while( $it0.hasNext() ) {
+				var sound = $it0.next();
+				sound.mute(true);
 			}
-		}
-	};
+		};
+		window.onfocus = function() {
+			if(!Waud.isMuted) {
+				var $it1 = Waud.sounds.iterator();
+				while( $it1.hasNext() ) {
+					var sound1 = $it1.next();
+					sound1.mute(false);
+				}
+			}
+		};
+	} else {
+		window.onblur = null;
+		window.onfocus = null;
+	}
 };
 Waud.enableTouchUnlock = function(callback) {
 	Waud.__touchUnlockCallback = callback;
