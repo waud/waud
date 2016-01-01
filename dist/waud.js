@@ -254,12 +254,31 @@ Waud.init = function(d) {
 	Waud.types.set("aac","audio/aac");
 	Waud.types.set("m4a","audio/x-m4a");
 };
+Waud.autoMute = function() {
+	window.onblur = function() {
+		var $it0 = Waud.sounds.iterator();
+		while( $it0.hasNext() ) {
+			var sound = $it0.next();
+			sound.mute(true);
+		}
+	};
+	window.onfocus = function() {
+		if(!Waud.isMuted) {
+			var $it1 = Waud.sounds.iterator();
+			while( $it1.hasNext() ) {
+				var sound1 = $it1.next();
+				sound1.mute(false);
+			}
+		}
+	};
+};
 Waud.enableTouchUnlock = function(callback) {
 	Waud.__touchUnlockCallback = callback;
 	Waud.dom.ontouchend = ($_=Waud.audioManager,$bind($_,$_.unlockAudio));
 };
 Waud.mute = function(val) {
 	if(val == null) val = true;
+	Waud.isMuted = val;
 	var $it0 = Waud.sounds.iterator();
 	while( $it0.hasNext() ) {
 		var sound = $it0.next();
@@ -656,6 +675,7 @@ Array.__name__ = true;
 var __map_reserved = {}
 Waud.defaults = { };
 Waud.preferredSampleRate = 44100;
+Waud.isMuted = false;
 })(typeof console != "undefined" ? console : {log:function(){}}, typeof window != "undefined" ? window : exports);
 
 //# sourceMappingURL=waud.js.map
