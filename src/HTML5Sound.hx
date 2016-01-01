@@ -88,7 +88,6 @@ import js.html.AudioElement;
 
 	public function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties):IWaudSound {
 		if (_muted) return this;
-		stop();
 		if (isSpriteSound && soundProps != null) {
 			_snd.currentTime = soundProps.start;
 			if (_tmr != null) _tmr.stop();
