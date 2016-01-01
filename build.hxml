@@ -24,7 +24,7 @@ HTML5Sound
 WebAudioAPISound
 -js dist/waud.min.js
 -dce full
-#--no-traces
+--no-traces
 
 --next
 
