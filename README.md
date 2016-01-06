@@ -84,7 +84,7 @@ class Main {
 		Waud.enableTouchUnlock(touchUnlock);
 		_bgSnd = new WaudSound("assets/loop.mp3", { autoplay: false, loop: true, volume: 0.5, onload: _playBgSound });
 		_snd2 = new WaudSound("assets/sound1.wav", {
-            autoplay: false,
+			autoplay: false,
 			loop: false,
 			onload: function (snd) { snd.play(); },
 			onend: function (snd) { trace("ended"); },
