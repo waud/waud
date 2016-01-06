@@ -13,13 +13,12 @@ For haxe users:
 
 ### API Documentation ###
 
-`Waud.init(?dom)` - To initialise the library, make sure you call this first. You can also pass an optional parent `DOM` element to it where all the HTML5 sonds will be appended and also used for touch events to unlock audio on iOS devices.
-
-`Waud.enableTouchUnlock(?callback)` - Helper function to unlock audio on iOS devices. You can pass an optional callback which will be called on `touchend` event.
-
-`Waud.autoMute()` - Helper function to automatically mute audio when the browser window is not in focus. Will un-mute when the window gains focus.
-
-`Waud.isWebAudioSupported` & `Waud.isHTML5AudioSupported` to check web audio and HTML5 audio support.
+- `Waud.init(?dom)` - To initialise the library, make sure you call this first. You can also pass an optional parent `DOM` element to it where all the HTML5 sonds will be appended and also used for touch events to unlock audio on iOS devices.
+- `Waud.enableTouchUnlock(?callback)` - Helper function to unlock audio on iOS devices. You can pass an optional callback which will be called on `touchend` event.
+- `Waud.autoMute()` - Helper function to automatically mute audio when the browser window is not in focus. Will un-mute when the window gains focus.
+- `Waud.isWebAudioSupported` - To check web audio support.
+- `Waud.isHTML5AudioSupported` to check HTML5 audio support.
+- `Waud.getFormatSupportString()` - Returns a string with all the format support information (ex: OGG: probably, WAV: probably, MP3: probably, AAC: probably, M4A: maybe).
 
 The following functions can be used to check format support (returns true or false):
 
@@ -28,8 +27,6 @@ The following functions can be used to check format support (returns true or fal
 - `Waud.isMP3Supported()`
 - `Waud.isAACSupported()`
 - `Waud.isM4ASupported()`
-
-`Waud.getFormatSupportString()` return a string with all the above support information.
 
 There are 3 classes available for audio playback.
 
