@@ -38,14 +38,17 @@ There are 3 classes available for audio playback.
 
 The following are the options available when creating sound instabce:
 
-- **`autoplay`** - true or false (default: false)
-- **`loop`** - true or false (default: false)
-- **`volume`** - between 0 and 1 (default: 1)
-- **`onload`** - callback function when the sounad is loaded with sound instance as parameter (default: none)
-- **`onend`** - callback function when the sound playback ends with sound instance as parameter (default: none)
-- **`onerror`** - callback function when there is an error in loading/decoding with sound instance as parameter (default: none)
+- **`autoplay`** - true or false (default: `false`)
+- **`loop`** - true or false (default: `false`)
+- **`volume`** - between 0 and 1 (default: `1`)
+- **`onload`** - callback function when the sounad is loaded with sound instance as parameter (default: `none`)
+- **`onend`** - callback function when the sound playback ends with sound instance as parameter (default: `none`)
+- **`onerror`** - callback function when there is an error in loading/decoding with sound instance as parameter (default: `none`)
 
-Example: `new WaudSound("assets/loop.mp3", { autoplay: false, loop: true, volume: 0.5, onload: _playBgSound });`
+Example: 
+```js
+var snd = new WaudSound("assets/loop.mp3", { autoplay: false, loop: true, volume: 0.5, onload: _playBgSound });
+```
 
 Available functions on sound instance:
 
