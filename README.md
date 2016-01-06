@@ -18,7 +18,7 @@ For haxe users:
 - **`Waud.autoMute()`** - Helper function to automatically mute audio when the browser window is not in focus. Will un-mute when the window gains focus.
 - **`Waud.isWebAudioSupported`** - To check web audio support.
 - **`Waud.isHTML5AudioSupported`** to check HTML5 audio support.
-- **`Waud.getFormatSupportString()`** - Returns a string with all the format support information (ex: OGG: probably, WAV: probably, MP3: probably, AAC: probably, M4A: maybe).
+- **`Waud.getFormatSupportString()`** - Returns a string with all the format support information (ex: `OGG: probably, WAV: probably, MP3: probably, AAC: probably, M4A: maybe`).
 
 The following functions can be used to check format support (returns `true` or `false`):
 
