@@ -174,7 +174,7 @@
 
     //Touch unlock event for iOS devices
     function touchUnlock() {
-        if (_bgSnd.isPlaying()) _bgSnd.play();
+        if (!_bgSnd.isPlaying()) _bgSnd.play();
     }
 
     function playBgSound(snd) {
