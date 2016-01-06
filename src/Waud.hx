@@ -44,7 +44,7 @@ import js.Browser;
 		types.set("m4a", "audio/x-m4a");
 	}
 
-	public static function autoMute(?val:Bool = true) {
+	public static function autoMute() {
 		var blur = function() {
 			for (sound in sounds) sound.mute(true);
 		};
@@ -53,12 +53,9 @@ import js.Browser;
 			if (!isMuted) for (sound in sounds) sound.mute(false);
 		};
 
-		if (val) FocusManager.addEvents(focus, blur);
-		else {
-			FocusManager.removeEvents(focus, blur);
-			focus = null;
-			blur = null;
-		}
+		var fm = new FocusManager();
+		fm.focus = focus;
+		fm.blur = blur;
 	}
 
 	public static function enableTouchUnlock(?callback:Void -> Void) {
