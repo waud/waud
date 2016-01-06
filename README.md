@@ -17,6 +17,8 @@ For haxe users:
 
 `Waud.enableTouchUnlock(?callback)` - Helper function to unlock audio on iOS devices. You can pass an optional callback which will be called on `touchend` event.
 
+`Waud.autoMute()` - Helper function to automatically mute audio when the browser window is not in focus. Will un-mute when the window gains focus.
+
 `Waud.isWebAudioSupported` & `Waud.isHTML5AudioSupported` to check web audio and HTML5 audio support.
 
 The following functions can be used to check format support (returns true or false):
