@@ -76,30 +76,55 @@ EReg.prototype = {
 		return this.r.m != null;
 	}
 };
-var FocusManager = function() { };
-FocusManager.__name__ = true;
-FocusManager.addEvents = function(focus,blur) {
+var FocusManager = function() {
+	var _g = this;
+	this._hidden = "";
+	this._visibilityChange = "";
+	this._currentState = "";
+	if(Reflect.field(window.document,"hidden") != null) {
+		this._hidden = "hidden";
+		this._visibilityChange = "visibilitychange";
+	} else if(Reflect.field(window.document,"mozHidden") != null) {
+		this._hidden = "mozHidden";
+		this._visibilityChange = "mozvisibilitychange";
+	} else if(Reflect.field(window.document,"msHidden") != null) {
+		this._hidden = "msHidden";
+		this._visibilityChange = "msvisibilitychange";
+	} else if(Reflect.field(window.document,"webkitHidden") != null) {
+		this._hidden = "webkitHidden";
+		this._visibilityChange = "webkitvisibilitychange";
+	}
 	if(Reflect.field(window,"addEventListener") != null) {
-		window.addEventListener("focus",focus);
-		window.addEventListener("blur",blur);
+		window.addEventListener("focus",$bind(this,this._focus));
+		window.addEventListener("blur",$bind(this,this._blur));
+		window.addEventListener("pageshow",$bind(this,this._focus));
+		window.addEventListener("pagehide",$bind(this,this._blur));
+		document.addEventListener(this._visibilityChange,$bind(this,this._handleVisibilityChange));
 	} else if(Reflect.field(window,"attachEvent") != null) {
-		window.attachEvent("onfocus",focus);
-		window.attachEvent("onblur",blur);
+		window.attachEvent("onfocus",$bind(this,this._focus));
+		window.attachEvent("onblur",$bind(this,this._blur));
+		window.attachEvent("pageshow",$bind(this,this._focus));
+		window.attachEvent("pagehide",$bind(this,this._blur));
+		document.attachEvent(this._visibilityChange,$bind(this,this._handleVisibilityChange));
 	} else window.onload = function() {
-		window.onfocus = focus;
-		window.onblur = blur;
+		window.onfocus = $bind(_g,_g._focus);
+		window.onblur = $bind(_g,_g._blur);
+		window.onpageshow = $bind(_g,_g._focus);
+		window.onpagehide = $bind(_g,_g._blur);
 	};
 };
-FocusManager.removeEvents = function(focus,blur) {
-	if(Reflect.field(window,"removeEventListener") != null) {
-		window.removeEventListener("focus",focus);
-		window.removeEventListener("blur",blur);
-	} else if(Reflect.field(window,"removeEvent") != null) {
-		window.removeEvent("onfocus",focus);
-		window.removeEvent("onblur",blur);
-	} else {
-		window.onfocus = null;
-		window.onblur = null;
+FocusManager.__name__ = true;
+FocusManager.prototype = {
+	_handleVisibilityChange: function() {
+		if(Reflect.field(window.document,this._hidden) != null && Reflect.field(window.document,this._hidden)) this.blur(); else this.focus();
+	}
+	,_focus: function() {
+		if(this._currentState != "focus" && this.focus != null) this.focus();
+		this._currentState = "focus";
+	}
+	,_blur: function() {
+		if(this._currentState != "blur" && this.blur != null) this.blur();
+		this._currentState = "blur";
 	}
 };
 var IWaudSound = function() { };
@@ -279,8 +304,7 @@ Waud.init = function(d) {
 	Waud.types.set("aac","audio/aac");
 	Waud.types.set("m4a","audio/x-m4a");
 };
-Waud.autoMute = function(val) {
-	if(val == null) val = true;
+Waud.autoMute = function() {
 	var blur = function() {
 		var $it0 = Waud.sounds.iterator();
 		while( $it0.hasNext() ) {
@@ -297,11 +321,9 @@ Waud.autoMute = function(val) {
 			}
 		}
 	};
-	if(val) FocusManager.addEvents(focus,blur); else {
-		FocusManager.removeEvents(focus,blur);
-		focus = null;
-		blur = null;
-	}
+	var fm = new FocusManager();
+	fm.focus = focus;
+	fm.blur = blur;
 };
 Waud.enableTouchUnlock = function(callback) {
 	Waud.__touchUnlockCallback = callback;

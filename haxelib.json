@@ -19,8 +19,8 @@
 	"contributors": [
 		"adireddy"
 	],
-	"releasenote": "added cross-browser autoMute functionality",
-	"version": "0.2.3",
+	"releasenote": "improved cross-browser autoMute functionality",
+	"version": "0.2.4",
 	"url": "https://github.com/adireddy/waud",
 	"dependencies": {}
 }
