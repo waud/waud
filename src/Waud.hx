@@ -45,18 +45,19 @@ import js.Browser;
 	}
 
 	public static function autoMute(?val:Bool = true) {
-		if (val) {
-			Browser.window.onblur = function() {
-				for (sound in sounds) sound.mute(true);
-			};
+		var blur = function() {
+			for (sound in sounds) sound.mute(true);
+		};
 
-			Browser.window.onfocus = function() {
-				if (!isMuted) for (sound in sounds) sound.mute(false);
-			};
-		}
+		var focus = function() {
+			if (!isMuted) for (sound in sounds) sound.mute(false);
+		};
+
+		if (val) FocusManager.addEvents(focus, blur);
 		else {
-			Browser.window.onblur = null;
-			Browser.window.onfocus = null;
+			FocusManager.removeEvents(focus, blur);
+			focus = null;
+			blur = null;
 		}
 	}
 

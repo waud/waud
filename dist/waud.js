@@ -76,6 +76,32 @@ EReg.prototype = {
 		return this.r.m != null;
 	}
 };
+var FocusManager = function() { };
+FocusManager.__name__ = true;
+FocusManager.addEvents = function(focus,blur) {
+	if(Reflect.field(window,"addEventListener") != null) {
+		window.addEventListener("focus",focus);
+		window.addEventListener("blur",blur);
+	} else if(Reflect.field(window,"attachEvent") != null) {
+		window.attachEvent("onfocus",focus);
+		window.attachEvent("onblur",blur);
+	} else window.onload = function() {
+		window.onfocus = focus;
+		window.onblur = blur;
+	};
+};
+FocusManager.removeEvents = function(focus,blur) {
+	if(Reflect.field(window,"removeEventListener") != null) {
+		window.removeEventListener("focus",focus);
+		window.removeEventListener("blur",blur);
+	} else if(Reflect.field(window,"removeEvent") != null) {
+		window.removeEvent("onfocus",focus);
+		window.removeEvent("onblur",blur);
+	} else {
+		window.onfocus = null;
+		window.onblur = null;
+	}
+};
 var IWaudSound = function() { };
 IWaudSound.__name__ = true;
 var HTML5Sound = $hx_exports.HTML5Sound = function(url,options) {
@@ -149,7 +175,6 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 	,play: function(spriteName,soundProps) {
 		var _g = this;
 		if(this._muted) return this;
-		this.stop();
 		if(this.isSpriteSound && soundProps != null) {
 			this._snd.currentTime = soundProps.start;
 			if(this._tmr != null) this._tmr.stop();
@@ -256,26 +281,26 @@ Waud.init = function(d) {
 };
 Waud.autoMute = function(val) {
 	if(val == null) val = true;
-	if(val) {
-		window.onblur = function() {
-			var $it0 = Waud.sounds.iterator();
-			while( $it0.hasNext() ) {
-				var sound = $it0.next();
-				sound.mute(true);
+	var blur = function() {
+		var $it0 = Waud.sounds.iterator();
+		while( $it0.hasNext() ) {
+			var sound = $it0.next();
+			sound.mute(true);
+		}
+	};
+	var focus = function() {
+		if(!Waud.isMuted) {
+			var $it1 = Waud.sounds.iterator();
+			while( $it1.hasNext() ) {
+				var sound1 = $it1.next();
+				sound1.mute(false);
 			}
-		};
-		window.onfocus = function() {
-			if(!Waud.isMuted) {
-				var $it1 = Waud.sounds.iterator();
-				while( $it1.hasNext() ) {
-					var sound1 = $it1.next();
-					sound1.mute(false);
-				}
-			}
-		};
-	} else {
-		window.onblur = null;
-		window.onfocus = null;
+		}
+	};
+	if(val) FocusManager.addEvents(focus,blur); else {
+		FocusManager.removeEvents(focus,blur);
+		focus = null;
+		blur = null;
 	}
 };
 Waud.enableTouchUnlock = function(callback) {
