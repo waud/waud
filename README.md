@@ -22,43 +22,43 @@ For haxe users:
 
 The following functions can be used to check format support (returns true or false):
 
-- `Waud.isOGGSupported()`
-- `Waud.isWAVSupported()`
-- `Waud.isMP3Supported()`
-- `Waud.isAACSupported()`
-- `Waud.isM4ASupported()`
+- **`Waud.isOGGSupported()`**
+- **`Waud.isWAVSupported()`**
+- **`Waud.isMP3Supported()`**
+- **`Waud.isAACSupported()`**
+- **`Waud.isM4ASupported()`**
 
 There are 3 classes available for audio playback.
 
-- `WaudSound` **(recommended)** - to automatically use web audio api with HTML5 audio fallback.
-- `WebAudioAPISound` - to force web audio api
-- `HTML5Sound` - to force HTML5 audio
+- **`WaudSound` (recommended)** - to automatically use web audio api with HTML5 audio fallback.
+- **`WebAudioAPISound`** - to force web audio api
+- **`HTML5Sound`** - to force HTML5 audio
 
 `HTML5Sound` on iOS devices have some [limitations](https://developer.apple.com/library/safari/documentation/AudioVideo/Conceptual/Using_HTML5_Audio_Video/Device-SpecificConsiderations/Device-SpecificConsiderations.html) you should be aware of. Setting volume audio is not possible and mute is implemented by pausing and replaying the sound if it's already playing.
 
 The following are the options available when creating sound instabce:
 
-- `autoplay` - true or false (default: false)
-- `loop` - true or false (default: false)
-- `volume` - between 0 and 1 (default: 1)
-- `onload` - callback function when the sounad is loaded with sound instance as parameter (default: none)
-- `onend` - callback function when the sound playback ends with sound instance as parameter (default: none)
-- `onerror` - callback function when there is an error in loading/decoding with sound instance as parameter (default: none)
+- **`autoplay`** - true or false (default: false)
+- **`loop`** - true or false (default: false)
+- **`volume`** - between 0 and 1 (default: 1)
+- **`onload`** - callback function when the sounad is loaded with sound instance as parameter (default: none)
+- **`onend`** - callback function when the sound playback ends with sound instance as parameter (default: none)
+- **`onerror`** - callback function when there is an error in loading/decoding with sound instance as parameter (default: none)
 
 Example: `new WaudSound("assets/loop.mp3", { autoplay: false, loop: true, volume: 0.5, onload: _playBgSound });`
 
 Available functions on sound instance:
 
-- `play()` - returns sound instance for chaining if needed
-- `stop()`
-- `mute(val)` - true or false
-- `loop(val)` - true or false
-- `setVolume(val)` - between 0 and 1
-- `getVolume()` - returna value between 0 and 1
-- `isPlaying()` - returns true or false
-- `onEnd(callback)` - callback will get sound instance as parameter
+- **`play()`** - returns sound instance for chaining if needed
+- **`stop()`**
+- **`mute(val)`** - true or false
+- **`loop(val)`** - true or false
+- **`setVolume(val)`** - between 0 and 1
+- **`getVolume()`** - returna value between 0 and 1
+- **`isPlaying()`** - returns true or false
+- **`onEnd(callback)`** - callback will get sound instance as parameter
 
-`Waud.sounds` will hold all the sounds that are loaded. To access any sound use `Waud.sounds.get(url)` where `url` is the path used to load the sound.
+**`Waud.sounds`** will hold all the sounds that are loaded. To access any sound use `Waud.sounds.get(url)` where `url` is the path used to load the sound.
 
 ### Issues ###
 
