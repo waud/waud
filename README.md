@@ -13,7 +13,7 @@ For haxe users:
 
 ### API Documentation ###
 
-- **`Waud.init(?dom)`** - To initialise the library, make sure you call this first. You can also pass an optional parent `DOM` element to it where all the HTML5 sonds will be appended and also used for touch events to unlock audio on iOS devices.
+- **`Waud.init(?dom)`** - To initialise the library, make sure you call this first. You can also pass an optional parent `DOM` element to it where all the HTML5 sounds will be appended and also used for touch events to unlock audio on iOS devices.
 - **`Waud.enableTouchUnlock(?callback)`** - Helper function to unlock audio on iOS devices. You can pass an optional callback which will be called on `touchend` event.
 - **`Waud.autoMute()`** - Helper function to automatically mute audio when the browser window is not in focus. Will un-mute when the window gains focus.
 - **`Waud.isWebAudioSupported`** - To check web audio support.
@@ -41,7 +41,7 @@ The following are the options available when creating sound instabce:
 - **`autoplay`** - true or false (default: `false`)
 - **`loop`** - true or false (default: `false`)
 - **`volume`** - between 0 and 1 (default: `1`)
-- **`onload`** - callback function when the sounad is loaded with sound instance as parameter (default: `none`)
+- **`onload`** - callback function when the sound is loaded with sound instance as parameter (default: `none`)
 - **`onend`** - callback function when the sound playback ends with sound instance as parameter (default: `none`)
 - **`onerror`** - callback function when there is an error in loading/decoding with sound instance as parameter (default: `none`)
 
@@ -57,7 +57,7 @@ Available functions on sound instance:
 - **`mute(val)`** - true or false
 - **`loop(val)`** - true or false
 - **`setVolume(val)`** - between 0 and 1
-- **`getVolume()`** - returna value between 0 and 1
+- **`getVolume()`** - returns value between 0 and 1
 - **`isPlaying()`** - returns true or false
 - **`onEnd(callback)`** - callback will get sound instance as parameter
 
