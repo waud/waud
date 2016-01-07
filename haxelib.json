@@ -20,7 +20,7 @@
 		"adireddy"
 	],
 	"releasenote": "improved cross-browser autoMute functionality and updated documentation",
-	"version": "0.2.5",
+	"version": "0.2.6",
 	"url": "https://github.com/adireddy/waud",
 	"dependencies": {}
 }
