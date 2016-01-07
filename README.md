@@ -69,8 +69,8 @@ Found any bug? Please create a new [issue](https://github.com/adireddy/waud/issu
 
 ### Demo ###
 
-- [Haxe](http://adireddy.github.io/demos/waud/)
 - [JavaScript](http://adireddy.github.io/demos/waud/js.html)
+- [Haxe](http://adireddy.github.io/demos/waud/)
 
 ### Usage ###
 
