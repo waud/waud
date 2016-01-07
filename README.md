@@ -74,44 +74,6 @@ Found any bug? Please create a new [issue](https://github.com/adireddy/waud/issu
 
 ### Usage ###
 
-##### Haxe #####
-
-```haxe
-class Main {
-
-	var _bgSnd:IWaudSound;
-	var _snd2:IWaudSound;
-
-	public function new() {
-		Waud.init();
-		Waud.enableTouchUnlock(touchUnlock);
-		Waud.autoMute();
-		
-		_bgSnd = new WaudSound("assets/loop.mp3", { autoplay: false, loop: true, volume: 0.5, onload: _playBgSound });
-		_snd2 = new WaudSound("assets/sound1.wav", {
-			autoplay: false,
-			loop: false,
-			onload: function (snd) { snd.play(); },
-			onend: function (snd) { trace("ended"); },
-			onerror: function (snd) { trace("error"); }
-		});
-	}
-	
-	// for iOS devices
-	function touchUnlock() {
-		if (!_bgSnd.isPlaying()) _bgSnd.play();
-	}
-	
-	function _playBgSound(snd:IWaudSound) {
-		if (!snd.isPlaying()) snd.play();
-	}
-	
-	static function main() {
-		new Main();
-	}
-}
-```
-
 ##### JavaScript #####
 
 ```js
@@ -138,6 +100,44 @@ function touchUnlock() {
 
 function _playBgSound(snd) {
 	if (!snd.isPlaying()) snd.play();
+}
+```
+
+##### Haxe #####
+
+```haxe
+class Main {
+
+	var _bgSnd:IWaudSound;
+	var _snd2:IWaudSound;
+
+	public function new() {
+		Waud.init();
+		Waud.enableTouchUnlock(touchUnlock);
+		Waud.autoMute();
+		
+		_bgSnd = new WaudSound("assets/loop.mp3", { autoplay: false, loop: true, volume: 0.5, onload: _playBgSound });
+		_snd2 = new WaudSound("assets/sound1.wav", {
+			autoplay: false,
+			loop: false,
+			onload: function (snd) { snd.play(); },
+			onend: function (snd) { trace("ended"); },
+			onerror: function (snd) { trace("error"); }
+		});
+	}
+	
+	//Touch unlock event for iOS devices
+	function touchUnlock() {
+		if (!_bgSnd.isPlaying()) _bgSnd.play();
+	}
+	
+	function _playBgSound(snd:IWaudSound) {
+		if (!snd.isPlaying()) snd.play();
+	}
+	
+	static function main() {
+		new Main();
+	}
 }
 ```
 
