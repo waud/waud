@@ -52,7 +52,7 @@ var snd = new WaudSound("assets/loop.mp3", { autoplay: false, loop: true, volume
 
 Available functions on sound instance:
 
-- **`play()`** - returns sound instance for chaining if needed
+- **`play(?sprite)`** - optional sprite name when using audio sprite, returns sound instance for chaining if needed
 - **`stop()`**
 - **`mute(val)`** - true or false
 - **`loop(val)`** - true or false
