@@ -4,6 +4,7 @@
 
 	var _options:WaudSoundOptions;
 	var _isPlaying:Bool;
+	var _muted:Bool;
 
 	public function new(url:String, ?options:WaudSoundOptions = null) {
 		if (url == null || url == "") {
@@ -16,6 +17,7 @@
 		}
 		isSpriteSound = false;
 		_isPlaying = false;
+		_muted = false;
 		if (options == null) options = {};
 
 		options.autoplay = (options.autoplay != null) ? options.autoplay : Waud.defaults.autoplay;

@@ -54,6 +54,7 @@ var BaseSound = function(url,options) {
 	}
 	this.isSpriteSound = false;
 	this._isPlaying = false;
+	this._muted = false;
 	if(options == null) options = { };
 	if(options.autoplay != null) options.autoplay = options.autoplay; else options.autoplay = Waud.defaults.autoplay;
 	if(options.preload != null) options.preload = options.preload; else options.preload = Waud.defaults.preload;
@@ -155,12 +156,62 @@ EReg.prototype = {
 		return this.r.m != null;
 	}
 };
+var FocusManager = function() {
+	var _g = this;
+	this._hidden = "";
+	this._visibilityChange = "";
+	this._currentState = "";
+	if(Reflect.field(window.document,"hidden") != null) {
+		this._hidden = "hidden";
+		this._visibilityChange = "visibilitychange";
+	} else if(Reflect.field(window.document,"mozHidden") != null) {
+		this._hidden = "mozHidden";
+		this._visibilityChange = "mozvisibilitychange";
+	} else if(Reflect.field(window.document,"msHidden") != null) {
+		this._hidden = "msHidden";
+		this._visibilityChange = "msvisibilitychange";
+	} else if(Reflect.field(window.document,"webkitHidden") != null) {
+		this._hidden = "webkitHidden";
+		this._visibilityChange = "webkitvisibilitychange";
+	}
+	if(Reflect.field(window,"addEventListener") != null) {
+		window.addEventListener("focus",$bind(this,this._focus));
+		window.addEventListener("blur",$bind(this,this._blur));
+		window.addEventListener("pageshow",$bind(this,this._focus));
+		window.addEventListener("pagehide",$bind(this,this._blur));
+		document.addEventListener(this._visibilityChange,$bind(this,this._handleVisibilityChange));
+	} else if(Reflect.field(window,"attachEvent") != null) {
+		window.attachEvent("onfocus",$bind(this,this._focus));
+		window.attachEvent("onblur",$bind(this,this._blur));
+		window.attachEvent("pageshow",$bind(this,this._focus));
+		window.attachEvent("pagehide",$bind(this,this._blur));
+		document.attachEvent(this._visibilityChange,$bind(this,this._handleVisibilityChange));
+	} else window.onload = function() {
+		window.onfocus = $bind(_g,_g._focus);
+		window.onblur = $bind(_g,_g._blur);
+		window.onpageshow = $bind(_g,_g._focus);
+		window.onpagehide = $bind(_g,_g._blur);
+	};
+};
+FocusManager.__name__ = true;
+FocusManager.prototype = {
+	_handleVisibilityChange: function() {
+		if(Reflect.field(window.document,this._hidden) != null && Reflect.field(window.document,this._hidden)) this.blur(); else this.focus();
+	}
+	,_focus: function() {
+		if(this._currentState != "focus" && this.focus != null) this.focus();
+		this._currentState = "focus";
+	}
+	,_blur: function() {
+		if(this._currentState != "blur" && this.blur != null) this.blur();
+		this._currentState = "blur";
+	}
+};
 var IWaudSound = function() { };
 IWaudSound.__name__ = true;
 var HTML5Sound = $hx_exports.HTML5Sound = function(url,options) {
 	var _g = this;
 	BaseSound.call(this,url,options);
-	this._muted = false;
 	this._snd = Waud.dom.createElement("audio");
 	this._addSource(url);
 	this._snd.autoplay = this._options.autoplay;
@@ -228,13 +279,13 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 	}
 	,play: function(spriteName,soundProps) {
 		var _g = this;
-		this.stop();
+		if(this._muted) return this;
 		if(this.isSpriteSound && soundProps != null) {
 			this._snd.currentTime = soundProps.start;
 			if(this._tmr != null) this._tmr.stop();
 			this._tmr = haxe_Timer.delay(function() {
 				if(soundProps.loop != null && soundProps.loop) _g.play(spriteName,soundProps); else _g.stop();
-			},Math.ceil(soundProps.end * 1000));
+			},Math.ceil(soundProps.duration * 1000));
 		}
 		this._snd.play();
 		return this;
@@ -412,6 +463,7 @@ var Main = function() {
 	this._ua = new PIXI.Text(window.navigator.userAgent,{ font : "12px Tahoma", fill : "#FFFFFF"});
 	this.stage.addChild(this._ua);
 	Waud.init();
+	Waud.autoMute();
 	Waud.enableTouchUnlock($bind(this,this.touchUnlock));
 	this._bgSnd = new WaudSound("assets/loop.mp3",{ loop : true, autoplay : false, volume : 0.5, onload : $bind(this,this._playBgSound)});
 	this._glassMP3 = new WaudSound("assets/glass.mp3");
@@ -659,12 +711,34 @@ Waud.init = function(d) {
 	Waud.types.set("aac","audio/aac");
 	Waud.types.set("m4a","audio/x-m4a");
 };
+Waud.autoMute = function() {
+	var blur = function() {
+		var $it0 = Waud.sounds.iterator();
+		while( $it0.hasNext() ) {
+			var sound = $it0.next();
+			sound.mute(true);
+		}
+	};
+	var focus = function() {
+		if(!Waud.isMuted) {
+			var $it1 = Waud.sounds.iterator();
+			while( $it1.hasNext() ) {
+				var sound1 = $it1.next();
+				sound1.mute(false);
+			}
+		}
+	};
+	var fm = new FocusManager();
+	fm.focus = focus;
+	fm.blur = blur;
+};
 Waud.enableTouchUnlock = function(callback) {
 	Waud.__touchUnlockCallback = callback;
 	Waud.dom.ontouchend = ($_=Waud.audioManager,$bind($_,$_.unlockAudio));
 };
 Waud.mute = function(val) {
 	if(val == null) val = true;
+	Waud.isMuted = val;
 	var $it0 = Waud.sounds.iterator();
 	while( $it0.hasNext() ) {
 		var sound = $it0.next();
@@ -833,11 +907,12 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 	}
 	,play: function(spriteName,soundProps) {
 		var _g = this;
+		if(this._muted) return this;
 		var start = 0;
 		var end = -1;
 		if(this.isSpriteSound && soundProps != null) {
 			start = soundProps.start;
-			end = soundProps.end;
+			end = soundProps.duration;
 		}
 		var buffer = this._manager.bufferList.get(this._url);
 		if(buffer != null) {
@@ -852,8 +927,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 				_g._isPlaying = false;
 				if(_g._options.onend != null) _g._options.onend(_g);
 			};
-			if(this._manager.playingSounds.get(this._url) == null) this._manager.playingSounds.set(this._url,[]);
-			this._manager.playingSounds.get(this._url).push(this._snd);
+			if(this._manager.playingSounds.get(this._url) == null) this._manager.playingSounds.set(this._url,this._snd);
 		}
 		return this;
 	}
@@ -873,6 +947,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		return this._options.volume;
 	}
 	,mute: function(val) {
+		this._muted = val;
 		if(this._gainNode == null) return;
 		if(val) this._gainNode.gain.value = 0; else this._gainNode.gain.value = this._options.volume;
 	}
@@ -1229,6 +1304,7 @@ Perf.MEM_TXT_CLR = "#FFFFFF";
 Perf.INFO_TXT_CLR = "#000000";
 Waud.defaults = { };
 Waud.preferredSampleRate = 44100;
+Waud.isMuted = false;
 Main.main();
 })(typeof console != "undefined" ? console : {log:function(){}}, typeof window != "undefined" ? window : exports);
 

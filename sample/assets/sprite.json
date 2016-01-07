@@ -1,29 +1,29 @@
 {
-  "src": "assets/sprite.m4a",
-  "sprite": [
-    {
-      "name": "bell",
-      "start": 0,
-      "end": 2.1149886621315193,
-      "loop": false
-    },
-    {
-      "name": "canopening",
-      "start": 4,
-      "end": 2,
-      "loop": false
-    },
-    {
-      "name": "glass",
-      "start": 7,
-      "end": 0.5485714285714286,
-      "loop": false
-    },
-    {
-      "name": "loop",
-      "start": 9,
-      "end": 56.03265306122449,
-      "loop": true
-    }
-  ]
+	"src": "assets/sprite.m4a",
+	"sprite": [
+		{
+			"name": "bell",
+			"start": 0,
+			"duration": 2.1149886621315193,
+			"loop": false
+		},
+		{
+			"name": "canopening",
+			"start": 4,
+			"duration": 2,
+			"loop": false
+		},
+		{
+			"name": "glass",
+			"start": 7,
+			"duration": 0.5485714285714289,
+			"loop": false
+		},
+		{
+			"name": "loop",
+			"start": 9,
+			"duration": 56.032653061224494,
+			"loop": true
+		}
+	]
 }

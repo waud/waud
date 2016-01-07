@@ -19,8 +19,8 @@
 	"contributors": [
 		"adireddy"
 	],
-	"releasenote": "added audio sprite support",
-	"version": "0.2.0",
+	"releasenote": "improved cross-browser autoMute functionality and updated documentation",
+	"version": "0.2.6",
 	"url": "https://github.com/adireddy/waud",
 	"dependencies": {}
 }

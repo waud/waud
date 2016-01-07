@@ -12,6 +12,7 @@ import js.Browser;
 	public static var types:Map<String, String>;
 	public static var dom:HTMLDocument;
 	public static var preferredSampleRate:Int = 44100;
+	public static var isMuted:Bool = false;
 
 	static var audioElement:AudioElement;
 
@@ -43,12 +44,27 @@ import js.Browser;
 		types.set("m4a", "audio/x-m4a");
 	}
 
+	public static function autoMute() {
+		var blur = function() {
+			for (sound in sounds) sound.mute(true);
+		};
+
+		var focus = function() {
+			if (!isMuted) for (sound in sounds) sound.mute(false);
+		};
+
+		var fm = new FocusManager();
+		fm.focus = focus;
+		fm.blur = blur;
+	}
+
 	public static function enableTouchUnlock(?callback:Void -> Void) {
 		__touchUnlockCallback = callback;
 		dom.ontouchend = Waud.audioManager.unlockAudio;
 	}
 
 	public static function mute(?val:Bool = true) {
+		isMuted = val;
 		for (sound in sounds) sound.mute(val);
 	}
 

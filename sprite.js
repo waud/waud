@@ -125,7 +125,7 @@ module.exports = function(files) {
             json.sprite.push({
                 name: name,
                 start: offsetCursor,
-                end: duration,
+                duration: duration,
                 loop: name === opts.autoplay || opts.loop.indexOf(name) !== -1
             });
             offsetCursor += originalDuration

@@ -1,6 +1,6 @@
 typedef AudioSpriteSoundProperties = {
 	var name:String;
 	var start:Float;
-	var end:Float;
+	var duration:Float;
 	@:optional var loop:Bool;
 }
