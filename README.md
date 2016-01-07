@@ -63,6 +63,15 @@ Available functions on sound instance:
 
 **`Waud.sounds`** will hold all the sounds that are loaded. To access any sound use `Waud.sounds.get(url)` where `url` is the path used to load the sound.
 
+### Audio Sprite ###
+
+Use [waudsprite](https://github.com/adireddy/waudsprite) to generate audio sprite.
+
+```js
+var audSprite = new WaudSound("assets/sprite.json");
+audSprite.play("glass");
+```
+
 ### Issues ###
 
 Found any bug? Please create a new [issue](https://github.com/adireddy/waud/issues/new).
