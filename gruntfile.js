@@ -28,12 +28,12 @@ module.exports = function (grunt) {
         },
 
         exec: {
-            copy: "mkdir npm-publish || true && cp -r src dist sprite.js waudaudiosprite.js package.json LICENSE README.md ./npm-publish/",
+            copy: "mkdir npm-publish || true && cp -r src dist package.json LICENSE README.md ./npm-publish/",
             npm: "npm publish ./npm-publish/ && rm -r npm-publish"
         },
 
         zip: {
-            "waud.zip": ["src/*", "sprite.js", "waudaudiosprite.js", "haxelib.json", "README.md", "LICENSE"]
+            "waud.zip": ["src/*", "haxelib.json", "README.md", "LICENSE"]
         }
     });
 
