@@ -7,7 +7,12 @@ import js.Browser;
 	public static var isWebAudioSupported:Bool;
 	public static var isHTML5AudioSupported:Bool;
 	public static var audioManager:AudioManager;
-	public static var defaults:WaudSoundOptions = {};
+	public static var defaults:WaudSoundOptions = {
+		autoplay: false,
+		loop: false,
+		preload: "true",
+		volume: 1
+	};
 	public static var sounds:Map<String, IWaudSound>;
 	public static var types:Map<String, String>;
 	public static var dom:HTMLDocument;
@@ -28,11 +33,6 @@ import js.Browser;
 
 		if (isWebAudioSupported) Waud.audioManager.createAudioContext();
 		else if (!isHTML5AudioSupported) trace("no audio support in this browser");
-
-		defaults.autoplay = false;
-		defaults.loop = false;
-		defaults.preload = "true";
-		defaults.volume = 1;
 
 		sounds = new Map();
 
