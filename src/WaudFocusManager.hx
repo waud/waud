@@ -1,6 +1,6 @@
 import js.Browser;
 
-class FocusManager {
+@:expose @:keep class WaudFocusManager {
 
 	static inline var FOCUS_STATE:String = "focus";
 	static inline var BLUR_STATE:String = "blur";
