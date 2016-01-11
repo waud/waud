@@ -4,6 +4,7 @@ import js.Browser;
 
 class AudioManager {
 
+	public var types:Map<String, String>;
 	public var audioContext:AudioContext;
 	public var bufferList:Map<String, Dynamic>;
 	public var playingSounds:Map<String, Dynamic>;
@@ -13,6 +14,13 @@ class AudioManager {
 	public function new() {
 		bufferList = new Map();
 		playingSounds = new Map();
+
+		types = new Map();
+		types.set("mp3", "audio/mpeg");
+		types.set("ogg", "audio/ogg");
+		types.set("wav", "audio/wav");
+		types.set("aac", "audio/aac");
+		types.set("m4a", "audio/x-m4a");
 	}
 
 	public function checkWebAudioAPISupport():Bool {
