@@ -1,6 +1,15 @@
 -cmd haxelib newrepo
 -cmd haxelib install pixijs
 -cmd haxelib install msignal
+-cmd haxelib install utest
+
+--next
+
+-cp test
+-cp src
+-lib utest
+-main Test
+-js test/test.js
 
 --next
 
@@ -11,6 +20,7 @@ HTML5Sound
 WebAudioAPISound
 -dce full
 -js dist/waud.js
+-xml apidocs/docs.xml
 
 -debug
 -D source-map-content
