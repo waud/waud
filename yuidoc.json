@@ -1,0 +1,16 @@
+{
+	"name": "waud.js",
+	"description": "Web Audio Library with HTML5 audio fallback",
+	"version": "0.2.7",
+	"url": "https://github.com/adireddy/waud",
+	"logo": "https://raw.githubusercontent.com/adireddy/waud/master/logo.png",
+	"options": {
+		"linkNatives": "true",
+		"attributesEmit": "true",
+		"selleck": "true",
+		"ignorePaths": [],
+		"paths": "*/hx",
+		"outdir": "./apidocs",
+		"themedir": "./node_modules/yuidoc-theme-blue"
+	}
+}
