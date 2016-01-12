@@ -51,7 +51,7 @@ import js.html.AudioElement;
 		_src = Waud.dom.createSourceElement();
 		_src.src = src;
 
-		if (Waud.types.get(_getExt(src)) != null) _src.type = Waud.types.get(_getExt(src));
+		if (Waud.audioManager.types.get(_getExt(src)) != null) _src.type = Waud.audioManager.types.get(_getExt(src));
 		_snd.appendChild(_src);
 
 		return _src;
@@ -74,7 +74,7 @@ import js.html.AudioElement;
 
 	public function mute(val:Bool) {
 		_snd.muted = val;
-		if (Utils.isiOS()) {
+		if (WaudUtils.isiOS()) {
 			if (val && isPlaying()) {
 				_muted = true;
 				_snd.pause();
