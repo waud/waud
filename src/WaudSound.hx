@@ -9,7 +9,14 @@ import haxe.Json;
 	var _options:WaudSoundOptions;
 	var _spriteData:AudioSprite;
 
-	public function new(src:String, ?options:WaudSoundOptions = null) {
+	/**
+	* Class to automatically use web audio api with HTML5 audio fallback.
+	*
+	* @class WaudSound
+	* @constructor
+	* @param {String} url Can be audio file path or JSON file for audio sprite.
+	*/
+	public function new(url:String, ?options:WaudSoundOptions = null) {
 		if (Waud.audioManager == null) {
 			trace("initialise Waud using Waud.init() before loading sounds");
 			return;
@@ -17,13 +24,13 @@ import haxe.Json;
 
 		_options = options;
 
-		if (src.indexOf(".json") > 0) {
+		if (url.indexOf(".json") > 0) {
 			isSpriteSound = true;
-			_loadSpriteJson(src);
+			_loadSpriteJson(url);
 		}
 		else {
 			isSpriteSound = false;
-			_init(src);
+			_init(url);
 		}
 	}
 
@@ -40,9 +47,9 @@ import haxe.Json;
 		xobj.send(null);
 	}
 
-	function _init(src:String) {
-		if (Waud.isWebAudioSupported) _snd = new WebAudioAPISound(src, _options);
-		else if (Waud.isHTML5AudioSupported) _snd = new HTML5Sound(src, _options);
+	function _init(url:String) {
+		if (Waud.isWebAudioSupported) _snd = new WebAudioAPISound(url, _options);
+		else if (Waud.isHTML5AudioSupported) _snd = new HTML5Sound(url, _options);
 		else trace("no audio support in this browser");
 
 		_snd.isSpriteSound = isSpriteSound;

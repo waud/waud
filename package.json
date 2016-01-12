@@ -30,20 +30,21 @@
 		"name": "Adi Reddy Mora",
 		"email": "adiinteractive@gmail.com"
 	},
-	"dependencies": {
-
-	},
+	"dependencies": {},
 	"license": "MIT",
 	"devDependencies": {
+		"async": "~0.9.0",
+		"browserify": "latest",
 		"grunt": "latest",
 		"grunt-cli": "latest",
-		"grunt-haxe": "latest",
-		"browserify": "latest",
 		"grunt-contrib-uglify": "latest",
-		"async": "~0.9.0",
+		"grunt-contrib-yuidoc": "latest",
+		"grunt-haxe": "latest",
 		"mkdirp": "^0.5.0",
 		"optimist": "~0.6.1",
 		"underscore": "~1.8.3",
-		"winston": "~1.0.0"
+		"winston": "~1.0.0",
+		"yuidoc-theme-blue": "^0.1.9",
+		"yuidocjs": "^0.9.0"
 	}
 }

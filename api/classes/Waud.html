@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="en" class="yui-overrride">
+<head>
+    <meta charset="utf-8">
+    <title>Waud - waud.js</title>
+    <link rel="stylesheet" href="../assets/css/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700' rel='stylesheet' type='text/css'>
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="../assets/yui/build/yui-base/yui-base-min.js"></script>
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            <h1 class="blue-main-title">waud.js</h1>
+        </div>
+        <div class="yui3-u-1-4 version project-version">
+            API Docs for: 0.2.7
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+                    <h2 class="off-left">APIs</h2>
+                    <div id="api-tabview" class="tabview">
+                        <ul class="tabs">
+                            <li><a href="#api-classes">Classes</a></li>
+                            <li><a href="#api-modules">Modules</a></li>
+                        </ul>
+                
+                        <div id="api-tabview-filter">
+                            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+                        </div>
+                
+                        <div id="api-tabview-panel">
+                            <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/Waud.html">Waud</a></li>
+                                <li><a href="../classes/WaudSound.html">WaudSound</a></li>
+                                <li><a href="../classes/WaudSoundOptions.html">WaudSoundOptions</a></li>
+                                <li><a href="../classes/WaudUtils.html">WaudUtils</a></li>
+                            </ul>
+                
+                            <ul id="api-modules" class="apis modules">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+                    Show:
+                    <label for="api-show-inherited">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </div>
+            
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<h1>Waud</h1>
+<div class="meta">
+
+
+        <div class="foundat">
+            Defined in: <a href="../files/src_Waud.hx.html#l5"><code>src&#x2F;Waud.hx:5</code></a>
+        </div>
+
+
+</div>
+
+
+<h3>Summary</h3>
+<div class="intro">
+    <p>Web Audio Library with HTML5 audio fallback.</p>
+
+</div>
+
+
+<div id="classdocs" class="tabview">
+    <ul class="api-class-tabs">
+        <li class="api-class-tab index"><a href="#index">Index</a></li>
+
+            <li class="api-class-tab methods"><a href="#methods">Methods</a></li>
+            <li class="api-class-tab properties"><a href="#properties">Properties</a></li>
+    </ul>
+
+    <div>
+        <div id="index" class="api-class-tabpanel index">
+            <h2 class="off-left">Item Index</h2>
+
+                <div class="index-section methods">
+                    <h3>Methods</h3>
+
+                    <ul class="index-list methods">
+                            <li class="index-item method">
+                                <a href="#method_autoMute">autoMute</a>
+
+                                    <span class="flag static">static</span>
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_enableTouchUnlock">enableTouchUnlock</a>
+
+                                    <span class="flag static">static</span>
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_getFormatSupportString">getFormatSupportString</a>
+
+                                    <span class="flag static">static</span>
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_init">init</a>
+
+                                    <span class="flag static">static</span>
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_isAACSupported">isAACSupported</a>
+
+                                    <span class="flag static">static</span>
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_isM4ASupported">isM4ASupported</a>
+
+                                    <span class="flag static">static</span>
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_isMP3Supported">isMP3Supported</a>
+
+                                    <span class="flag static">static</span>
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_isOGGSupported">isOGGSupported</a>
+
+                                    <span class="flag static">static</span>
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_isSupported">isSupported</a>
+
+                                    <span class="flag static">static</span>
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_isWAVSupported">isWAVSupported</a>
+
+                                    <span class="flag static">static</span>
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_mute">mute</a>
+
+                                    <span class="flag static">static</span>
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_stop">stop</a>
+
+                                    <span class="flag static">static</span>
+                            </li>
+                    </ul>
+                </div>
+
+                <div class="index-section properties">
+                    <h3>Properties</h3>
+
+                    <ul class="index-list properties">
+                            <li class="index-item property">
+                                <a href="#property_defaults">defaults</a>
+
+                                    <span class="flag static">static</span>
+                            </li>
+                            <li class="index-item property">
+                                <a href="#property_isHTML5AudioSupported">isHTML5AudioSupported</a>
+
+                                    <span class="flag static">static</span>
+                            </li>
+                            <li class="index-item property">
+                                <a href="#property_isWebAudioSupported">isWebAudioSupported</a>
+
+                                    <span class="flag static">static</span>
+                            </li>
+                            <li class="index-item property">
+                                <a href="#property_preferredSampleRate">preferredSampleRate</a>
+
+                                    <span class="flag static">static</span>
+                            </li>
+                            <li class="index-item property">
+                                <a href="#property_sounds">sounds</a>
+
+                                    <span class="flag static">static</span>
+                            </li>
+                    </ul>
+                </div>
+
+
+        </div>
+
+            <div id="methods" class="api-class-tabpanel">
+                <h2 class="off-left">Methods</h2>
+
+<div id="method_autoMute" class="method item">
+  <h3 class="blue-method-name">autoMute</h3>
+
+  <div class="meta method-meta">
+      <p>
+          Defined in
+      <a href="../files/src_Waud.hx.html#l100"><code>src&#x2F;Waud.hx:100</code></a>
+  </p>
+
+
+
+  </div>
+
+  <h3>Syntax</h3>
+  <div class="blue-method-syntax">
+  <h3 class="name"><code>autoMute</code></h3>
+
+        <span class="paren">()</span>
+
+
+
+
+
+        <span class="flag static">static</span>
+
+
+
+  </div>
+    <div class="description">
+      <h3>Summary</h3>
+        <p>Helper function to automatically mute audio when the browser window is not in focus.
+Will un-mute when the window gains focus.</p>
+
+    </div>
+
+
+
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+<pre class="code prettyprint"><code>Waud.autoMute();</code></pre>
+
+            </div>
+        </div>
+
+</div>
+<div id="method_enableTouchUnlock" class="method item">
+  <h3 class="blue-method-name">enableTouchUnlock</h3>
+
+  <div class="meta method-meta">
+      <p>
+          Defined in
+      <a href="../files/src_Waud.hx.html#l123"><code>src&#x2F;Waud.hx:123</code></a>
+  </p>
+
+
+
+  </div>
+
+  <h3>Syntax</h3>
+  <div class="blue-method-syntax">
+  <h3 class="name"><code>enableTouchUnlock</code></h3>
+
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+                <li class="arg">
+                        <code class="optional">[callback]</code>
+                </li>
+            </ul><span class="paren">)</span>
+        </div>
+
+
+
+
+
+        <span class="flag static">static</span>
+
+
+
+  </div>
+    <div class="description">
+      <h3>Summary</h3>
+        <p>Helper function to unlock audio on iOS devices.
+You can pass an optional callback which will be triggered on <code>touchend</code> event.</p>
+
+    </div>
+
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+                <li class="param">
+                        <code class="param-name optional">[callback]</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function" class="crosslink external" target="_blank">Function</a></span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                </li>
+            </ul>
+        </div>
+
+
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+<pre class="code prettyprint"><code>Waud.enableTouchUnlock(callback);</code></pre>
+
+            </div>
+        </div>
+
+</div>
+<div id="method_getFormatSupportString" class="method item">
+  <h3 class="blue-method-name">getFormatSupportString</h3>
+
+  <div class="meta method-meta">
+      <p>
+          Defined in
+      <a href="../files/src_Waud.hx.html#l166"><code>src&#x2F;Waud.hx:166</code></a>
+  </p>
+
+
+
+  </div>
+
+  <h3>Syntax</h3>
+  <div class="blue-method-syntax">
+  <h3 class="name"><code>getFormatSupportString</code></h3>
+
+        <span class="paren">()</span>
+
+        <span class="returns-inline">
+            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+        </span>
+
+
+
+
+        <span class="flag static">static</span>
+
+
+
+  </div>
+    <div class="description">
+      <h3>Summary</h3>
+        <p>Returns a string with all the format support information.</p>
+
+    </div>
+
+
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>:
+                <div class="blue-return-desc">
+                    <p>support string <code>OGG: probably, WAV: probably, MP3: probably, AAC: probably, M4A: maybe</code> (example)</p>
+
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+<pre class="code prettyprint"><code>Waud.getFormatSupportString();</code></pre>
+
+            </div>
+        </div>
+
+</div>
+<div id="method_init" class="method item">
+  <h3 class="blue-method-name">init</h3>
+
+  <div class="meta method-meta">
+      <p>
+          Defined in
+      <a href="../files/src_Waud.hx.html#l76"><code>src&#x2F;Waud.hx:76</code></a>
+  </p>
+
+
+
+  </div>
+
+  <h3>Syntax</h3>
+  <div class="blue-method-syntax">
+  <h3 class="name"><code>init</code></h3>
+
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+                <li class="arg">
+                        <code class="optional">[d = document]</code>
+                </li>
+            </ul><span class="paren">)</span>
+        </div>
+
+
+
+
+
+        <span class="flag static">static</span>
+
+
+
+  </div>
+    <div class="description">
+      <h3>Summary</h3>
+        <p>To initialise the library, make sure you call this first.
+You can also pass an optional parent DOM element to it where all the HTML5 sounds will be appended and also used for touch events to unlock audio on iOS devices.</p>
+
+    </div>
+
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+                <li class="param">
+                        <code class="param-name optional">[d = document]</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLDocument" class="crosslink external" target="_blank">HTMLDocument</a></span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                </li>
+            </ul>
+        </div>
+
+
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+<pre class="code prettyprint"><code>Waud.init();</code></pre>
+
+            </div>
+        </div>
+
+</div>
+<div id="method_isAACSupported" class="method item">
+  <h3 class="blue-method-name">isAACSupported</h3>
+
+  <div class="meta method-meta">
+      <p>
+          Defined in
+      <a href="../files/src_Waud.hx.html#l243"><code>src&#x2F;Waud.hx:243</code></a>
+  </p>
+
+
+
+  </div>
+
+  <h3>Syntax</h3>
+  <div class="blue-method-syntax">
+  <h3 class="name"><code>isAACSupported</code></h3>
+
+        <span class="paren">()</span>
+
+        <span class="returns-inline">
+            <span class="type">Bool</span>
+        </span>
+
+
+
+
+        <span class="flag static">static</span>
+
+
+
+  </div>
+    <div class="description">
+      <h3>Summary</h3>
+        <p>Function to check <code>aac</code> format support.</p>
+
+    </div>
+
+
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                <span class="type">Bool</span>:
+                <div class="blue-return-desc">
+                    <p>true or false</p>
+
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+<pre class="code prettyprint"><code>Waud.isAACSupported();</code></pre>
+
+            </div>
+        </div>
+
+</div>
+<div id="method_isM4ASupported" class="method item">
+  <h3 class="blue-method-name">isM4ASupported</h3>
+
+  <div class="meta method-meta">
+      <p>
+          Defined in
+      <a href="../files/src_Waud.hx.html#l257"><code>src&#x2F;Waud.hx:257</code></a>
+  </p>
+
+
+
+  </div>
+
+  <h3>Syntax</h3>
+  <div class="blue-method-syntax">
+  <h3 class="name"><code>isM4ASupported</code></h3>
+
+        <span class="paren">()</span>
+
+        <span class="returns-inline">
+            <span class="type">Bool</span>
+        </span>
+
+
+
+
+        <span class="flag static">static</span>
+
+
+
+  </div>
+    <div class="description">
+      <h3>Summary</h3>
+        <p>Function to check <code>m4a</code> format support.</p>
+
+    </div>
+
+
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                <span class="type">Bool</span>:
+                <div class="blue-return-desc">
+                    <p>true or false</p>
+
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+<pre class="code prettyprint"><code>Waud.isM4ASupported();</code></pre>
+
+            </div>
+        </div>
+
+</div>
+<div id="method_isMP3Supported" class="method item">
+  <h3 class="blue-method-name">isMP3Supported</h3>
+
+  <div class="meta method-meta">
+      <p>
+          Defined in
+      <a href="../files/src_Waud.hx.html#l229"><code>src&#x2F;Waud.hx:229</code></a>
+  </p>
+
+
+
+  </div>
+
+  <h3>Syntax</h3>
+  <div class="blue-method-syntax">
+  <h3 class="name"><code>isMP3Supported</code></h3>
+
+        <span class="paren">()</span>
+
+        <span class="returns-inline">
+            <span class="type">Bool</span>
+        </span>
+
+
+
+
+        <span class="flag static">static</span>
+
+
+
+  </div>
+    <div class="description">
+      <h3>Summary</h3>
+        <p>Function to check <code>mp3</code> format support.</p>
+
+    </div>
+
+
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                <span class="type">Bool</span>:
+                <div class="blue-return-desc">
+                    <p>true or false</p>
+
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+<pre class="code prettyprint"><code>Waud.isMP3Supported();</code></pre>
+
+            </div>
+        </div>
+
+</div>
+<div id="method_isOGGSupported" class="method item">
+  <h3 class="blue-method-name">isOGGSupported</h3>
+
+  <div class="meta method-meta">
+      <p>
+          Defined in
+      <a href="../files/src_Waud.hx.html#l201"><code>src&#x2F;Waud.hx:201</code></a>
+  </p>
+
+
+
+  </div>
+
+  <h3>Syntax</h3>
+  <div class="blue-method-syntax">
+  <h3 class="name"><code>isOGGSupported</code></h3>
+
+        <span class="paren">()</span>
+
+        <span class="returns-inline">
+            <span class="type">Bool</span>
+        </span>
+
+
+
+
+        <span class="flag static">static</span>
+
+
+
+  </div>
+    <div class="description">
+      <h3>Summary</h3>
+        <p>Function to check <code>ogg</code> format support.</p>
+
+    </div>
+
+
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                <span class="type">Bool</span>:
+                <div class="blue-return-desc">
+                    <p>true or false</p>
+
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+<pre class="code prettyprint"><code>Waud.isOGGSupported();</code></pre>
+
+            </div>
+        </div>
+
+</div>
+<div id="method_isSupported" class="method item">
+  <h3 class="blue-method-name">isSupported</h3>
+
+  <div class="meta method-meta">
+      <p>
+          Defined in
+      <a href="../files/src_Waud.hx.html#l184"><code>src&#x2F;Waud.hx:184</code></a>
+  </p>
+
+
+
+  </div>
+
+  <h3>Syntax</h3>
+  <div class="blue-method-syntax">
+  <h3 class="name"><code>isSupported</code></h3>
+
+        <span class="paren">()</span>
+
+        <span class="returns-inline">
+            <span class="type">Bool</span>
+        </span>
+
+
+
+
+        <span class="flag static">static</span>
+
+
+
+  </div>
+    <div class="description">
+      <h3>Summary</h3>
+        <p>Function to check whether audio is supported or not.</p>
+
+    </div>
+
+
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                <span class="type">Bool</span>:
+                <div class="blue-return-desc">
+                    <p>true or false</p>
+
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+<pre class="code prettyprint"><code>Waud.isSupported();</code></pre>
+
+            </div>
+        </div>
+
+</div>
+<div id="method_isWAVSupported" class="method item">
+  <h3 class="blue-method-name">isWAVSupported</h3>
+
+  <div class="meta method-meta">
+      <p>
+          Defined in
+      <a href="../files/src_Waud.hx.html#l215"><code>src&#x2F;Waud.hx:215</code></a>
+  </p>
+
+
+
+  </div>
+
+  <h3>Syntax</h3>
+  <div class="blue-method-syntax">
+  <h3 class="name"><code>isWAVSupported</code></h3>
+
+        <span class="paren">()</span>
+
+        <span class="returns-inline">
+            <span class="type">Bool</span>
+        </span>
+
+
+
+
+        <span class="flag static">static</span>
+
+
+
+  </div>
+    <div class="description">
+      <h3>Summary</h3>
+        <p>Function to check <code>wav</code> format support.</p>
+
+    </div>
+
+
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                <span class="type">Bool</span>:
+                <div class="blue-return-desc">
+                    <p>true or false</p>
+
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+<pre class="code prettyprint"><code>Waud.isWAVSupported();</code></pre>
+
+            </div>
+        </div>
+
+</div>
+<div id="method_mute" class="method item">
+  <h3 class="blue-method-name">mute</h3>
+
+  <div class="meta method-meta">
+      <p>
+          Defined in
+      <a href="../files/src_Waud.hx.html#l138"><code>src&#x2F;Waud.hx:138</code></a>
+  </p>
+
+
+
+  </div>
+
+  <h3>Syntax</h3>
+  <div class="blue-method-syntax">
+  <h3 class="name"><code>mute</code></h3>
+
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+                <li class="arg">
+                        <code class="optional">[val = true]</code>
+                </li>
+            </ul><span class="paren">)</span>
+        </div>
+
+
+
+
+
+        <span class="flag static">static</span>
+
+
+
+  </div>
+    <div class="description">
+      <h3>Summary</h3>
+        <p>Helper function to mute all the sounds.</p>
+
+    </div>
+
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+                <li class="param">
+                        <code class="param-name optional">[val = true]</code>
+                        <span class="type">Bool</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                </li>
+            </ul>
+        </div>
+
+
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+<pre class="code prettyprint"><code>Waud.mute();
+Waud.mute(true);
+Waud.mute(false);</code></pre>
+
+            </div>
+        </div>
+
+</div>
+<div id="method_stop" class="method item">
+  <h3 class="blue-method-name">stop</h3>
+
+  <div class="meta method-meta">
+      <p>
+          Defined in
+      <a href="../files/src_Waud.hx.html#l154"><code>src&#x2F;Waud.hx:154</code></a>
+  </p>
+
+
+
+  </div>
+
+  <h3>Syntax</h3>
+  <div class="blue-method-syntax">
+  <h3 class="name"><code>stop</code></h3>
+
+        <span class="paren">()</span>
+
+
+
+
+
+        <span class="flag static">static</span>
+
+
+
+  </div>
+    <div class="description">
+      <h3>Summary</h3>
+        <p>Helper function to stop all the sounds.</p>
+
+    </div>
+
+
+
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+<pre class="code prettyprint"><code>Waud.stop();</code></pre>
+
+            </div>
+        </div>
+
+</div>
+            </div>
+
+            <div id="properties" class="api-class-tabpanel">
+                <h2 class="off-left">Properties</h2>
+
+                    <div id="property_defaults" class="property item">
+                    
+                      <h3 class="blue-method-name">defaults</h3>
+                      <div class="meta method-meta">
+                          <p>
+                              Defined in
+                          <a href="../files/src_Waud.hx.html#l32"><code>src&#x2F;Waud.hx:32</code></a>
+                      </p>
+                    
+                    
+                      </div>
+                    
+                      <h3>Syntax</h3>
+                      <div class="blue-method-syntax">
+                        <h3 class="name"><code>defaults</code></h3>
+                        <span class="type"><a href="../classes/WaudSoundOptions.html" class="crosslink">WaudSoundOptions</a></span>
+                    
+                    
+                    
+                    
+                            <span class="flag static">static</span>
+                    
+                        </div>
+                    
+                        <div class="description">
+                          <h3>Summary</h3>
+                            <p>Defaults properties used on sound.</p>
+                    
+                        </div>
+                    
+                    
+                    
+                        <div class="example">
+                          <h4>Example:</h4>
+                    
+                          <div class="example-content">
+                            <pre class="code prettyprint"><code>Waud.defaults = { volume: 0.5, autoplay: true };</code></pre>
+                    
+                          </div>
+                        </div>
+                    
+                    </div>
+                    <div id="property_isHTML5AudioSupported" class="property item">
+                    
+                      <h3 class="blue-method-name">isHTML5AudioSupported</h3>
+                      <div class="meta method-meta">
+                          <p>
+                              Defined in
+                          <a href="../files/src_Waud.hx.html#l22"><code>src&#x2F;Waud.hx:22</code></a>
+                      </p>
+                    
+                    
+                      </div>
+                    
+                      <h3>Syntax</h3>
+                      <div class="blue-method-syntax">
+                        <h3 class="name"><code>isHTML5AudioSupported</code></h3>
+                        <span class="type">Bool</span>
+                    
+                    
+                    
+                    
+                            <span class="flag static">static</span>
+                    
+                        </div>
+                    
+                        <div class="description">
+                          <h3>Summary</h3>
+                            <p>Tells whether html5 audio is supported or not.</p>
+                    
+                        </div>
+                    
+                    
+                    
+                        <div class="example">
+                          <h4>Example:</h4>
+                    
+                          <div class="example-content">
+                            <pre class="code prettyprint"><code>Waud.isHTML5AudioSupported;</code></pre>
+                    
+                          </div>
+                        </div>
+                    
+                    </div>
+                    <div id="property_isWebAudioSupported" class="property item">
+                    
+                      <h3 class="blue-method-name">isWebAudioSupported</h3>
+                      <div class="meta method-meta">
+                          <p>
+                              Defined in
+                          <a href="../files/src_Waud.hx.html#l12"><code>src&#x2F;Waud.hx:12</code></a>
+                      </p>
+                    
+                    
+                      </div>
+                    
+                      <h3>Syntax</h3>
+                      <div class="blue-method-syntax">
+                        <h3 class="name"><code>isWebAudioSupported</code></h3>
+                        <span class="type">Bool</span>
+                    
+                    
+                    
+                    
+                            <span class="flag static">static</span>
+                    
+                        </div>
+                    
+                        <div class="description">
+                          <h3>Summary</h3>
+                            <p>Tells whether web audio api is supported or not.</p>
+                    
+                        </div>
+                    
+                    
+                    
+                        <div class="example">
+                          <h4>Example:</h4>
+                    
+                          <div class="example-content">
+                            <pre class="code prettyprint"><code>Waud.isWebAudioSupported;</code></pre>
+                    
+                          </div>
+                        </div>
+                    
+                    </div>
+                    <div id="property_preferredSampleRate" class="property item">
+                    
+                      <h3 class="blue-method-name">preferredSampleRate</h3>
+                      <div class="meta method-meta">
+                          <p>
+                              Defined in
+                          <a href="../files/src_Waud.hx.html#l57"><code>src&#x2F;Waud.hx:57</code></a>
+                      </p>
+                    
+                    
+                      </div>
+                    
+                      <h3>Syntax</h3>
+                      <div class="blue-method-syntax">
+                        <h3 class="name"><code>preferredSampleRate</code></h3>
+                        <span class="type">Int</span>
+                    
+                    
+                    
+                    
+                            <span class="flag static">static</span>
+                    
+                        </div>
+                    
+                        <div class="description">
+                          <h3>Summary</h3>
+                            <p>Preferred sample rate used when creating buffer on audio context.
+                    It is recommended to use audio files with same sample rate and set this value here.</p>
+                    
+                        </div>
+                    
+                    
+                    
+                        <div class="example">
+                          <h4>Example:</h4>
+                    
+                          <div class="example-content">
+                            <pre class="code prettyprint"><code>Waud.preferredSampleRate = 44100;</code></pre>
+                    
+                          </div>
+                        </div>
+                    
+                    </div>
+                    <div id="property_sounds" class="property item">
+                    
+                      <h3 class="blue-method-name">sounds</h3>
+                      <div class="meta method-meta">
+                          <p>
+                              Defined in
+                          <a href="../files/src_Waud.hx.html#l47"><code>src&#x2F;Waud.hx:47</code></a>
+                      </p>
+                    
+                    
+                      </div>
+                    
+                      <h3>Syntax</h3>
+                      <div class="blue-method-syntax">
+                        <h3 class="name"><code>sounds</code></h3>
+                        <span class="type">Map<String, IWaudSound></span>
+                    
+                    
+                    
+                    
+                            <span class="flag static">static</span>
+                    
+                        </div>
+                    
+                        <div class="description">
+                          <h3>Summary</h3>
+                            <p>Holds all the sounds that are loaded.</p>
+                    
+                        </div>
+                    
+                    
+                    
+                        <div class="example">
+                          <h4>Example:</h4>
+                    
+                          <div class="example-content">
+                            <pre class="code prettyprint"><code>Waud.sounds.get(&quot;url&quot;);</code></pre>
+                    
+                          </div>
+                        </div>
+                    
+                    </div>
+            </div>
+
+
+    </div>
+</div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

@@ -1,0 +1,432 @@
+{
+    "project": {
+        "name": "waud.js",
+        "description": "Web Audio Library",
+        "version": "0.2.7",
+        "url": "https://github.com/adireddy/waud"
+    },
+    "files": {
+        "src/Waud.hx": {
+            "name": "src/Waud.hx",
+            "modules": {},
+            "classes": {
+                "Waud": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/WaudSound.hx": {
+            "name": "src/WaudSound.hx",
+            "modules": {},
+            "classes": {
+                "WaudSound": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/WaudSoundOptions.hx": {
+            "name": "src/WaudSoundOptions.hx",
+            "modules": {},
+            "classes": {
+                "WaudSoundOptions": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/WaudUtils.hx": {
+            "name": "src/WaudUtils.hx",
+            "modules": {},
+            "classes": {
+                "WaudUtils": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        }
+    },
+    "modules": {},
+    "classes": {
+        "Waud": {
+            "name": "Waud",
+            "shortname": "Waud",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/Waud.hx",
+            "line": 5,
+            "description": "Web Audio Library with HTML5 audio fallback."
+        },
+        "WaudSound": {
+            "name": "WaudSound",
+            "shortname": "WaudSound",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/WaudSound.hx",
+            "line": 12,
+            "description": "Class to automatically use web audio api with HTML5 audio fallback.",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "url",
+                    "description": "Can be audio file path or JSON file for audio sprite.",
+                    "type": "String"
+                }
+            ]
+        },
+        "WaudSoundOptions": {
+            "name": "WaudSoundOptions",
+            "shortname": "WaudSoundOptions",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/WaudSoundOptions.hx",
+            "line": 1,
+            "description": "Sound Options"
+        },
+        "WaudUtils": {
+            "name": "WaudUtils",
+            "shortname": "WaudUtils",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/WaudUtils.hx",
+            "line": 3,
+            "description": "Utility functions"
+        }
+    },
+    "elements": {},
+    "classitems": [
+        {
+            "file": "src/Waud.hx",
+            "line": 12,
+            "description": "Tells whether web audio api is supported or not.",
+            "itemtype": "property",
+            "name": "isWebAudioSupported",
+            "static": 1,
+            "type": "{Bool}",
+            "example": [
+                "\n    Waud.isWebAudioSupported;"
+            ],
+            "class": "Waud"
+        },
+        {
+            "file": "src/Waud.hx",
+            "line": 22,
+            "description": "Tells whether html5 audio is supported or not.",
+            "itemtype": "property",
+            "name": "isHTML5AudioSupported",
+            "static": 1,
+            "type": "{Bool}",
+            "example": [
+                "\n    Waud.isHTML5AudioSupported;"
+            ],
+            "class": "Waud"
+        },
+        {
+            "file": "src/Waud.hx",
+            "line": 32,
+            "description": "Defaults properties used on sound.",
+            "itemtype": "property",
+            "name": "defaults",
+            "static": 1,
+            "type": "{WaudSoundOptions}",
+            "example": [
+                "\n    Waud.defaults = { volume: 0.5, autoplay: true };"
+            ],
+            "class": "Waud"
+        },
+        {
+            "file": "src/Waud.hx",
+            "line": 47,
+            "description": "Holds all the sounds that are loaded.",
+            "itemtype": "property",
+            "name": "sounds",
+            "static": 1,
+            "type": "{Map<String, IWaudSound>}",
+            "example": [
+                "\n    Waud.sounds.get(\"url\");"
+            ],
+            "class": "Waud"
+        },
+        {
+            "file": "src/Waud.hx",
+            "line": 57,
+            "description": "Preferred sample rate used when creating buffer on audio context.\nIt is recommended to use audio files with same sample rate and set this value here.",
+            "itemtype": "property",
+            "name": "preferredSampleRate",
+            "static": 1,
+            "type": "{Int}",
+            "example": [
+                "\n    Waud.preferredSampleRate = 44100;"
+            ],
+            "class": "Waud"
+        },
+        {
+            "file": "src/Waud.hx",
+            "line": 76,
+            "description": "To initialise the library, make sure you call this first.\nYou can also pass an optional parent DOM element to it where all the HTML5 sounds will be appended and also used for touch events to unlock audio on iOS devices.",
+            "static": 1,
+            "itemtype": "method",
+            "name": "init",
+            "params": [
+                {
+                    "name": "d ",
+                    "description": "",
+                    "type": "HTMLDocument",
+                    "optional": true,
+                    "optdefault": " document"
+                }
+            ],
+            "example": [
+                "\n    Waud.init();"
+            ],
+            "class": "Waud"
+        },
+        {
+            "file": "src/Waud.hx",
+            "line": 100,
+            "description": "Helper function to automatically mute audio when the browser window is not in focus.\nWill un-mute when the window gains focus.",
+            "static": 1,
+            "itemtype": "method",
+            "name": "autoMute",
+            "example": [
+                "\n    Waud.autoMute();"
+            ],
+            "class": "Waud"
+        },
+        {
+            "file": "src/Waud.hx",
+            "line": 123,
+            "description": "Helper function to unlock audio on iOS devices.\nYou can pass an optional callback which will be triggered on `touchend` event.",
+            "static": 1,
+            "itemtype": "method",
+            "name": "enableTouchUnlock",
+            "params": [
+                {
+                    "name": "callback",
+                    "description": "",
+                    "type": "Function",
+                    "optional": true
+                }
+            ],
+            "example": [
+                "\n    Waud.enableTouchUnlock(callback);"
+            ],
+            "class": "Waud"
+        },
+        {
+            "file": "src/Waud.hx",
+            "line": 138,
+            "description": "Helper function to mute all the sounds.",
+            "static": 1,
+            "itemtype": "method",
+            "name": "mute",
+            "params": [
+                {
+                    "name": "val ",
+                    "description": "",
+                    "type": "Bool",
+                    "optional": true,
+                    "optdefault": " true"
+                }
+            ],
+            "example": [
+                "\n    Waud.mute();\n    Waud.mute(true);\n    Waud.mute(false);"
+            ],
+            "class": "Waud"
+        },
+        {
+            "file": "src/Waud.hx",
+            "line": 154,
+            "description": "Helper function to stop all the sounds.",
+            "static": 1,
+            "itemtype": "method",
+            "name": "stop",
+            "example": [
+                "\n    Waud.stop();"
+            ],
+            "class": "Waud"
+        },
+        {
+            "file": "src/Waud.hx",
+            "line": 166,
+            "description": "Returns a string with all the format support information.",
+            "static": 1,
+            "itemtype": "method",
+            "name": "getFormatSupportString",
+            "return": {
+                "description": "support string `OGG: probably, WAV: probably, MP3: probably, AAC: probably, M4A: maybe` (example)",
+                "type": "String"
+            },
+            "example": [
+                "\n    Waud.getFormatSupportString();"
+            ],
+            "class": "Waud"
+        },
+        {
+            "file": "src/Waud.hx",
+            "line": 184,
+            "description": "Function to check whether audio is supported or not.",
+            "static": 1,
+            "itemtype": "method",
+            "name": "isSupported",
+            "return": {
+                "description": "true or false",
+                "type": "Bool"
+            },
+            "example": [
+                "\n    Waud.isSupported();"
+            ],
+            "class": "Waud"
+        },
+        {
+            "file": "src/Waud.hx",
+            "line": 201,
+            "description": "Function to check `ogg` format support.",
+            "static": 1,
+            "itemtype": "method",
+            "name": "isOGGSupported",
+            "return": {
+                "description": "true or false",
+                "type": "Bool"
+            },
+            "example": [
+                "\n    Waud.isOGGSupported();"
+            ],
+            "class": "Waud"
+        },
+        {
+            "file": "src/Waud.hx",
+            "line": 215,
+            "description": "Function to check `wav` format support.",
+            "static": 1,
+            "itemtype": "method",
+            "name": "isWAVSupported",
+            "return": {
+                "description": "true or false",
+                "type": "Bool"
+            },
+            "example": [
+                "\n    Waud.isWAVSupported();"
+            ],
+            "class": "Waud"
+        },
+        {
+            "file": "src/Waud.hx",
+            "line": 229,
+            "description": "Function to check `mp3` format support.",
+            "static": 1,
+            "itemtype": "method",
+            "name": "isMP3Supported",
+            "return": {
+                "description": "true or false",
+                "type": "Bool"
+            },
+            "example": [
+                "\n    Waud.isMP3Supported();"
+            ],
+            "class": "Waud"
+        },
+        {
+            "file": "src/Waud.hx",
+            "line": 243,
+            "description": "Function to check `aac` format support.",
+            "static": 1,
+            "itemtype": "method",
+            "name": "isAACSupported",
+            "return": {
+                "description": "true or false",
+                "type": "Bool"
+            },
+            "example": [
+                "\n    Waud.isAACSupported();"
+            ],
+            "class": "Waud"
+        },
+        {
+            "file": "src/Waud.hx",
+            "line": 257,
+            "description": "Function to check `m4a` format support.",
+            "static": 1,
+            "itemtype": "method",
+            "name": "isM4ASupported",
+            "return": {
+                "description": "true or false",
+                "type": "Bool"
+            },
+            "example": [
+                "\n    Waud.isM4ASupported();"
+            ],
+            "class": "Waud"
+        },
+        {
+            "file": "src/WaudSoundOptions.hx",
+            "line": 7,
+            "description": "Auto play sound",
+            "itemtype": "property",
+            "name": "autoplay",
+            "type": "{Bool}",
+            "default": "false",
+            "class": "WaudSoundOptions"
+        },
+        {
+            "file": "src/WaudSoundOptions.hx",
+            "line": 15,
+            "description": "Loop sound",
+            "itemtype": "property",
+            "name": "loop",
+            "type": "{Bool}",
+            "default": "false",
+            "class": "WaudSoundOptions"
+        },
+        {
+            "file": "src/WaudSoundOptions.hx",
+            "line": 23,
+            "description": "Sound volume between 0 and 1",
+            "itemtype": "property",
+            "name": "volume",
+            "type": "{Float}",
+            "default": "1",
+            "class": "WaudSoundOptions"
+        },
+        {
+            "file": "src/WaudSoundOptions.hx",
+            "line": 31,
+            "description": "Callback function when the sound is loaded with sound instance as parameter",
+            "itemtype": "property",
+            "name": "onload",
+            "type": "{Function}",
+            "default": "null",
+            "class": "WaudSoundOptions"
+        },
+        {
+            "file": "src/WaudSoundOptions.hx",
+            "line": 39,
+            "description": "Callback function when the sound playback ends with sound instance as parameter",
+            "itemtype": "property",
+            "name": "onend",
+            "type": "{Function}",
+            "default": "null",
+            "class": "WaudSoundOptions"
+        },
+        {
+            "file": "src/WaudSoundOptions.hx",
+            "line": 47,
+            "description": "Callback function when there is an error in loading/decoding with sound instance as parameter",
+            "itemtype": "property",
+            "name": "onerror",
+            "type": "{Function}",
+            "default": "null",
+            "class": "WaudSoundOptions"
+        }
+    ],
+    "warnings": []
+}
