@@ -20,7 +20,6 @@ HTML5Sound
 WebAudioAPISound
 -dce full
 -js dist/waud.js
--xml apidocs/docs.xml
 
 -debug
 -D source-map-content
