@@ -1,3 +1,8 @@
+/**
+ * Sound Interface.
+ *
+ * @interface IWaudSound
+ */
 interface IWaudSound {
 	var isSpriteSound:Bool;
 	function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties):IWaudSound;

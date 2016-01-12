@@ -18,7 +18,7 @@
             <h1 class="blue-main-title">waud.js</h1>
         </div>
         <div class="yui3-u-1-4 version project-version">
-            API Docs for: 0.2.7
+            API Docs for: 0.2.8
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -93,7 +93,7 @@
 
 <h3>Summary</h3>
 <div class="intro">
-    <p>Utility functions</p>
+    <p>Collection of Browser Utility Functions.</p>
 
 </div>
 
@@ -102,18 +102,690 @@
     <ul class="api-class-tabs">
         <li class="api-class-tab index"><a href="#index">Index</a></li>
 
+            <li class="api-class-tab methods"><a href="#methods">Methods</a></li>
+            <li class="api-class-tab properties"><a href="#properties">Properties</a></li>
     </ul>
 
     <div>
         <div id="index" class="api-class-tabpanel index">
             <h2 class="off-left">Item Index</h2>
 
+                <div class="index-section methods">
+                    <h3>Methods</h3>
 
+                    <ul class="index-list methods">
+                            <li class="index-item method">
+                                <a href="#method_getiOSVersion">getiOSVersion</a>
+
+                                    <span class="flag static">static</span>
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_isAndroid">isAndroid</a>
+
+                                    <span class="flag static">static</span>
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_isChrome">isChrome</a>
+
+                                    <span class="flag static">static</span>
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_isFirefox">isFirefox</a>
+
+                                    <span class="flag static">static</span>
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_isiOS">isiOS</a>
+
+                                    <span class="flag static">static</span>
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_isiOS">isiOS</a>
+
+                                    <span class="flag static">static</span>
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_isMobile">isMobile</a>
+
+                                    <span class="flag static">static</span>
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_isSafari">isSafari</a>
+
+                                    <span class="flag static">static</span>
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_isWindowsPhone">isWindowsPhone</a>
+
+                                    <span class="flag static">static</span>
+                            </li>
+                    </ul>
+                </div>
+
+                <div class="index-section properties">
+                    <h3>Properties</h3>
+
+                    <ul class="index-list properties">
+                            <li class="index-item property">
+                                <a href="#property_ua">ua</a>
+
+                                    <span class="flag static">static</span>
+                            </li>
+                    </ul>
+                </div>
 
 
         </div>
 
+            <div id="methods" class="api-class-tabpanel">
+                <h2 class="off-left">Methods</h2>
 
+<div id="method_getiOSVersion" class="method item">
+  <h3 class="blue-method-name">getiOSVersion</h3>
+
+  <div class="meta method-meta">
+      <p>
+          Defined in
+      <a href="../files/src_WaudUtils.hx.html#l124"><code>src&#x2F;WaudUtils.hx:124</code></a>
+  </p>
+
+
+
+  </div>
+
+  <h3>Syntax</h3>
+  <div class="blue-method-syntax">
+  <h3 class="name"><code>getiOSVersion</code></h3>
+
+        <span class="paren">()</span>
+
+        <span class="returns-inline">
+            <span class="type">Array<Int></span>
+        </span>
+
+
+
+
+        <span class="flag static">static</span>
+
+
+
+  </div>
+    <div class="description">
+      <h3>Summary</h3>
+        <p>Function to get the <strong>iOS</strong> version.</p>
+
+    </div>
+
+
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                <span class="type">Array<Int></span>:
+                <div class="blue-return-desc">
+                    <p>[9,0,1]</p>
+
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+<pre class="code prettyprint"><code>Waud.getiOSVersion();</code></pre>
+
+            </div>
+        </div>
+
+</div>
+<div id="method_isAndroid" class="method item">
+  <h3 class="blue-method-name">isAndroid</h3>
+
+  <div class="meta method-meta">
+      <p>
+          Defined in
+      <a href="../files/src_WaudUtils.hx.html#l20"><code>src&#x2F;WaudUtils.hx:20</code></a>
+  </p>
+
+
+
+  </div>
+
+  <h3>Syntax</h3>
+  <div class="blue-method-syntax">
+  <h3 class="name"><code>isAndroid</code></h3>
+
+        <span class="paren">()</span>
+
+        <span class="returns-inline">
+            <span class="type">Bool</span>
+        </span>
+
+
+
+
+        <span class="flag static">static</span>
+
+
+
+  </div>
+    <div class="description">
+      <h3>Summary</h3>
+        <p>Function to check if the device is <strong>Android</strong> or not.</p>
+
+    </div>
+
+
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                <span class="type">Bool</span>:
+                <div class="blue-return-desc">
+                    <p>true or false</p>
+
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+<pre class="code prettyprint"><code>Waud.isAndroid();</code></pre>
+
+            </div>
+        </div>
+
+</div>
+<div id="method_isChrome" class="method item">
+  <h3 class="blue-method-name">isChrome</h3>
+
+  <div class="meta method-meta">
+      <p>
+          Defined in
+      <a href="../files/src_WaudUtils.hx.html#l85"><code>src&#x2F;WaudUtils.hx:85</code></a>
+  </p>
+
+
+
+  </div>
+
+  <h3>Syntax</h3>
+  <div class="blue-method-syntax">
+  <h3 class="name"><code>isChrome</code></h3>
+
+        <span class="paren">()</span>
+
+        <span class="returns-inline">
+            <span class="type">Bool</span>
+        </span>
+
+
+
+
+        <span class="flag static">static</span>
+
+
+
+  </div>
+    <div class="description">
+      <h3>Summary</h3>
+        <p>Function to check if the device is <strong>Chrome</strong> or not.</p>
+
+    </div>
+
+
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                <span class="type">Bool</span>:
+                <div class="blue-return-desc">
+                    <p>true or false</p>
+
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+<pre class="code prettyprint"><code>Waud.isChrome();</code></pre>
+
+            </div>
+        </div>
+
+</div>
+<div id="method_isFirefox" class="method item">
+  <h3 class="blue-method-name">isFirefox</h3>
+
+  <div class="meta method-meta">
+      <p>
+          Defined in
+      <a href="../files/src_WaudUtils.hx.html#l59"><code>src&#x2F;WaudUtils.hx:59</code></a>
+  </p>
+
+
+
+  </div>
+
+  <h3>Syntax</h3>
+  <div class="blue-method-syntax">
+  <h3 class="name"><code>isFirefox</code></h3>
+
+        <span class="paren">()</span>
+
+        <span class="returns-inline">
+            <span class="type">Bool</span>
+        </span>
+
+
+
+
+        <span class="flag static">static</span>
+
+
+
+  </div>
+    <div class="description">
+      <h3>Summary</h3>
+        <p>Function to check if the device is <strong>Firefox</strong> or not.</p>
+
+    </div>
+
+
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                <span class="type">Bool</span>:
+                <div class="blue-return-desc">
+                    <p>true or false</p>
+
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+<pre class="code prettyprint"><code>Waud.isFirefox();</code></pre>
+
+            </div>
+        </div>
+
+</div>
+<div id="method_isiOS" class="method item">
+  <h3 class="blue-method-name">isiOS</h3>
+
+  <div class="meta method-meta">
+      <p>
+          Defined in
+      <a href="../files/src_WaudUtils.hx.html#l33"><code>src&#x2F;WaudUtils.hx:33</code></a>
+  </p>
+
+
+
+  </div>
+
+  <h3>Syntax</h3>
+  <div class="blue-method-syntax">
+  <h3 class="name"><code>isiOS</code></h3>
+
+        <span class="paren">()</span>
+
+        <span class="returns-inline">
+            <span class="type">Bool</span>
+        </span>
+
+
+
+
+        <span class="flag static">static</span>
+
+
+
+  </div>
+    <div class="description">
+      <h3>Summary</h3>
+        <p>Function to check if the device is <strong>iOS</strong> or not.</p>
+
+    </div>
+
+
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                <span class="type">Bool</span>:
+                <div class="blue-return-desc">
+                    <p>true or false</p>
+
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+<pre class="code prettyprint"><code>Waud.isiOS();</code></pre>
+
+            </div>
+        </div>
+
+</div>
+<div id="method_isiOS" class="method item">
+  <h3 class="blue-method-name">isiOS</h3>
+
+  <div class="meta method-meta">
+      <p>
+          Defined in
+      <a href="../files/src_WaudUtils.hx.html#l72"><code>src&#x2F;WaudUtils.hx:72</code></a>
+  </p>
+
+
+
+  </div>
+
+  <h3>Syntax</h3>
+  <div class="blue-method-syntax">
+  <h3 class="name"><code>isiOS</code></h3>
+
+        <span class="paren">()</span>
+
+        <span class="returns-inline">
+            <span class="type">Bool</span>
+        </span>
+
+
+
+
+        <span class="flag static">static</span>
+
+
+
+  </div>
+    <div class="description">
+      <h3>Summary</h3>
+        <p>Function to check if the device is <strong>Opera</strong> or not.</p>
+
+    </div>
+
+
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                <span class="type">Bool</span>:
+                <div class="blue-return-desc">
+                    <p>true or false</p>
+
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+<pre class="code prettyprint"><code>Waud.isiOS();</code></pre>
+
+            </div>
+        </div>
+
+</div>
+<div id="method_isMobile" class="method item">
+  <h3 class="blue-method-name">isMobile</h3>
+
+  <div class="meta method-meta">
+      <p>
+          Defined in
+      <a href="../files/src_WaudUtils.hx.html#l111"><code>src&#x2F;WaudUtils.hx:111</code></a>
+  </p>
+
+
+
+  </div>
+
+  <h3>Syntax</h3>
+  <div class="blue-method-syntax">
+  <h3 class="name"><code>isMobile</code></h3>
+
+        <span class="paren">()</span>
+
+        <span class="returns-inline">
+            <span class="type">Bool</span>
+        </span>
+
+
+
+
+        <span class="flag static">static</span>
+
+
+
+  </div>
+    <div class="description">
+      <h3>Summary</h3>
+        <p>Function to check if the device is <strong>mobile</strong> or not.</p>
+
+    </div>
+
+
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                <span class="type">Bool</span>:
+                <div class="blue-return-desc">
+                    <p>true or false</p>
+
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+<pre class="code prettyprint"><code>Waud.isMobile();</code></pre>
+
+            </div>
+        </div>
+
+</div>
+<div id="method_isSafari" class="method item">
+  <h3 class="blue-method-name">isSafari</h3>
+
+  <div class="meta method-meta">
+      <p>
+          Defined in
+      <a href="../files/src_WaudUtils.hx.html#l98"><code>src&#x2F;WaudUtils.hx:98</code></a>
+  </p>
+
+
+
+  </div>
+
+  <h3>Syntax</h3>
+  <div class="blue-method-syntax">
+  <h3 class="name"><code>isSafari</code></h3>
+
+        <span class="paren">()</span>
+
+        <span class="returns-inline">
+            <span class="type">Bool</span>
+        </span>
+
+
+
+
+        <span class="flag static">static</span>
+
+
+
+  </div>
+    <div class="description">
+      <h3>Summary</h3>
+        <p>Function to check if the device is <strong>Safari</strong> or not.</p>
+
+    </div>
+
+
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                <span class="type">Bool</span>:
+                <div class="blue-return-desc">
+                    <p>true or false</p>
+
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+<pre class="code prettyprint"><code>Waud.isSafari();</code></pre>
+
+            </div>
+        </div>
+
+</div>
+<div id="method_isWindowsPhone" class="method item">
+  <h3 class="blue-method-name">isWindowsPhone</h3>
+
+  <div class="meta method-meta">
+      <p>
+          Defined in
+      <a href="../files/src_WaudUtils.hx.html#l46"><code>src&#x2F;WaudUtils.hx:46</code></a>
+  </p>
+
+
+
+  </div>
+
+  <h3>Syntax</h3>
+  <div class="blue-method-syntax">
+  <h3 class="name"><code>isWindowsPhone</code></h3>
+
+        <span class="paren">()</span>
+
+        <span class="returns-inline">
+            <span class="type">Bool</span>
+        </span>
+
+
+
+
+        <span class="flag static">static</span>
+
+
+
+  </div>
+    <div class="description">
+      <h3>Summary</h3>
+        <p>Function to check if the device is <strong>Windows Phone</strong> or not.</p>
+
+    </div>
+
+
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                <span class="type">Bool</span>:
+                <div class="blue-return-desc">
+                    <p>true or false</p>
+
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+<pre class="code prettyprint"><code>Waud.isWindowsPhone();</code></pre>
+
+            </div>
+        </div>
+
+</div>
+            </div>
+
+            <div id="properties" class="api-class-tabpanel">
+                <h2 class="off-left">Properties</h2>
+
+                    <div id="property_ua" class="property item">
+                    
+                      <h3 class="blue-method-name">ua</h3>
+                      <div class="meta method-meta">
+                          <p>
+                              Defined in
+                          <a href="../files/src_WaudUtils.hx.html#l10"><code>src&#x2F;WaudUtils.hx:10</code></a>
+                      </p>
+                    
+                    
+                      </div>
+                    
+                      <h3>Syntax</h3>
+                      <div class="blue-method-syntax">
+                        <h3 class="name"><code>ua</code></h3>
+                        <span class="type">Unknown</span>
+                    
+                    
+                    
+                    
+                            <span class="flag static">static</span>
+                    
+                        </div>
+                    
+                        <div class="description">
+                          <h3>Summary</h3>
+                            <p>User Agrent String.</p>
+                    
+                        </div>
+                    
+                    
+                    
+                        <div class="example">
+                          <h4>Example:</h4>
+                    
+                          <div class="example-content">
+                            <pre class="code prettyprint"><code>WaudUtils.ua;</code></pre>
+                    
+                          </div>
+                        </div>
+                    
+                    </div>
+            </div>
 
 
     </div>

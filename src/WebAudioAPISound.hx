@@ -4,7 +4,7 @@ import js.html.audio.GainNode;
 import js.html.audio.AudioBufferSourceNode;
 import js.html.audio.AudioBuffer;
 
-@:expose @:keep class WebAudioAPISound extends BaseSound implements IWaudSound {
+@:keep class WebAudioAPISound extends BaseSound implements IWaudSound {
 
 	var _url:String;
 	var _manager:AudioManager;

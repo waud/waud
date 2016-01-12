@@ -11,26 +11,31 @@ import js.Browser;
 
 	/**
 	* Tells whether web audio api is supported or not.
+	*
 	* @property isWebAudioSupported
 	* @static
 	* @type {Bool}
+	* @readOnly
 	* @example
  	*     Waud.isWebAudioSupported;
 	*/
-	public static var isWebAudioSupported:Bool;
+	public static var isWebAudioSupported(default, null):Bool;
 
 	/**
 	* Tells whether html5 audio is supported or not.
+	*
 	* @property isHTML5AudioSupported
 	* @static
 	* @type {Bool}
+	* @readOnly
 	* @example
  	*     Waud.isHTML5AudioSupported;
 	*/
-	public static var isHTML5AudioSupported:Bool;
+	public static var isHTML5AudioSupported(default, null):Bool;
 
 	/**
 	* Defaults properties used on sound.
+	*
 	* @property defaults
 	* @static
 	* @type {WaudSoundOptions}
@@ -46,17 +51,21 @@ import js.Browser;
 
 	/**
 	* Holds all the sounds that are loaded.
+	*
 	* @property sounds
 	* @static
 	* @type {Map<String, IWaudSound>}
+	* @readOnly
 	* @example
  	*     Waud.sounds.get("url");
 	*/
-	public static var sounds:Map<String, IWaudSound>;
+	public static var sounds(default, null):Map<String, IWaudSound>;
 
 	/**
 	* Preferred sample rate used when creating buffer on audio context.
-	* It is recommended to use audio files with same sample rate and set this value here.
+	*
+	* It is recommended to use audio files with same sample rate and set the value used here.
+	*
 	* @property preferredSampleRate
 	* @static
 	* @type {Int}
@@ -65,16 +74,61 @@ import js.Browser;
 	*/
 	public static var preferredSampleRate:Int = 44100;
 
-	public static var audioManager:AudioManager;
-	public static var dom:HTMLDocument;
+	/**
+	* Audio Manager instance.
+	*
+	* @property audioManager
+	* @static
+	* @type {AudioManager}
+	* @readOnly
+	*/
+	public static var audioManager(default, null):AudioManager;
 
-	static var audioElement:AudioElement;
-	static var isMuted:Bool = false;
+	/**
+	* Document dom element used for appending sounds and touch events.
+	*
+	* @property dom
+	* @static
+	* @type {document}
+	*/
+	public static var dom(default, null):HTMLDocument;
 
+	/**
+	* State of audio, muted or not.
+	*
+	* @property isMuted
+	* @static
+	* @type {Bool}
+	* @readOnly
+	* @example
+ 	*     Waud.isMuted;
+	*/
+	public static var isMuted(default, null):Bool = false;
+
+	/**
+	* Touch unlock callback reference.
+	*
+	* @property __touchUnlockCallback
+	* @static
+	* @private
+	* @type {Function}
+	*/
 	public static var __touchUnlockCallback:Void -> Void;
 
 	/**
+	* Audio element used to check audio support.
+	*
+	* @property __audioElement
+	* @static
+	* @private
+	* @type {AudioElement}
+	* @readOnly
+	*/
+	static var __audioElement:AudioElement;
+
+	/**
 	* To initialise the library, make sure you call this first.
+	*
 	* You can also pass an optional parent DOM element to it where all the HTML5 sounds will be appended and also used for touch events to unlock audio on iOS devices.
 	*
 	* @static
@@ -86,7 +140,7 @@ import js.Browser;
 	public static function init(?d:HTMLDocument) {
 		if (d == null) d = Browser.document;
 		dom = d;
-		audioElement = dom.createAudioElement();
+		__audioElement = dom.createAudioElement();
 		if (Waud.audioManager == null) Waud.audioManager = new AudioManager();
 		isWebAudioSupported = Waud.audioManager.checkWebAudioAPISupport();
 		isHTML5AudioSupported = (Reflect.field(Browser.window, "Audio") != null);
@@ -99,6 +153,7 @@ import js.Browser;
 
 	/**
 	* Helper function to automatically mute audio when the browser window is not in focus.
+	*
 	* Will un-mute when the window gains focus.
 	*
 	* @static
@@ -122,6 +177,7 @@ import js.Browser;
 
 	/**
 	* Helper function to unlock audio on iOS devices.
+	*
 	* You can pass an optional callback which will be triggered on `touchend` event.
 	*
 	* @static
@@ -173,11 +229,11 @@ import js.Browser;
 	*     Waud.getFormatSupportString();
 	*/
 	public static function getFormatSupportString():String {
-		var support:String = "OGG: " + audioElement.canPlayType('audio/ogg; codecs="vorbis"');
-		support += ", WAV: " + audioElement.canPlayType('audio/wav; codecs="1"');
-		support += ", MP3: " + audioElement.canPlayType('audio/mpeg;');
-		support += ", AAC: " + audioElement.canPlayType('audio/aac;');
-		support += ", M4A: " + audioElement.canPlayType('audio/x-m4a;');
+		var support:String = "OGG: " + __audioElement.canPlayType('audio/ogg; codecs="vorbis"');
+		support += ", WAV: " + __audioElement.canPlayType('audio/wav; codecs="1"');
+		support += ", MP3: " + __audioElement.canPlayType('audio/mpeg;');
+		support += ", AAC: " + __audioElement.canPlayType('audio/aac;');
+		support += ", M4A: " + __audioElement.canPlayType('audio/x-m4a;');
 		return support;
 	}
 
@@ -208,7 +264,7 @@ import js.Browser;
 	*     Waud.isOGGSupported();
 	*/
 	public static function isOGGSupported():Bool {
-		var canPlay = audioElement.canPlayType('audio/ogg; codecs="vorbis"');
+		var canPlay = __audioElement.canPlayType('audio/ogg; codecs="vorbis"');
 		return (isHTML5AudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe"));
 	}
 
@@ -222,7 +278,7 @@ import js.Browser;
 	*     Waud.isWAVSupported();
 	*/
 	public static function isWAVSupported():Bool {
-		var canPlay = audioElement.canPlayType('audio/wav; codecs="1"');
+		var canPlay = __audioElement.canPlayType('audio/wav; codecs="1"');
 		return (isHTML5AudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe"));
 	}
 
@@ -236,7 +292,7 @@ import js.Browser;
 	*     Waud.isMP3Supported();
 	*/
 	public static function isMP3Supported():Bool {
-		var canPlay = audioElement.canPlayType('audio/mpeg;');
+		var canPlay = __audioElement.canPlayType('audio/mpeg;');
 		return (isHTML5AudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe"));
 	}
 
@@ -250,7 +306,7 @@ import js.Browser;
 	*     Waud.isAACSupported();
 	*/
 	public static function isAACSupported():Bool {
-		var canPlay = audioElement.canPlayType('audio/aac;');
+		var canPlay = __audioElement.canPlayType('audio/aac;');
 		return (isHTML5AudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe"));
 	}
 
@@ -264,7 +320,7 @@ import js.Browser;
 	*     Waud.isM4ASupported();
 	*/
 	public static function isM4ASupported():Bool {
-		var canPlay = audioElement.canPlayType('audio/x-m4a;');
+		var canPlay = __audioElement.canPlayType('audio/x-m4a;');
 		return (isHTML5AudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe"));
 	}
 }

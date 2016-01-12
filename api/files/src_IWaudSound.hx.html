@@ -2,7 +2,7 @@
 <html lang="en" class="yui-overrride">
 <head>
     <meta charset="utf-8">
-    <title>src/WaudSoundOptions.hx - waud.js</title>
+    <title>src/IWaudSound.hx - waud.js</title>
     <link rel="stylesheet" href="../assets/css/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700' rel='stylesheet' type='text/css'>
@@ -79,65 +79,26 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1 class="file-heading">File: src/WaudSoundOptions.hx</h1>
+<h1 class="file-heading">File: src/IWaudSound.hx</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
 /**
-* Sound Options.
-*
-* @class WaudSoundOptions
-*/
-typedef WaudSoundOptions = {
-	/**
-	* Auto play sound.
-	* @property autoplay
-	* @type {Bool}
-	* @default false
-	*/
-	@:optional var autoplay:Bool;
-
-	/**
-	* Loop sound.
-	* @property loop
-	* @type {Bool}
-	* @default false
-	*/
-	@:optional var loop:Bool;
-
-	/**
-	* Sound volume between 0 and 1.
-	* @property volume
-	* @type {Float}
-	* @default 1
-	*/
-	@:optional var volume:Float;
-
-	/**
-	* Callback function when the sound is loaded with sound instance as parameter.
-	* @property onload
-	* @type {Function}
-	* @default null
-	*/
-	@:optional var onload:IWaudSound -&gt; Void;
-
-	/**
-	* Callback function when the sound playback ends with sound instance as parameter.
-	* @property onend
-	* @type {Function}
-	* @default null
-	*/
-	@:optional var onend:IWaudSound -&gt; Void;
-
-	/**
-	* Callback function when there is an error in loading/decoding with sound instance as parameter.
-	* @property onerror
-	* @type {Function}
-	* @default null
-	*/
-	@:optional var onerror:IWaudSound -&gt; Void;
-
-	@:optional var preload:Dynamic;
+ * Sound Interface.
+ *
+ * @interface IWaudSound
+ */
+interface IWaudSound {
+	var isSpriteSound:Bool;
+	function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties):IWaudSound;
+	function stop():Void;
+	function onEnd(callback:IWaudSound -&gt; Void):IWaudSound;
+	function mute(val:Bool):Void;
+	function loop(val:Bool):Void;
+	function setVolume(val:Float):Void;
+	function getVolume():Float;
+	function isPlaying():Bool;
+	function destroy():Void;
 }
     </pre>
 </div>

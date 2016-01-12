@@ -20,7 +20,7 @@
 		"adireddy"
 	],
 	"releasenote": "updated documentation",
-	"version": "0.2.7",
+	"version": "0.2.8",
 	"url": "https://github.com/adireddy/waud",
 	"dependencies": {}
 }

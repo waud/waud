@@ -1,11 +1,11 @@
 /**
-* Sound Options
+* Sound Options.
 *
 * @class WaudSoundOptions
 */
 typedef WaudSoundOptions = {
 	/**
-	* Auto play sound
+	* Auto play sound.
 	* @property autoplay
 	* @type {Bool}
 	* @default false
@@ -13,7 +13,7 @@ typedef WaudSoundOptions = {
 	@:optional var autoplay:Bool;
 
 	/**
-	* Loop sound
+	* Loop sound.
 	* @property loop
 	* @type {Bool}
 	* @default false
@@ -21,7 +21,7 @@ typedef WaudSoundOptions = {
 	@:optional var loop:Bool;
 
 	/**
-	* Sound volume between 0 and 1
+	* Sound volume between 0 and 1.
 	* @property volume
 	* @type {Float}
 	* @default 1
@@ -29,7 +29,7 @@ typedef WaudSoundOptions = {
 	@:optional var volume:Float;
 
 	/**
-	* Callback function when the sound is loaded with sound instance as parameter
+	* Callback function when the sound is loaded with sound instance as parameter.
 	* @property onload
 	* @type {Function}
 	* @default null
@@ -37,7 +37,7 @@ typedef WaudSoundOptions = {
 	@:optional var onload:IWaudSound -> Void;
 
 	/**
-	* Callback function when the sound playback ends with sound instance as parameter
+	* Callback function when the sound playback ends with sound instance as parameter.
 	* @property onend
 	* @type {Function}
 	* @default null
@@ -45,7 +45,7 @@ typedef WaudSoundOptions = {
 	@:optional var onend:IWaudSound -> Void;
 
 	/**
-	* Callback function when there is an error in loading/decoding with sound instance as parameter
+	* Callback function when there is an error in loading/decoding with sound instance as parameter.
 	* @property onerror
 	* @type {Function}
 	* @default null

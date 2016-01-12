@@ -2,7 +2,7 @@ import haxe.Timer;
 import js.html.SourceElement;
 import js.html.AudioElement;
 
-@:expose @:keep class HTML5Sound extends BaseSound implements IWaudSound {
+@:keep class HTML5Sound extends BaseSound implements IWaudSound {
 
 	var _snd:AudioElement;
 	var _src:SourceElement;

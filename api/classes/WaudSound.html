@@ -18,7 +18,7 @@
             <h1 class="blue-main-title">waud.js</h1>
         </div>
         <div class="yui3-u-1-4 version project-version">
-            API Docs for: 0.2.7
+            API Docs for: 0.2.8
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -147,7 +147,9 @@
 
 
                     <div class="param-description">
-                        <p>Can be audio file path or JSON file for audio sprite.</p>
+                        <ul>
+<li>Can be audio file path or JSON file for audio sprite.</li>
+</ul>
 
                     </div>
 
@@ -164,17 +166,788 @@
     <ul class="api-class-tabs">
         <li class="api-class-tab index"><a href="#index">Index</a></li>
 
+            <li class="api-class-tab methods"><a href="#methods">Methods</a></li>
     </ul>
 
     <div>
         <div id="index" class="api-class-tabpanel index">
             <h2 class="off-left">Item Index</h2>
 
+                <div class="index-section methods">
+                    <h3>Methods</h3>
+
+                    <ul class="index-list methods">
+                            <li class="index-item method private">
+                                <a href="#method__init">_init</a>
+
+                            </li>
+                            <li class="index-item method private">
+                                <a href="#method__loadSpriteJson">_loadSpriteJson</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_destroy">destroy</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_getVolume">getVolume</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_isPlaying">isPlaying</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_loop">loop</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_mute">mute</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_onEnd">onEnd</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_play">play</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_setVolume">setVolume</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_stop">stop</a>
+
+                            </li>
+                    </ul>
+                </div>
 
 
 
         </div>
 
+            <div id="methods" class="api-class-tabpanel">
+                <h2 class="off-left">Methods</h2>
+
+<div id="method__init" class="method item private">
+  <h3 class="blue-method-name">_init</h3>
+
+  <div class="meta method-meta">
+      <p>
+          Defined in
+      <a href="../files/src_WaudSound.hx.html#l57"><code>src&#x2F;WaudSound.hx:57</code></a>
+  </p>
+
+
+
+  </div>
+
+  <h3>Syntax</h3>
+  <div class="blue-method-syntax">
+  <h3 class="name"><code>_init</code></h3>
+
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+                <li class="arg">
+                        <code>url</code>
+                </li>
+            </ul><span class="paren">)</span>
+        </div>
+
+
+
+        <span class="flag private">private</span>
+
+
+
+
+
+  </div>
+    <div class="description">
+      <h3>Summary</h3>
+        <p>Function to initialize sound.</p>
+
+    </div>
+
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+                <li class="param">
+                        <code class="param-name">url</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+
+
+                    <div class="param-description">
+                        <ul>
+<li>Audio file path.</li>
+</ul>
+
+                    </div>
+
+                </li>
+            </ul>
+        </div>
+
+
+
+</div>
+<div id="method__loadSpriteJson" class="method item private">
+  <h3 class="blue-method-name">_loadSpriteJson</h3>
+
+  <div class="meta method-meta">
+      <p>
+          Defined in
+      <a href="../files/src_WaudSound.hx.html#l37"><code>src&#x2F;WaudSound.hx:37</code></a>
+  </p>
+
+
+
+  </div>
+
+  <h3>Syntax</h3>
+  <div class="blue-method-syntax">
+  <h3 class="name"><code>_loadSpriteJson</code></h3>
+
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+                <li class="arg">
+                        <code>url</code>
+                </li>
+            </ul><span class="paren">)</span>
+        </div>
+
+
+
+        <span class="flag private">private</span>
+
+
+
+
+
+  </div>
+    <div class="description">
+      <h3>Summary</h3>
+        <p>Function to load audio sprite JSON.</p>
+
+    </div>
+
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+                <li class="param">
+                        <code class="param-name">url</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+
+
+                    <div class="param-description">
+                        <ul>
+<li>Audio Sprite JSON path.</li>
+</ul>
+
+                    </div>
+
+                </li>
+            </ul>
+        </div>
+
+
+
+</div>
+<div id="method_destroy" class="method item">
+  <h3 class="blue-method-name">destroy</h3>
+
+  <div class="meta method-meta">
+      <p>
+          Defined in
+      <a href="../files/src_WaudSound.hx.html#l180"><code>src&#x2F;WaudSound.hx:180</code></a>
+  </p>
+
+
+
+  </div>
+
+  <h3>Syntax</h3>
+  <div class="blue-method-syntax">
+  <h3 class="name"><code>destroy</code></h3>
+
+        <span class="paren">()</span>
+
+
+
+
+
+
+
+
+  </div>
+    <div class="description">
+      <h3>Summary</h3>
+        <p>Function to destroy sound.</p>
+
+    </div>
+
+
+
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+<pre class="code prettyprint"><code>snd.destroy();</code></pre>
+
+            </div>
+        </div>
+
+</div>
+<div id="method_getVolume" class="method item">
+  <h3 class="blue-method-name">getVolume</h3>
+
+  <div class="meta method-meta">
+      <p>
+          Defined in
+      <a href="../files/src_WaudSound.hx.html#l84"><code>src&#x2F;WaudSound.hx:84</code></a>
+  </p>
+
+
+
+  </div>
+
+  <h3>Syntax</h3>
+  <div class="blue-method-syntax">
+  <h3 class="name"><code>getVolume</code></h3>
+
+        <span class="paren">()</span>
+
+        <span class="returns-inline">
+            <span class="type">Float</span>
+        </span>
+
+
+
+
+
+
+
+  </div>
+    <div class="description">
+      <h3>Summary</h3>
+        <p>Function to get sound volume.</p>
+
+    </div>
+
+
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                <span class="type">Float</span>:
+                <div class="blue-return-desc">
+                    <p>between 0 and 1.</p>
+
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+<pre class="code prettyprint"><code>snd.getVolume();</code></pre>
+
+            </div>
+        </div>
+
+</div>
+<div id="method_isPlaying" class="method item">
+  <h3 class="blue-method-name">isPlaying</h3>
+
+  <div class="meta method-meta">
+      <p>
+          Defined in
+      <a href="../files/src_WaudSound.hx.html#l131"><code>src&#x2F;WaudSound.hx:131</code></a>
+  </p>
+
+
+
+  </div>
+
+  <h3>Syntax</h3>
+  <div class="blue-method-syntax">
+  <h3 class="name"><code>isPlaying</code></h3>
+
+        <span class="paren">()</span>
+
+        <span class="returns-inline">
+            <span class="type">Bool</span>
+        </span>
+
+
+
+
+
+
+
+  </div>
+    <div class="description">
+      <h3>Summary</h3>
+        <p>Function to check if the sound is playing or not.</p>
+
+    </div>
+
+
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                <span class="type">Bool</span>:
+                <div class="blue-return-desc">
+                    <p>true or false.</p>
+
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+<pre class="code prettyprint"><code>snd.isPlaying();</code></pre>
+
+            </div>
+        </div>
+
+</div>
+<div id="method_loop" class="method item">
+  <h3 class="blue-method-name">loop</h3>
+
+  <div class="meta method-meta">
+      <p>
+          Defined in
+      <a href="../files/src_WaudSound.hx.html#l143"><code>src&#x2F;WaudSound.hx:143</code></a>
+  </p>
+
+
+
+  </div>
+
+  <h3>Syntax</h3>
+  <div class="blue-method-syntax">
+  <h3 class="name"><code>loop</code></h3>
+
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+                <li class="arg">
+                        <code>val</code>
+                </li>
+            </ul><span class="paren">)</span>
+        </div>
+
+
+
+
+
+
+
+
+  </div>
+    <div class="description">
+      <h3>Summary</h3>
+        <p>Function to loop or unloop sound.</p>
+
+    </div>
+
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+                <li class="param">
+                        <code class="param-name">val</code>
+                        <span class="type">Bool</span>
+
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                </li>
+            </ul>
+        </div>
+
+
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+<pre class="code prettyprint"><code>snd.loop(true);</code></pre>
+
+            </div>
+        </div>
+
+</div>
+<div id="method_mute" class="method item">
+  <h3 class="blue-method-name">mute</h3>
+
+  <div class="meta method-meta">
+      <p>
+          Defined in
+      <a href="../files/src_WaudSound.hx.html#l96"><code>src&#x2F;WaudSound.hx:96</code></a>
+  </p>
+
+
+
+  </div>
+
+  <h3>Syntax</h3>
+  <div class="blue-method-syntax">
+  <h3 class="name"><code>mute</code></h3>
+
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+                <li class="arg">
+                        <code>val</code>
+                </li>
+            </ul><span class="paren">)</span>
+        </div>
+
+
+
+
+
+
+
+
+  </div>
+    <div class="description">
+      <h3>Summary</h3>
+        <p>Function to mute sound.</p>
+
+    </div>
+
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+                <li class="param">
+                        <code class="param-name">val</code>
+                        <span class="type">Bool</span>
+
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                </li>
+            </ul>
+        </div>
+
+
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+<pre class="code prettyprint"><code>snd.mute(true);</code></pre>
+
+            </div>
+        </div>
+
+</div>
+<div id="method_onEnd" class="method item">
+  <h3 class="blue-method-name">onEnd</h3>
+
+  <div class="meta method-meta">
+      <p>
+          Defined in
+      <a href="../files/src_WaudSound.hx.html#l166"><code>src&#x2F;WaudSound.hx:166</code></a>
+  </p>
+
+
+
+  </div>
+
+  <h3>Syntax</h3>
+  <div class="blue-method-syntax">
+  <h3 class="name"><code>onEnd</code></h3>
+
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+                <li class="arg">
+                        <code>callback</code>
+                </li>
+            </ul><span class="paren">)</span>
+        </div>
+
+        <span class="returns-inline">
+            <span class="type">IWaudSound</span>
+        </span>
+
+
+
+
+
+
+
+  </div>
+    <div class="description">
+      <h3>Summary</h3>
+        <p>Function to add callback that triggers on end of the sound.</p>
+
+    </div>
+
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+                <li class="param">
+                        <code class="param-name">callback</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function" class="crosslink external" target="_blank">Function</a></span>
+
+
+                    <div class="param-description">
+                        <ul>
+<li>Callback function that triggers on end of the sound.</li>
+</ul>
+
+                    </div>
+
+                </li>
+            </ul>
+        </div>
+
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                <span class="type">IWaudSound</span>:
+                <div class="blue-return-desc">
+                    <p>sound instance</p>
+
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+<pre class="code prettyprint"><code>snd.onEnd(callback);</code></pre>
+
+            </div>
+        </div>
+
+</div>
+<div id="method_play" class="method item">
+  <h3 class="blue-method-name">play</h3>
+
+  <div class="meta method-meta">
+      <p>
+          Defined in
+      <a href="../files/src_WaudSound.hx.html#l108"><code>src&#x2F;WaudSound.hx:108</code></a>
+  </p>
+
+
+
+  </div>
+
+  <h3>Syntax</h3>
+  <div class="blue-method-syntax">
+  <h3 class="name"><code>play</code></h3>
+
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+                <li class="arg">
+                        <code class="optional">[spriteName]</code>
+                </li>
+            </ul><span class="paren">)</span>
+        </div>
+
+        <span class="returns-inline">
+            <span class="type">IWaudSound</span>
+        </span>
+
+
+
+
+
+
+
+  </div>
+    <div class="description">
+      <h3>Summary</h3>
+        <p>Function to play the sound with optional sprite name when using audio sprite.</p>
+
+    </div>
+
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+                <li class="param">
+                        <code class="param-name optional">[spriteName]</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+                    <div class="param-description">
+                        <ul>
+<li>Sprite name to play.</li>
+</ul>
+
+                    </div>
+
+                </li>
+            </ul>
+        </div>
+
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                <span class="type">IWaudSound</span>:
+                <div class="blue-return-desc">
+                    <p>sound instance</p>
+
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+<pre class="code prettyprint"><code>snd.play();
+snd.play(&quot;bell&quot;);</code></pre>
+
+            </div>
+        </div>
+
+</div>
+<div id="method_setVolume" class="method item">
+  <h3 class="blue-method-name">setVolume</h3>
+
+  <div class="meta method-meta">
+      <p>
+          Defined in
+      <a href="../files/src_WaudSound.hx.html#l72"><code>src&#x2F;WaudSound.hx:72</code></a>
+  </p>
+
+
+
+  </div>
+
+  <h3>Syntax</h3>
+  <div class="blue-method-syntax">
+  <h3 class="name"><code>setVolume</code></h3>
+
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+                <li class="arg">
+                        <code>val</code>
+                </li>
+            </ul><span class="paren">)</span>
+        </div>
+
+
+
+
+
+
+
+
+  </div>
+    <div class="description">
+      <h3>Summary</h3>
+        <p>Function to set sound volume.</p>
+
+    </div>
+
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+                <li class="param">
+                        <code class="param-name">val</code>
+                        <span class="type">Float</span>
+
+
+                    <div class="param-description">
+                        <ul>
+<li>Should be between 0 and 1.</li>
+</ul>
+
+                    </div>
+
+                </li>
+            </ul>
+        </div>
+
+
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+<pre class="code prettyprint"><code>snd.setVolume(0.5);</code></pre>
+
+            </div>
+        </div>
+
+</div>
+<div id="method_stop" class="method item">
+  <h3 class="blue-method-name">stop</h3>
+
+  <div class="meta method-meta">
+      <p>
+          Defined in
+      <a href="../files/src_WaudSound.hx.html#l155"><code>src&#x2F;WaudSound.hx:155</code></a>
+  </p>
+
+
+
+  </div>
+
+  <h3>Syntax</h3>
+  <div class="blue-method-syntax">
+  <h3 class="name"><code>stop</code></h3>
+
+        <span class="paren">()</span>
+
+
+
+
+
+
+
+
+  </div>
+    <div class="description">
+      <h3>Summary</h3>
+        <p>Function to stop sound.</p>
+
+    </div>
+
+
+
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+<pre class="code prettyprint"><code>snd.stop();</code></pre>
+
+            </div>
+        </div>
+
+</div>
+            </div>
 
 
 
