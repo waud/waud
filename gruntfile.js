@@ -30,7 +30,7 @@ module.exports = function (grunt) {
         exec: {
             copy: "mkdir npm-publish || true && cp -r src dist package.json LICENSE README.md ./npm-publish/",
             npm: "npm publish ./npm-publish/ && rm -r npm-publish",
-            docs: ""
+            docs: "cp -r ./api/** /haxe/adireddy.github.io/docs/waud/"
         },
 
         zip: {
