@@ -13,7 +13,7 @@ For haxe users:
 
 ### API Documentation ###
 
-[API documentation reference](http://adireddy.github.io/docs/waud/)
+[API Reference](http://adireddy.github.io/docs/waud/)
 
 Example: 
 ```js
