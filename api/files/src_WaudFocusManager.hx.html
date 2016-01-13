@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" class="yui-overrride">
+<head>
+    <meta charset="utf-8">
+    <title>src/WaudFocusManager.hx - waud.js</title>
+    <link rel="stylesheet" href="../assets/css/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700' rel='stylesheet' type='text/css'>
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="../assets/yui/build/yui-base/yui-base-min.js"></script>
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            <h1 class="blue-main-title">waud.js</h1>
+        </div>
+        <div class="yui3-u-1-4 version project-version">
+            API Docs for: 0.3.0
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+                    <h2 class="off-left">APIs</h2>
+                    <div id="api-tabview" class="tabview">
+                        <ul class="tabs">
+                            <li><a href="#api-classes">Classes</a></li>
+                            <li><a href="#api-modules">Modules</a></li>
+                        </ul>
+                
+                        <div id="api-tabview-filter">
+                            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+                        </div>
+                
+                        <div id="api-tabview-panel">
+                            <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/Waud.html">Waud</a></li>
+                                <li><a href="../classes/WaudFocusManager.html">WaudFocusManager</a></li>
+                                <li><a href="../classes/WaudSound.html">WaudSound</a></li>
+                                <li><a href="../classes/WaudSoundOptions.html">WaudSoundOptions</a></li>
+                                <li><a href="../classes/WaudUtils.html">WaudUtils</a></li>
+                            </ul>
+                
+                            <ul id="api-modules" class="apis modules">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+                    Show:
+                    <label for="api-show-inherited">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </div>
+            
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<h1 class="file-heading">File: src/WaudFocusManager.hx</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+import js.Browser;
+
+@:expose @:keep class WaudFocusManager {
+
+	static inline var FOCUS_STATE:String = &quot;focus&quot;;
+	static inline var BLUR_STATE:String = &quot;blur&quot;;
+
+	/**
+	* Focus callback function.
+	*
+	* @property focus
+	* @type {Function}
+	* @example
+ 	*     fm.focus = onFocus;
+	*/
+	public var focus:Void -&gt; Void;
+
+	/**
+	* Blur callback function.
+	*
+	* @property blur
+	* @type {Function}
+	* @example
+ 	*     fm.blur = onBlur;
+	*/
+	public var blur:Void -&gt; Void;
+
+	var _hidden:String;
+	var _visibilityChange:String;
+	var _currentState:String;
+
+	/**
+	* Cross-browser utility class used to mute/unmute audio on focus on/off events. Used when **Waud.autoMute()** is called.
+	*
+	* This calss can also be used as a standalone utility class to handle focus on/off events.
+	*
+	* @class WaudFocusManager
+	* @constructor
+	* @example
+	* 		var fm = new WaudFocusManager();
+	* 		fm.focus = onFocus;
+	* 		fm.blur = onBlur;
+	*/
+	public function new() {
+		_hidden = &quot;&quot;;
+		_visibilityChange = &quot;&quot;;
+		_currentState = &quot;&quot;;
+
+		if (Reflect.field(Browser.document, &quot;hidden&quot;) != null) {
+			_hidden = &quot;hidden&quot;;
+			_visibilityChange = &quot;visibilitychange&quot;;
+		}
+		else if (Reflect.field(Browser.document, &quot;mozHidden&quot;) != null) {
+			_hidden = &quot;mozHidden&quot;;
+			_visibilityChange = &quot;mozvisibilitychange&quot;;
+		}
+		else if (Reflect.field(Browser.document, &quot;msHidden&quot;) != null) {
+			_hidden = &quot;msHidden&quot;;
+			_visibilityChange = &quot;msvisibilitychange&quot;;
+		}
+		else if (Reflect.field(Browser.document, &quot;webkitHidden&quot;) != null) {
+			_hidden = &quot;webkitHidden&quot;;
+			_visibilityChange = &quot;webkitvisibilitychange&quot;;
+		}
+
+		if (Reflect.field(Browser.window, &quot;addEventListener&quot;) != null) {
+			untyped __js__(&quot;window&quot;).addEventListener(&quot;focus&quot;, _focus);
+			untyped __js__(&quot;window&quot;).addEventListener(&quot;blur&quot;, _blur);
+			untyped __js__(&quot;window&quot;).addEventListener(&quot;pageshow&quot;, _focus);
+			untyped __js__(&quot;window&quot;).addEventListener(&quot;pagehide&quot;, _blur);
+			untyped __js__(&quot;document&quot;).addEventListener(_visibilityChange, _handleVisibilityChange);
+		}
+		else if (Reflect.field(Browser.window, &quot;attachEvent&quot;) != null) {
+			untyped __js__(&quot;window&quot;).attachEvent(&quot;onfocus&quot;, _focus);
+			untyped __js__(&quot;window&quot;).attachEvent(&quot;onblur&quot;, _blur);
+			untyped __js__(&quot;window&quot;).attachEvent(&quot;pageshow&quot;, _focus);
+			untyped __js__(&quot;window&quot;).attachEvent(&quot;pagehide&quot;, _blur);
+			untyped __js__(&quot;document&quot;).attachEvent(_visibilityChange, _handleVisibilityChange);
+		}
+		else {
+			Browser.window.onload = function () {
+				Browser.window.onfocus = _focus;
+				Browser.window.onblur = _blur;
+				Browser.window.onpageshow = _focus;
+				Browser.window.onpagehide = _blur;
+			};
+		}
+	}
+
+	function _handleVisibilityChange() {
+		if (Reflect.field(Browser.document, _hidden) != null &amp;&amp; Reflect.field(Browser.document, _hidden)) blur();
+		else focus();
+	}
+
+	function _focus() {
+		if (_currentState != FOCUS_STATE &amp;&amp; focus != null) focus();
+		_currentState = FOCUS_STATE;
+	}
+
+	function _blur() {
+		if (_currentState != BLUR_STATE &amp;&amp; blur != null) blur();
+		_currentState = BLUR_STATE;
+	}
+
+	/**
+	* Function to clear focus manager events.
+	*
+	* @method clearEvents
+	* @example
+	*     fm.clearEvents();
+	*/
+	public function clearEvents() {
+		if (Reflect.field(Browser.window, &quot;removeEventListener&quot;) != null) {
+			untyped __js__(&quot;window&quot;).removeEventListener(&quot;focus&quot;, _focus);
+			untyped __js__(&quot;window&quot;).removeEventListener(&quot;blur&quot;, _blur);
+			untyped __js__(&quot;window&quot;).removeEventListener(&quot;pageshow&quot;, _focus);
+			untyped __js__(&quot;window&quot;).removeEventListener(&quot;pagehide&quot;, _blur);
+			untyped __js__(&quot;window&quot;).removeEventListener(_visibilityChange, _handleVisibilityChange);
+		}
+		else if (Reflect.field(Browser.window, &quot;removeEvent&quot;) != null) {
+			untyped __js__(&quot;window&quot;).removeEvent(&quot;onfocus&quot;, _focus);
+			untyped __js__(&quot;window&quot;).removeEvent(&quot;onblur&quot;, _blur);
+			untyped __js__(&quot;window&quot;).removeEvent(&quot;pageshow&quot;, _focus);
+			untyped __js__(&quot;window&quot;).removeEvent(&quot;pagehide&quot;, _blur);
+			untyped __js__(&quot;window&quot;).removeEvent(_visibilityChange, _handleVisibilityChange);
+		}
+		else {
+			Browser.window.onfocus = null;
+			Browser.window.onblur = null;
+			Browser.window.onpageshow = null;
+			Browser.window.onpagehide = null;
+		}
+	}
+}
+    </pre>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

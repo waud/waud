@@ -18,7 +18,7 @@
             <h1 class="blue-main-title">waud.js</h1>
         </div>
         <div class="yui3-u-1-4 version project-version">
-            API Docs for: 0.2.8
+            API Docs for: 0.3.0
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -40,6 +40,7 @@
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/Waud.html">Waud</a></li>
+                                <li><a href="../classes/WaudFocusManager.html">WaudFocusManager</a></li>
                                 <li><a href="../classes/WaudSound.html">WaudSound</a></li>
                                 <li><a href="../classes/WaudSoundOptions.html">WaudSoundOptions</a></li>
                                 <li><a href="../classes/WaudUtils.html">WaudUtils</a></li>
@@ -84,7 +85,7 @@
 
 
         <div class="foundat">
-            Defined in: <a href="../files/src_WaudSound.hx.html#l12"><code>src&#x2F;WaudSound.hx:12</code></a>
+            Defined in: <a href="../files/src_WaudSound.hx.html#l21"><code>src&#x2F;WaudSound.hx:21</code></a>
         </div>
 
 
@@ -105,7 +106,7 @@
   <div class="meta method-meta">
       <p>
           Defined in
-      <a href="../files/src_WaudSound.hx.html#l12"><code>src&#x2F;WaudSound.hx:12</code></a>
+      <a href="../files/src_WaudSound.hx.html#l21"><code>src&#x2F;WaudSound.hx:21</code></a>
   </p>
 
 
@@ -120,6 +121,9 @@
             <span class="paren">(</span><ul class="args-list inline commas">
                 <li class="arg">
                         <code>url</code>
+                </li>
+                <li class="arg">
+                        <code class="optional">[options]</code>
                 </li>
             </ul><span class="paren">)</span>
         </div>
@@ -154,10 +158,37 @@
                     </div>
 
                 </li>
+                <li class="param">
+                        <code class="param-name optional">[options]</code>
+                        <span class="type"><a href="../classes/WaudSoundOptions.html" class="crosslink">WaudSoundOptions</a></span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+                    <div class="param-description">
+                        <ul>
+<li>Sound options.</li>
+</ul>
+
+                    </div>
+
+                </li>
             </ul>
         </div>
 
 
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+<pre class="code prettyprint"><code>    // MP3 Sound
+    var snd = new WaudSound(&quot;assets/loop.mp3&quot;, { autoplay: false, loop: true, volume: 0.5, onload: _playBgSound });
+
+    // Audio Sprite
+    var audSprite = new WaudSound(&quot;assets/sprite.json&quot;);
+    audSprite.play(&quot;glass&quot;);</code></pre>
+
+            </div>
+        </div>
 
 </div>
     </div>
@@ -167,6 +198,7 @@
         <li class="api-class-tab index"><a href="#index">Index</a></li>
 
             <li class="api-class-tab methods"><a href="#methods">Methods</a></li>
+            <li class="api-class-tab properties"><a href="#properties">Properties</a></li>
     </ul>
 
     <div>
@@ -224,6 +256,16 @@
                     </ul>
                 </div>
 
+                <div class="index-section properties">
+                    <h3>Properties</h3>
+
+                    <ul class="index-list properties">
+                            <li class="index-item property">
+                                <a href="#property_isSpriteSound">isSpriteSound</a>
+
+                            </li>
+                    </ul>
+                </div>
 
 
         </div>
@@ -237,7 +279,7 @@
   <div class="meta method-meta">
       <p>
           Defined in
-      <a href="../files/src_WaudSound.hx.html#l57"><code>src&#x2F;WaudSound.hx:57</code></a>
+      <a href="../files/src_WaudSound.hx.html#l74"><code>src&#x2F;WaudSound.hx:74</code></a>
   </p>
 
 
@@ -300,7 +342,7 @@
   <div class="meta method-meta">
       <p>
           Defined in
-      <a href="../files/src_WaudSound.hx.html#l37"><code>src&#x2F;WaudSound.hx:37</code></a>
+      <a href="../files/src_WaudSound.hx.html#l54"><code>src&#x2F;WaudSound.hx:54</code></a>
   </p>
 
 
@@ -363,7 +405,7 @@
   <div class="meta method-meta">
       <p>
           Defined in
-      <a href="../files/src_WaudSound.hx.html#l180"><code>src&#x2F;WaudSound.hx:180</code></a>
+      <a href="../files/src_WaudSound.hx.html#l197"><code>src&#x2F;WaudSound.hx:197</code></a>
   </p>
 
 
@@ -408,7 +450,7 @@
   <div class="meta method-meta">
       <p>
           Defined in
-      <a href="../files/src_WaudSound.hx.html#l84"><code>src&#x2F;WaudSound.hx:84</code></a>
+      <a href="../files/src_WaudSound.hx.html#l101"><code>src&#x2F;WaudSound.hx:101</code></a>
   </p>
 
 
@@ -445,7 +487,7 @@
             <div class="returns-description">
                 <span class="type">Float</span>:
                 <div class="blue-return-desc">
-                    <p>between 0 and 1.</p>
+                    <p>between 0 and 1</p>
 
                 </div>
 
@@ -469,7 +511,7 @@
   <div class="meta method-meta">
       <p>
           Defined in
-      <a href="../files/src_WaudSound.hx.html#l131"><code>src&#x2F;WaudSound.hx:131</code></a>
+      <a href="../files/src_WaudSound.hx.html#l148"><code>src&#x2F;WaudSound.hx:148</code></a>
   </p>
 
 
@@ -506,7 +548,7 @@
             <div class="returns-description">
                 <span class="type">Bool</span>:
                 <div class="blue-return-desc">
-                    <p>true or false.</p>
+                    <p>true or false</p>
 
                 </div>
 
@@ -530,7 +572,7 @@
   <div class="meta method-meta">
       <p>
           Defined in
-      <a href="../files/src_WaudSound.hx.html#l143"><code>src&#x2F;WaudSound.hx:143</code></a>
+      <a href="../files/src_WaudSound.hx.html#l160"><code>src&#x2F;WaudSound.hx:160</code></a>
   </p>
 
 
@@ -597,7 +639,7 @@
   <div class="meta method-meta">
       <p>
           Defined in
-      <a href="../files/src_WaudSound.hx.html#l96"><code>src&#x2F;WaudSound.hx:96</code></a>
+      <a href="../files/src_WaudSound.hx.html#l113"><code>src&#x2F;WaudSound.hx:113</code></a>
   </p>
 
 
@@ -664,7 +706,7 @@
   <div class="meta method-meta">
       <p>
           Defined in
-      <a href="../files/src_WaudSound.hx.html#l166"><code>src&#x2F;WaudSound.hx:166</code></a>
+      <a href="../files/src_WaudSound.hx.html#l183"><code>src&#x2F;WaudSound.hx:183</code></a>
   </p>
 
 
@@ -750,7 +792,7 @@
   <div class="meta method-meta">
       <p>
           Defined in
-      <a href="../files/src_WaudSound.hx.html#l108"><code>src&#x2F;WaudSound.hx:108</code></a>
+      <a href="../files/src_WaudSound.hx.html#l125"><code>src&#x2F;WaudSound.hx:125</code></a>
   </p>
 
 
@@ -838,7 +880,7 @@ snd.play(&quot;bell&quot;);</code></pre>
   <div class="meta method-meta">
       <p>
           Defined in
-      <a href="../files/src_WaudSound.hx.html#l72"><code>src&#x2F;WaudSound.hx:72</code></a>
+      <a href="../files/src_WaudSound.hx.html#l89"><code>src&#x2F;WaudSound.hx:89</code></a>
   </p>
 
 
@@ -908,7 +950,7 @@ snd.play(&quot;bell&quot;);</code></pre>
   <div class="meta method-meta">
       <p>
           Defined in
-      <a href="../files/src_WaudSound.hx.html#l155"><code>src&#x2F;WaudSound.hx:155</code></a>
+      <a href="../files/src_WaudSound.hx.html#l172"><code>src&#x2F;WaudSound.hx:172</code></a>
   </p>
 
 
@@ -949,6 +991,51 @@ snd.play(&quot;bell&quot;);</code></pre>
 </div>
             </div>
 
+            <div id="properties" class="api-class-tabpanel">
+                <h2 class="off-left">Properties</h2>
+
+                    <div id="property_isSpriteSound" class="property item">
+                    
+                      <h3 class="blue-method-name">isSpriteSound</h3>
+                      <div class="meta method-meta">
+                          <p>
+                              Defined in
+                          <a href="../files/src_WaudSound.hx.html#l6"><code>src&#x2F;WaudSound.hx:6</code></a>
+                      </p>
+                    
+                    
+                      </div>
+                    
+                      <h3>Syntax</h3>
+                      <div class="blue-method-syntax">
+                        <h3 class="name"><code>isSpriteSound</code></h3>
+                        <span class="type">Bool</span>
+                    
+                    
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                          <h3>Summary</h3>
+                            <p>Indicates if the sound is sprite sound or normal sound.</p>
+                    
+                        </div>
+                    
+                    
+                    
+                        <div class="example">
+                          <h4>Example:</h4>
+                    
+                          <div class="example-content">
+                            <pre class="code prettyprint"><code>snd.isSpriteSound;</code></pre>
+                    
+                          </div>
+                        </div>
+                    
+                    </div>
+            </div>
 
 
     </div>

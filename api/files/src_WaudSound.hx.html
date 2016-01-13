@@ -18,7 +18,7 @@
             <h1 class="blue-main-title">waud.js</h1>
         </div>
         <div class="yui3-u-1-4 version project-version">
-            API Docs for: 0.2.8
+            API Docs for: 0.3.0
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -40,6 +40,7 @@
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/Waud.html">Waud</a></li>
+                                <li><a href="../classes/WaudFocusManager.html">WaudFocusManager</a></li>
                                 <li><a href="../classes/WaudSound.html">WaudSound</a></li>
                                 <li><a href="../classes/WaudSoundOptions.html">WaudSoundOptions</a></li>
                                 <li><a href="../classes/WaudUtils.html">WaudUtils</a></li>
@@ -88,6 +89,15 @@ import haxe.Json;
 
 @:expose @:keep class WaudSound implements IWaudSound {
 
+	/**
+	* Indicates if the sound is sprite sound or normal sound.
+	*
+	* @property isSpriteSound
+	* @type {Bool}
+	* @readOnly
+	* @example
+ 	*     snd.isSpriteSound;
+	*/
 	public var isSpriteSound:Bool;
 
 	var _snd:IWaudSound;
@@ -100,6 +110,14 @@ import haxe.Json;
 	* @class WaudSound
 	* @constructor
 	* @param {String} url - Can be audio file path or JSON file for audio sprite.
+	* @param {WaudSoundOptions} [options] - Sound options.
+	* @example
+	* 		// MP3 Sound
+	* 		var snd = new WaudSound(&quot;assets/loop.mp3&quot;, { autoplay: false, loop: true, volume: 0.5, onload: _playBgSound });
+	*
+	* 		// Audio Sprite
+	* 		var audSprite = new WaudSound(&quot;assets/sprite.json&quot;);
+	* 		audSprite.play(&quot;glass&quot;);
 	*/
 	public function new(url:String, ?options:WaudSoundOptions = null) {
 		if (Waud.audioManager == null) {
@@ -170,7 +188,7 @@ import haxe.Json;
 	* Function to get sound volume.
 	*
 	* @method getVolume
-	* @return {Float} between 0 and 1.
+	* @return {Float} between 0 and 1
 	* @example
 	*     snd.getVolume();
 	*/
@@ -217,7 +235,7 @@ import haxe.Json;
 	* Function to check if the sound is playing or not.
 	*
 	* @method isPlaying
-	* @return {Bool} true or false.
+	* @return {Bool} true or false
 	* @example
 	*     snd.isPlaying();
 	*/

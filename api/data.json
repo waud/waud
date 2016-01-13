@@ -2,7 +2,7 @@
     "project": {
         "name": "waud.js",
         "description": "Web Audio Library",
-        "version": "0.2.8",
+        "version": "0.3.0",
         "url": "https://github.com/adireddy/waud"
     },
     "files": {
@@ -18,6 +18,15 @@
             "modules": {},
             "classes": {
                 "Waud": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/WaudFocusManager.hx": {
+            "name": "src/WaudFocusManager.hx",
+            "modules": {},
+            "classes": {
+                "WaudFocusManager": 1
             },
             "fors": {},
             "namespaces": {}
@@ -64,6 +73,22 @@
             "line": 5,
             "description": "Web Audio Library with HTML5 audio fallback."
         },
+        "WaudFocusManager": {
+            "name": "WaudFocusManager",
+            "shortname": "WaudFocusManager",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/WaudFocusManager.hx",
+            "line": 32,
+            "description": "Cross-browser utility class used to mute/unmute audio on focus on/off events. Used when **Waud.autoMute()** is called.\n\nThis calss can also be used as a standalone utility class to handle focus on/off events.",
+            "is_constructor": 1,
+            "example": [
+                "\n\t\tvar fm = new WaudFocusManager();\n\t\tfm.focus = onFocus;\n\t\tfm.blur = onBlur;"
+            ]
+        },
         "WaudSound": {
             "name": "WaudSound",
             "shortname": "WaudSound",
@@ -73,7 +98,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/WaudSound.hx",
-            "line": 12,
+            "line": 21,
             "description": "Class to automatically use web audio api with HTML5 audio fallback.",
             "is_constructor": 1,
             "params": [
@@ -81,7 +106,16 @@
                     "name": "url",
                     "description": "- Can be audio file path or JSON file for audio sprite.",
                     "type": "String"
+                },
+                {
+                    "name": "options",
+                    "description": "- Sound options.",
+                    "type": "WaudSoundOptions",
+                    "optional": true
                 }
+            ],
+            "example": [
+                "\n\t\t// MP3 Sound\n\t\tvar snd = new WaudSound(\"assets/loop.mp3\", { autoplay: false, loop: true, volume: 0.5, onload: _playBgSound });\n\n\t\t// Audio Sprite\n\t\tvar audSprite = new WaudSound(\"assets/sprite.json\");\n\t\taudSprite.play(\"glass\");"
             ]
         },
         "WaudSoundOptions": {
@@ -289,7 +323,7 @@
             "params": [
                 {
                     "name": "callback",
-                    "description": "",
+                    "description": "- Optional callback that triggers after touch unlock.",
                     "type": "Function",
                     "optional": true
                 }
@@ -445,8 +479,56 @@
             "class": "Waud"
         },
         {
+            "file": "src/WaudFocusManager.hx",
+            "line": 8,
+            "description": "Focus callback function.",
+            "itemtype": "property",
+            "name": "focus",
+            "type": "{Function}",
+            "example": [
+                "\n    fm.focus = onFocus;"
+            ],
+            "class": "WaudFocusManager"
+        },
+        {
+            "file": "src/WaudFocusManager.hx",
+            "line": 18,
+            "description": "Blur callback function.",
+            "itemtype": "property",
+            "name": "blur",
+            "type": "{Function}",
+            "example": [
+                "\n    fm.blur = onBlur;"
+            ],
+            "class": "WaudFocusManager"
+        },
+        {
+            "file": "src/WaudFocusManager.hx",
+            "line": 105,
+            "description": "Function to clear focus manager events.",
+            "itemtype": "method",
+            "name": "clearEvents",
+            "example": [
+                "\n    fm.clearEvents();"
+            ],
+            "class": "WaudFocusManager"
+        },
+        {
             "file": "src/WaudSound.hx",
-            "line": 37,
+            "line": 6,
+            "description": "Indicates if the sound is sprite sound or normal sound.",
+            "itemtype": "property",
+            "name": "isSpriteSound",
+            "type": "{Bool}",
+            "readonly": "",
+            "example": [
+                "\n    snd.isSpriteSound;"
+            ],
+            "class": "WaudSound"
+        },
+        {
+            "file": "src/WaudSound.hx",
+            "line": 54,
             "description": "Function to load audio sprite JSON.",
             "access": "private",
             "tagname": "",
@@ -463,7 +545,7 @@
         },
         {
             "file": "src/WaudSound.hx",
-            "line": 57,
+            "line": 74,
             "description": "Function to initialize sound.",
             "access": "private",
             "tagname": "",
@@ -480,7 +562,7 @@
         },
         {
             "file": "src/WaudSound.hx",
-            "line": 72,
+            "line": 89,
             "description": "Function to set sound volume.",
             "itemtype": "method",
             "name": "setVolume",
@@ -498,12 +580,12 @@
         },
         {
             "file": "src/WaudSound.hx",
-            "line": 84,
+            "line": 101,
             "description": "Function to get sound volume.",
             "itemtype": "method",
             "name": "getVolume",
             "return": {
-                "description": "between 0 and 1.",
+                "description": "between 0 and 1",
                 "type": "Float"
             },
             "example": [
@@ -513,7 +595,7 @@
         },
         {
             "file": "src/WaudSound.hx",
-            "line": 96,
+            "line": 113,
             "description": "Function to mute sound.",
             "itemtype": "method",
             "name": "mute",
@@ -531,7 +613,7 @@
         },
         {
             "file": "src/WaudSound.hx",
-            "line": 108,
+            "line": 125,
             "description": "Function to play the sound with optional sprite name when using audio sprite.",
             "itemtype": "method",
             "name": "play",
@@ -554,12 +636,12 @@
         },
         {
             "file": "src/WaudSound.hx",
-            "line": 131,
+            "line": 148,
             "description": "Function to check if the sound is playing or not.",
             "itemtype": "method",
             "name": "isPlaying",
             "return": {
-                "description": "true or false.",
+                "description": "true or false",
                 "type": "Bool"
             },
             "example": [
@@ -569,7 +651,7 @@
         },
         {
             "file": "src/WaudSound.hx",
-            "line": 143,
+            "line": 160,
             "description": "Function to loop or unloop sound.",
             "itemtype": "method",
             "name": "loop",
@@ -587,7 +669,7 @@
         },
         {
             "file": "src/WaudSound.hx",
-            "line": 155,
+            "line": 172,
             "description": "Function to stop sound.",
             "itemtype": "method",
             "name": "stop",
@@ -598,7 +680,7 @@
         },
         {
             "file": "src/WaudSound.hx",
-            "line": 166,
+            "line": 183,
             "description": "Function to add callback that triggers on end of the sound.",
             "itemtype": "method",
             "name": "onEnd",
@@ -620,7 +702,7 @@
         },
         {
             "file": "src/WaudSound.hx",
-            "line": 180,
+            "line": 197,
             "description": "Function to destroy sound.",
             "itemtype": "method",
             "name": "destroy",
@@ -771,7 +853,7 @@
             "description": "Function to check if the device is **Opera** or not.",
             "static": 1,
             "itemtype": "method",
-            "name": "isiOS",
+            "name": "isOpera",
             "return": {
                 "description": "true or false",
                 "type": "Bool"
