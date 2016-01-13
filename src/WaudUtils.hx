@@ -76,7 +76,7 @@ import js.Browser;
 	* @method isOpera
 	* @return {Bool} true or false
 	* @example
-	*     Waud.isiOS();
+	*     Waud.isOpera();
 	*/
 	public static function isOpera():Bool {
 		return ~/Opera/i.match(ua) || Reflect.field(Browser.window, "opera") != null;
