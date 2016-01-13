@@ -5,13 +5,42 @@ import js.Browser;
 	static inline var FOCUS_STATE:String = "focus";
 	static inline var BLUR_STATE:String = "blur";
 
+	/**
+	* Focus callback function.
+	*
+	* @property focus
+	* @type {Function}
+	* @example
+ 	*     fm.focus = onFocus;
+	*/
 	public var focus:Void -> Void;
+
+	/**
+	* Blur callback function.
+	*
+	* @property blur
+	* @type {Function}
+	* @example
+ 	*     fm.blur = onBlur;
+	*/
 	public var blur:Void -> Void;
 
 	var _hidden:String;
 	var _visibilityChange:String;
 	var _currentState:String;
 
+	/**
+	* Cross-browser utility class used to mute/unmute audio on focus on/off events. Used when **Waud.autoMute()** is called.
+	*
+	* This calss can also be used as a standalone utility class to handle focus on/off events.
+	*
+	* @class WaudFocusManager
+	* @constructor
+	* @example
+	* 		var fm = new WaudFocusManager();
+	* 		fm.focus = onFocus;
+	* 		fm.blur = onBlur;
+	*/
 	public function new() {
 		_hidden = "";
 		_visibilityChange = "";
@@ -73,6 +102,13 @@ import js.Browser;
 		_currentState = BLUR_STATE;
 	}
 
+	/**
+	* Function to clear focus manager events.
+	*
+	* @method clearEvents
+	* @example
+	*     fm.clearEvents();
+	*/
 	public function clearEvents() {
 		if (Reflect.field(Browser.window, "removeEventListener") != null) {
 			untyped __js__("window").removeEventListener("focus", _focus);

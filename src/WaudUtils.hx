@@ -73,7 +73,7 @@ import js.Browser;
 	* Function to check if the device is **Opera** or not.
 	*
 	* @static
-	* @method isiOS
+	* @method isOpera
 	* @return {Bool} true or false
 	* @example
 	*     Waud.isiOS();

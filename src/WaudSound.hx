@@ -3,6 +3,15 @@ import haxe.Json;
 
 @:expose @:keep class WaudSound implements IWaudSound {
 
+	/**
+	* Indicates if the sound is sprite sound or normal sound.
+	*
+	* @property isSpriteSound
+	* @type {Bool}
+	* @readOnly
+	* @example
+ 	*     snd.isSpriteSound;
+	*/
 	public var isSpriteSound:Bool;
 
 	var _snd:IWaudSound;
@@ -15,6 +24,14 @@ import haxe.Json;
 	* @class WaudSound
 	* @constructor
 	* @param {String} url - Can be audio file path or JSON file for audio sprite.
+	* @param {WaudSoundOptions} [options] - Sound options.
+	* @example
+	* 		// MP3 Sound
+	* 		var snd = new WaudSound("assets/loop.mp3", { autoplay: false, loop: true, volume: 0.5, onload: _playBgSound });
+	*
+	* 		// Audio Sprite
+	* 		var audSprite = new WaudSound("assets/sprite.json");
+	* 		audSprite.play("glass");
 	*/
 	public function new(url:String, ?options:WaudSoundOptions = null) {
 		if (Waud.audioManager == null) {

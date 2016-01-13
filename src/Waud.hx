@@ -182,7 +182,7 @@ import js.Browser;
 	*
 	* @static
 	* @method enableTouchUnlock
-	* @param {Function} [callback]
+	* @param {Function} [callback] - Optional callback that triggers after touch unlock.
 	* @example
  	*     Waud.enableTouchUnlock(callback);
 	*/
