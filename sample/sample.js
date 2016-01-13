@@ -167,7 +167,7 @@ EReg.prototype = {
 };
 var IWaudSound = function() { };
 IWaudSound.__name__ = true;
-var HTML5Sound = $hx_exports.HTML5Sound = function(url,options) {
+var HTML5Sound = function(url,options) {
 	var _g = this;
 	BaseSound.call(this,url,options);
 	this._snd = Waud.dom.createElement("audio");
@@ -660,7 +660,7 @@ Waud.__name__ = true;
 Waud.init = function(d) {
 	if(d == null) d = window.document;
 	Waud.dom = d;
-	Waud.audioElement = Waud.dom.createElement("audio");
+	Waud.__audioElement = Waud.dom.createElement("audio");
 	if(Waud.audioManager == null) Waud.audioManager = new AudioManager();
 	Waud.isWebAudioSupported = Waud.audioManager.checkWebAudioAPISupport();
 	Waud.isHTML5AudioSupported = Reflect.field(window,"Audio") != null;
@@ -709,11 +709,11 @@ Waud.stop = function() {
 	}
 };
 Waud.getFormatSupportString = function() {
-	var support = "OGG: " + Waud.audioElement.canPlayType("audio/ogg; codecs=\"vorbis\"");
-	support += ", WAV: " + Waud.audioElement.canPlayType("audio/wav; codecs=\"1\"");
-	support += ", MP3: " + Waud.audioElement.canPlayType("audio/mpeg;");
-	support += ", AAC: " + Waud.audioElement.canPlayType("audio/aac;");
-	support += ", M4A: " + Waud.audioElement.canPlayType("audio/x-m4a;");
+	var support = "OGG: " + Waud.__audioElement.canPlayType("audio/ogg; codecs=\"vorbis\"");
+	support += ", WAV: " + Waud.__audioElement.canPlayType("audio/wav; codecs=\"1\"");
+	support += ", MP3: " + Waud.__audioElement.canPlayType("audio/mpeg;");
+	support += ", AAC: " + Waud.__audioElement.canPlayType("audio/aac;");
+	support += ", M4A: " + Waud.__audioElement.canPlayType("audio/x-m4a;");
 	return support;
 };
 Waud.isSupported = function() {
@@ -724,23 +724,23 @@ Waud.isSupported = function() {
 	return Waud.isWebAudioSupported || Waud.isHTML5AudioSupported;
 };
 Waud.isOGGSupported = function() {
-	var canPlay = Waud.audioElement.canPlayType("audio/ogg; codecs=\"vorbis\"");
+	var canPlay = Waud.__audioElement.canPlayType("audio/ogg; codecs=\"vorbis\"");
 	return Waud.isHTML5AudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe");
 };
 Waud.isWAVSupported = function() {
-	var canPlay = Waud.audioElement.canPlayType("audio/wav; codecs=\"1\"");
+	var canPlay = Waud.__audioElement.canPlayType("audio/wav; codecs=\"1\"");
 	return Waud.isHTML5AudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe");
 };
 Waud.isMP3Supported = function() {
-	var canPlay = Waud.audioElement.canPlayType("audio/mpeg;");
+	var canPlay = Waud.__audioElement.canPlayType("audio/mpeg;");
 	return Waud.isHTML5AudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe");
 };
 Waud.isAACSupported = function() {
-	var canPlay = Waud.audioElement.canPlayType("audio/aac;");
+	var canPlay = Waud.__audioElement.canPlayType("audio/aac;");
 	return Waud.isHTML5AudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe");
 };
 Waud.isM4ASupported = function() {
-	var canPlay = Waud.audioElement.canPlayType("audio/x-m4a;");
+	var canPlay = Waud.__audioElement.canPlayType("audio/x-m4a;");
 	return Waud.isHTML5AudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe");
 };
 var WaudFocusManager = $hx_exports.WaudFocusManager = function() {
@@ -933,7 +933,7 @@ WaudUtils.getiOSVersion = function() {
 	}
 	return matched;
 };
-var WebAudioAPISound = $hx_exports.WebAudioAPISound = function(url,options) {
+var WebAudioAPISound = function(url,options) {
 	BaseSound.call(this,url,options);
 	this._url = url;
 	this._manager = Waud.audioManager;
