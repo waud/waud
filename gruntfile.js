@@ -49,7 +49,7 @@ module.exports = function (grunt) {
                     selleck: "true",
                     extension: ".hx",
                     paths: "./src",
-                    outdir: "./api",
+                    outdir: "../adireddy.github.io/docs/waud/",
                     themedir: "./yui/themes/yuidoc-theme-blue"
             }
         }
