@@ -20,7 +20,7 @@
 		"adireddy"
 	],
 	"releasenote": "api documentation",
-	"version": "0.3.0",
+	"version": "0.3.1",
 	"url": "https://github.com/adireddy/waud",
 	"dependencies": {}
 }
