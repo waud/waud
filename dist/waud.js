@@ -15,7 +15,6 @@ var AudioManager = function() {
 	this.types.set("aac","audio/aac");
 	this.types.set("m4a","audio/x-m4a");
 };
-AudioManager.__name__ = true;
 AudioManager.prototype = {
 	checkWebAudioAPISupport: function() {
 		if(Reflect.field(window,"AudioContext") != null) {
@@ -49,8 +48,8 @@ AudioManager.prototype = {
 		}
 	}
 };
-var BaseSound = function(url,options) {
-	if(url == null || url == "") {
+var BaseSound = function(sndUrl,options) {
+	if(sndUrl == null || sndUrl == "") {
 		console.log("invalid sound url");
 		return;
 	}
@@ -59,6 +58,8 @@ var BaseSound = function(url,options) {
 		return;
 	}
 	this.isSpriteSound = false;
+	this.url = sndUrl;
+	this._isLoaded = false;
 	this._isPlaying = false;
 	this._muted = false;
 	if(options == null) options = { };
@@ -66,14 +67,15 @@ var BaseSound = function(url,options) {
 	if(options.preload != null) options.preload = options.preload; else options.preload = Waud.defaults.preload;
 	if(options.loop != null) options.loop = options.loop; else options.loop = Waud.defaults.loop;
 	if(options.volume != null && options.volume >= 0 && options.volume <= 1) options.volume = options.volume; else options.volume = Waud.defaults.volume;
+	if(options.onload != null) options.onload = options.onload; else options.onload = Waud.defaults.onload;
+	if(options.onend != null) options.onend = options.onend; else options.onend = Waud.defaults.onend;
+	if(options.onerror != null) options.onerror = options.onerror; else options.onerror = Waud.defaults.onerror;
 	this._options = options;
 };
-BaseSound.__name__ = true;
 var EReg = function(r,opt) {
 	opt = opt.split("u").join("");
 	this.r = new RegExp(r,opt);
 };
-EReg.__name__ = true;
 EReg.prototype = {
 	match: function(s) {
 		if(this.r.global) this.r.lastIndex = 0;
@@ -86,46 +88,54 @@ EReg.prototype = {
 	}
 };
 var IWaudSound = function() { };
-IWaudSound.__name__ = true;
 var HTML5Sound = function(url,options) {
-	var _g = this;
 	BaseSound.call(this,url,options);
 	this._snd = Waud.dom.createElement("audio");
 	this._addSource(url);
-	this._snd.autoplay = this._options.autoplay;
-	this._snd.loop = this._options.loop;
-	this._snd.volume = this._options.volume;
-	if(Std.string(this._options.preload) == "true") this._snd.preload = "auto"; else if(Std.string(this._options.preload) == "false") this._snd.preload = "none"; else this._snd.preload = "metadata";
-	if(this._options.onload != null) this._snd.onloadeddata = function() {
-		_g._options.onload(_g);
-	};
-	this._snd.onplaying = function() {
-		_g._isPlaying = true;
-	};
-	this._snd.onended = function() {
-		_g._isPlaying = false;
-		if(_g._options.onend != null) _g._options.onend(_g);
-	};
-	if(this._options.onerror != null) this._snd.onerror = function() {
-		_g._options.onerror(_g);
-	};
-	Waud.sounds.set(url,this);
-	this._snd.load();
+	if(this._options.preload) this.load();
 };
-HTML5Sound.__name__ = true;
 HTML5Sound.__interfaces__ = [IWaudSound];
 HTML5Sound.__super__ = BaseSound;
 HTML5Sound.prototype = $extend(BaseSound.prototype,{
-	_addSource: function(src) {
+	load: function(callback) {
+		var _g = this;
+		if(!this._isLoaded) {
+			this._snd.autoplay = this._options.autoplay;
+			this._snd.loop = this._options.loop;
+			this._snd.volume = this._options.volume;
+			if(callback != null) this._options.onload = callback;
+			if(this._options.preload) this._snd.preload = "auto"; else this._snd.preload = "metadata";
+			if(this._options.onload != null) {
+				this._isLoaded = true;
+				this._snd.onloadeddata = function() {
+					_g._options.onload(_g);
+				};
+			}
+			this._snd.onplaying = function() {
+				_g._isPlaying = true;
+			};
+			this._snd.onended = function() {
+				_g._isPlaying = false;
+				if(_g._options.onend != null) _g._options.onend(_g);
+			};
+			if(this._options.onerror != null) this._snd.onerror = function() {
+				_g._options.onerror(_g);
+			};
+			this._snd.load();
+			Waud.sounds.set(this.url,this);
+		}
+		return this;
+	}
+	,_addSource: function(url) {
 		this._src = Waud.dom.createElement("source");
-		this._src.src = src;
+		this._src.src = url;
 		if((function($this) {
 			var $r;
-			var key = $this._getExt(src);
+			var key = $this._getExt(url);
 			$r = Waud.audioManager.types.get(key);
 			return $r;
 		}(this)) != null) {
-			var key1 = this._getExt(src);
+			var key1 = this._getExt(url);
 			this._src.type = Waud.audioManager.types.get(key1);
 		}
 		this._snd.appendChild(this._src);
@@ -135,6 +145,7 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 		return filename.split(".").pop();
 	}
 	,setVolume: function(val) {
+		if(!this._isLoaded) return;
 		if(val >= 0 && val <= 1) {
 			this._snd.volume = val;
 			this._options.volume = val;
@@ -144,6 +155,7 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 		return this._options.volume;
 	}
 	,mute: function(val) {
+		if(!this._isLoaded) return;
 		this._snd.muted = val;
 		if(WaudUtils.isiOS()) {
 			if(val && this.isPlaying()) {
@@ -157,6 +169,10 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 	}
 	,play: function(spriteName,soundProps) {
 		var _g = this;
+		if(!this._isLoaded) {
+			console.log("sound not loaded");
+			return this;
+		}
 		if(this._muted) return this;
 		if(this.isSpriteSound && soundProps != null) {
 			this._snd.currentTime = soundProps.start;
@@ -172,14 +188,20 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 		return this._isPlaying;
 	}
 	,loop: function(val) {
+		if(!this._isLoaded) return;
 		this._snd.loop = val;
 	}
 	,stop: function() {
+		if(!this._isLoaded) return;
 		this._snd.pause();
 		this._snd.currentTime = 0;
 	}
 	,onEnd: function(callback) {
 		this._options.onend = callback;
+		return this;
+	}
+	,onLoad: function(callback) {
+		this._options.onload = callback;
 		return this;
 	}
 	,destroy: function() {
@@ -192,15 +214,12 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 	}
 });
 var HxOverrides = function() { };
-HxOverrides.__name__ = true;
 HxOverrides.cca = function(s,index) {
 	var x = s.charCodeAt(index);
 	if(x != x) return undefined;
 	return x;
 };
-Math.__name__ = true;
 var Reflect = function() { };
-Reflect.__name__ = true;
 Reflect.field = function(o,field) {
 	try {
 		return o[field];
@@ -210,10 +229,6 @@ Reflect.field = function(o,field) {
 	}
 };
 var Std = function() { };
-Std.__name__ = true;
-Std.string = function(s) {
-	return js_Boot.__string_rec(s,"");
-};
 Std.parseInt = function(x) {
 	var v = parseInt(x,10);
 	if(v == 0 && (HxOverrides.cca(x,1) == 120 || HxOverrides.cca(x,1) == 88)) v = parseInt(x);
@@ -221,7 +236,6 @@ Std.parseInt = function(x) {
 	return v;
 };
 var Type = function() { };
-Type.__name__ = true;
 Type.createInstance = function(cl,args) {
 	var _g = args.length;
 	switch(_g) {
@@ -249,7 +263,6 @@ Type.createInstance = function(cl,args) {
 	return null;
 };
 var Waud = $hx_exports.Waud = function() { };
-Waud.__name__ = true;
 Waud.init = function(d) {
 	if(d == null) d = window.document;
 	Waud.dom = d;
@@ -373,7 +386,6 @@ var WaudFocusManager = $hx_exports.WaudFocusManager = function() {
 		window.onpagehide = $bind(_g,_g._blur);
 	};
 };
-WaudFocusManager.__name__ = true;
 WaudFocusManager.prototype = {
 	_handleVisibilityChange: function() {
 		if(Reflect.field(window.document,this._hidden) != null && Reflect.field(window.document,this._hidden)) this.blur(); else this.focus();
@@ -421,7 +433,6 @@ var WaudSound = $hx_exports.WaudSound = function(url,options) {
 		this._init(url);
 	}
 };
-WaudSound.__name__ = true;
 WaudSound.__interfaces__ = [IWaudSound];
 WaudSound.prototype = {
 	_loadSpriteJson: function(url) {
@@ -438,6 +449,7 @@ WaudSound.prototype = {
 		xobj.send(null);
 	}
 	,_init: function(url) {
+		this.url = url;
 		if(Waud.isWebAudioSupported) this._snd = new WebAudioAPISound(url,this._options); else if(Waud.isHTML5AudioSupported) this._snd = new HTML5Sound(url,this._options); else console.log("no audio support in this browser");
 		this._snd.isSpriteSound = this.isSpriteSound;
 	}
@@ -449,6 +461,10 @@ WaudSound.prototype = {
 	}
 	,mute: function(val) {
 		this._snd.mute(val);
+	}
+	,load: function(callback) {
+		this._snd.load(callback);
+		return this._snd;
 	}
 	,play: function(spriteName,soundProps) {
 		if(spriteName != null) {
@@ -463,8 +479,7 @@ WaudSound.prototype = {
 				}
 			}
 		}
-		this._snd.play(spriteName,soundProps);
-		return this;
+		return this._snd.play(spriteName,soundProps);
 	}
 	,isPlaying: function() {
 		return this._snd.isPlaying();
@@ -476,8 +491,10 @@ WaudSound.prototype = {
 		this._snd.stop();
 	}
 	,onEnd: function(callback) {
-		this._snd.onEnd(callback);
-		return this;
+		return this._snd.onEnd(callback);
+	}
+	,onLoad: function(callback) {
+		return this._snd.onLoad(callback);
 	}
 	,destroy: function() {
 		this._snd.destroy();
@@ -485,7 +502,6 @@ WaudSound.prototype = {
 	}
 };
 var WaudUtils = $hx_exports.WaudUtils = function() { };
-WaudUtils.__name__ = true;
 WaudUtils.isAndroid = function() {
 	return new EReg("Android","i").match(WaudUtils.ua);
 };
@@ -528,17 +544,9 @@ WaudUtils.getiOSVersion = function() {
 };
 var WebAudioAPISound = function(url,options) {
 	BaseSound.call(this,url,options);
-	this._url = url;
 	this._manager = Waud.audioManager;
-	var request = new XMLHttpRequest();
-	request.open("GET",this._url,true);
-	request.responseType = "arraybuffer";
-	request.onload = $bind(this,this._onSoundLoaded);
-	request.onerror = $bind(this,this._error);
-	request.send();
-	Waud.sounds.set(url,this);
+	if(this._options.preload) this.load();
 };
-WebAudioAPISound.__name__ = true;
 WebAudioAPISound.__interfaces__ = [IWaudSound];
 WebAudioAPISound.__super__ = BaseSound;
 WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
@@ -547,11 +555,12 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 	}
 	,_decodeSuccess: function(buffer) {
 		if(buffer == null) {
-			console.log("empty buffer: " + this._url);
+			console.log("empty buffer: " + this.url);
 			if(this._options.onerror != null) this._options.onerror(this);
 			return;
 		}
-		this._manager.bufferList.set(this._url,buffer);
+		this._manager.bufferList.set(this.url,buffer);
+		this._isLoaded = true;
 		if(this._options.onload != null) this._options.onload(this);
 		if(this._options.autoplay) this.play();
 	}
@@ -567,8 +576,25 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		this._gainNode.connect(this._manager.audioContext.destination);
 		return source;
 	}
+	,load: function(callback) {
+		if(!this._isLoaded) {
+			var request = new XMLHttpRequest();
+			request.open("GET",this.url,true);
+			request.responseType = "arraybuffer";
+			request.onload = $bind(this,this._onSoundLoaded);
+			request.onerror = $bind(this,this._error);
+			request.send();
+			if(callback != null) this._options.onload = callback;
+			Waud.sounds.set(this.url,this);
+		}
+		return this;
+	}
 	,play: function(spriteName,soundProps) {
 		var _g = this;
+		if(!this._isLoaded) {
+			console.log("sound not loaded");
+			return this;
+		}
 		if(this._muted) return this;
 		var start = 0;
 		var end = -1;
@@ -576,7 +602,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 			start = soundProps.start;
 			end = soundProps.duration;
 		}
-		var buffer = this._manager.bufferList.get(this._url);
+		var buffer = this._manager.bufferList.get(this.url);
 		if(buffer != null) {
 			this._snd = this._makeSource(buffer);
 			if(start >= 0 && end > -1) this._snd.start(0,start,end); else {
@@ -589,7 +615,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 				_g._isPlaying = false;
 				if(_g._options.onend != null) _g._options.onend(_g);
 			};
-			if(this._manager.playingSounds.get(this._url) == null) this._manager.playingSounds.set(this._url,this._snd);
+			if(this._manager.playingSounds.get(this.url) == null) this._manager.playingSounds.set(this.url,this._snd);
 		}
 		return this;
 	}
@@ -597,11 +623,11 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		return this._isPlaying;
 	}
 	,loop: function(val) {
-		if(this._snd == null) return;
+		if(this._snd == null || !this._isLoaded) return;
 		this._snd.loop = val;
 	}
 	,setVolume: function(val) {
-		if(this._gainNode == null) return;
+		if(this._gainNode == null || !this._isLoaded) return;
 		this._options.volume = val;
 		this._gainNode.gain.value = this._options.volume;
 	}
@@ -610,15 +636,19 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 	}
 	,mute: function(val) {
 		this._muted = val;
-		if(this._gainNode == null) return;
+		if(this._gainNode == null || !this._isLoaded) return;
 		if(val) this._gainNode.gain.value = 0; else this._gainNode.gain.value = this._options.volume;
 	}
 	,stop: function() {
-		if(this._snd == null) return;
+		if(this._snd == null || !this._isLoaded) return;
 		this._snd.stop(0);
 	}
 	,onEnd: function(callback) {
 		this._options.onend = callback;
+		return this;
+	}
+	,onLoad: function(callback) {
+		this._options.onload = callback;
 		return this;
 	}
 	,destroy: function() {
@@ -634,14 +664,12 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 	}
 });
 var haxe_IMap = function() { };
-haxe_IMap.__name__ = true;
 var haxe_Timer = function(time_ms) {
 	var me = this;
 	this.id = setInterval(function() {
 		me.run();
 	},time_ms);
 };
-haxe_Timer.__name__ = true;
 haxe_Timer.delay = function(f,time_ms) {
 	var t = new haxe_Timer(time_ms);
 	t.run = function() {
@@ -665,7 +693,6 @@ var haxe_ds__$StringMap_StringMapIterator = function(map,keys) {
 	this.index = 0;
 	this.count = keys.length;
 };
-haxe_ds__$StringMap_StringMapIterator.__name__ = true;
 haxe_ds__$StringMap_StringMapIterator.prototype = {
 	hasNext: function() {
 		return this.index < this.count;
@@ -677,7 +704,6 @@ haxe_ds__$StringMap_StringMapIterator.prototype = {
 var haxe_ds_StringMap = function() {
 	this.h = { };
 };
-haxe_ds_StringMap.__name__ = true;
 haxe_ds_StringMap.__interfaces__ = [haxe_IMap];
 haxe_ds_StringMap.prototype = {
 	set: function(key,value) {
@@ -716,86 +742,13 @@ var js__$Boot_HaxeError = function(val) {
 	this.message = String(val);
 	if(Error.captureStackTrace) Error.captureStackTrace(this,js__$Boot_HaxeError);
 };
-js__$Boot_HaxeError.__name__ = true;
 js__$Boot_HaxeError.__super__ = Error;
 js__$Boot_HaxeError.prototype = $extend(Error.prototype,{
 });
-var js_Boot = function() { };
-js_Boot.__name__ = true;
-js_Boot.__string_rec = function(o,s) {
-	if(o == null) return "null";
-	if(s.length >= 5) return "<...>";
-	var t = typeof(o);
-	if(t == "function" && (o.__name__ || o.__ename__)) t = "object";
-	switch(t) {
-	case "object":
-		if(o instanceof Array) {
-			if(o.__enum__) {
-				if(o.length == 2) return o[0];
-				var str2 = o[0] + "(";
-				s += "\t";
-				var _g1 = 2;
-				var _g = o.length;
-				while(_g1 < _g) {
-					var i1 = _g1++;
-					if(i1 != 2) str2 += "," + js_Boot.__string_rec(o[i1],s); else str2 += js_Boot.__string_rec(o[i1],s);
-				}
-				return str2 + ")";
-			}
-			var l = o.length;
-			var i;
-			var str1 = "[";
-			s += "\t";
-			var _g2 = 0;
-			while(_g2 < l) {
-				var i2 = _g2++;
-				str1 += (i2 > 0?",":"") + js_Boot.__string_rec(o[i2],s);
-			}
-			str1 += "]";
-			return str1;
-		}
-		var tostr;
-		try {
-			tostr = o.toString;
-		} catch( e ) {
-			if (e instanceof js__$Boot_HaxeError) e = e.val;
-			return "???";
-		}
-		if(tostr != null && tostr != Object.toString && typeof(tostr) == "function") {
-			var s2 = o.toString();
-			if(s2 != "[object Object]") return s2;
-		}
-		var k = null;
-		var str = "{\n";
-		s += "\t";
-		var hasp = o.hasOwnProperty != null;
-		for( var k in o ) {
-		if(hasp && !o.hasOwnProperty(k)) {
-			continue;
-		}
-		if(k == "prototype" || k == "__class__" || k == "__super__" || k == "__interfaces__" || k == "__properties__") {
-			continue;
-		}
-		if(str.length != 2) str += ", \n";
-		str += s + k + " : " + js_Boot.__string_rec(o[k],s);
-		}
-		s = s.substring(1);
-		str += "\n" + s + "}";
-		return str;
-	case "function":
-		return "<function>";
-	case "string":
-		return o;
-	default:
-		return String(o);
-	}
-};
 var $_, $fid = 0;
 function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id__ = $fid++; var f; if( o.hx__closures__ == null ) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__]; if( f == null ) { f = function(){ return f.method.apply(f.scope, arguments); }; f.scope = o; f.method = m; o.hx__closures__[m.__id__] = f; } return f; }
-String.__name__ = true;
-Array.__name__ = true;
 var __map_reserved = {}
-Waud.defaults = { autoplay : false, loop : false, preload : "true", volume : 1};
+Waud.defaults = { autoplay : false, loop : false, preload : true, volume : 1};
 Waud.preferredSampleRate = 44100;
 Waud.isMuted = false;
 WaudFocusManager.FOCUS_STATE = "focus";
