@@ -19,8 +19,8 @@
 	"contributors": [
 		"adireddy"
 	],
-	"releasenote": "api documentation",
-	"version": "0.3.1",
+	"releasenote": "added load and onLoad methods",
+	"version": "0.3.2",
 	"url": "https://github.com/adireddy/waud",
 	"dependencies": {}
 }
