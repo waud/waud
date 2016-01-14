@@ -52,5 +52,16 @@ typedef WaudSoundOptions = {
 	*/
 	@:optional var onerror:IWaudSound -> Void;
 
-	@:optional var preload:Dynamic;
+	/**
+	* Whether to preload the sound or not.
+	*
+	* Set it to `true` to automatically load the sound when instantiated.
+	*
+	* Set it to `false` to load the sound manually using `snd.load()` method.
+	*
+	* @property preload
+	* @type {Bool}
+	* @default true
+	*/
+	@:optional var preload:Bool;
 }
