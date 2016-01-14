@@ -14,6 +14,17 @@ import haxe.Json;
 	*/
 	public var isSpriteSound:Bool;
 
+	/**
+	* Sound url.
+	*
+	* @property url
+	* @type {String}
+	* @readOnly
+	* @example
+ 	*     snd.url;
+	*/
+	public var url:String;
+
 	var _snd:IWaudSound;
 	var _options:WaudSoundOptions;
 	var _spriteData:AudioSprite;
@@ -79,6 +90,7 @@ import haxe.Json;
 	* @param {String} url - Audio file path.
 	*/
 	function _init(url:String) {
+		this.url = url;
 		if (Waud.isWebAudioSupported) _snd = new WebAudioAPISound(url, _options);
 		else if (Waud.isHTML5AudioSupported) _snd = new HTML5Sound(url, _options);
 		else trace("no audio support in this browser");
@@ -123,6 +135,21 @@ import haxe.Json;
 	}
 
 	/**
+	* Function to manually load the sound if `preload` was set to `false` with optional onload callback.
+	*
+	* @method load
+	* @param {Function} [callback] - onload callback function.
+	* @return {IWaudSound} sound instance
+	* @example
+	*     snd.load();
+	*     snd.load(callback);
+	*/
+	public function load(?callback:IWaudSound -> Void):IWaudSound {
+		_snd.load(callback);
+		return _snd;
+	}
+
+	/**
 	* Function to play the sound with optional sprite name when using audio sprite.
 	*
 	* @method play
@@ -141,8 +168,7 @@ import haxe.Json;
 				}
 			}
 		}
-		_snd.play(spriteName, soundProps);
-		return this;
+		return _snd.play(spriteName, soundProps);
 	}
 
 	/**
@@ -181,17 +207,29 @@ import haxe.Json;
 	}
 
 	/**
-	* Function to add callback that triggers on end of the sound.
+	* Function to add callback that triggers when the sound finishes playing.
 	*
 	* @method onEnd
-	* @param {Function} callback - Callback function that triggers on end of the sound.
+	* @param {Function} callback - Callback function.
 	* @return {IWaudSound} sound instance
 	* @example
 	*     snd.onEnd(callback);
 	*/
 	public function onEnd(callback:IWaudSound -> Void):IWaudSound {
-		_snd.onEnd(callback);
-		return this;
+		return _snd.onEnd(callback);
+	}
+
+	/**
+	* Function to add callback that triggers when the sound is loaded.
+	*
+	* @method onLoad
+	* @param {Function} callback - Callback function.
+	* @return {IWaudSound} sound instance
+	* @example
+	*     snd.onLoad(callback);
+	*/
+	public function onLoad(callback:IWaudSound -> Void):IWaudSound {
+		return _snd.onLoad(callback);
 	}
 
 	/**
