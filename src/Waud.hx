@@ -40,12 +40,12 @@ import js.Browser;
 	* @static
 	* @type {WaudSoundOptions}
 	* @example
- 	*     Waud.defaults = { volume: 0.5, autoplay: true };
+ 	*     Waud.defaults = { volume: 0.5, autoplay: true, preload: false };
 	*/
 	public static var defaults:WaudSoundOptions = {
 		autoplay: false,
 		loop: false,
-		preload: "true",
+		preload: true,
 		volume: 1
 	};
 
