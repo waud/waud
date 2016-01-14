@@ -87,16 +87,34 @@ import js.Browser;
 		}
 	}
 
+	/**
+	* Function to handle visibility change event.
+	*
+	* @private
+	* @method _handleVisibilityChange
+	*/
 	function _handleVisibilityChange() {
 		if (Reflect.field(Browser.document, _hidden) != null && Reflect.field(Browser.document, _hidden)) blur();
 		else focus();
 	}
 
+	/**
+	* Function to trigger focus callback.
+	*
+	* @private
+	* @method _focus
+	*/
 	function _focus() {
 		if (_currentState != FOCUS_STATE && focus != null) focus();
 		_currentState = FOCUS_STATE;
 	}
 
+	/**
+	* Function to trigger blur callback.
+	*
+	* @private
+	* @method _blur
+	*/
 	function _blur() {
 		if (_currentState != BLUR_STATE && blur != null) blur();
 		_currentState = BLUR_STATE;
