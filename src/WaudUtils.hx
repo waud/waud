@@ -12,6 +12,7 @@ import js.Browser;
 	*
 	* @static
 	* @property ua
+	* @type {String}
 	* @example
 	*     WaudUtils.ua;
 	*/
