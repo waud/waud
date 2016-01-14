@@ -78,9 +78,10 @@ class Main extends Application {
 		Waud.init();
 		Waud.autoMute();
 		Waud.enableTouchUnlock(touchUnlock);
-		_bgSnd = new WaudSound("assets/loop.mp3", { loop:true, autoplay: false, volume: 0.5, onload: _playBgSound });
+		Waud.defaults.onload = _onLoad;
+		_bgSnd = new WaudSound("assets/loop.mp3", { loop:true, autoplay: false, volume: 1, onload: _playBgSound });
 
-		_glassMP3 = new WaudSound("assets/glass.mp3");
+		_glassMP3 = new WaudSound("assets/glass.mp3", {preload: false});
 		_bellMP3 = new WaudSound("assets/bell.mp3");
 		_canMP3 = new WaudSound("assets/canopening.mp3");
 
@@ -98,7 +99,13 @@ class Main extends Application {
 
 		_audSprite = new WaudSound("assets/sprite.json");
 
+		_glassMP3.load(_onLoad);
+
 		_resize();
+	}
+
+	function _onLoad(snd:IWaudSound) {
+		trace(snd.url);
 	}
 
 	function touchUnlock() {
