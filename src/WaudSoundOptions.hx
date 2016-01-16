@@ -64,4 +64,15 @@ typedef WaudSoundOptions = {
 	* @default true
 	*/
 	@:optional var preload:Bool;
+
+	/**
+	* Whether to use web audio api or not.
+	*
+	* Set it to `false` to force html5 audio even when web audio is available.
+	*
+	* @property webaudio
+	* @type {Bool}
+	* @default true
+	*/
+	@:optional var webaudio:Bool;
 }
