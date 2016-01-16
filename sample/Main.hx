@@ -1,3 +1,4 @@
+import js.Browser;
 import pixi.core.Pixi;
 import pixi.core.text.Text;
 import pixi.core.display.Container;
@@ -81,7 +82,7 @@ class Main extends Application {
 		Waud.defaults.onload = _onLoad;
 		_bgSnd = new WaudSound("assets/loop.mp3", { loop:true, autoplay: false, volume: 1, onload: _playBgSound });
 
-		_glassMP3 = new WaudSound("assets/glass.mp3", {preload: false});
+		_glassMP3 = new WaudSound("assets/glass.mp3", {preload: false, webaudio: false});
 		_bellMP3 = new WaudSound("assets/bell.mp3");
 		_canMP3 = new WaudSound("assets/canopening.mp3");
 
@@ -125,7 +126,7 @@ class Main extends Application {
 	}
 
 	function _stop() {
-		Waud.stop();
+		Waud.destroy();
 	}
 
 	function _addButton(label:String, x:Float, y:Float, width:Float, height:Float, callback:Dynamic) {
@@ -141,6 +142,6 @@ class Main extends Application {
 	}
 
 	static function main() {
-		new Main();
+		Reflect.setField(Browser.window, "a", new Main());
 	}
 }
