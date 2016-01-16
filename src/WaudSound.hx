@@ -60,6 +60,8 @@ import haxe.Json;
 			isSpriteSound = false;
 			_init(url);
 		}
+
+		Waud.sounds.set(url, this);
 	}
 
 	/**
@@ -91,7 +93,7 @@ import haxe.Json;
 	*/
 	function _init(url:String) {
 		this.url = url;
-		if (Waud.isWebAudioSupported) _snd = new WebAudioAPISound(url, _options);
+		if (Waud.isWebAudioSupported && Waud.useWebAudio && (_options == null || _options.webaudio == null || _options.webaudio)) _snd = new WebAudioAPISound(url, _options);
 		else if (Waud.isHTML5AudioSupported) _snd = new HTML5Sound(url, _options);
 		else trace("no audio support in this browser");
 
@@ -107,6 +109,7 @@ import haxe.Json;
 	*     snd.setVolume(0.5);
 	*/
 	public function setVolume(val:Float) {
+		if (_snd == null) return;
 		_snd.setVolume(val);
 	}
 
@@ -119,6 +122,7 @@ import haxe.Json;
 	*     snd.getVolume();
 	*/
 	public function getVolume():Float {
+		if (_snd == null) return 0;
 		return _snd.getVolume();
 	}
 
@@ -131,6 +135,7 @@ import haxe.Json;
 	*     snd.mute(true);
 	*/
 	public function mute(val:Bool) {
+		if (_snd == null) return;
 		_snd.mute(val);
 	}
 
@@ -145,8 +150,9 @@ import haxe.Json;
 	*     snd.load(callback);
 	*/
 	public function load(?callback:IWaudSound -> Void):IWaudSound {
+		if (_snd == null) return null;
 		_snd.load(callback);
-		return _snd;
+		return this;
 	}
 
 	/**
@@ -160,6 +166,7 @@ import haxe.Json;
 	*     snd.play("bell");
 	*/
 	public function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties = null):IWaudSound {
+		if (_snd == null) return null;
 		if (spriteName != null) {
 			for (snd in _spriteData.sprite) {
 				if (snd.name == spriteName) {
@@ -168,7 +175,8 @@ import haxe.Json;
 				}
 			}
 		}
-		return _snd.play(spriteName, soundProps);
+		_snd.play(spriteName, soundProps);
+		return this;
 	}
 
 	/**
@@ -180,6 +188,7 @@ import haxe.Json;
 	*     snd.isPlaying();
 	*/
 	public function isPlaying():Bool {
+		if (_snd == null) return false;
 		return _snd.isPlaying();
 	}
 
@@ -192,6 +201,7 @@ import haxe.Json;
 	*     snd.loop(true);
 	*/
 	public function loop(val:Bool) {
+		if (_snd == null) return;
 		_snd.loop(val);
 	}
 
@@ -203,6 +213,7 @@ import haxe.Json;
 	*     snd.stop();
 	*/
 	public function stop() {
+		if (_snd == null) return;
 		_snd.stop();
 	}
 
@@ -216,7 +227,9 @@ import haxe.Json;
 	*     snd.onEnd(callback);
 	*/
 	public function onEnd(callback:IWaudSound -> Void):IWaudSound {
-		return _snd.onEnd(callback);
+		if (_snd == null) return null;
+		_snd.onEnd(callback);
+		return this;
 	}
 
 	/**
@@ -229,7 +242,9 @@ import haxe.Json;
 	*     snd.onLoad(callback);
 	*/
 	public function onLoad(callback:IWaudSound -> Void):IWaudSound {
-		return _snd.onLoad(callback);
+		if (_snd == null) return null;
+		_snd.onLoad(callback);
+		return this;
 	}
 
 	/**
@@ -240,6 +255,7 @@ import haxe.Json;
 	*     snd.destroy();
 	*/
 	public function destroy() {
+		if (_snd == null) return;
 		_snd.destroy();
 		_snd = null;
 	}
