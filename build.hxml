@@ -1,6 +1,15 @@
 -cmd haxelib newrepo
 -cmd haxelib install pixijs
 -cmd haxelib install msignal
+-cmd haxelib install utest
+
+--next
+
+-cp test
+-cp src
+-lib utest
+-main Test
+-js test/test.js
 
 --next
 
@@ -41,4 +50,4 @@ WebAudioAPISound
 -D stats
 
 #--next
-#-cmd node audiosprite/generatesprite --loop loop --autoplay loop  -o sample/assets/sprite -e m4a sample/assets/*.mp3
+#-cmd waudsprite --loop loop --autoplay loop  -o sample/assets/sprite -e m4a sample/assets/*.mp3

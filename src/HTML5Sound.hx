@@ -2,56 +2,64 @@ import haxe.Timer;
 import js.html.SourceElement;
 import js.html.AudioElement;
 
-@:expose @:keep class HTML5Sound extends BaseSound implements IWaudSound {
+@:keep class HTML5Sound extends BaseSound implements IWaudSound {
 
 	var _snd:AudioElement;
 	var _src:SourceElement;
 	var _tmr:Timer;
 
 	public function new(url:String, ?options:WaudSoundOptions = null) {
+		#if debug trace("using html5 audio - " + url); #end
 		super(url, options);
 		_snd = Waud.dom.createAudioElement();
 		_addSource(url);
-
-		_snd.autoplay = _options.autoplay;
-		_snd.loop = _options.loop;
-		_snd.volume = _options.volume;
-
-		if (Std.string(_options.preload) == "true") _snd.preload = "auto";
-		else if (Std.string(_options.preload) == "false") _snd.preload = "none";
-		else _snd.preload = "metadata";
-
-		if (_options.onload != null) {
-			_snd.onloadeddata = function() {
-				_options.onload(this);
-			}
-		}
-
-		_snd.onplaying = function() {
-			_isPlaying = true;
-		}
-
-		_snd.onended = function() {
-			_isPlaying = false;
-			if (_options.onend != null) _options.onend(this);
-		}
-
-		if (_options.onerror != null) {
-			_snd.onerror = function() {
-				_options.onerror(this);
-			}
-		}
-
-		Waud.sounds.set(url, this);
-
-		_snd.load();
+		if (_options.preload) load();
 	}
 
-	function _addSource(src:String):SourceElement {
-		_src = Waud.dom.createSourceElement();
-		_src.src = src;
+	public function load(?callback:IWaudSound -> Void):IWaudSound {
+		if (!_isLoaded) {
+			_snd.autoplay = _options.autoplay;
+			_snd.loop = _options.loop;
+			_snd.volume = _options.volume;
 
-		if (Waud.types.get(_getExt(src)) != null) _src.type = Waud.types.get(_getExt(src));
+			if (callback != null) _options.onload = callback;
+
+			if (_options.preload) _snd.preload = "auto";
+			else _snd.preload = "metadata"; //none
+
+			if (_options.onload != null) {
+				_isLoaded = true;
+				_snd.onloadeddata = function() {
+					_options.onload(this);
+				}
+			}
+
+			_snd.onplaying = function() {
+				_isPlaying = true;
+			}
+
+			_snd.onended = function() {
+				_isPlaying = false;
+				if (_options.onend != null) _options.onend(this);
+			}
+
+			if (_options.onerror != null) {
+				_snd.onerror = function() {
+					_options.onerror(this);
+				}
+			}
+
+			_snd.load();
+		}
+
+		return this;
+	}
+
+	function _addSource(url:String):SourceElement {
+		_src = Waud.dom.createSourceElement();
+		_src.src = url;
+
+		if (Waud.audioManager.types.get(_getExt(url)) != null) _src.type = Waud.audioManager.types.get(_getExt(url));
 		_snd.appendChild(_src);
 
 		return _src;
@@ -62,6 +70,7 @@ import js.html.AudioElement;
 	}
 
 	public function setVolume(val:Float) {
+		if (!_isLoaded) return;
 		if (val >= 0 && val <= 1) {
 			_snd.volume = val;
 			_options.volume = val;
@@ -73,8 +82,9 @@ import js.html.AudioElement;
 	}
 
 	public function mute(val:Bool) {
+		if (!_isLoaded) return;
 		_snd.muted = val;
-		if (Utils.isiOS()) {
+		if (WaudUtils.isiOS()) {
 			if (val && isPlaying()) {
 				_muted = true;
 				_snd.pause();
@@ -87,6 +97,10 @@ import js.html.AudioElement;
 	}
 
 	public function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties):IWaudSound {
+		if (!_isLoaded) {
+			trace("sound not loaded");
+			return this;
+		}
 		if (_muted) return this;
 		if (isSpriteSound && soundProps != null) {
 			_snd.currentTime = soundProps.start;
@@ -107,16 +121,23 @@ import js.html.AudioElement;
 	}
 
 	public function loop(val:Bool) {
+		if (!_isLoaded) return;
 		_snd.loop = val;
 	}
 
 	public function stop() {
+		if (!_isLoaded) return;
 		_snd.pause();
 		_snd.currentTime = 0;
 	}
 
 	public function onEnd(callback:IWaudSound -> Void):IWaudSound {
 		_options.onend = callback;
+		return this;
+	}
+
+	public function onLoad(callback:IWaudSound -> Void):IWaudSound {
+		_options.onload = callback;
 		return this;
 	}
 

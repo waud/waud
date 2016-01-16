@@ -13,14 +13,17 @@
 		"audiocontext",
 		"library",
 		"waud.js",
-		"waud"
+		"waud",
+		"audiosprite",
+		"sprite",
+		"audio sprite"
 	],
 	"description": "Web Audio Library",
 	"contributors": [
 		"adireddy"
 	],
-	"releasenote": "improved cross-browser autoMute functionality and updated documentation",
-	"version": "0.2.6",
+	"releasenote": "added options to enable/disable web audio",
+	"version": "0.3.3",
 	"url": "https://github.com/adireddy/waud",
 	"dependencies": {}
 }
