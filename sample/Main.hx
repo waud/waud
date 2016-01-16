@@ -72,6 +72,8 @@ class Main extends Application {
 		_addButton("Bell", 180, 200, 60, 30, function() { _audSprite.play("bell"); });
 		_addButton("Can", 240, 200, 60, 30, function() { _audSprite.play("canopening"); });
 
+		_addButton("DESTROY", 120, 250, 180, 30, function() { Waud.destroy(); });
+
 		_ua = new Text(Browser.navigator.userAgent, { font: "12px Tahoma", fill:"#FFFFFF" });
 		stage.addChild(_ua);
 
@@ -125,7 +127,7 @@ class Main extends Application {
 	}
 
 	function _stop() {
-		Waud.destroy();
+		Waud.stop();
 	}
 
 	function _addButton(label:String, x:Float, y:Float, width:Float, height:Float, callback:Dynamic) {

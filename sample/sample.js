@@ -460,6 +460,9 @@ var Main = function() {
 	this._addButton("Can",240,200,60,30,function() {
 		_g._audSprite.play("canopening");
 	});
+	this._addButton("DESTROY",120,250,180,30,function() {
+		Waud.destroy();
+	});
 	this._ua = new PIXI.Text(window.navigator.userAgent,{ font : "12px Tahoma", fill : "#FFFFFF"});
 	this.stage.addChild(this._ua);
 	Waud.init();
@@ -505,7 +508,7 @@ Main.prototype = $extend(pixi_plugins_app_Application.prototype,{
 		Waud.mute(false);
 	}
 	,_stop: function() {
-		Waud.destroy();
+		Waud.stop();
 	}
 	,_addButton: function(label,x,y,width,height,callback) {
 		var btn = new Button(label,width,height);
