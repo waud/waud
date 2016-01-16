@@ -25,6 +25,7 @@
 		if (options == null) options = {};
 
 		options.autoplay = (options.autoplay != null) ? options.autoplay : Waud.defaults.autoplay;
+		options.webaudio = (options.webaudio != null) ? options.webaudio : Waud.defaults.webaudio;
 		options.preload = (options.preload != null) ? options.preload : Waud.defaults.preload;
 		options.loop = (options.loop != null) ? options.loop : Waud.defaults.loop;
 		options.volume = (options.volume != null && options.volume >= 0 && options.volume <= 1) ? options.volume : Waud.defaults.volume;
