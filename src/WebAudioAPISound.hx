@@ -11,10 +11,9 @@ import js.html.audio.AudioBuffer;
 	var _gainNode:GainNode;
 
 	public function new(url:String, ?options:WaudSoundOptions = null) {
+		#if debug trace("using web audio - " + url); #end
 		super(url, options);
-
 		_manager = Waud.audioManager;
-
 		if (_options.preload) load();
 	}
 
@@ -58,8 +57,6 @@ import js.html.audio.AudioBuffer;
 			request.send();
 
 			if (callback != null) _options.onload = callback;
-
-			Waud.sounds.set(url, this);
 		}
 
 		return this;
