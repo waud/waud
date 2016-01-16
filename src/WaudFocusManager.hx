@@ -94,8 +94,8 @@ import js.Browser;
 	* @method _handleVisibilityChange
 	*/
 	function _handleVisibilityChange() {
-		if (Reflect.field(Browser.document, _hidden) != null && Reflect.field(Browser.document, _hidden)) blur();
-		else focus();
+		if (Reflect.field(Browser.document, _hidden) != null && Reflect.field(Browser.document, _hidden) && blur != null) blur();
+		else if (focus != null) focus();
 	}
 
 	/**
