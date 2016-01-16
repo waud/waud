@@ -1,3 +1,4 @@
+import js.html.audio.AudioContext;
 import js.html.HTMLDocument;
 import js.html.AudioElement;
 import js.Browser;
@@ -8,6 +9,22 @@ import js.Browser;
 * @class Waud
 */
 @:expose @:keep class Waud {
+
+	/**
+	* Tells whether to use web audio api or not.
+	*
+	* You can use this to enable/disable web audio globally for all sounds.
+	*
+	* Note that you can also enable/disable web audio individually for each sound instance.
+	*
+	* @property useWebAudio
+	* @static
+	* @type {Bool}
+	* @default true
+	* @example
+ 	*     Waud.useWebAudio = false;
+	*/
+	public static var useWebAudio:Bool = true;
 
 	/**
 	* Tells whether web audio api is supported or not.
@@ -39,6 +56,7 @@ import js.Browser;
 	* @property defaults
 	* @static
 	* @type {WaudSoundOptions}
+	* @default { autoplay: false, loop: false, preload: true, webaudio: true, volume: 1 }
 	* @example
  	*     Waud.defaults = { volume: 0.5, autoplay: true, preload: false };
 	*/
@@ -46,6 +64,7 @@ import js.Browser;
 		autoplay: false,
 		loop: false,
 		preload: true,
+		webaudio: true,
 		volume: 1
 	};
 
@@ -69,8 +88,9 @@ import js.Browser;
 	* @property preferredSampleRate
 	* @static
 	* @type {Int}
+	* @default 44100
 	* @example
- 	*     Waud.preferredSampleRate = 44100;
+ 	*     Waud.preferredSampleRate = 22050;
 	*/
 	public static var preferredSampleRate:Int = 44100;
 
@@ -83,6 +103,16 @@ import js.Browser;
 	* @readOnly
 	*/
 	public static var audioManager(default, null):AudioManager;
+
+	/**
+	* Audio Context reference.
+	*
+	* @property audioContext
+	* @static
+	* @type {AudioContext}
+	* @readOnly
+	*/
+	public static var audioContext:AudioContext;
 
 	/**
 	* Document dom element used for appending sounds and touch events.
@@ -100,6 +130,7 @@ import js.Browser;
 	* @static
 	* @type {Bool}
 	* @readOnly
+	* @default false
 	* @example
  	*     Waud.isMuted;
 	*/
@@ -127,6 +158,17 @@ import js.Browser;
 	static var __audioElement:AudioElement;
 
 	/**
+	* Focus Manager reference used for `autoMute` functionality.
+	*
+	* @property _focusManager
+	* @static
+	* @private
+	* @type {WaudFocusManager}
+	* @readOnly
+	*/
+	static var _focusManager:WaudFocusManager;
+
+	/**
 	* To initialise the library, make sure you call this first.
 	*
 	* You can also pass an optional parent DOM element to it where all the HTML5 sounds will be appended and also used for touch events to unlock audio on iOS devices.
@@ -144,6 +186,7 @@ import js.Browser;
 		if (Waud.audioManager == null) Waud.audioManager = new AudioManager();
 		isWebAudioSupported = Waud.audioManager.checkWebAudioAPISupport();
 		isHTML5AudioSupported = (Reflect.field(Browser.window, "Audio") != null);
+		audioContext = Waud.audioManager.audioContext;
 
 		if (isWebAudioSupported) Waud.audioManager.createAudioContext();
 		else if (!isHTML5AudioSupported) trace("no audio support in this browser");
@@ -170,9 +213,9 @@ import js.Browser;
 			if (!isMuted) for (sound in sounds) sound.mute(false);
 		};
 
-		var fm = new WaudFocusManager();
-		fm.focus = focus;
-		fm.blur = blur;
+		_focusManager = new WaudFocusManager();
+		_focusManager.focus = focus;
+		_focusManager.blur = blur;
 	}
 
 	/**
@@ -204,7 +247,7 @@ import js.Browser;
 	*/
 	public static function mute(?val:Bool = true) {
 		isMuted = val;
-		for (sound in sounds) sound.mute(val);
+		if (sounds != null) for (sound in sounds) sound.mute(val);
 	}
 
 	/**
@@ -216,7 +259,7 @@ import js.Browser;
 	*     Waud.stop();
 	*/
 	public static function stop() {
-		for (sound in sounds) sound.stop();
+		if (sounds != null) for (sound in sounds) sound.stop();
 	}
 
 	/**
@@ -322,5 +365,27 @@ import js.Browser;
 	public static function isM4ASupported():Bool {
 		var canPlay = __audioElement.canPlayType('audio/x-m4a;');
 		return (isHTML5AudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe"));
+	}
+
+	/**
+	* Function to destroy audio context.
+	*
+	* @static
+	* @method destroy
+	* @example
+	*     Waud.destroy();
+	*/
+	public static function destroy() {
+		if (sounds != null) for (sound in sounds) sound.destroy();
+		sounds = null;
+		if (Waud.audioManager != null) Waud.audioManager.destroyContext();
+		Waud.audioManager = null;
+		Waud.audioContext = null;
+		__audioElement = null;
+		if (_focusManager != null) {
+			_focusManager.clearEvents();
+			_focusManager.blur = null;
+			_focusManager.focus = null;
+		}
 	}
 }
