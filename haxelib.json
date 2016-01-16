@@ -13,14 +13,17 @@
 		"audiocontext",
 		"library",
 		"waud.js",
-		"waud"
+		"waud",
+		"audiosprite",
+		"sprite",
+		"audio sprite"
 	],
 	"description": "Web Audio Library",
 	"contributors": [
 		"adireddy"
 	],
-	"releasenote": "added load and onLoad methods",
-	"version": "0.3.2",
+	"releasenote": "added options to enable/disable web audio",
+	"version": "0.3.3",
 	"url": "https://github.com/adireddy/waud",
 	"dependencies": {}
 }
