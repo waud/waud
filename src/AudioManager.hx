@@ -67,6 +67,9 @@ class AudioManager {
 			untyped __js__("this.audioContext").close();
 		}
 		audioContext = null;
+		bufferList = null;
+		playingSounds = null;
+		types = null;
 	}
 
 	public function suspendContext() {
