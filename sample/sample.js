@@ -485,7 +485,7 @@ var Main = function() {
 };
 Main.__name__ = true;
 Main.main = function() {
-	Reflect.setField(window,"a",new Main());
+	new Main();
 };
 Main.__super__ = pixi_plugins_app_Application;
 Main.prototype = $extend(pixi_plugins_app_Application.prototype,{
@@ -649,9 +649,6 @@ Reflect.field = function(o,field) {
 		if (e instanceof js__$Boot_HaxeError) e = e.val;
 		return null;
 	}
-};
-Reflect.setField = function(o,field,value) {
-	o[field] = value;
 };
 Reflect.isFunction = function(f) {
 	return typeof(f) == "function" && !(f.__name__ || f.__ename__);

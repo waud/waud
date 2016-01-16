@@ -3,7 +3,6 @@ import pixi.core.Pixi;
 import pixi.core.text.Text;
 import pixi.core.display.Container;
 import pixi.plugins.app.Application;
-import js.Browser;
 
 class Main extends Application {
 
@@ -142,6 +141,6 @@ class Main extends Application {
 	}
 
 	static function main() {
-		Reflect.setField(Browser.window, "a", new Main());
+		new Main();
 	}
 }
