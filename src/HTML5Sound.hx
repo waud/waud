@@ -9,10 +9,10 @@ import js.html.AudioElement;
 	var _tmr:Timer;
 
 	public function new(url:String, ?options:WaudSoundOptions = null) {
+		#if debug trace("using html5 audio - " + url); #end
 		super(url, options);
 		_snd = Waud.dom.createAudioElement();
 		_addSource(url);
-
 		if (_options.preload) load();
 	}
 
@@ -50,7 +50,6 @@ import js.html.AudioElement;
 			}
 
 			_snd.load();
-			Waud.sounds.set(url, this);
 		}
 
 		return this;
