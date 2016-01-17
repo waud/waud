@@ -3,6 +3,10 @@ Web Audio Library with HTML5 audio fallback.
 
 [![Build Status](https://travis-ci.org/adireddy/waud.svg?branch=master)](https://travis-ci.org/adireddy/waud) [![npm version](https://badge.fury.io/js/waud.js.svg)](https://badge.fury.io/js/waud.js)
 
+| <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/safari/safari_48x48.png" alt="Safari"> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/chrome/chrome_48x48.png" alt="Chrome"> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/firefox/firefox_48x48.png" alt="Firefox"> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/edge/edge_48x48.png" alt="Edge"> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/opera/opera_48x48.png" alt="Opera"> |
+|:---:|:---:|:---:|:---:|:---:|
+| Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ |
+
 ### Installation
 
 `npm install waud.js`
@@ -13,13 +17,7 @@ For haxe users:
 
 ### [API Documentation](http://adireddy.github.io/docs/waud/)
 
-### Browser Support
-
-|  <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/safari/safari_48x48.png" alt="Safari"> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/chrome/chrome_48x48.png" alt="Chrome"> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/firefox/firefox_48x48.png" alt="Firefox"> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/edge/edge_48x48.png" alt="Edge"> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/opera/opera_48x48.png" alt="Opera"> |
-|:---:|:---:|:---:|:---:|:---:|
-| Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ |
-
-### Example ###
+### Example
 
 Example: 
 ```js
