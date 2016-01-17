@@ -77,3 +77,7 @@ function _playBgSound(snd) {
 <img alt="MIT license" height="40" src="http://upload.wikimedia.org/wikipedia/commons/c/c3/License_icon-mit.svg" /></a>
 
 This content is released under the [MIT](http://opensource.org/licenses/MIT) License.
+
+### Contributor Code of Conduct ###
+
+[Code of Conduct](https://github.com/CoralineAda/contributor_covenant) is adapted from [Contributor Covenant, version 1.2.0](http://contributor-covenant.org/version/1/2/0/)
