@@ -3,7 +3,7 @@ Web Audio Library with HTML5 audio fallback.
 
 [![Build Status](https://travis-ci.org/adireddy/waud.svg?branch=master)](https://travis-ci.org/adireddy/waud) [![npm version](https://badge.fury.io/js/waud.js.svg)](https://badge.fury.io/js/waud.js)
 
-### Installation ###
+### Installation
 
 `npm install waud.js`
 
@@ -11,7 +11,13 @@ For haxe users:
 
 `haxelib install waud`
 
-### [API Documentation](http://adireddy.github.io/docs/waud/) ###
+### [API Documentation](http://adireddy.github.io/docs/waud/)
+
+### Browser Support
+
+|  <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/safari/safari_48x48.png" alt="Safari"> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/chrome/chrome_48x48.png" alt="Chrome"> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/firefox/firefox_48x48.png" alt="Firefox"> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/edge/edge_48x48.png" alt="Edge"> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/opera/opera_48x48.png" alt="Opera"> |
+|:---:|:---:|:---:|:---:|:---:|
+| Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ |
 
 ### Example ###
 
@@ -20,7 +26,7 @@ Example:
 var snd = new WaudSound("assets/loop.mp3", { autoplay: false, loop: true, volume: 0.5, onload: _playBgSound });
 ```
 
-### Audio Sprite ###
+### Audio Sprite
 
 Use [waudsprite](https://github.com/adireddy/waudsprite) to generate audio sprite.
 
@@ -29,18 +35,16 @@ var audSprite = new WaudSound("assets/sprite.json");
 audSprite.play("glass");
 ```
 
-### Issues ###
+### Issues
 
 Found any bug? Please create a new [issue](https://github.com/adireddy/waud/issues/new).
 
-### Demo ###
+### Demo
 
 - [JavaScript](http://adireddy.github.io/demos/waud/js.html)
 - [Haxe](http://adireddy.github.io/demos/waud/)
 
-### Usage ###
-
-##### JavaScript #####
+### Usage
 
 ```js
 Waud.init();
@@ -69,45 +73,7 @@ function _playBgSound(snd) {
 }
 ```
 
-##### Haxe #####
-
-```haxe
-class Main {
-
-	var _bgSnd:IWaudSound;
-	var _snd2:IWaudSound;
-
-	public function new() {
-		Waud.init();
-		Waud.enableTouchUnlock(touchUnlock);
-		Waud.autoMute();
-		
-		_bgSnd = new WaudSound("assets/loop.mp3", { autoplay: false, loop: true, volume: 0.5, onload: _playBgSound });
-		_snd2 = new WaudSound("assets/sound1.wav", {
-			autoplay: false,
-			loop: false,
-			onload: function (snd) { snd.play(); },
-			onend: function (snd) { trace("ended"); },
-			onerror: function (snd) { trace("error"); }
-		});
-	}
-	
-	//Touch unlock event for iOS devices
-	function touchUnlock() {
-		if (!_bgSnd.isPlaying()) _bgSnd.play();
-	}
-	
-	function _playBgSound(snd:IWaudSound) {
-		if (!snd.isPlaying()) snd.play();
-	}
-	
-	static function main() {
-		new Main();
-	}
-}
-```
-
-### Licensing Information ###
+### Licensing Information
 
 <a rel="license" href="http://opensource.org/licenses/MIT">
 <img alt="MIT license" height="40" src="http://upload.wikimedia.org/wikipedia/commons/c/c3/License_icon-mit.svg" /></a>
