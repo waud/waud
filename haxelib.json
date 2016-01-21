@@ -22,8 +22,8 @@
 	"contributors": [
 		"adireddy"
 	],
-	"releasenote": "updated api docs",
-	"version": "0.3.4",
+	"releasenote": "using closure compiler",
+	"version": "0.3.5",
 	"url": "https://github.com/adireddy/waud",
 	"dependencies": {}
 }
