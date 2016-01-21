@@ -4,13 +4,60 @@ import js.Browser;
 
 class AudioManager {
 
+	/**
+	* Audio Types.
+	*
+	* @property types
+	* @protected
+	* @type {Map}
+	*/
 	public var types:Map<String, String>;
+
+	/**
+	* Audio Context instance.
+	*
+	* @property audioContext
+	* @protected
+	* @type {AudioContext}
+	*/
 	public var audioContext:AudioContext;
+
+	/**
+	* Audio buffer list.
+	*
+	* @property bufferList
+	* @protected
+	* @type {Map}
+	*/
 	public var bufferList:Map<String, Dynamic>;
+
+	/**
+	* Reference to playing sounds.
+	*
+	* @property playingSounds
+	* @protected
+	* @type {Map}
+	*/
 	public var playingSounds:Map<String, Dynamic>;
 
+	/**
+	* Audio Context Class determined based on the browser type. Refer {{#crossLink "AudioManager/checkWebAudioAPISupport:method"}}{{/crossLink}} method.
+	*
+	* @property AudioContextClass
+	* @static
+	* @private
+	* @type {AudioContext|webkitAudioContext}
+	*/
 	static var AudioContextClass:Dynamic;
 
+	/**
+	* Audio Manager class instantiated in {{#crossLink "Waud/init:method"}}Waud.init{{/crossLink}} method.
+	*
+	* @class AudioManager
+	* @constructor
+	* @example
+	* 		Waud.audioManager
+	*/
 	public function new() {
 		bufferList = new Map();
 		playingSounds = new Map();
@@ -23,6 +70,13 @@ class AudioManager {
 		types.set("m4a", "audio/x-m4a");
 	}
 
+	/**
+	* Function to check web audio api support.
+	*
+	* Used by {{#crossLink "Waud/init:method"}}Waud.init{{/crossLink}} method.
+	*
+	* @method checkWebAudioAPISupport
+	*/
 	public function checkWebAudioAPISupport():Bool {
 		if (Reflect.field(Browser.window, "AudioContext") != null) {
 			AudioContextClass = Reflect.field(Browser.window, "AudioContext");
@@ -35,6 +89,13 @@ class AudioManager {
 		return false;
 	}
 
+	/**
+	* Function to unlock audio on `touchend` event.
+	*
+	* Used by {{#crossLink "Waud/enableTouchUnlock:method"}}Waud.enableTouchUnlock{{/crossLink}} method.
+	*
+	* @method unlockAudio
+	*/
 	public function unlockAudio() {
 		if (audioContext == null) return;
 		var bfr = audioContext.createBuffer(1, 1, Waud.preferredSampleRate);
@@ -51,6 +112,13 @@ class AudioManager {
 		Waud.dom.ontouchend = null;
 	}
 
+	/**
+	* Function to create audio context.
+	*
+	* Used by {{#crossLink "Waud/init:method"}}Waud.init{{/crossLink}} method.
+	*
+	* @method createAudioContext
+	*/
 	public function createAudioContext() {
 		if (audioContext == null) {
 			try {
@@ -62,7 +130,14 @@ class AudioManager {
 		}
 	}
 
-	public function destroyContext() {
+	/**
+	* Function to close audio context and reset all variables.
+	*
+	* Used by {{#crossLink "Waud/destroy:method"}}Waud.destroy{{/crossLink}} method.
+	*
+	* @method destroy
+	*/
+	public function destroy() {
 		if (audioContext != null && untyped __js__("this.audioContext").close != null && untyped __js__("this.audioContext").close != "") {
 			untyped __js__("this.audioContext").close();
 		}
@@ -72,12 +147,27 @@ class AudioManager {
 		types = null;
 	}
 
+	/**
+	* This function suspends the progression of time in the audio context, temporarily halting audio hardware access and reducing CPU/battery usage in the process.
+	* This is useful if you want an application to power down the audio hardware when it will not be using an audio context for a while.
+	*
+	* @method suspendContext
+	* @example
+	*     Waud.audioManager.suspendContext();
+	*/
 	public function suspendContext() {
 		if (audioContext != null) {
 			if (untyped __js__("this.audioContext").suspend != null) untyped __js__("this.audioContext").suspend();
 		}
 	}
 
+	/**
+	* This function resumes the progression of time in an audio context that has previously been suspended.
+	*
+	* @method resumeContext
+	* @example
+	*     Waud.audioManager.resumeContext();
+	*/
 	public function resumeContext() {
 		if (audioContext != null) {
 			if (untyped __js__("this.audioContext").resume != null) untyped __js__("this.audioContext").resume();
