@@ -186,10 +186,8 @@ import js.Browser;
 		if (Waud.audioManager == null) Waud.audioManager = new AudioManager();
 		isWebAudioSupported = Waud.audioManager.checkWebAudioAPISupport();
 		isHTML5AudioSupported = (Reflect.field(Browser.window, "Audio") != null);
-		audioContext = Waud.audioManager.audioContext;
 
-		if (isWebAudioSupported) Waud.audioManager.createAudioContext();
-		else if (!isHTML5AudioSupported) trace("no audio support in this browser");
+		if (isWebAudioSupported) audioContext = Waud.audioManager.createAudioContext();
 
 		sounds = new Map();
 	}
