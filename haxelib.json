@@ -22,8 +22,8 @@
 	"contributors": [
 		"adireddy"
 	],
-	"releasenote": "added options to enable/disable web audio",
-	"version": "0.3.3",
+	"releasenote": "updated api docs",
+	"version": "0.3.4",
 	"url": "https://github.com/adireddy/waud",
 	"dependencies": {}
 }

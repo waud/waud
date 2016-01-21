@@ -27,10 +27,13 @@ module.exports = function (grunt) {
             }
         },
 
-        exec: {
-            copy: "mkdir npm-publish || true && cp -r src dist package.json LICENSE README.md ./npm-publish/",
-            npm: "npm publish ./npm-publish/ && rm -r npm-publish",
-            sample: "cp -r ../adireddy.github.io/demos/waud/"
+        shell: {
+            npm: {
+                command: "mkdir npm-publish || true && cp -r src dist package.json LICENSE README.md ./npm-publish/ && npm publish ./npm-publish/ && rm -r npm-publish"
+            },
+            sample: {
+                command: "cp ./dist/waud.min.js sample/ && cp -r ./sample/ ../adireddy.github.io/demos/waud/"
+            }
         },
 
         zip: {
@@ -50,7 +53,8 @@ module.exports = function (grunt) {
                     extension: ".hx",
                     paths: "./src",
                     outdir: "../adireddy.github.io/docs/waud/",
-                    themedir: "./yui/themes/yuidoc-theme-blue"
+                    themedir: "./yui/themes/yuidoc-theme-blue",
+                    logo: "./sample/assets/logo.png"
             }
         }
     }
@@ -60,7 +64,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-uglify");
     grunt.loadNpmTasks('grunt-contrib-yuidoc');
     grunt.loadNpmTasks("grunt-zip");
-    grunt.loadNpmTasks("grunt-exec");
+    grunt.loadNpmTasks("grunt-shell");
     grunt.registerTask("default", ["haxe", "uglify"]);
-    grunt.registerTask("dist", ["uglify"]);
 };

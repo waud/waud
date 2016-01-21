@@ -40,6 +40,9 @@ import haxe.Json;
 	* 		// MP3 Sound
 	* 		var snd = new WaudSound("assets/loop.mp3", { autoplay: false, loop: true, volume: 0.5, onload: _playBgSound });
 	*
+	* 		// Force HTML5 Audio
+	* 		var snd = new WaudSound("assets/loop.mp3", { webaudio: false });
+	*
 	* 		// Audio Sprite
 	* 		var audSprite = new WaudSound("assets/sprite.json");
 	* 		audSprite.play("glass");

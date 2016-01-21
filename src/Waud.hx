@@ -141,7 +141,7 @@ import js.Browser;
 	*
 	* @property __touchUnlockCallback
 	* @static
-	* @private
+	* @protected
 	* @type {Function}
 	*/
 	public static var __touchUnlockCallback:Void -> Void;
@@ -378,7 +378,7 @@ import js.Browser;
 	public static function destroy() {
 		if (sounds != null) for (sound in sounds) sound.destroy();
 		sounds = null;
-		if (Waud.audioManager != null) Waud.audioManager.destroyContext();
+		if (Waud.audioManager != null) Waud.audioManager.destroy();
 		Waud.audioManager = null;
 		Waud.audioContext = null;
 		__audioElement = null;
