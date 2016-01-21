@@ -2,6 +2,7 @@
 -cmd haxelib install pixijs
 -cmd haxelib install msignal
 -cmd haxelib install utest
+-cmd haxelib install closure
 
 --next
 
@@ -20,7 +21,6 @@ HTML5Sound
 WebAudioAPISound
 -dce full
 -js dist/waud.js
-
 -debug
 -D source-map-content
 
@@ -31,6 +31,8 @@ Waud
 WaudSound
 HTML5Sound
 WebAudioAPISound
+-lib closure
+-D closure_overwrite
 -js dist/waud.min.js
 -dce full
 --no-traces

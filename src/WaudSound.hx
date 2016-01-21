@@ -98,7 +98,10 @@ import haxe.Json;
 		this.url = url;
 		if (Waud.isWebAudioSupported && Waud.useWebAudio && (_options == null || _options.webaudio == null || _options.webaudio)) _snd = new WebAudioAPISound(url, _options);
 		else if (Waud.isHTML5AudioSupported) _snd = new HTML5Sound(url, _options);
-		else trace("no audio support in this browser");
+		else {
+			trace("no audio support in this browser");
+			return;
+		}
 
 		_snd.isSpriteSound = isSpriteSound;
 	}

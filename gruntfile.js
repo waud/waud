@@ -61,9 +61,8 @@ module.exports = function (grunt) {
     });
 
     grunt.loadNpmTasks("grunt-haxe");
-    grunt.loadNpmTasks("grunt-contrib-uglify");
     grunt.loadNpmTasks('grunt-contrib-yuidoc');
     grunt.loadNpmTasks("grunt-zip");
     grunt.loadNpmTasks("grunt-shell");
-    grunt.registerTask("default", ["haxe", "uglify"]);
+    grunt.registerTask("default", ["haxe"]);
 };

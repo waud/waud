@@ -1,8 +1,11 @@
 sudo: false
-language: node_js
-node_js:
-  - "0.10"
-before_install: npm install -g grunt-cli
-install: npm install
-before_script: npm install --save-dev
-script: grunt dist
+language: haxe
+
+git:
+    depth: 1
+
+haxe:
+  - "3.2.0"
+
+hxml:
+  - build.hxml

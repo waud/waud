@@ -47,6 +47,7 @@ AudioManager.prototype = {
 			if (e instanceof js__$Boot_HaxeError) e = e.val;
 			this.audioContext = null;
 		}
+		return this.audioContext;
 	}
 	,destroy: function() {
 		if(this.audioContext != null && (this.audioContext.close != null && this.audioContext.close != "")) this.audioContext.close();
@@ -709,8 +710,7 @@ Waud.init = function(d) {
 	if(Waud.audioManager == null) Waud.audioManager = new AudioManager();
 	Waud.isWebAudioSupported = Waud.audioManager.checkWebAudioAPISupport();
 	Waud.isHTML5AudioSupported = Reflect.field(window,"Audio") != null;
-	Waud.audioContext = Waud.audioManager.audioContext;
-	if(Waud.isWebAudioSupported) Waud.audioManager.createAudioContext(); else if(!Waud.isHTML5AudioSupported) console.log("no audio support in this browser");
+	if(Waud.isWebAudioSupported) Waud.audioContext = Waud.audioManager.createAudioContext();
 	Waud.sounds = new haxe_ds_StringMap();
 };
 Waud.autoMute = function() {
@@ -916,7 +916,10 @@ WaudSound.prototype = {
 	}
 	,_init: function(url) {
 		this.url = url;
-		if(Waud.isWebAudioSupported && Waud.useWebAudio && (this._options == null || this._options.webaudio == null || this._options.webaudio)) this._snd = new WebAudioAPISound(url,this._options); else if(Waud.isHTML5AudioSupported) this._snd = new HTML5Sound(url,this._options); else console.log("no audio support in this browser");
+		if(Waud.isWebAudioSupported && Waud.useWebAudio && (this._options == null || this._options.webaudio == null || this._options.webaudio)) this._snd = new WebAudioAPISound(url,this._options); else if(Waud.isHTML5AudioSupported) this._snd = new HTML5Sound(url,this._options); else {
+			console.log("no audio support in this browser");
+			return;
+		}
 		this._snd.isSpriteSound = this.isSpriteSound;
 	}
 	,setVolume: function(val) {

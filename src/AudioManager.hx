@@ -20,7 +20,7 @@ class AudioManager {
 	* @protected
 	* @type {AudioContext}
 	*/
-	public var audioContext:AudioContext;
+	public var audioContext(default, null):AudioContext;
 
 	/**
 	* Audio buffer list.
@@ -118,8 +118,9 @@ class AudioManager {
 	* Used by {{#crossLink "Waud/init:method"}}Waud.init{{/crossLink}} method.
 	*
 	* @method createAudioContext
+	* @return AudioContext
 	*/
-	public function createAudioContext() {
+	public function createAudioContext():AudioContext {
 		if (audioContext == null) {
 			try {
 				if (AudioContextClass != null) audioContext = cast Type.createInstance(AudioContextClass, []);
@@ -128,6 +129,7 @@ class AudioManager {
 				audioContext = null;
 			}
 		}
+		return audioContext;
 	}
 
 	/**
