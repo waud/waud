@@ -1,6 +1,6 @@
 {
   "name": "waud.js",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "Web Audio Library",
   "main": "./dist/waud.min.js",
   "scripts": {
@@ -33,17 +33,13 @@
   "dependencies": {},
   "license": "MIT",
   "devDependencies": {
-    "async": "~0.9.0",
     "browserify": "latest",
     "grunt": "latest",
     "grunt-cli": "latest",
     "grunt-contrib-uglify": "latest",
     "grunt-contrib-yuidoc": "^0.10.0",
     "grunt-haxe": "latest",
-    "mkdirp": "^0.5.0",
-    "optimist": "~0.6.1",
-    "underscore": "~1.8.3",
-    "winston": "~1.0.0",
+    "grunt-shell": "^1.1.2",
     "yuidoc-theme-blue": "^0.1.9",
     "yuidocjs": "^0.9.0"
   }
