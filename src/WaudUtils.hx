@@ -8,17 +8,6 @@ import js.Browser;
 @:expose @:keep class WaudUtils {
 
 	/**
-	* User Agrent String.
-	*
-	* @static
-	* @property ua
-	* @type {String}
-	* @example
-	*     WaudUtils.ua;
-	*/
-	public static var ua:String = Browser.navigator.userAgent;
-
-	/**
 	* Function to check if the device is **Android** or not.
 	*
 	* @static
@@ -27,7 +16,8 @@ import js.Browser;
 	* @example
 	*     Waud.isAndroid();
 	*/
-	public static function isAndroid():Bool {
+	public static function isAndroid(?ua:String):Bool {
+		if (ua == null) ua = Browser.navigator.userAgent;
 		return ~/Android/i.match(ua);
 	}
 
@@ -40,7 +30,8 @@ import js.Browser;
 	* @example
 	*     Waud.isiOS();
 	*/
-	public static function isiOS():Bool {
+	public static function isiOS(?ua:String):Bool {
+		if (ua == null) ua = Browser.navigator.userAgent;
 		return ~/(iPad|iPhone|iPod)/i.match(ua);
 	}
 
@@ -53,7 +44,8 @@ import js.Browser;
 	* @example
 	*     Waud.isWindowsPhone();
 	*/
-	public static function isWindowsPhone():Bool {
+	public static function isWindowsPhone(?ua:String):Bool {
+		if (ua == null) ua = Browser.navigator.userAgent;
 		return ~/(IEMobile|Windows Phone)/i.match(ua);
 	}
 
@@ -66,7 +58,8 @@ import js.Browser;
 	* @example
 	*     Waud.isFirefox();
 	*/
-	public static function isFirefox():Bool {
+	public static function isFirefox(?ua:String):Bool {
+		if (ua == null) ua = Browser.navigator.userAgent;
 		return ~/Firefox/i.match(ua);
 	}
 
@@ -79,7 +72,8 @@ import js.Browser;
 	* @example
 	*     Waud.isOpera();
 	*/
-	public static function isOpera():Bool {
+	public static function isOpera(?ua:String):Bool {
+		if (ua == null) ua = Browser.navigator.userAgent;
 		return ~/Opera/i.match(ua) || Reflect.field(Browser.window, "opera") != null;
 	}
 
@@ -92,7 +86,8 @@ import js.Browser;
 	* @example
 	*     Waud.isChrome();
 	*/
-	public static function isChrome():Bool {
+	public static function isChrome(?ua:String):Bool {
+		if (ua == null) ua = Browser.navigator.userAgent;
 		return ~/Chrome/i.match(ua);
 	}
 
@@ -105,7 +100,8 @@ import js.Browser;
 	* @example
 	*     Waud.isSafari();
 	*/
-	public static function isSafari():Bool {
+	public static function isSafari(?ua:String):Bool {
+		if (ua == null) ua = Browser.navigator.userAgent;
 		return ~/Safari/i.match(ua);
 	}
 
@@ -118,7 +114,8 @@ import js.Browser;
 	* @example
 	*     Waud.isMobile();
 	*/
-	public static function isMobile():Bool {
+	public static function isMobile(?ua:String):Bool {
+		if (ua == null) ua = Browser.navigator.userAgent;
 		return ~/(iPad|iPhone|iPod|Android|webOS|BlackBerry|Windows Phone|IEMobile)/i.match(ua);
 	}
 
@@ -131,7 +128,8 @@ import js.Browser;
 	* @example
 	*     Waud.getiOSVersion();
 	*/
-	public static function getiOSVersion():Array<Int> {
+	public static function getiOSVersion(?ua:String):Array<Int> {
+		if (ua == null) ua = Browser.navigator.userAgent;
 		var v:EReg = ~/[0-9_]+?[0-9_]+?[0-9_]+/i;
 		var matched:Array<Int> = [];
 		if (v.match(ua)) {
