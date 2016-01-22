@@ -258,42 +258,32 @@ TestWaudUtils.__name__ = ["TestWaudUtils"];
 TestWaudUtils.prototype = {
 	_uaStrings: null
 	,testChrome: function() {
-		WaudUtils.ua = this._uaStrings.get("chrome");
-		utest_Assert.isTrue(WaudUtils.isChrome(),null,{ fileName : "TestWaudUtils.hx", lineNumber : 20, className : "TestWaudUtils", methodName : "testChrome"});
+		utest_Assert.isTrue(WaudUtils.isChrome(this._uaStrings.get("chrome")),null,{ fileName : "TestWaudUtils.hx", lineNumber : 20, className : "TestWaudUtils", methodName : "testChrome"});
 	}
 	,testFirefox: function() {
-		WaudUtils.ua = this._uaStrings.get("firefox");
-		utest_Assert.isTrue(WaudUtils.isFirefox(),null,{ fileName : "TestWaudUtils.hx", lineNumber : 25, className : "TestWaudUtils", methodName : "testFirefox"});
+		utest_Assert.isTrue(WaudUtils.isFirefox(this._uaStrings.get("firefox")),null,{ fileName : "TestWaudUtils.hx", lineNumber : 24, className : "TestWaudUtils", methodName : "testFirefox"});
 	}
 	,testOpera: function() {
-		WaudUtils.ua = this._uaStrings.get("opera");
-		utest_Assert.isTrue(WaudUtils.isOpera(),null,{ fileName : "TestWaudUtils.hx", lineNumber : 30, className : "TestWaudUtils", methodName : "testOpera"});
+		utest_Assert.isTrue(WaudUtils.isOpera(this._uaStrings.get("opera")),null,{ fileName : "TestWaudUtils.hx", lineNumber : 28, className : "TestWaudUtils", methodName : "testOpera"});
 	}
 	,testSafari: function() {
-		WaudUtils.ua = this._uaStrings.get("safari");
-		utest_Assert.isTrue(WaudUtils.isSafari(),null,{ fileName : "TestWaudUtils.hx", lineNumber : 35, className : "TestWaudUtils", methodName : "testSafari"});
+		utest_Assert.isTrue(WaudUtils.isSafari(this._uaStrings.get("safari")),null,{ fileName : "TestWaudUtils.hx", lineNumber : 32, className : "TestWaudUtils", methodName : "testSafari"});
 	}
 	,testWindows: function() {
-		WaudUtils.ua = this._uaStrings.get("windows");
-		utest_Assert.isTrue(WaudUtils.isWindowsPhone(),null,{ fileName : "TestWaudUtils.hx", lineNumber : 40, className : "TestWaudUtils", methodName : "testWindows"});
+		utest_Assert.isTrue(WaudUtils.isWindowsPhone(this._uaStrings.get("windows")),null,{ fileName : "TestWaudUtils.hx", lineNumber : 36, className : "TestWaudUtils", methodName : "testWindows"});
 	}
 	,testiOS: function() {
-		WaudUtils.ua = this._uaStrings.get("ipad");
-		utest_Assert.isTrue(WaudUtils.isiOS(),null,{ fileName : "TestWaudUtils.hx", lineNumber : 45, className : "TestWaudUtils", methodName : "testiOS"});
+		utest_Assert.isTrue(WaudUtils.isiOS(this._uaStrings.get("ipad")),null,{ fileName : "TestWaudUtils.hx", lineNumber : 40, className : "TestWaudUtils", methodName : "testiOS"});
 	}
 	,testAndroid: function() {
-		WaudUtils.ua = this._uaStrings.get("android");
-		utest_Assert.isTrue(WaudUtils.isAndroid(),null,{ fileName : "TestWaudUtils.hx", lineNumber : 50, className : "TestWaudUtils", methodName : "testAndroid"});
+		utest_Assert.isTrue(WaudUtils.isAndroid(this._uaStrings.get("android")),null,{ fileName : "TestWaudUtils.hx", lineNumber : 44, className : "TestWaudUtils", methodName : "testAndroid"});
 	}
 	,testMobile: function() {
-		WaudUtils.ua = this._uaStrings.get("iphone");
-		utest_Assert.isTrue(WaudUtils.isMobile(),null,{ fileName : "TestWaudUtils.hx", lineNumber : 55, className : "TestWaudUtils", methodName : "testMobile"});
+		utest_Assert.isTrue(WaudUtils.isMobile(this._uaStrings.get("iphone")),null,{ fileName : "TestWaudUtils.hx", lineNumber : 48, className : "TestWaudUtils", methodName : "testMobile"});
 	}
 	,testiOSVersion: function() {
-		WaudUtils.ua = this._uaStrings.get("ipad");
-		utest_Assert.isTrue(WaudUtils.getiOSVersion()[0] == 7,null,{ fileName : "TestWaudUtils.hx", lineNumber : 60, className : "TestWaudUtils", methodName : "testiOSVersion"});
-		WaudUtils.ua = this._uaStrings.get("iphone");
-		utest_Assert.isTrue(WaudUtils.getiOSVersion()[0] == 8,null,{ fileName : "TestWaudUtils.hx", lineNumber : 63, className : "TestWaudUtils", methodName : "testiOSVersion"});
+		utest_Assert.isTrue(WaudUtils.getiOSVersion(this._uaStrings.get("ipad"))[0] == 7,null,{ fileName : "TestWaudUtils.hx", lineNumber : 52, className : "TestWaudUtils", methodName : "testiOSVersion"});
+		utest_Assert.isTrue(WaudUtils.getiOSVersion(this._uaStrings.get("iphone"))[0] == 8,null,{ fileName : "TestWaudUtils.hx", lineNumber : 53, className : "TestWaudUtils", methodName : "testiOSVersion"});
 	}
 	,__class__: TestWaudUtils
 };
@@ -383,34 +373,43 @@ Type.enumIndex = function(e) {
 };
 var WaudUtils = $hx_exports.WaudUtils = function() { };
 WaudUtils.__name__ = ["WaudUtils"];
-WaudUtils.isAndroid = function() {
-	return new EReg("Android","i").match(WaudUtils.ua);
+WaudUtils.isAndroid = function(ua) {
+	if(ua == null) ua = window.navigator.userAgent;
+	return new EReg("Android","i").match(ua);
 };
-WaudUtils.isiOS = function() {
-	return new EReg("(iPad|iPhone|iPod)","i").match(WaudUtils.ua);
+WaudUtils.isiOS = function(ua) {
+	if(ua == null) ua = window.navigator.userAgent;
+	return new EReg("(iPad|iPhone|iPod)","i").match(ua);
 };
-WaudUtils.isWindowsPhone = function() {
-	return new EReg("(IEMobile|Windows Phone)","i").match(WaudUtils.ua);
+WaudUtils.isWindowsPhone = function(ua) {
+	if(ua == null) ua = window.navigator.userAgent;
+	return new EReg("(IEMobile|Windows Phone)","i").match(ua);
 };
-WaudUtils.isFirefox = function() {
-	return new EReg("Firefox","i").match(WaudUtils.ua);
+WaudUtils.isFirefox = function(ua) {
+	if(ua == null) ua = window.navigator.userAgent;
+	return new EReg("Firefox","i").match(ua);
 };
-WaudUtils.isOpera = function() {
-	return new EReg("Opera","i").match(WaudUtils.ua) || Reflect.field(window,"opera") != null;
+WaudUtils.isOpera = function(ua) {
+	if(ua == null) ua = window.navigator.userAgent;
+	return new EReg("Opera","i").match(ua) || Reflect.field(window,"opera") != null;
 };
-WaudUtils.isChrome = function() {
-	return new EReg("Chrome","i").match(WaudUtils.ua);
+WaudUtils.isChrome = function(ua) {
+	if(ua == null) ua = window.navigator.userAgent;
+	return new EReg("Chrome","i").match(ua);
 };
-WaudUtils.isSafari = function() {
-	return new EReg("Safari","i").match(WaudUtils.ua);
+WaudUtils.isSafari = function(ua) {
+	if(ua == null) ua = window.navigator.userAgent;
+	return new EReg("Safari","i").match(ua);
 };
-WaudUtils.isMobile = function() {
-	return new EReg("(iPad|iPhone|iPod|Android|webOS|BlackBerry|Windows Phone|IEMobile)","i").match(WaudUtils.ua);
+WaudUtils.isMobile = function(ua) {
+	if(ua == null) ua = window.navigator.userAgent;
+	return new EReg("(iPad|iPhone|iPod|Android|webOS|BlackBerry|Windows Phone|IEMobile)","i").match(ua);
 };
-WaudUtils.getiOSVersion = function() {
+WaudUtils.getiOSVersion = function(ua) {
+	if(ua == null) ua = window.navigator.userAgent;
 	var v = new EReg("[0-9_]+?[0-9_]+?[0-9_]+","i");
 	var matched = [];
-	if(v.match(WaudUtils.ua)) {
+	if(v.match(ua)) {
 		var match = v.matched(0).split("_");
 		var _g = [];
 		var _g1 = 0;
@@ -2932,7 +2931,6 @@ var ArrayBuffer = (Function("return typeof ArrayBuffer != 'undefined' ? ArrayBuf
 if(ArrayBuffer.prototype.slice == null) ArrayBuffer.prototype.slice = js_html_compat_ArrayBuffer.sliceImpl;
 var DataView = (Function("return typeof DataView != 'undefined' ? DataView : null"))() || js_html_compat_DataView;
 var Uint8Array = (Function("return typeof Uint8Array != 'undefined' ? Uint8Array : null"))() || js_html_compat_Uint8Array._new;
-WaudUtils.ua = window.navigator.userAgent;
 haxe_io_FPHelper.i64tmp = (function($this) {
 	var $r;
 	var x = new haxe__$Int64__$_$_$Int64(0,0);

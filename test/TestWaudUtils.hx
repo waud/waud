@@ -1,4 +1,5 @@
 import utest.Assert;
+
 class TestWaudUtils {
 
 	var _uaStrings:Map<String, String>;
@@ -16,50 +17,39 @@ class TestWaudUtils {
 	}
 
 	public function testChrome() {
-		WaudUtils.ua = _uaStrings.get("chrome");
-		Assert.isTrue(WaudUtils.isChrome());
+		Assert.isTrue(WaudUtils.isChrome(_uaStrings.get("chrome")));
 	}
 
 	public function testFirefox() {
-		WaudUtils.ua = _uaStrings.get("firefox");
-		Assert.isTrue(WaudUtils.isFirefox());
+		Assert.isTrue(WaudUtils.isFirefox(_uaStrings.get("firefox")));
 	}
 
 	public function testOpera() {
-		WaudUtils.ua = _uaStrings.get("opera");
-		Assert.isTrue(WaudUtils.isOpera());
+		Assert.isTrue(WaudUtils.isOpera(_uaStrings.get("opera")));
 	}
 
 	public function testSafari() {
-		WaudUtils.ua = _uaStrings.get("safari");
-		Assert.isTrue(WaudUtils.isSafari());
+		Assert.isTrue(WaudUtils.isSafari(_uaStrings.get("safari")));
 	}
 
 	public function testWindows() {
-		WaudUtils.ua = _uaStrings.get("windows");
-		Assert.isTrue(WaudUtils.isWindowsPhone());
+		Assert.isTrue(WaudUtils.isWindowsPhone(_uaStrings.get("windows")));
 	}
 
 	public function testiOS() {
-		WaudUtils.ua = _uaStrings.get("ipad");
-		Assert.isTrue(WaudUtils.isiOS());
+		Assert.isTrue(WaudUtils.isiOS(_uaStrings.get("ipad")));
 	}
 
 	public function testAndroid() {
-		WaudUtils.ua = _uaStrings.get("android");
-		Assert.isTrue(WaudUtils.isAndroid());
+		Assert.isTrue(WaudUtils.isAndroid(_uaStrings.get("android")));
 	}
 
 	public function testMobile() {
-		WaudUtils.ua = _uaStrings.get("iphone");
-		Assert.isTrue(WaudUtils.isMobile());
+		Assert.isTrue(WaudUtils.isMobile(_uaStrings.get("iphone")));
 	}
 
 	public function testiOSVersion() {
-		WaudUtils.ua = _uaStrings.get("ipad");
-		Assert.isTrue(WaudUtils.getiOSVersion()[0] == 7);
-
-		WaudUtils.ua = _uaStrings.get("iphone");
-		Assert.isTrue(WaudUtils.getiOSVersion()[0] == 8);
+		Assert.isTrue(WaudUtils.getiOSVersion(_uaStrings.get("ipad"))[0] == 7);
+		Assert.isTrue(WaudUtils.getiOSVersion(_uaStrings.get("iphone"))[0] == 8);
 	}
 }
