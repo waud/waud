@@ -39,9 +39,9 @@ import js.html.audio.AudioBuffer;
 
 	function _makeSource(buffer:AudioBuffer):AudioBufferSourceNode {
 		var source:AudioBufferSourceNode = _manager.audioContext.createBufferSource();
-		_gainNode = _manager.audioContext.createGain();
-		_gainNode.gain.value = _options.volume;
 		source.buffer = buffer;
+		 if (untyped __js__("this._manager.audioContext").createGain != null) _gainNode = _manager.audioContext.createGain();
+		 else _gainNode = untyped __js__("this._manager.audioContext").createGainNode();
 		source.connect(_gainNode);
 		_gainNode.connect(_manager.audioContext.destination);
 		return source;
@@ -146,7 +146,7 @@ import js.html.audio.AudioBuffer;
 
 	public function destroy() {
 		if (_snd != null) {
-			_snd.stop(0);
+			//_snd.stop(0);
 			_snd.disconnect();
 			_snd = null;
 		}
