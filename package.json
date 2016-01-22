@@ -1,48 +1,49 @@
 {
-	"name": "waud.js",
-	"version": "0.3.7",
-	"description": "Web Audio Library",
-	"main": "./dist/waud.min.js",
-	"scripts": {
-		"test": "echo \"no test specified\" && exit 0"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/adireddy/waud"
-	},
-	"bugs": {
-		"url": "https://github.com/adireddy/waud/issues"
-	},
-	"keywords": [
-		"web audio",
-		"web audio api",
-		"haxe",
-		"javascript",
-		"audio",
-		"web",
-		"sounds",
-		"audiocontext",
-		"library",
-		"waud.js",
-		"waud"
-	],
-	"author": {
-		"name": "Adi Reddy Mora",
-		"email": "adiinteractive@gmail.com"
-	},
-	"dependencies": {},
-	"license": "MIT",
-	"devDependencies": {
-		"async": "~0.9.0",
-		"browserify": "latest",
-		"grunt": "latest",
-		"grunt-cli": "latest",
-		"grunt-zip": "latest",
-		"grunt-contrib-uglify": "latest",
-		"grunt-contrib-yuidoc": "^0.10.0",
-		"grunt-haxe": "latest",
-		"grunt-shell": "^1.1.2",
-		"yuidoc-theme-blue": "^0.1.9",
-		"yuidocjs": "^0.9.0"
-	}
+  "name": "waud.js",
+  "version": "0.3.8",
+  "description": "Web Audio Library",
+  "main": "./dist/waud.min.js",
+  "scripts": {
+    "test": "echo \"no test specified\" && exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adireddy/waud"
+  },
+  "bugs": {
+    "url": "https://github.com/adireddy/waud/issues"
+  },
+  "keywords": [
+    "web audio",
+    "web audio api",
+    "haxe",
+    "javascript",
+    "audio",
+    "web",
+    "sounds",
+    "audiocontext",
+    "library",
+    "waud.js",
+    "waud"
+  ],
+  "author": {
+    "name": "Adi Reddy Mora",
+    "email": "adiinteractive@gmail.com"
+  },
+  "dependencies": {},
+  "license": "MIT",
+  "devDependencies": {
+    "async": "~0.9.0",
+    "browserify": "latest",
+    "grunt": "latest",
+    "grunt-browserify": "latest",
+    "grunt-cli": "latest",
+    "grunt-contrib-uglify": "latest",
+    "grunt-contrib-yuidoc": "^0.10.0",
+    "grunt-haxe": "latest",
+    "grunt-shell": "^1.1.2",
+    "grunt-zip": "latest",
+    "yuidoc-theme-blue": "^0.1.9",
+    "yuidocjs": "^0.9.0"
+  }
 }
