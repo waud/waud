@@ -213,6 +213,10 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 		this._options.onload = callback;
 		return this;
 	}
+	,onError: function(callback) {
+		this._options.onerror = callback;
+		return this;
+	}
 	,destroy: function() {
 		if(this._snd != null) {
 			this._snd.pause();
@@ -545,6 +549,11 @@ WaudSound.prototype = {
 		this._snd.onLoad(callback);
 		return this;
 	}
+	,onError: function(callback) {
+		if(this._snd == null) return null;
+		this._snd.onError(callback);
+		return this;
+	}
 	,destroy: function() {
 		if(this._snd == null) return;
 		this._snd.destroy();
@@ -699,6 +708,10 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 	}
 	,onLoad: function(callback) {
 		this._options.onload = callback;
+		return this;
+	}
+	,onError: function(callback) {
+		this._options.onerror = callback;
 		return this;
 	}
 	,destroy: function() {
