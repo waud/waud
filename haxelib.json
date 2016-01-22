@@ -22,8 +22,8 @@
 	"contributors": [
 		"adireddy"
 	],
-	"releasenote": "using closure compiler",
-	"version": "0.3.5",
+	"releasenote": "added onError method to WaudSound",
+	"version": "0.3.6",
 	"url": "https://github.com/adireddy/waud",
 	"dependencies": {}
 }
