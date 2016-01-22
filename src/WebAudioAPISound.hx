@@ -139,6 +139,11 @@ import js.html.audio.AudioBuffer;
 		return this;
 	}
 
+	public function onError(callback:IWaudSound -> Void):IWaudSound {
+		_options.onerror = callback;
+		return this;
+	}
+
 	public function destroy() {
 		if (_snd != null) {
 			_snd.stop(0);

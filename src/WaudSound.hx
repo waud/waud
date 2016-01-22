@@ -254,6 +254,21 @@ import haxe.Json;
 	}
 
 	/**
+	* Function to add callback that triggers when the sound fails to load or if it fails to decode when using web audio.
+	*
+	* @method onError
+	* @param {Function} callback - Callback function.
+	* @return {IWaudSound} sound instance
+	* @example
+	*     snd.onError(callback);
+	*/
+	public function onError(callback:IWaudSound -> Void):IWaudSound {
+		if (_snd == null) return null;
+		_snd.onError(callback);
+		return this;
+	}
+
+	/**
 	* Function to destroy sound.
 	*
 	* @method destroy
