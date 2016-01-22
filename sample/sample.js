@@ -298,6 +298,10 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 		this._options.onload = callback;
 		return this;
 	}
+	,onError: function(callback) {
+		this._options.onerror = callback;
+		return this;
+	}
 	,destroy: function() {
 		if(this._snd != null) {
 			this._snd.pause();
@@ -978,6 +982,11 @@ WaudSound.prototype = {
 		this._snd.onLoad(callback);
 		return this;
 	}
+	,onError: function(callback) {
+		if(this._snd == null) return null;
+		this._snd.onError(callback);
+		return this;
+	}
 	,destroy: function() {
 		if(this._snd == null) return;
 		this._snd.destroy();
@@ -1134,6 +1143,10 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 	}
 	,onLoad: function(callback) {
 		this._options.onload = callback;
+		return this;
+	}
+	,onError: function(callback) {
+		this._options.onerror = callback;
 		return this;
 	}
 	,destroy: function() {
@@ -1316,11 +1329,25 @@ msignal_Signal.prototype = {
 	add: function(listener) {
 		return this.registerListener(listener);
 	}
+	,addOnce: function(listener) {
+		return this.registerListener(listener,true);
+	}
+	,addWithPriority: function(listener,priority) {
+		if(priority == null) priority = 0;
+		return this.registerListener(listener,false,priority);
+	}
+	,addOnceWithPriority: function(listener,priority) {
+		if(priority == null) priority = 0;
+		return this.registerListener(listener,true,priority);
+	}
 	,remove: function(listener) {
 		var slot = this.slots.find(listener);
 		if(slot == null) return null;
 		this.slots = this.slots.filterNot(listener);
 		return slot;
+	}
+	,removeAll: function() {
+		this.slots = msignal_SlotList.NIL;
 	}
 	,registerListener: function(listener,once,priority) {
 		if(priority == null) priority = 0;
@@ -1345,7 +1372,29 @@ msignal_Signal.prototype = {
 		if(once == null) once = false;
 		return null;
 	}
+	,get_numListeners: function() {
+		return this.slots.get_length();
+	}
 };
+var msignal_Signal0 = function() {
+	msignal_Signal.call(this);
+};
+msignal_Signal0.__name__ = true;
+msignal_Signal0.__super__ = msignal_Signal;
+msignal_Signal0.prototype = $extend(msignal_Signal.prototype,{
+	dispatch: function() {
+		var slotsToProcess = this.slots;
+		while(slotsToProcess.nonEmpty) {
+			slotsToProcess.head.execute();
+			slotsToProcess = slotsToProcess.tail;
+		}
+	}
+	,createSlot: function(listener,once,priority) {
+		if(priority == null) priority = 0;
+		if(once == null) once = false;
+		return new msignal_Slot0(this,listener,once,priority);
+	}
+});
 var msignal_Signal1 = function(type) {
 	msignal_Signal.call(this,[type]);
 };
@@ -1363,6 +1412,25 @@ msignal_Signal1.prototype = $extend(msignal_Signal.prototype,{
 		if(priority == null) priority = 0;
 		if(once == null) once = false;
 		return new msignal_Slot1(this,listener,once,priority);
+	}
+});
+var msignal_Signal2 = function(type1,type2) {
+	msignal_Signal.call(this,[type1,type2]);
+};
+msignal_Signal2.__name__ = true;
+msignal_Signal2.__super__ = msignal_Signal;
+msignal_Signal2.prototype = $extend(msignal_Signal.prototype,{
+	dispatch: function(value1,value2) {
+		var slotsToProcess = this.slots;
+		while(slotsToProcess.nonEmpty) {
+			slotsToProcess.head.execute(value1,value2);
+			slotsToProcess = slotsToProcess.tail;
+		}
+	}
+	,createSlot: function(listener,once,priority) {
+		if(priority == null) priority = 0;
+		if(once == null) once = false;
+		return new msignal_Slot2(this,listener,once,priority);
 	}
 });
 var msignal_Slot = function(signal,listener,once,priority) {
@@ -1384,6 +1452,20 @@ msignal_Slot.prototype = {
 		return this.listener = value;
 	}
 };
+var msignal_Slot0 = function(signal,listener,once,priority) {
+	if(priority == null) priority = 0;
+	if(once == null) once = false;
+	msignal_Slot.call(this,signal,listener,once,priority);
+};
+msignal_Slot0.__name__ = true;
+msignal_Slot0.__super__ = msignal_Slot;
+msignal_Slot0.prototype = $extend(msignal_Slot.prototype,{
+	execute: function() {
+		if(!this.enabled) return;
+		if(this.once) this.remove();
+		this.listener();
+	}
+});
 var msignal_Slot1 = function(signal,listener,once,priority) {
 	if(priority == null) priority = 0;
 	if(once == null) once = false;
@@ -1399,6 +1481,22 @@ msignal_Slot1.prototype = $extend(msignal_Slot.prototype,{
 		this.listener(value1);
 	}
 });
+var msignal_Slot2 = function(signal,listener,once,priority) {
+	if(priority == null) priority = 0;
+	if(once == null) once = false;
+	msignal_Slot.call(this,signal,listener,once,priority);
+};
+msignal_Slot2.__name__ = true;
+msignal_Slot2.__super__ = msignal_Slot;
+msignal_Slot2.prototype = $extend(msignal_Slot.prototype,{
+	execute: function(value1,value2) {
+		if(!this.enabled) return;
+		if(this.once) this.remove();
+		if(this.param1 != null) value1 = this.param1;
+		if(this.param2 != null) value2 = this.param2;
+		this.listener(value1,value2);
+	}
+});
 var msignal_SlotList = function(head,tail) {
 	this.nonEmpty = false;
 	if(head == null && tail == null) {
@@ -1412,7 +1510,18 @@ var msignal_SlotList = function(head,tail) {
 };
 msignal_SlotList.__name__ = true;
 msignal_SlotList.prototype = {
-	prepend: function(slot) {
+	get_length: function() {
+		if(!this.nonEmpty) return 0;
+		if(this.tail == msignal_SlotList.NIL) return 1;
+		var result = 0;
+		var p = this;
+		while(p.nonEmpty) {
+			++result;
+			p = p.tail;
+		}
+		return result;
+	}
+	,prepend: function(slot) {
 		return new msignal_SlotList(slot,this);
 	}
 	,insertWithPriority: function(slot) {
