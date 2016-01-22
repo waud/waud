@@ -180,16 +180,18 @@ import js.Browser;
  	*     Waud.init();
 	*/
 	public static function init(?d:HTMLDocument) {
-		if (d == null) d = Browser.document;
-		dom = d;
-		__audioElement = dom.createAudioElement();
-		if (Waud.audioManager == null) Waud.audioManager = new AudioManager();
-		isWebAudioSupported = Waud.audioManager.checkWebAudioAPISupport();
-		isHTML5AudioSupported = (Reflect.field(Browser.window, "Audio") != null);
+		if (__audioElement == null) {
+			if (d == null) d = Browser.document;
+			dom = d;
+			__audioElement = dom.createAudioElement();
+			if (Waud.audioManager == null) Waud.audioManager = new AudioManager();
+			isWebAudioSupported = Waud.audioManager.checkWebAudioAPISupport();
+			isHTML5AudioSupported = (Reflect.field(Browser.window, "Audio") != null);
 
-		if (isWebAudioSupported) audioContext = Waud.audioManager.createAudioContext();
+			if (isWebAudioSupported) audioContext = Waud.audioManager.createAudioContext();
 
-		sounds = new Map();
+			sounds = new Map();
+		}
 	}
 
 	/**
