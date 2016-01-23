@@ -129,6 +129,7 @@ import js.html.AudioElement;
 		if (!_isLoaded || _snd == null) return;
 		_snd.pause();
 		_snd.currentTime = 0;
+		_isPlaying = false;
 	}
 
 	public function onEnd(callback:IWaudSound -> Void):IWaudSound {
@@ -153,5 +154,6 @@ import js.html.AudioElement;
 			_src = null;
 			_snd = null;
 		}
+		_isPlaying = false;
 	}
 }

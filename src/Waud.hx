@@ -206,11 +206,11 @@ import js.Browser;
 	*/
 	public static function autoMute() {
 		var blur = function() {
-			for (sound in sounds) sound.mute(true);
+			if (sounds != null) for (sound in sounds) sound.mute(true);
 		};
 
 		var focus = function() {
-			if (!isMuted) for (sound in sounds) sound.mute(false);
+			if (!isMuted && sounds != null) for (sound in sounds) sound.mute(false);
 		};
 
 		_focusManager = new WaudFocusManager();
