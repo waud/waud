@@ -22,8 +22,8 @@
 	"contributors": [
 		"adireddy"
 	],
-	"releasenote": "bug fixes",
-	"version": "0.3.7",
+	"releasenote": "safari bug fixes",
+	"version": "0.3.9",
 	"url": "https://github.com/adireddy/waud",
 	"dependencies": {}
 }
