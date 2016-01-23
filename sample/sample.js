@@ -289,6 +289,7 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 		if(!this._isLoaded || this._snd == null) return;
 		this._snd.pause();
 		this._snd.currentTime = 0;
+		this._isPlaying = false;
 	}
 	,onEnd: function(callback) {
 		this._options.onend = callback;
@@ -309,6 +310,7 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 			this._src = null;
 			this._snd = null;
 		}
+		this._isPlaying = false;
 	}
 });
 var HxOverrides = function() { };
@@ -721,14 +723,16 @@ Waud.init = function(d) {
 };
 Waud.autoMute = function() {
 	var blur = function() {
-		var $it0 = Waud.sounds.iterator();
-		while( $it0.hasNext() ) {
-			var sound = $it0.next();
-			sound.mute(true);
+		if(Waud.sounds != null) {
+			var $it0 = Waud.sounds.iterator();
+			while( $it0.hasNext() ) {
+				var sound = $it0.next();
+				sound.mute(true);
+			}
 		}
 	};
 	var focus = function() {
-		if(!Waud.isMuted) {
+		if(!Waud.isMuted && Waud.sounds != null) {
 			var $it1 = Waud.sounds.iterator();
 			while( $it1.hasNext() ) {
 				var sound1 = $it1.next();
@@ -1100,6 +1104,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 			return this;
 		}
 		if(this._muted) return this;
+		if(this._isPlaying) this.destroy();
 		var start = 0;
 		var end = -1;
 		if(this.isSpriteSound && soundProps != null) {
@@ -1144,7 +1149,8 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		if(val) this._gainNode.gain.value = 0; else this._gainNode.gain.value = this._options.volume;
 	}
 	,stop: function() {
-		if(this._snd == null || !this._isLoaded) return;
+		if(this._snd == null || !this._isLoaded || !this._isPlaying) return;
+		this._isPlaying = false;
 		this._snd.stop(0);
 	}
 	,onEnd: function(callback) {
@@ -1161,6 +1167,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 	}
 	,destroy: function() {
 		if(this._snd != null) {
+			if(this._isPlaying) this._snd.stop(0);
 			this._snd.disconnect();
 			this._snd = null;
 		}
@@ -1168,6 +1175,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 			this._gainNode.disconnect();
 			this._gainNode = null;
 		}
+		this._isPlaying = false;
 	}
 });
 var haxe_IMap = function() { };
