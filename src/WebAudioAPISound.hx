@@ -1,3 +1,4 @@
+import Reflect;
 import js.html.XMLHttpRequestResponseType;
 import js.html.XMLHttpRequest;
 import js.html.audio.GainNode;
@@ -39,9 +40,9 @@ import js.html.audio.AudioBuffer;
 
 	function _makeSource(buffer:AudioBuffer):AudioBufferSourceNode {
 		var source:AudioBufferSourceNode = _manager.audioContext.createBufferSource();
-		_gainNode = _manager.audioContext.createGain();
-		_gainNode.gain.value = _options.volume;
 		source.buffer = buffer;
+		 if (untyped __js__("this._manager.audioContext").createGain != null) _gainNode = _manager.audioContext.createGain();
+		 else _gainNode = untyped __js__("this._manager.audioContext").createGainNode();
 		source.connect(_gainNode);
 		_gainNode.connect(_manager.audioContext.destination);
 		return source;
@@ -68,6 +69,7 @@ import js.html.audio.AudioBuffer;
 			return this;
 		}
 		if (_muted) return this;
+		if (_isPlaying) destroy();
 		var start:Float = 0;
 		var end:Float = -1;
 		if (isSpriteSound && soundProps != null) {
@@ -125,7 +127,8 @@ import js.html.audio.AudioBuffer;
 	}
 
 	public function stop() {
-		if (_snd == null || !_isLoaded) return;
+		if (_snd == null || !_isLoaded || !_isPlaying) return;
+		_isPlaying = false;
 		_snd.stop(0);
 	}
 
@@ -139,9 +142,14 @@ import js.html.audio.AudioBuffer;
 		return this;
 	}
 
+	public function onError(callback:IWaudSound -> Void):IWaudSound {
+		_options.onerror = callback;
+		return this;
+	}
+
 	public function destroy() {
 		if (_snd != null) {
-			_snd.stop(0);
+			if (_isPlaying) _snd.stop(0);
 			_snd.disconnect();
 			_snd = null;
 		}
@@ -149,5 +157,6 @@ import js.html.audio.AudioBuffer;
 			_gainNode.disconnect();
 			_gainNode = null;
 		}
+		_isPlaying = false;
 	}
 }

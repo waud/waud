@@ -97,7 +97,7 @@ import js.html.AudioElement;
 	}
 
 	public function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties):IWaudSound {
-		if (!_isLoaded) {
+		if (!_isLoaded || _snd == null) {
 			trace("sound not loaded");
 			return this;
 		}
@@ -112,7 +112,7 @@ import js.html.AudioElement;
 				else stop();
 			}, Math.ceil(soundProps.duration * 1000));
 		}
-		_snd.play();
+		if (!_isPlaying) _snd.play();
 		return this;
 	}
 
@@ -121,14 +121,15 @@ import js.html.AudioElement;
 	}
 
 	public function loop(val:Bool) {
-		if (!_isLoaded) return;
+		if (!_isLoaded || _snd == null) return;
 		_snd.loop = val;
 	}
 
 	public function stop() {
-		if (!_isLoaded) return;
+		if (!_isLoaded || _snd == null) return;
 		_snd.pause();
 		_snd.currentTime = 0;
+		_isPlaying = false;
 	}
 
 	public function onEnd(callback:IWaudSound -> Void):IWaudSound {
@@ -141,6 +142,11 @@ import js.html.AudioElement;
 		return this;
 	}
 
+	public function onError(callback:IWaudSound -> Void):IWaudSound {
+		_options.onerror = callback;
+		return this;
+	}
+
 	public function destroy() {
 		if (_snd != null) {
 			_snd.pause();
@@ -148,5 +154,6 @@ import js.html.AudioElement;
 			_src = null;
 			_snd = null;
 		}
+		_isPlaying = false;
 	}
 }

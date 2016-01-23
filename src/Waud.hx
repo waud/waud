@@ -180,16 +180,18 @@ import js.Browser;
  	*     Waud.init();
 	*/
 	public static function init(?d:HTMLDocument) {
-		if (d == null) d = Browser.document;
-		dom = d;
-		__audioElement = dom.createAudioElement();
-		if (Waud.audioManager == null) Waud.audioManager = new AudioManager();
-		isWebAudioSupported = Waud.audioManager.checkWebAudioAPISupport();
-		isHTML5AudioSupported = (Reflect.field(Browser.window, "Audio") != null);
+		if (__audioElement == null) {
+			if (d == null) d = Browser.document;
+			dom = d;
+			__audioElement = dom.createAudioElement();
+			if (Waud.audioManager == null) Waud.audioManager = new AudioManager();
+			isWebAudioSupported = Waud.audioManager.checkWebAudioAPISupport();
+			isHTML5AudioSupported = (Reflect.field(Browser.window, "Audio") != null);
 
-		if (isWebAudioSupported) audioContext = Waud.audioManager.createAudioContext();
+			if (isWebAudioSupported) audioContext = Waud.audioManager.createAudioContext();
 
-		sounds = new Map();
+			sounds = new Map();
+		}
 	}
 
 	/**
@@ -204,11 +206,11 @@ import js.Browser;
 	*/
 	public static function autoMute() {
 		var blur = function() {
-			for (sound in sounds) sound.mute(true);
+			if (sounds != null) for (sound in sounds) sound.mute(true);
 		};
 
 		var focus = function() {
-			if (!isMuted) for (sound in sounds) sound.mute(false);
+			if (!isMuted && sounds != null) for (sound in sounds) sound.mute(false);
 		};
 
 		_focusManager = new WaudFocusManager();
