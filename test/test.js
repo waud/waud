@@ -1,4 +1,4 @@
-(function (console, $hx_exports) { "use strict";
+(function (console, $hx_exports, $global) { "use strict";
 var $estr = function() { return js_Boot.__string_rec(this,''); };
 function $extend(from, fields) {
 	function Inherit() {} Inherit.prototype = from; var proto = new Inherit();
@@ -871,7 +871,7 @@ js_Boot.__isNativeObj = function(o) {
 	return js_Boot.__nativeClassName(o) != null;
 };
 js_Boot.__resolveNativeClass = function(name) {
-	return (Function("return typeof " + name + " != \"undefined\" ? " + name + " : null"))();
+	return $global[name];
 };
 var js_html_compat_ArrayBuffer = function(a) {
 	if((a instanceof Array) && a.__enum__ == null) {
@@ -2927,10 +2927,10 @@ Bool.__ename__ = ["Bool"];
 var Class = { __name__ : ["Class"]};
 var Enum = { };
 var __map_reserved = {}
-var ArrayBuffer = (Function("return typeof ArrayBuffer != 'undefined' ? ArrayBuffer : null"))() || js_html_compat_ArrayBuffer;
+var ArrayBuffer = $global.ArrayBuffer || js_html_compat_ArrayBuffer;
 if(ArrayBuffer.prototype.slice == null) ArrayBuffer.prototype.slice = js_html_compat_ArrayBuffer.sliceImpl;
-var DataView = (Function("return typeof DataView != 'undefined' ? DataView : null"))() || js_html_compat_DataView;
-var Uint8Array = (Function("return typeof Uint8Array != 'undefined' ? Uint8Array : null"))() || js_html_compat_Uint8Array._new;
+var DataView = $global.DataView || js_html_compat_DataView;
+var Uint8Array = $global.Uint8Array || js_html_compat_Uint8Array._new;
 haxe_io_FPHelper.i64tmp = (function($this) {
 	var $r;
 	var x = new haxe__$Int64__$_$_$Int64(0,0);
@@ -2942,4 +2942,4 @@ js_html_compat_Uint8Array.BYTES_PER_ELEMENT = 1;
 utest_TestHandler.POLLING_TIME = 10;
 utest_ui_text_HtmlReport.platform = "javascript";
 Test.main();
-})(typeof console != "undefined" ? console : {log:function(){}}, typeof window != "undefined" ? window : exports);
+})(typeof console != "undefined" ? console : {log:function(){}}, typeof window != "undefined" ? window : exports, typeof window != "undefined" ? window : typeof global != "undefined" ? global : typeof self != "undefined" ? self : this);
