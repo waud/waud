@@ -80,7 +80,9 @@ import js.html.audio.AudioBuffer;
 			_snd = _makeSource(buffer);
 			if (start >= 0 && end > -1) {
 				if (Reflect.field(_snd, "start") != null) _snd.start(0, start, end);
-				else untyped __js__("this._snd").noteOn(0, start, end);
+				else {
+					untyped __js__("this._snd").noteGrainOn(0, start, end);
+				}
 			}
 			else {
 				_snd.loop = _options.loop;
