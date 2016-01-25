@@ -1115,7 +1115,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		if(buffer != null) {
 			this._snd = this._makeSource(buffer);
 			if(start >= 0 && end > -1) {
-				if(Reflect.field(this._snd,"start") != null) this._snd.start(0,start,end); else this._snd.noteOn(0,start,end);
+				if(Reflect.field(this._snd,"start") != null) this._snd.start(0,start,end); else this._snd.noteGrainOn(0,start,end);
 			} else {
 				this._snd.loop = this._options.loop;
 				if(Reflect.field(this._snd,"start") != null) this._snd.start(0); else this._snd.noteOn(0);
