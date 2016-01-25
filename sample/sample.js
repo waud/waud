@@ -33,7 +33,7 @@ AudioManager.prototype = {
 		var src = this.audioContext.createBufferSource();
 		src.buffer = bfr;
 		src.connect(this.audioContext.destination);
-		src.start(0);
+		if(Reflect.field(src,"start") != null) src.start(0); else src.noteOn(0);
 		if(src.onended != null) src.onended = $bind(this,this._unlockCallback); else haxe_Timer.delay($bind(this,this._unlockCallback),1);
 	}
 	,_unlockCallback: function() {
@@ -1114,9 +1114,11 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		var buffer = this._manager.bufferList.get(this.url);
 		if(buffer != null) {
 			this._snd = this._makeSource(buffer);
-			if(start >= 0 && end > -1) this._snd.start(0,start,end); else {
+			if(start >= 0 && end > -1) {
+				if(Reflect.field(this._snd,"start") != null) this._snd.start(0,start,end); else this._snd.noteOn(0,start,end);
+			} else {
 				this._snd.loop = this._options.loop;
-				this._snd.start(0);
+				if(Reflect.field(this._snd,"start") != null) this._snd.start(0); else this._snd.noteOn(0);
 			}
 			this._isPlaying = true;
 			this._snd.onended = function() {
@@ -1151,7 +1153,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 	,stop: function() {
 		if(this._snd == null || !this._isLoaded || !this._isPlaying) return;
 		this._isPlaying = false;
-		this._snd.stop(0);
+		if(Reflect.field(this._snd,"stop") != null) this._snd.stop(0); else this._snd.noteOff(0);
 	}
 	,onEnd: function(callback) {
 		this._options.onend = callback;
@@ -1167,7 +1169,9 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 	}
 	,destroy: function() {
 		if(this._snd != null) {
-			if(this._isPlaying) this._snd.stop(0);
+			if(this._isPlaying) {
+				if(Reflect.field(this._snd,"stop") != null) this._snd.stop(0); else this._snd.noteOff(0);
+			}
 			this._snd.disconnect();
 			this._snd = null;
 		}
