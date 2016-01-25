@@ -22,8 +22,8 @@
 	"contributors": [
 		"adireddy"
 	],
-	"releasenote": "safari bug fixes",
-	"version": "0.3.9",
+	"releasenote": "iOS 6 bug fixes",
+	"version": "0.4.0",
 	"url": "https://github.com/adireddy/waud",
 	"dependencies": {}
 }
