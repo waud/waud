@@ -102,7 +102,8 @@ class AudioManager {
 		var src:AudioBufferSourceNode = audioContext.createBufferSource();
 		src.buffer = bfr;
 		src.connect(audioContext.destination);
-		src.start(0);
+		if (Reflect.field(src, "start") != null) src.start(0);
+		else untyped __js__("src").noteOn(0);
 		if (src.onended != null) src.onended = _unlockCallback;
 		else haxe.Timer.delay(_unlockCallback, 1);
 	}

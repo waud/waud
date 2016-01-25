@@ -1,4 +1,3 @@
-import Reflect;
 import js.html.XMLHttpRequestResponseType;
 import js.html.XMLHttpRequest;
 import js.html.audio.GainNode;
@@ -79,10 +78,14 @@ import js.html.audio.AudioBuffer;
 		var buffer = _manager.bufferList.get(url);
 		if (buffer != null) {
 			_snd = _makeSource(buffer);
-			if (start >= 0 && end > -1) _snd.start(0, start, end);
+			if (start >= 0 && end > -1) {
+				if (Reflect.field(_snd, "start") != null) _snd.start(0, start, end);
+				else untyped __js__("this._snd").noteOn(0, start, end);
+			}
 			else {
 				_snd.loop = _options.loop;
-				_snd.start(0);
+				if (Reflect.field(_snd, "start") != null) _snd.start(0);
+				else untyped __js__("this._snd").noteOn(0);
 			}
 
 			_isPlaying = true;
@@ -129,7 +132,8 @@ import js.html.audio.AudioBuffer;
 	public function stop() {
 		if (_snd == null || !_isLoaded || !_isPlaying) return;
 		_isPlaying = false;
-		_snd.stop(0);
+		if (Reflect.field(_snd, "stop") != null) _snd.stop(0);
+		else untyped __js__("this._snd").noteOff(0);
 	}
 
 	public function onEnd(callback:IWaudSound -> Void):IWaudSound {
@@ -149,7 +153,10 @@ import js.html.audio.AudioBuffer;
 
 	public function destroy() {
 		if (_snd != null) {
-			if (_isPlaying) _snd.stop(0);
+			if (_isPlaying) {
+				if (Reflect.field(_snd, "stop") != null) _snd.stop(0);
+				else untyped __js__("this._snd").noteOff(0);
+			}
 			_snd.disconnect();
 			_snd = null;
 		}
