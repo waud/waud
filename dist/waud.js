@@ -206,6 +206,11 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 		this._snd.currentTime = 0;
 		this._isPlaying = false;
 	}
+	,pause: function() {
+		if(!this._isLoaded || this._snd == null) return;
+		this._snd.pause();
+		this._isPlaying = false;
+	}
 	,onEnd: function(callback) {
 		this._options.onend = callback;
 		return this;
@@ -545,6 +550,10 @@ WaudSound.prototype = {
 		if(this._snd == null) return;
 		this._snd.stop();
 	}
+	,pause: function() {
+		if(this._snd == null) return;
+		this._snd.pause();
+	}
 	,onEnd: function(callback) {
 		if(this._snd == null) return null;
 		this._snd.onEnd(callback);
@@ -619,6 +628,8 @@ WaudUtils.getiOSVersion = function(ua) {
 var WebAudioAPISound = function(url,options) {
 	console.log("using web audio - " + url);
 	BaseSound.call(this,url,options);
+	this._playStartTime = 0;
+	this._pauseTime = 0;
 	this._manager = Waud.audioManager;
 	if(this._options.preload) this.load();
 };
@@ -673,7 +684,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		var start = 0;
 		var end = -1;
 		if(this.isSpriteSound && soundProps != null) {
-			start = soundProps.start;
+			start = soundProps.start + this._pauseTime;
 			end = soundProps.duration;
 		}
 		var buffer = this._manager.bufferList.get(this.url);
@@ -683,13 +694,16 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 				if(Reflect.field(this._snd,"start") != null) this._snd.start(0,start,end); else this._snd.noteGrainOn(0,start,end);
 			} else {
 				this._snd.loop = this._options.loop;
-				if(Reflect.field(this._snd,"start") != null) this._snd.start(0); else this._snd.noteOn(0);
+				if(Reflect.field(this._snd,"start") != null) this._snd.start(0,this._pauseTime); else this._snd.noteGrainOn(0,this._pauseTime);
 			}
+			this._playStartTime = this._manager.audioContext.currentTime;
 			this._isPlaying = true;
 			this._snd.onended = function() {
-				if(_g.isSpriteSound && soundProps != null && soundProps.loop && start >= 0 && end > -1) _g.play(spriteName,soundProps);
-				_g._isPlaying = false;
-				if(_g._options.onend != null) _g._options.onend(_g);
+				if(_g._pauseTime == 0) {
+					if(_g.isSpriteSound && soundProps != null && soundProps.loop && start >= 0 && end > -1) _g.play(spriteName,soundProps);
+					_g._isPlaying = false;
+					if(_g._options.onend != null) _g._options.onend(_g);
+				}
 			};
 			if(this._manager.playingSounds.get(this.url) == null) this._manager.playingSounds.set(this.url,this._snd);
 		}
@@ -716,9 +730,14 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		if(val) this._gainNode.gain.value = 0; else this._gainNode.gain.value = this._options.volume;
 	}
 	,stop: function() {
+		this._pauseTime = 0;
 		if(this._snd == null || !this._isLoaded || !this._isPlaying) return;
 		this._isPlaying = false;
 		if(Reflect.field(this._snd,"stop") != null) this._snd.stop(0); else this._snd.noteOff(0);
+	}
+	,pause: function() {
+		this.stop();
+		this._pauseTime += this._manager.audioContext.currentTime - this._playStartTime;
 	}
 	,onEnd: function(callback) {
 		this._options.onend = callback;
