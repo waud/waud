@@ -132,6 +132,12 @@ import js.html.AudioElement;
 		_isPlaying = false;
 	}
 
+	public function pause() {
+		if (!_isLoaded || _snd == null) return;
+		_snd.pause();
+		_isPlaying = false;
+	}
+
 	public function onEnd(callback:IWaudSound -> Void):IWaudSound {
 		_options.onend = callback;
 		return this;

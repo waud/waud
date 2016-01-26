@@ -9,10 +9,14 @@ import js.html.audio.AudioBuffer;
 	var _manager:AudioManager;
 	var _snd:AudioBufferSourceNode;
 	var _gainNode:GainNode;
+	var _playStartTime:Float;
+	var _pauseTime:Float;
 
 	public function new(url:String, ?options:WaudSoundOptions = null) {
 		#if debug trace("using web audio - " + url); #end
 		super(url, options);
+		_playStartTime = 0;
+		_pauseTime = 0;
 		_manager = Waud.audioManager;
 		if (_options.preload) load();
 	}
@@ -72,7 +76,7 @@ import js.html.audio.AudioBuffer;
 		var start:Float = 0;
 		var end:Float = -1;
 		if (isSpriteSound && soundProps != null) {
-			start = soundProps.start;
+			start = soundProps.start + _pauseTime;
 			end = soundProps.duration;
 		}
 		var buffer = _manager.bufferList.get(url);
@@ -86,17 +90,20 @@ import js.html.audio.AudioBuffer;
 			}
 			else {
 				_snd.loop = _options.loop;
-				if (Reflect.field(_snd, "start") != null) _snd.start(0);
-				else untyped __js__("this._snd").noteOn(0);
+				if (Reflect.field(_snd, "start") != null) _snd.start(0, _pauseTime);
+				else untyped __js__("this._snd").noteGrainOn(0, _pauseTime);
 			}
 
+			_playStartTime = _manager.audioContext.currentTime;
 			_isPlaying = true;
 			_snd.onended = function() {
-				if (isSpriteSound && soundProps != null && soundProps.loop && start >= 0 && end > -1) {
-					play(spriteName, soundProps);
+				if (_pauseTime == 0) {
+					if (isSpriteSound && soundProps != null && soundProps.loop && start >= 0 && end > -1) {
+						play(spriteName, soundProps);
+					}
+					_isPlaying = false;
+					if (_options.onend != null) _options.onend(this);
 				}
-				_isPlaying = false;
-				if (_options.onend != null) _options.onend(this);
 			}
 
 			if(_manager.playingSounds.get(url) == null) _manager.playingSounds.set(url, _snd);
@@ -132,10 +139,16 @@ import js.html.audio.AudioBuffer;
 	}
 
 	public function stop() {
+		_pauseTime = 0;
 		if (_snd == null || !_isLoaded || !_isPlaying) return;
 		_isPlaying = false;
 		if (Reflect.field(_snd, "stop") != null) _snd.stop(0);
 		else untyped __js__("this._snd").noteOff(0);
+	}
+
+	public function pause() {
+		stop();
+		_pauseTime += _manager.audioContext.currentTime - _playStartTime;
 	}
 
 	public function onEnd(callback:IWaudSound -> Void):IWaudSound {

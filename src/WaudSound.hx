@@ -224,6 +224,18 @@ import haxe.Json;
 	}
 
 	/**
+	* Function to pause sound.
+	*
+	* @method pause
+	* @example
+	*     snd.pause();
+	*/
+	public function pause() {
+		if (_snd == null) return;
+		_snd.pause();
+	}
+
+	/**
 	* Function to add callback that triggers when the sound finishes playing.
 	*
 	* @method onEnd
