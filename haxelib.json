@@ -22,8 +22,8 @@
 	"contributors": [
 		"adireddy"
 	],
-	"releasenote": "iOS 6 audio sprite bug fix",
-	"version": "0.4.1",
+	"releasenote": "added pause method",
+	"version": "0.4.2",
 	"url": "https://github.com/adireddy/waud",
 	"dependencies": {}
 }
