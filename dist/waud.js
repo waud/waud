@@ -342,6 +342,15 @@ Waud.stop = function() {
 		}
 	}
 };
+Waud.pause = function() {
+	if(Waud.sounds != null) {
+		var $it0 = Waud.sounds.iterator();
+		while( $it0.hasNext() ) {
+			var sound = $it0.next();
+			sound.pause();
+		}
+	}
+};
 Waud.getFormatSupportString = function() {
 	var support = "OGG: " + Waud.__audioElement.canPlayType("audio/ogg; codecs=\"vorbis\"");
 	support += ", WAV: " + Waud.__audioElement.canPlayType("audio/wav; codecs=\"1\"");
@@ -736,7 +745,9 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		if(Reflect.field(this._snd,"stop") != null) this._snd.stop(0); else this._snd.noteOff(0);
 	}
 	,pause: function() {
-		this.stop();
+		if(this._snd == null || !this._isLoaded || !this._isPlaying) return;
+		this._isPlaying = false;
+		if(Reflect.field(this._snd,"stop") != null) this._snd.stop(0); else this._snd.noteOff(0);
 		this._pauseTime += this._manager.audioContext.currentTime - this._playStartTime;
 	}
 	,onEnd: function(callback) {
