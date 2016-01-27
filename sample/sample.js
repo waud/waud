@@ -291,6 +291,11 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 		this._snd.currentTime = 0;
 		this._isPlaying = false;
 	}
+	,pause: function() {
+		if(!this._isLoaded || this._snd == null) return;
+		this._snd.pause();
+		this._isPlaying = false;
+	}
 	,onEnd: function(callback) {
 		this._options.onend = callback;
 		return this;
@@ -321,6 +326,7 @@ HxOverrides.cca = function(s,index) {
 	return x;
 };
 var pixi_plugins_app_Application = function() {
+	this._animationFrameId = null;
 	this.pixelRatio = 1;
 	this.set_skipFrame(false);
 	this.autoResize = true;
@@ -370,9 +376,12 @@ pixi_plugins_app_Application.prototype = {
 		if(rendererType == "auto") this.renderer = PIXI.autoDetectRenderer(this.width,this.height,renderingOptions); else if(rendererType == "canvas") this.renderer = new PIXI.CanvasRenderer(this.width,this.height,renderingOptions); else this.renderer = new PIXI.WebGLRenderer(this.width,this.height,renderingOptions);
 		if(this.roundPixels) this.renderer.roundPixels = true;
 		window.document.body.appendChild(this.renderer.view);
-		if(this.autoResize) window.onresize = $bind(this,this._onWindowResize);
-		window.requestAnimationFrame($bind(this,this._onRequestAnimationFrame));
+		this.resumeRendering();
 		this.addStats();
+	}
+	,resumeRendering: function() {
+		if(this.autoResize) window.onresize = $bind(this,this._onWindowResize);
+		if(this._animationFrameId == null) this._animationFrameId = window.requestAnimationFrame($bind(this,this._onRequestAnimationFrame));
 	}
 	,_onWindowResize: function(event) {
 		this.width = window.innerWidth;
@@ -389,7 +398,7 @@ pixi_plugins_app_Application.prototype = {
 			if(this.onUpdate != null) this.onUpdate(elapsedTime);
 			this.renderer.render(this.stage);
 		}
-		window.requestAnimationFrame($bind(this,this._onRequestAnimationFrame));
+		this._animationFrameId = window.requestAnimationFrame($bind(this,this._onRequestAnimationFrame));
 	}
 	,addStats: function() {
 		if(window.Perf != null) new Perf().addInfo(["UNKNOWN","WEBGL","CANVAS"][this.renderer.type] + " - " + this.pixelRatio);
@@ -452,7 +461,7 @@ var Main = function() {
 	this._addButton("BG Vol 1",300,150,60,30,function() {
 		_g._bgSnd.setVolume(1);
 	});
-	this._addButton("Stop",360,150,60,30,$bind(this,this._stop));
+	this._addButton("Stop All",360,150,60,30,$bind(this,this._stop));
 	label = new PIXI.Text("Sprite: ",{ font : "26px Tahoma", fill : "#FFFFFF"});
 	this._btnContainer.addChild(label);
 	label.position.y = 200;
@@ -467,7 +476,31 @@ var Main = function() {
 	this._addButton("Can",240,200,60,30,function() {
 		_g._audSprite.play("canopening");
 	});
-	this._addButton("DESTROY",120,250,180,30,function() {
+	label = new PIXI.Text("Test 1: ",{ font : "26px Tahoma", fill : "#FFFFFF"});
+	this._btnContainer.addChild(label);
+	label.position.y = 250;
+	this._addButton("Play",120,250,60,30,function() {
+		_g._countdown.play();
+	});
+	this._addButton("Pause",180,250,60,30,function() {
+		_g._countdown.pause();
+	});
+	this._addButton("Stop",240,250,60,30,function() {
+		_g._countdown.stop();
+	});
+	label = new PIXI.Text("Test 2: ",{ font : "26px Tahoma", fill : "#FFFFFF"});
+	this._btnContainer.addChild(label);
+	label.position.y = 300;
+	this._addButton("Play",120,300,60,30,function() {
+		_g._audSprite.play("countdown");
+	});
+	this._addButton("Pause",180,300,60,30,function() {
+		_g._audSprite.pause();
+	});
+	this._addButton("Stop",240,300,60,30,function() {
+		_g._audSprite.stop();
+	});
+	this._addButton("DESTROY",120,350,180,30,function() {
 		Waud.destroy();
 	});
 	this._ua = new PIXI.Text(window.navigator.userAgent,{ font : "12px Tahoma", fill : "#FFFFFF"});
@@ -490,6 +523,7 @@ var Main = function() {
 	this._ua.text += "\nWeb Audio API: " + Std.string(Waud.isWebAudioSupported);
 	this._ua.text += "\nHTML5 Audio: " + Std.string(Waud.isHTML5AudioSupported);
 	this._audSprite = new WaudSound("assets/sprite.json");
+	this._countdown = new WaudSound("assets/countdown.mp3",{ webaudio : false});
 	this._glassMP3.load($bind(this,this._onLoad));
 	this._resize();
 };
@@ -535,6 +569,7 @@ var Perf = $hx_exports.Perf = function(pos,offset) {
 	this._perfObj = window.performance;
 	this._memoryObj = window.performance.memory;
 	this._memCheck = this._perfObj != null && this._memoryObj != null && this._memoryObj.totalJSHeapSize > 0;
+	this._raf = true;
 	this.currentFps = 0;
 	this.currentMs = 0;
 	this.currentMem = "0";
@@ -557,7 +592,7 @@ Perf.prototype = {
 		var time;
 		if(this._perfObj != null && ($_=this._perfObj,$bind($_,$_.now)) != null) time = this._perfObj.now(); else time = new Date().getTime();
 		this._ticks++;
-		if(time > this._prevTime + Perf.MEASUREMENT_INTERVAL) {
+		if(this._raf && time > this._prevTime + Perf.MEASUREMENT_INTERVAL) {
 			this.currentMs = Math.round(time - this._startTime);
 			this.ms.innerHTML = "MS: " + this.currentMs;
 			this.currentFps = Math.round(this._ticks * 1000 / (time - this._prevTime));
@@ -573,7 +608,8 @@ Perf.prototype = {
 			}
 		}
 		this._startTime = time;
-		window.requestAnimationFrame($bind(this,this._tick));
+		if(this._raf) window.requestAnimationFrame(this._raf?$bind(this,this._tick):function() {
+		});
 	}
 	,_createDiv: function(id,top) {
 		if(top == null) top = 0;
@@ -978,6 +1014,10 @@ WaudSound.prototype = {
 		if(this._snd == null) return;
 		this._snd.stop();
 	}
+	,pause: function() {
+		if(this._snd == null) return;
+		this._snd.pause();
+	}
 	,onEnd: function(callback) {
 		if(this._snd == null) return null;
 		this._snd.onEnd(callback);
@@ -1053,6 +1093,8 @@ WaudUtils.getiOSVersion = function(ua) {
 var WebAudioAPISound = function(url,options) {
 	console.log("using web audio - " + url);
 	BaseSound.call(this,url,options);
+	this._playStartTime = 0;
+	this._pauseTime = 0;
 	this._manager = Waud.audioManager;
 	if(this._options.preload) this.load();
 };
@@ -1108,7 +1150,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		var start = 0;
 		var end = -1;
 		if(this.isSpriteSound && soundProps != null) {
-			start = soundProps.start;
+			start = soundProps.start + this._pauseTime;
 			end = soundProps.duration;
 		}
 		var buffer = this._manager.bufferList.get(this.url);
@@ -1118,13 +1160,16 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 				if(Reflect.field(this._snd,"start") != null) this._snd.start(0,start,end); else this._snd.noteGrainOn(0,start,end);
 			} else {
 				this._snd.loop = this._options.loop;
-				if(Reflect.field(this._snd,"start") != null) this._snd.start(0); else this._snd.noteOn(0);
+				if(Reflect.field(this._snd,"start") != null) this._snd.start(0,this._pauseTime); else this._snd.noteGrainOn(0,this._pauseTime);
 			}
+			this._playStartTime = this._manager.audioContext.currentTime;
 			this._isPlaying = true;
 			this._snd.onended = function() {
-				if(_g.isSpriteSound && soundProps != null && soundProps.loop && start >= 0 && end > -1) _g.play(spriteName,soundProps);
-				_g._isPlaying = false;
-				if(_g._options.onend != null) _g._options.onend(_g);
+				if(_g._pauseTime == 0) {
+					if(_g.isSpriteSound && soundProps != null && soundProps.loop && start >= 0 && end > -1) _g.play(spriteName,soundProps);
+					_g._isPlaying = false;
+					if(_g._options.onend != null) _g._options.onend(_g);
+				}
 			};
 			if(this._manager.playingSounds.get(this.url) == null) this._manager.playingSounds.set(this.url,this._snd);
 		}
@@ -1151,9 +1196,14 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		if(val) this._gainNode.gain.value = 0; else this._gainNode.gain.value = this._options.volume;
 	}
 	,stop: function() {
+		this._pauseTime = 0;
 		if(this._snd == null || !this._isLoaded || !this._isPlaying) return;
 		this._isPlaying = false;
 		if(Reflect.field(this._snd,"stop") != null) this._snd.stop(0); else this._snd.noteOff(0);
+	}
+	,pause: function() {
+		this.stop();
+		this._pauseTime += this._manager.audioContext.currentTime - this._playStartTime;
 	}
 	,onEnd: function(callback) {
 		this._options.onend = callback;

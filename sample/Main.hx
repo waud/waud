@@ -21,6 +21,8 @@ class Main extends Application {
 
 	var _audSprite:IWaudSound;
 
+	var _countdown:IWaudSound;
+
 	var _ua:Text;
 
 	public function new() {
@@ -62,7 +64,7 @@ class Main extends Application {
 		_addButton("Unmute", 180, 150, 60, 30, _unmute);
 		_addButton("BG Vol 0", 240, 150, 60, 30, function() { _bgSnd.setVolume(0); });
 		_addButton("BG Vol 1", 300, 150, 60, 30, function() { _bgSnd.setVolume(1); });
-		_addButton("Stop", 360, 150, 60, 30, _stop);
+		_addButton("Stop All", 360, 150, 60, 30, _stop);
 
 		// Audio Sprite
 		label = new Text("Sprite: ", { font: "26px Tahoma", fill:"#FFFFFF" });
@@ -72,7 +74,21 @@ class Main extends Application {
 		_addButton("Bell", 180, 200, 60, 30, function() { _audSprite.play("bell"); });
 		_addButton("Can", 240, 200, 60, 30, function() { _audSprite.play("canopening"); });
 
-		_addButton("DESTROY", 120, 250, 180, 30, function() { Waud.destroy(); });
+		label = new Text("Test 1: ", { font: "26px Tahoma", fill:"#FFFFFF" });
+		_btnContainer.addChild(label);
+		label.position.y = 250;
+		_addButton("Play", 120, 250, 60, 30, function() { _countdown.play(); });
+		_addButton("Pause", 180, 250, 60, 30, function() { _countdown.pause(); });
+		_addButton("Stop", 240, 250, 60, 30, function() { _countdown.stop(); });
+
+		label = new Text("Test 2: ", { font: "26px Tahoma", fill:"#FFFFFF" });
+		_btnContainer.addChild(label);
+		label.position.y = 300;
+		_addButton("Play", 120, 300, 60, 30, function() { _audSprite.play("countdown"); });
+		_addButton("Pause", 180, 300, 60, 30, function() { _audSprite.pause(); });
+		_addButton("Stop", 240, 300, 60, 30, function() { _audSprite.stop(); });
+
+		_addButton("DESTROY", 120, 350, 180, 30, function() { Waud.destroy(); });
 
 		_ua = new Text(Browser.navigator.userAgent, { font: "12px Tahoma", fill:"#FFFFFF" });
 		stage.addChild(_ua);
@@ -100,6 +116,8 @@ class Main extends Application {
 		_ua.text += "\nHTML5 Audio: " + Waud.isHTML5AudioSupported;
 
 		_audSprite = new WaudSound("assets/sprite.json");
+
+		_countdown = new WaudSound("assets/countdown.mp3", {webaudio: false});
 
 		_glassMP3.load(_onLoad);
 
