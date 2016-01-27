@@ -261,6 +261,18 @@ import js.Browser;
 	public static function stop() {
 		if (sounds != null) for (sound in sounds) sound.stop();
 	}
+    
+    /**
+	* Helper function to pause all the sounds.
+	*
+	* @static
+	* @method pause
+	* @example
+	*     Waud.pause();
+	*/
+	public static function pause() {
+		if (sounds != null) for (sound in sounds) sound.pause();
+	}
 
 	/**
 	* Returns a string with all the format support information.

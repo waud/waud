@@ -147,7 +147,10 @@ import js.html.audio.AudioBuffer;
 	}
 
 	public function pause() {
-		stop();
+        if (_snd == null || !_isLoaded || !_isPlaying) return;
+		_isPlaying = false;
+		if (Reflect.field(_snd, "stop") != null) _snd.stop(0);
+		else untyped __js__("this._snd").noteOff(0);
 		_pauseTime += _manager.audioContext.currentTime - _playStartTime;
 	}
 
