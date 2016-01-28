@@ -462,6 +462,7 @@ var Main = function() {
 		_g._bgSnd.setVolume(1);
 	});
 	this._addButton("Stop All",360,150,60,30,$bind(this,this._stop));
+	this._addButton("Pause All",420,150,60,30,$bind(this,this._pause));
 	label = new PIXI.Text("Sprite: ",{ font : "26px Tahoma", fill : "#FFFFFF"});
 	this._btnContainer.addChild(label);
 	label.position.y = 200;
@@ -550,6 +551,9 @@ Main.prototype = $extend(pixi_plugins_app_Application.prototype,{
 	}
 	,_stop: function() {
 		Waud.stop();
+	}
+	,_pause: function() {
+		Waud.pause();
 	}
 	,_addButton: function(label,x,y,width,height,callback) {
 		var btn = new Button(label,width,height);
@@ -801,6 +805,15 @@ Waud.stop = function() {
 		while( $it0.hasNext() ) {
 			var sound = $it0.next();
 			sound.stop();
+		}
+	}
+};
+Waud.pause = function() {
+	if(Waud.sounds != null) {
+		var $it0 = Waud.sounds.iterator();
+		while( $it0.hasNext() ) {
+			var sound = $it0.next();
+			sound.pause();
 		}
 	}
 };
@@ -1202,7 +1215,9 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		if(Reflect.field(this._snd,"stop") != null) this._snd.stop(0); else this._snd.noteOff(0);
 	}
 	,pause: function() {
-		this.stop();
+		if(this._snd == null || !this._isLoaded || !this._isPlaying) return;
+		this._isPlaying = false;
+		if(Reflect.field(this._snd,"stop") != null) this._snd.stop(0); else this._snd.noteOff(0);
 		this._pauseTime += this._manager.audioContext.currentTime - this._playStartTime;
 	}
 	,onEnd: function(callback) {

@@ -65,6 +65,7 @@ class Main extends Application {
 		_addButton("BG Vol 0", 240, 150, 60, 30, function() { _bgSnd.setVolume(0); });
 		_addButton("BG Vol 1", 300, 150, 60, 30, function() { _bgSnd.setVolume(1); });
 		_addButton("Stop All", 360, 150, 60, 30, _stop);
+        _addButton("Pause All", 420, 150, 60, 30, _pause);
 
 		// Audio Sprite
 		label = new Text("Sprite: ", { font: "26px Tahoma", fill:"#FFFFFF" });
@@ -146,6 +147,10 @@ class Main extends Application {
 
 	function _stop() {
 		Waud.stop();
+	}
+    
+    function _pause() {
+		Waud.pause();
 	}
 
 	function _addButton(label:String, x:Float, y:Float, width:Float, height:Float, callback:Dynamic) {
