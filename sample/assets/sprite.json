@@ -14,14 +14,20 @@
       "loop": false
     },
     {
-      "name": "glass",
+      "name": "countdown",
       "start": 7,
+      "duration": 12.198095238095238,
+      "loop": false
+    },
+    {
+      "name": "glass",
+      "start": 21,
       "duration": 0.5485714285714286,
       "loop": false
     },
     {
       "name": "loop",
-      "start": 9,
+      "start": 23,
       "duration": 56.03265306122449,
       "loop": true
     }

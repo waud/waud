@@ -32,7 +32,7 @@ import js.Browser;
 	/**
 	* Cross-browser utility class used to mute/unmute audio on focus on/off events. Used when **Waud.autoMute()** is called.
 	*
-	* This calss can also be used as a standalone utility class to handle focus on/off events.
+	* This can also be used as a standalone utility class to handle focus on/off events.
 	*
 	* @class WaudFocusManager
 	* @constructor

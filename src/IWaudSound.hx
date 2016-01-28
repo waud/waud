@@ -9,6 +9,7 @@ interface IWaudSound {
 	function load(?callback:IWaudSound -> Void):IWaudSound;
 	function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties):IWaudSound;
 	function stop():Void;
+	function pause():Void;
 	function onEnd(callback:IWaudSound -> Void):IWaudSound;
 	function onLoad(callback:IWaudSound -> Void):IWaudSound;
 	function onError(callback:IWaudSound -> Void):IWaudSound;
