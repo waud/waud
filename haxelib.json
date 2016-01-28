@@ -22,8 +22,8 @@
 	"contributors": [
 		"adireddy"
 	],
-	"releasenote": "added pause method",
-	"version": "0.4.2",
+	"releasenote": "minor bug fixes",
+	"version": "0.4.3",
 	"url": "https://github.com/adireddy/waud",
 	"dependencies": {}
 }
