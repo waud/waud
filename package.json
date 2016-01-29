@@ -1,8 +1,8 @@
 {
   "name": "waud.js",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "Web Audio Library",
-  "main": "./dist/waud.min.js",
+  "main": "./dist/waud.js",
   "scripts": {
     "test": "echo \"no test specified\" && exit 0"
   },
