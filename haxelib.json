@@ -23,7 +23,7 @@
 		"adireddy"
 	],
 	"releasenote": "minor bug fixes",
-	"version": "0.4.3",
+	"version": "0.4.4",
 	"url": "https://github.com/adireddy/waud",
 	"dependencies": {}
 }

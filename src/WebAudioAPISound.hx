@@ -90,8 +90,8 @@ import js.html.audio.AudioBuffer;
 			}
 			else {
 				_snd.loop = _options.loop;
-				if (Reflect.field(_snd, "start") != null) _snd.start(0, _pauseTime);
-				else untyped __js__("this._snd").noteGrainOn(0, _pauseTime);
+				if (Reflect.field(_snd, "start") != null) _snd.start(0);
+				else untyped __js__("this._snd").noteGrainOn(0, _pauseTime, _snd.buffer.duration);
 			}
 
 			_playStartTime = _manager.audioContext.currentTime;

@@ -27,13 +27,27 @@ AudioManager.prototype = {
 		return false;
 	}
 	,unlockAudio: function() {
-		if(this.audioContext == null) return;
-		var bfr = this.audioContext.createBuffer(1,1,Waud.preferredSampleRate);
-		var src = this.audioContext.createBufferSource();
-		src.buffer = bfr;
-		src.connect(this.audioContext.destination);
-		if(Reflect.field(src,"start") != null) src.start(0); else src.noteOn(0);
-		if(src.onended != null) src.onended = $bind(this,this._unlockCallback); else haxe_Timer.delay($bind(this,this._unlockCallback),1);
+		if(this.audioContext != null) {
+			var bfr = this.audioContext.createBuffer(1,1,Waud.preferredSampleRate);
+			var src = this.audioContext.createBufferSource();
+			src.buffer = bfr;
+			src.connect(this.audioContext.destination);
+			if(Reflect.field(src,"start") != null) src.start(0); else src.noteOn(0);
+			if(src.onended != null) src.onended = $bind(this,this._unlockCallback); else haxe_Timer.delay($bind(this,this._unlockCallback),1);
+		} else {
+			var audio;
+			var _this = window.document;
+			audio = _this.createElement("audio");
+			var source;
+			var _this1 = window.document;
+			source = _this1.createElement("source");
+			source.src = "data:audio/wave;base64,UklGRjIAAABXQVZFZm10IBIAAAABAAEAQB8AAEAfAAABAAgAAABmYWN0BAAAAAAAAABkYXRhAAAAAA==";
+			audio.appendChild(source);
+			window.document.appendChild(audio);
+			audio.play();
+			if(Waud.__touchUnlockCallback != null) Waud.__touchUnlockCallback();
+			Waud.dom.ontouchend = null;
+		}
 	}
 	,_unlockCallback: function() {
 		if(Waud.__touchUnlockCallback != null) Waud.__touchUnlockCallback();
@@ -703,7 +717,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 				if(Reflect.field(this._snd,"start") != null) this._snd.start(0,start,end); else this._snd.noteGrainOn(0,start,end);
 			} else {
 				this._snd.loop = this._options.loop;
-				if(Reflect.field(this._snd,"start") != null) this._snd.start(0,this._pauseTime); else this._snd.noteGrainOn(0,this._pauseTime);
+				if(Reflect.field(this._snd,"start") != null) this._snd.start(0); else this._snd.noteGrainOn(0,this._pauseTime,this._snd.buffer.duration);
 			}
 			this._playStartTime = this._manager.audioContext.currentTime;
 			this._isPlaying = true;
