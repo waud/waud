@@ -1,3 +1,5 @@
+import js.html.AudioElement;
+import js.html.SourceElement;
 import js.html.audio.AudioBufferSourceNode;
 import js.html.audio.AudioContext;
 import js.Browser;
@@ -97,15 +99,25 @@ class AudioManager {
 	* @method unlockAudio
 	*/
 	public function unlockAudio() {
-		if (audioContext == null) return;
-		var bfr = audioContext.createBuffer(1, 1, Waud.preferredSampleRate);
-		var src:AudioBufferSourceNode = audioContext.createBufferSource();
-		src.buffer = bfr;
-		src.connect(audioContext.destination);
-		if (Reflect.field(src, "start") != null) src.start(0);
-		else untyped __js__("src").noteOn(0);
-		if (src.onended != null) src.onended = _unlockCallback;
-		else haxe.Timer.delay(_unlockCallback, 1);
+		if (audioContext != null) {
+			var bfr = audioContext.createBuffer(1, 1, Waud.preferredSampleRate);
+			var src:AudioBufferSourceNode = audioContext.createBufferSource();
+			src.buffer = bfr;
+			src.connect(audioContext.destination);
+			if (Reflect.field(src, "start") != null) src.start(0);
+			else untyped __js__("src").noteOn(0);
+			if (src.onended != null) src.onended = _unlockCallback;
+			else haxe.Timer.delay(_unlockCallback, 1);
+		}
+		else {
+			var audio:AudioElement = Browser.document.createAudioElement();
+			var source:SourceElement = Browser.document.createSourceElement();
+			source.src = "data:audio/wave;base64,UklGRjIAAABXQVZFZm10IBIAAAABAAEAQB8AAEAfAAABAAgAAABmYWN0BAAAAAAAAABkYXRhAAAAAA==";
+			audio.appendChild(source);
+			Browser.document.appendChild(audio);
+			audio.play();
+			_unlockCallback();
+		}
 	}
 
 	inline function _unlockCallback() {
