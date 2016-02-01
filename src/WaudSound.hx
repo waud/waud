@@ -166,12 +166,12 @@ import haxe.Json;
 	*
 	* @method play
 	* @param {String} [spriteName] - Sprite name to play.
-	* @return {IWaudSound} sound instance
+	* @return {Int} sound id
 	* @example
 	*     snd.play();
 	*     snd.play("bell");
 	*/
-	public function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties = null):IWaudSound {
+	public function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties = null):Int {
 		if (_snd == null) return null;
 		if (spriteName != null) {
 			for (snd in _spriteData.sprite) {
@@ -181,8 +181,7 @@ import haxe.Json;
 				}
 			}
 		}
-		_snd.play(spriteName, soundProps);
-		return this;
+		return _snd.play(spriteName, soundProps);
 	}
 
 	/**

@@ -53,7 +53,7 @@ module.exports = function (grunt) {
                     extension: ".hx",
                     paths: "./src",
                     outdir: "../adireddy.github.io/docs/waud/",
-                    themedir: "../adireddy.github.io/docs/yui/themes/yuidoc-theme-blue",
+                    themedir: "../adireddy.github.io/docs/yui/themes/waud-theme",
                     logo: "./sample/assets/logo.png"
             }
         }

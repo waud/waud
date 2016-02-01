@@ -6,6 +6,8 @@ import js.html.audio.AudioBuffer;
 
 @:keep class WebAudioAPISound extends BaseSound implements IWaudSound {
 
+	var _srcNodes:Array<AudioBufferSourceNode>;
+	var _gainNodes:Array<Dynamic>;
 	var _manager:AudioManager;
 	var _snd:AudioBufferSourceNode;
 	var _gainNode:GainNode;
@@ -17,6 +19,8 @@ import js.html.audio.AudioBuffer;
 		super(url, options);
 		_playStartTime = 0;
 		_pauseTime = 0;
+		_srcNodes = [];
+		_gainNodes = [];
 		_manager = Waud.audioManager;
 		if (_options.preload) load();
 	}
@@ -48,6 +52,8 @@ import js.html.audio.AudioBuffer;
 		 else _gainNode = untyped __js__("this._manager.audioContext").createGainNode();
 		source.connect(_gainNode);
 		_gainNode.connect(_manager.audioContext.destination);
+		_srcNodes.push(source);
+		_gainNodes.push(_gainNode);
 		return source;
 	}
 
@@ -66,13 +72,12 @@ import js.html.audio.AudioBuffer;
 		return this;
 	}
 
-	public function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties):IWaudSound {
+	public function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties):Int {
 		if (!_isLoaded) {
 			trace("sound not loaded");
-			return this;
+			return -1;
 		}
-		if (_muted) return this;
-		if (_isPlaying) destroy();
+		if (_muted) return -1;
 		var start:Float = 0;
 		var end:Float = -1;
 		if (isSpriteSound && soundProps != null) {
@@ -105,11 +110,9 @@ import js.html.audio.AudioBuffer;
 					if (_options.onend != null) _options.onend(this);
 				}
 			}
-
-			if(_manager.playingSounds.get(url) == null) _manager.playingSounds.set(url, _snd);
 		}
 
-		return this;
+		return _srcNodes.indexOf(_snd);
 	}
 
 	public function isPlaying():Bool {
@@ -141,16 +144,12 @@ import js.html.audio.AudioBuffer;
 	public function stop() {
 		_pauseTime = 0;
 		if (_snd == null || !_isLoaded || !_isPlaying) return;
-		_isPlaying = false;
-		if (Reflect.field(_snd, "stop") != null) _snd.stop(0);
-		else untyped __js__("this._snd").noteOff(0);
+		destroy();
 	}
 
 	public function pause() {
         if (_snd == null || !_isLoaded || !_isPlaying) return;
-		_isPlaying = false;
-		if (Reflect.field(_snd, "stop") != null) _snd.stop(0);
-		else untyped __js__("this._snd").noteOff(0);
+		destroy();
 		_pauseTime += _manager.audioContext.currentTime - _playStartTime;
 	}
 
@@ -170,18 +169,21 @@ import js.html.audio.AudioBuffer;
 	}
 
 	public function destroy() {
-		if (_snd != null) {
-			if (_isPlaying) {
-				if (Reflect.field(_snd, "stop") != null) _snd.stop(0);
-				else untyped __js__("this._snd").noteOff(0);
+		for (src in _srcNodes) {
+			if (Reflect.field(src, "stop") != null) src.stop(0);
+			else if (Reflect.field(src, "noteOff") != null) {
+				try { untyped __js__("this.src").noteOff(0); } catch(e:Dynamic) {}
 			}
-			_snd.disconnect();
-			_snd = null;
+			src.disconnect();
+			src = null;
 		}
-		if (_gainNode != null) {
-			_gainNode.disconnect();
-			_gainNode = null;
+		for (gain in _gainNodes) {
+			gain.disconnect();
+			gain = null;
 		}
+		_srcNodes = [];
+		_gainNodes = [];
+
 		_isPlaying = false;
 	}
 }

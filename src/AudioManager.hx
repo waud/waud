@@ -34,15 +34,6 @@ class AudioManager {
 	public var bufferList:Map<String, Dynamic>;
 
 	/**
-	* Reference to playing sounds.
-	*
-	* @property playingSounds
-	* @protected
-	* @type {Map}
-	*/
-	public var playingSounds:Map<String, Dynamic>;
-
-	/**
 	* Audio Context Class determined based on the browser type. Refer {{#crossLink "AudioManager/checkWebAudioAPISupport:method"}}{{/crossLink}} method.
 	*
 	* @property AudioContextClass
@@ -62,7 +53,6 @@ class AudioManager {
 	*/
 	public function new() {
 		bufferList = new Map();
-		playingSounds = new Map();
 
 		types = new Map();
 		types.set("mp3", "audio/mpeg");
@@ -158,7 +148,6 @@ class AudioManager {
 		}
 		audioContext = null;
 		bufferList = null;
-		playingSounds = null;
 		types = null;
 	}
 

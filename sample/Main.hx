@@ -71,7 +71,7 @@ class Main extends Application {
 		label = new Text("Sprite: ", { font: "26px Tahoma", fill:"#FFFFFF" });
 		_btnContainer.addChild(label);
 		label.position.y = 200;
-		_addButton("Glass", 120, 200, 60, 30, function() { _audSprite.play("glass").onEnd(function(s) { trace("ONEND"); }); });
+		_addButton("Glass", 120, 200, 60, 30, function() { _audSprite.play("glass"); });
 		_addButton("Bell", 180, 200, 60, 30, function() { _audSprite.play("bell"); });
 		_addButton("Can", 240, 200, 60, 30, function() { _audSprite.play("canopening"); });
 

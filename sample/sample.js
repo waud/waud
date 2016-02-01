@@ -7,7 +7,6 @@ function $extend(from, fields) {
 }
 var AudioManager = function() {
 	this.bufferList = new haxe_ds_StringMap();
-	this.playingSounds = new haxe_ds_StringMap();
 	this.types = new haxe_ds_StringMap();
 	this.types.set("mp3","audio/mpeg");
 	this.types.set("ogg","audio/ogg");
@@ -67,7 +66,6 @@ AudioManager.prototype = {
 		if(this.audioContext != null && (this.audioContext.close != null && this.audioContext.close != "")) this.audioContext.close();
 		this.audioContext = null;
 		this.bufferList = null;
-		this.playingSounds = null;
 		this.types = null;
 	}
 };
@@ -279,9 +277,9 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 		var _g = this;
 		if(!this._isLoaded || this._snd == null) {
 			console.log("sound not loaded");
-			return this;
+			return -1;
 		}
-		if(this._muted) return this;
+		if(this._muted) return -1;
 		if(this.isSpriteSound && soundProps != null) {
 			this._snd.currentTime = soundProps.start;
 			if(this._tmr != null) this._tmr.stop();
@@ -290,7 +288,7 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 			},Math.ceil(soundProps.duration * 1000));
 		}
 		if(!this._isPlaying) this._snd.play();
-		return this;
+		return 0;
 	}
 	,isPlaying: function() {
 		return this._isPlaying;
@@ -338,6 +336,18 @@ HxOverrides.cca = function(s,index) {
 	var x = s.charCodeAt(index);
 	if(x != x) return undefined;
 	return x;
+};
+HxOverrides.indexOf = function(a,obj,i) {
+	var len = a.length;
+	if(i < 0) {
+		i += len;
+		if(i < 0) i = 0;
+	}
+	while(i < len) {
+		if(a[i] === obj) return i;
+		i++;
+	}
+	return -1;
 };
 var pixi_plugins_app_Application = function() {
 	this._animationFrameId = null;
@@ -481,9 +491,7 @@ var Main = function() {
 	this._btnContainer.addChild(label);
 	label.position.y = 200;
 	this._addButton("Glass",120,200,60,30,function() {
-		_g._audSprite.play("glass").onEnd(function(s) {
-			console.log("ONEND");
-		});
+		_g._audSprite.play("glass");
 	});
 	this._addButton("Bell",180,200,60,30,function() {
 		_g._audSprite.play("bell");
@@ -1025,8 +1033,7 @@ WaudSound.prototype = {
 				}
 			}
 		}
-		this._snd.play(spriteName,soundProps);
-		return this;
+		return this._snd.play(spriteName,soundProps);
 	}
 	,isPlaying: function() {
 		if(this._snd == null) return false;
@@ -1121,6 +1128,8 @@ var WebAudioAPISound = function(url,options) {
 	BaseSound.call(this,url,options);
 	this._playStartTime = 0;
 	this._pauseTime = 0;
+	this._srcNodes = [];
+	this._gainNodes = [];
 	this._manager = Waud.audioManager;
 	if(this._options.preload) this.load();
 };
@@ -1151,6 +1160,8 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		if(this._manager.audioContext.createGain != null) this._gainNode = this._manager.audioContext.createGain(); else this._gainNode = this._manager.audioContext.createGainNode();
 		source.connect(this._gainNode);
 		this._gainNode.connect(this._manager.audioContext.destination);
+		this._srcNodes.push(source);
+		this._gainNodes.push(this._gainNode);
 		return source;
 	}
 	,load: function(callback) {
@@ -1169,10 +1180,9 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		var _g = this;
 		if(!this._isLoaded) {
 			console.log("sound not loaded");
-			return this;
+			return -1;
 		}
-		if(this._muted) return this;
-		if(this._isPlaying) this.destroy();
+		if(this._muted) return -1;
 		var start = 0;
 		var end = -1;
 		if(this.isSpriteSound && soundProps != null) {
@@ -1197,9 +1207,8 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 					if(_g._options.onend != null) _g._options.onend(_g);
 				}
 			};
-			if(this._manager.playingSounds.get(this.url) == null) this._manager.playingSounds.set(this.url,this._snd);
 		}
-		return this;
+		return HxOverrides.indexOf(this._srcNodes,this._snd,0);
 	}
 	,isPlaying: function() {
 		return this._isPlaying;
@@ -1224,13 +1233,11 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 	,stop: function() {
 		this._pauseTime = 0;
 		if(this._snd == null || !this._isLoaded || !this._isPlaying) return;
-		this._isPlaying = false;
-		if(Reflect.field(this._snd,"stop") != null) this._snd.stop(0); else this._snd.noteOff(0);
+		this.destroy();
 	}
 	,pause: function() {
 		if(this._snd == null || !this._isLoaded || !this._isPlaying) return;
-		this._isPlaying = false;
-		if(Reflect.field(this._snd,"stop") != null) this._snd.stop(0); else this._snd.noteOff(0);
+		this.destroy();
 		this._pauseTime += this._manager.audioContext.currentTime - this._playStartTime;
 	}
 	,onEnd: function(callback) {
@@ -1246,17 +1253,29 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		return this;
 	}
 	,destroy: function() {
-		if(this._snd != null) {
-			if(this._isPlaying) {
-				if(Reflect.field(this._snd,"stop") != null) this._snd.stop(0); else this._snd.noteOff(0);
+		var _g = 0;
+		var _g1 = this._srcNodes;
+		while(_g < _g1.length) {
+			var src = _g1[_g];
+			++_g;
+			if(Reflect.field(src,"stop") != null) src.stop(0); else if(Reflect.field(src,"noteOff") != null) try {
+				this.src.noteOff(0);
+			} catch( e ) {
+				if (e instanceof js__$Boot_HaxeError) e = e.val;
 			}
-			this._snd.disconnect();
-			this._snd = null;
+			src.disconnect();
+			src = null;
 		}
-		if(this._gainNode != null) {
-			this._gainNode.disconnect();
-			this._gainNode = null;
+		var _g2 = 0;
+		var _g11 = this._gainNodes;
+		while(_g2 < _g11.length) {
+			var gain = _g11[_g2];
+			++_g2;
+			gain.disconnect();
+			gain = null;
 		}
+		this._srcNodes = [];
+		this._gainNodes = [];
 		this._isPlaying = false;
 	}
 });
@@ -1669,6 +1688,9 @@ msignal_SlotList.prototype = {
 };
 var $_, $fid = 0;
 function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id__ = $fid++; var f; if( o.hx__closures__ == null ) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__]; if( f == null ) { f = function(){ return f.method.apply(f.scope, arguments); }; f.scope = o; f.method = m; o.hx__closures__[m.__id__] = f; } return f; }
+if(Array.prototype.indexOf) HxOverrides.indexOf = function(a,o,i) {
+	return Array.prototype.indexOf.call(a,o,i);
+};
 String.__name__ = true;
 Array.__name__ = true;
 Date.__name__ = ["Date"];
