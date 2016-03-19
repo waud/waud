@@ -80,4 +80,4 @@ This content is released under the [MIT](http://opensource.org/licenses/MIT) Lic
 
 ### Contributor Code of Conduct ###
 
-[Code of Conduct](https://github.com/CoralineAda/contributor_covenant) is adapted from [Contributor Covenant, version 1.3.0](http://contributor-covenant.org/version/1/3/0/)
+[Code of Conduct](https://github.com/CoralineAda/contributor_covenant) is adapted from [Contributor Covenant, version 1.4](http://contributor-covenant.org/version/1/4)
