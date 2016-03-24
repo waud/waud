@@ -1,5 +1,5 @@
 engines:
-  haxe-checkstyle:
+  haxe:
     enabled: true
 
 ratings:
