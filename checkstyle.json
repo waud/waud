@@ -2,13 +2,23 @@
     "defaultSeverity": "INFO",
     "checks": [
 	{
-	    "type": "Anonymous"
+	    "type": "Anonymous",
+	    "props": {
+		"severity": "ERROR"
+	    }
 	},
 	{
-	    "type": "ArrayAccess"
+	    "type": "ArrayAccess",
+	    "props": {
+		"severity": "INFO"
+	    }
+
 	},
 	{
-	    "type": "ArrayLiteral"
+	    "type": "ArrayLiteral",
+	    "props": {
+		"severity": "WARNING"
+	    }
 	},
 	{
 	    "type": "AvoidStarImport"
@@ -42,10 +52,17 @@
 	    "type": "CyclomaticComplexity"
 	},
 	{
-	    "type": "DefaultComesLast"
+	    "type": "DefaultComesLast",
+	    "props": {
+		"severity": "WARNING"
+	    }
+
 	},
 	{
-	    "type": "ERegLiteral"
+	    "type": "ERegLiteral",
+	    "props": {
+		"severity": "WARNING"
+	    }
 	},
 	{
 	    "props": {
@@ -81,7 +98,8 @@
 	},
 	{
 	    "props": {
-		"max": 2000
+		"max": 2000,
+		"severity": "ERROR"
 	    },
 	    "type": "FileLength"
 	},
@@ -106,7 +124,10 @@
 	    "type": "IndentationCharacter"
 	},
 	{
-	    "type": "InnerAssignment"
+	    "type": "InnerAssignment",
+	    "props": {
+		"severity": "WARNING"
+	    }
 	},
 	{
 	    "props": {
@@ -139,7 +160,8 @@
 	{
 	    "props": {
 		"max": 160,
-		"ignorePattern": "(^@desc)|(LONG LINE TEST)"
+		"ignorePattern": "(^@desc)|(LONG LINE TEST)",
+		"severity": "ERROR"
 	    },
 	    "type": "LineLength"
 	},
@@ -212,7 +234,8 @@
 	},
 	{
 	    "props": {
-		"max": 50
+		"max": 50,
+		"severity": "ERROR"
 	    },
 	    "type": "MethodLength"
 	},
@@ -245,7 +268,10 @@
 	    "type": "MultipleStringLiterals"
 	},
 	{
-	    "type": "MultipleVariableDeclarations"
+	    "type": "MultipleVariableDeclarations",
+	    "props": {
+		"severity": "WARNING"
+	    }
 	},
 	{
 	    "props": {
@@ -366,7 +392,7 @@
 	{
 	    "props": {
 		"max": 2,
-		"severity": "IGNORE"
+		"severity": "WARNING"
 	    },
 	    "type": "ReturnCount"
 	},
@@ -402,10 +428,16 @@
 	    "type": "SeparatorWrap"
 	},
 	{
-	    "type": "SimplifyBooleanExpression"
+	    "type": "SimplifyBooleanExpression",
+	    "props": {
+		"severity": "WARNING"
+	    }
 	},
 	{
-	    "type": "SimplifyBooleanReturn"
+	    "type": "SimplifyBooleanReturn",
+	    "props": {
+		"severity": "WARNING"
+	    }
 	},
 	{
 	    "props": {
@@ -469,7 +501,10 @@
 	    "type": "UnusedImport"
 	},
 	{
-	    "type": "VariableInitialisation"
+	    "type": "VariableInitialisation",
+	    "props": {
+		"severity": "WARNING"
+	    }
 	},
 	{
 	    "props": {
