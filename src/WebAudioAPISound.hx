@@ -48,8 +48,8 @@ import js.html.audio.AudioBuffer;
 	function _makeSource(buffer:AudioBuffer):AudioBufferSourceNode {
 		var source:AudioBufferSourceNode = _manager.audioContext.createBufferSource();
 		source.buffer = buffer;
-		 if (untyped __js__("this._manager.audioContext").createGain != null) _gainNode = _manager.audioContext.createGain();
-		 else _gainNode = untyped __js__("this._manager.audioContext").createGainNode();
+		if (untyped __js__("this._manager.audioContext").createGain != null) _gainNode = _manager.audioContext.createGain();
+		else _gainNode = untyped __js__("this._manager.audioContext").createGainNode();
 		source.connect(_gainNode);
 		_gainNode.connect(_manager.audioContext.destination);
 		_srcNodes.push(source);
@@ -148,7 +148,7 @@ import js.html.audio.AudioBuffer;
 	}
 
 	public function pause() {
-        if (_snd == null || !_isLoaded || !_isPlaying) return;
+		if (_snd == null || !_isLoaded || !_isPlaying) return;
 		destroy();
 		_pauseTime += _manager.audioContext.currentTime - _playStartTime;
 	}
@@ -172,7 +172,10 @@ import js.html.audio.AudioBuffer;
 		for (src in _srcNodes) {
 			if (Reflect.field(src, "stop") != null) src.stop(0);
 			else if (Reflect.field(src, "noteOff") != null) {
-				try { untyped __js__("this.src").noteOff(0); } catch(e:Dynamic) {}
+				try {
+					untyped __js__("this.src").noteOff(0);
+				}
+				catch (e:Dynamic) {}
 			}
 			src.disconnect();
 			src = null;
