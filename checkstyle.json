@@ -118,12 +118,6 @@
 	    "type": "HiddenField"
 	},
 	{
-	    "props": {
-		"character": "tab"
-	    },
-	    "type": "IndentationCharacter"
-	},
-	{
 	    "type": "InnerAssignment",
 	    "props": {
 		"severity": "WARNING"
@@ -242,7 +236,20 @@
 	{
 	    "props": {
 		"ignoreExtern": true,
-		"format": "^[a-z][a-zA-Z0-9]*$"
+		"format": "^[a-z][a-zA-Z0-9]*$",
+		"tokens": [
+		    "PUBLIC"
+		]
+	    },
+	    "type": "MethodName"
+	},
+	{
+	    "props": {
+		"ignoreExtern": true,
+		"format": "^_[a-z][a-zA-Z0-9]*$",
+		"tokens": [
+		    "PRIVATE"
+		]
 	    },
 	    "type": "MethodName"
 	},
@@ -452,9 +459,6 @@
 		"noSpaceAroundUnop": true
 	    },
 	    "type": "Spacing"
-	},
-	{
-	    "type": "TabForAligning"
 	},
 	{
 	    "type": "TrailingWhitespace"
