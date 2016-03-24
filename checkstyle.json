@@ -263,7 +263,8 @@
 	    "props": {
 		"minLength": 2,
 		"ignore": "^\\s+$",
-		"allowDuplicates": 2
+		"allowDuplicates": 2,
+		"severity": "WARNING"
 	    },
 	    "type": "MultipleStringLiterals"
 	},
@@ -451,9 +452,6 @@
 		"noSpaceAroundUnop": true
 	    },
 	    "type": "Spacing"
-	},
-	{
-	    "type": "TODOComment"
 	},
 	{
 	    "type": "TabForAligning"
