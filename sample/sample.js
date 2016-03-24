@@ -399,7 +399,7 @@ pixi_plugins_app_Application.prototype = {
 		renderingOptions.preserveDrawingBuffer = this.preserveDrawingBuffer;
 		if(rendererType == "auto") this.renderer = PIXI.autoDetectRenderer(this.width,this.height,renderingOptions); else if(rendererType == "canvas") this.renderer = new PIXI.CanvasRenderer(this.width,this.height,renderingOptions); else this.renderer = new PIXI.WebGLRenderer(this.width,this.height,renderingOptions);
 		if(this.roundPixels) this.renderer.roundPixels = true;
-		window.document.body.appendChild(this.renderer.view);
+		if(parentDom == null) window.document.body.appendChild(this.renderer.view); else parentDom.appendChild(this.renderer.view);
 		this.resumeRendering();
 		this.addStats();
 	}
