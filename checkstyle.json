@@ -45,9 +45,6 @@
 	    "type": "DefaultComesLast"
 	},
 	{
-	    "type": "Dynamic"
-	},
-	{
 	    "type": "ERegLiteral"
 	},
 	{
