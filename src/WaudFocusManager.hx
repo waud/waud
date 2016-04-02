@@ -4,6 +4,12 @@ import js.Browser;
 
 	static inline var FOCUS_STATE:String = "focus";
 	static inline var BLUR_STATE:String = "blur";
+	static inline var ON_FOCUS:String = "onfocus";
+	static inline var ON_BLUR:String = "onblur";
+	static inline var PAGE_SHOW:String = "pageshow";
+	static inline var PAGE_HIDE:String = "pagehide";
+	static inline var WINDOW:String = "window";
+	static inline var DOCUMENT:String = "document";
 
 	/**
 	* Focus callback function.
@@ -64,18 +70,18 @@ import js.Browser;
 		}
 
 		if (Reflect.field(Browser.window, "addEventListener") != null) {
-			untyped __js__("window").addEventListener("focus", _focus);
-			untyped __js__("window").addEventListener("blur", _blur);
-			untyped __js__("window").addEventListener("pageshow", _focus);
-			untyped __js__("window").addEventListener("pagehide", _blur);
-			untyped __js__("document").addEventListener(_visibilityChange, _handleVisibilityChange);
+			untyped __js__(WINDOW).addEventListener(FOCUS_STATE, _focus);
+			untyped __js__(WINDOW).addEventListener(BLUR_STATE, _blur);
+			untyped __js__(WINDOW).addEventListener(PAGE_SHOW, _focus);
+			untyped __js__(WINDOW).addEventListener(PAGE_HIDE, _blur);
+			untyped __js__(DOCUMENT).addEventListener(_visibilityChange, _handleVisibilityChange);
 		}
 		else if (Reflect.field(Browser.window, "attachEvent") != null) {
-			untyped __js__("window").attachEvent("onfocus", _focus);
-			untyped __js__("window").attachEvent("onblur", _blur);
-			untyped __js__("window").attachEvent("pageshow", _focus);
-			untyped __js__("window").attachEvent("pagehide", _blur);
-			untyped __js__("document").attachEvent(_visibilityChange, _handleVisibilityChange);
+			untyped __js__(WINDOW).attachEvent(ON_FOCUS, _focus);
+			untyped __js__(WINDOW).attachEvent(ON_BLUR, _blur);
+			untyped __js__(WINDOW).attachEvent(PAGE_SHOW, _focus);
+			untyped __js__(WINDOW).attachEvent(PAGE_HIDE, _blur);
+			untyped __js__(DOCUMENT).attachEvent(_visibilityChange, _handleVisibilityChange);
 		}
 		else {
 			Browser.window.onload = function () {
@@ -129,18 +135,18 @@ import js.Browser;
 	*/
 	public function clearEvents() {
 		if (Reflect.field(Browser.window, "removeEventListener") != null) {
-			untyped __js__("window").removeEventListener("focus", _focus);
-			untyped __js__("window").removeEventListener("blur", _blur);
-			untyped __js__("window").removeEventListener("pageshow", _focus);
-			untyped __js__("window").removeEventListener("pagehide", _blur);
-			untyped __js__("window").removeEventListener(_visibilityChange, _handleVisibilityChange);
+			untyped __js__(WINDOW).removeEventListener(FOCUS_STATE, _focus);
+			untyped __js__(WINDOW).removeEventListener(BLUR_STATE, _blur);
+			untyped __js__(WINDOW).removeEventListener(PAGE_SHOW, _focus);
+			untyped __js__(WINDOW).removeEventListener(PAGE_HIDE, _blur);
+			untyped __js__(WINDOW).removeEventListener(_visibilityChange, _handleVisibilityChange);
 		}
 		else if (Reflect.field(Browser.window, "removeEvent") != null) {
-			untyped __js__("window").removeEvent("onfocus", _focus);
-			untyped __js__("window").removeEvent("onblur", _blur);
-			untyped __js__("window").removeEvent("pageshow", _focus);
-			untyped __js__("window").removeEvent("pagehide", _blur);
-			untyped __js__("window").removeEvent(_visibilityChange, _handleVisibilityChange);
+			untyped __js__(WINDOW).removeEvent(ON_FOCUS, _focus);
+			untyped __js__(WINDOW).removeEvent(ON_BLUR, _blur);
+			untyped __js__(WINDOW).removeEvent(PAGE_SHOW, _focus);
+			untyped __js__(WINDOW).removeEvent(PAGE_HIDE, _blur);
+			untyped __js__(WINDOW).removeEvent(_visibilityChange, _handleVisibilityChange);
 		}
 		else {
 			Browser.window.onfocus = null;

@@ -32,7 +32,8 @@
 	{
 	    "props": {
 		"ignoreExtern": true,
-		"format": "^[A-Z][A-Z0-9]*(_[A-Z0-9_]+)*$"
+		"format": "^[A-Z][A-Z0-9]*(_[A-Z0-9_]+)*$",
+		"tokens": ["INLINE"]
 	    },
 	    "type": "ConstantName"
 	},
@@ -88,8 +89,7 @@
 	{
 	    "props": {
 		"max": 1,
-		"requireEmptyLineAfterAbstract": false,
-		"requireEmptyLineAfterClass": false
+		"requireEmptyLineAfterInterface": false
 	    },
 	    "type": "EmptyLines"
 	},
@@ -126,7 +126,7 @@
 	{
 	    "props": {
 		"allowMarkerInterfaces": true,
-		"allowProperties": false
+		"allowProperties": true
 	    },
 	    "type": "Interface"
 	},
@@ -185,13 +185,9 @@
 		    0,
 		    1,
 		    2,
-		    3,
-		    5,
-		    8,
-		    13,
-		    21,
-		    34,
-		    100
+		    4,
+		    200,
+		    1000
 		]
 	    },
 	    "type": "MagicNumber"
@@ -399,7 +395,7 @@
 	},
 	{
 	    "props": {
-		"max": 2,
+		"max": 3,
 		"severity": "WARNING"
 	    },
 	    "type": "ReturnCount"

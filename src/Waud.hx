@@ -10,6 +10,9 @@ import js.Browser;
 */
 @:expose @:keep class Waud {
 
+	static inline var PROBABLY:String = "probably";
+	static inline var MAYBE:String = "maybe";
+
 	/**
 	* Tells whether to use web audio api or not.
 	*
@@ -321,7 +324,7 @@ import js.Browser;
 	*/
 	public static function isOGGSupported():Bool {
 		var canPlay = __audioElement.canPlayType('audio/ogg; codecs="vorbis"');
-		return (isHTML5AudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe"));
+		return (isHTML5AudioSupported && canPlay != null && (canPlay == PROBABLY || canPlay == MAYBE));
 	}
 
 	/**
@@ -335,7 +338,7 @@ import js.Browser;
 	*/
 	public static function isWAVSupported():Bool {
 		var canPlay = __audioElement.canPlayType('audio/wav; codecs="1"');
-		return (isHTML5AudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe"));
+		return (isHTML5AudioSupported && canPlay != null && (canPlay == PROBABLY || canPlay == MAYBE));
 	}
 
 	/**
@@ -349,7 +352,7 @@ import js.Browser;
 	*/
 	public static function isMP3Supported():Bool {
 		var canPlay = __audioElement.canPlayType('audio/mpeg;');
-		return (isHTML5AudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe"));
+		return (isHTML5AudioSupported && canPlay != null && (canPlay == PROBABLY || canPlay == MAYBE));
 	}
 
 	/**
@@ -363,7 +366,7 @@ import js.Browser;
 	*/
 	public static function isAACSupported():Bool {
 		var canPlay = __audioElement.canPlayType('audio/aac;');
-		return (isHTML5AudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe"));
+		return (isHTML5AudioSupported && canPlay != null && (canPlay == PROBABLY || canPlay == MAYBE));
 	}
 
 	/**
@@ -377,7 +380,7 @@ import js.Browser;
 	*/
 	public static function isM4ASupported():Bool {
 		var canPlay = __audioElement.canPlayType('audio/x-m4a;');
-		return (isHTML5AudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe"));
+		return (isHTML5AudioSupported && canPlay != null && (canPlay == PROBABLY || canPlay == MAYBE));
 	}
 
 	/**

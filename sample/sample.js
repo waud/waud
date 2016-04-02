@@ -981,11 +981,11 @@ var WaudSound = $hx_exports.WaudSound = function(url,options) {
 WaudSound.__name__ = true;
 WaudSound.__interfaces__ = [IWaudSound];
 WaudSound.prototype = {
-	_loadSpriteJson: function(url) {
+	_loadSpriteJson: function(jsonUrl) {
 		var _g = this;
 		var xobj = new XMLHttpRequest();
 		xobj.overrideMimeType("application/json");
-		xobj.open("GET",url,true);
+		xobj.open("GET",jsonUrl,true);
 		xobj.onreadystatechange = function() {
 			if(xobj.readyState == 4 && xobj.status == 200) {
 				_g._spriteData = JSON.parse(xobj.response);
@@ -994,9 +994,9 @@ WaudSound.prototype = {
 		};
 		xobj.send(null);
 	}
-	,_init: function(url) {
-		this.url = url;
-		if(Waud.isWebAudioSupported && Waud.useWebAudio && (this._options == null || this._options.webaudio == null || this._options.webaudio)) this._snd = new WebAudioAPISound(url,this._options); else if(Waud.isHTML5AudioSupported) this._snd = new HTML5Sound(url,this._options); else {
+	,_init: function(soundUrl) {
+		this.url = soundUrl;
+		if(Waud.isWebAudioSupported && Waud.useWebAudio && (this._options == null || this._options.webaudio == null || this._options.webaudio)) this._snd = new WebAudioAPISound(this.url,this._options); else if(Waud.isHTML5AudioSupported) this._snd = new HTML5Sound(this.url,this._options); else {
 			console.log("no audio support in this browser");
 			return;
 		}
@@ -1709,12 +1709,20 @@ Perf.FPS_TXT_CLR = "#000000";
 Perf.MS_TXT_CLR = "#000000";
 Perf.MEM_TXT_CLR = "#FFFFFF";
 Perf.INFO_TXT_CLR = "#000000";
+Waud.PROBABLY = "probably";
+Waud.MAYBE = "maybe";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, loop : false, preload : true, webaudio : true, volume : 1};
 Waud.preferredSampleRate = 44100;
 Waud.isMuted = false;
 WaudFocusManager.FOCUS_STATE = "focus";
 WaudFocusManager.BLUR_STATE = "blur";
+WaudFocusManager.ON_FOCUS = "onfocus";
+WaudFocusManager.ON_BLUR = "onblur";
+WaudFocusManager.PAGE_SHOW = "pageshow";
+WaudFocusManager.PAGE_HIDE = "pagehide";
+WaudFocusManager.WINDOW = "window";
+WaudFocusManager.DOCUMENT = "document";
 Main.main();
 })(typeof console != "undefined" ? console : {log:function(){}}, typeof window != "undefined" ? window : exports);
 

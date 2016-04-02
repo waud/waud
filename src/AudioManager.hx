@@ -43,6 +43,8 @@ class AudioManager {
 	*/
 	static var AudioContextClass:Dynamic;
 
+	static inline var AUDIO_CONTEXT:String = "this.audioContext";
+
 	/**
 	* Audio Manager class instantiated in {{#crossLink "Waud/init:method"}}Waud.init{{/crossLink}} method.
 	*
@@ -128,7 +130,7 @@ class AudioManager {
 			try {
 				if (AudioContextClass != null) audioContext = cast Type.createInstance(AudioContextClass, []);
 			}
-			catch(e:Dynamic) {
+			catch (e:Dynamic) {
 				audioContext = null;
 			}
 		}
@@ -143,8 +145,8 @@ class AudioManager {
 	* @method destroy
 	*/
 	public function destroy() {
-		if (audioContext != null && untyped __js__("this.audioContext").close != null && untyped __js__("this.audioContext").close != "") {
-			untyped __js__("this.audioContext").close();
+		if (audioContext != null && untyped __js__(AUDIO_CONTEXT).close != null && untyped __js__(AUDIO_CONTEXT).close != "") {
+			untyped __js__(AUDIO_CONTEXT).close();
 		}
 		audioContext = null;
 		bufferList = null;
@@ -161,7 +163,7 @@ class AudioManager {
 	*/
 	public function suspendContext() {
 		if (audioContext != null) {
-			if (untyped __js__("this.audioContext").suspend != null) untyped __js__("this.audioContext").suspend();
+			if (untyped __js__(AUDIO_CONTEXT).suspend != null) untyped __js__(AUDIO_CONTEXT).suspend();
 		}
 	}
 
@@ -174,7 +176,7 @@ class AudioManager {
 	*/
 	public function resumeContext() {
 		if (audioContext != null) {
-			if (untyped __js__("this.audioContext").resume != null) untyped __js__("this.audioContext").resume();
+			if (untyped __js__(AUDIO_CONTEXT).resume != null) untyped __js__(AUDIO_CONTEXT).resume();
 		}
 	}
 }
