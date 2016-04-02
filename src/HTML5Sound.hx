@@ -110,7 +110,8 @@ import js.html.AudioElement;
 					play(spriteName, soundProps);
 				}
 				else stop();
-			}, Math.ceil(soundProps.duration * 1000));
+			},
+			Math.ceil(soundProps.duration * 1000));
 		}
 		if (!_isPlaying) _snd.play();
 		return 0;
