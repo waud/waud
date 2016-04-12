@@ -111,6 +111,7 @@ import js.html.audio.AudioBuffer;
 				}
 			}
 		}
+		_gainNode.gain.value = _options.volume;
 
 		return _srcNodes.indexOf(_snd);
 	}
@@ -125,8 +126,8 @@ import js.html.audio.AudioBuffer;
 	}
 
 	public function setVolume(val:Float) {
-		if (_gainNode == null || !_isLoaded) return;
 		_options.volume = val;
+		if (_gainNode == null || !_isLoaded) return;
 		_gainNode.gain.value = _options.volume;
 	}
 

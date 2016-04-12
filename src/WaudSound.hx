@@ -47,7 +47,6 @@ import haxe.Json;
 	* 		var audSprite = new WaudSound("assets/sprite.json");
 	* 		audSprite.play("glass");
 	*/
-
 	public function new(url:String, ?options:WaudSoundOptions = null) {
 		if (Waud.audioManager == null) {
 			trace("initialise Waud using Waud.init() before loading sounds");
@@ -75,7 +74,6 @@ import haxe.Json;
 	* @method _loadSpriteJson
 	* @param {String} url - Audio Sprite JSON path.
 	*/
-
 	function _loadSpriteJson(jsonUrl:String) {
 		var xobj = new XMLHttpRequest();
 		xobj.overrideMimeType("application/json");
@@ -96,7 +94,6 @@ import haxe.Json;
 	* @method _init
 	* @param {String} url - Audio file path.
 	*/
-
 	function _init(soundUrl:String) {
 		url = soundUrl;
 		if (Waud.isWebAudioSupported && Waud.useWebAudio && (_options == null || _options.webaudio == null || _options.webaudio)) {
@@ -121,7 +118,6 @@ import haxe.Json;
 	* @example
 	*     snd.setVolume(0.5);
 	*/
-
 	public function setVolume(val:Float) {
 		if (_snd == null) return;
 		_snd.setVolume(val);
@@ -135,7 +131,6 @@ import haxe.Json;
 	* @example
 	*     snd.getVolume();
 	*/
-
 	public function getVolume():Float {
 		if (_snd == null) return 0;
 		return _snd.getVolume();
@@ -149,7 +144,6 @@ import haxe.Json;
 	* @example
 	*     snd.mute(true);
 	*/
-
 	public function mute(val:Bool) {
 		if (_snd == null) return;
 		_snd.mute(val);
@@ -165,7 +159,6 @@ import haxe.Json;
 	*     snd.load();
 	*     snd.load(callback);
 	*/
-
 	public function load(?callback:IWaudSound -> Void):IWaudSound {
 		if (_snd == null) return null;
 		_snd.load(callback);
@@ -182,7 +175,6 @@ import haxe.Json;
 	*     snd.play();
 	*     snd.play("bell");
 	*/
-
 	public function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties = null):Int {
 		if (_snd == null) return null;
 		if (spriteName != null) {
@@ -204,7 +196,6 @@ import haxe.Json;
 	* @example
 	*     snd.isPlaying();
 	*/
-
 	public function isPlaying():Bool {
 		if (_snd == null) return false;
 		return _snd.isPlaying();
@@ -218,7 +209,6 @@ import haxe.Json;
 	* @example
 	*     snd.loop(true);
 	*/
-
 	public function loop(val:Bool) {
 		if (_snd == null) return;
 		_snd.loop(val);
@@ -231,7 +221,6 @@ import haxe.Json;
 	* @example
 	*     snd.stop();
 	*/
-
 	public function stop() {
 		if (_snd == null) return;
 		_snd.stop();
@@ -244,7 +233,6 @@ import haxe.Json;
 	* @example
 	*     snd.pause();
 	*/
-
 	public function pause() {
 		if (_snd == null) return;
 		_snd.pause();
@@ -259,7 +247,6 @@ import haxe.Json;
 	* @example
 	*     snd.onEnd(callback);
 	*/
-
 	public function onEnd(callback:IWaudSound -> Void):IWaudSound {
 		if (_snd == null) return null;
 		_snd.onEnd(callback);
@@ -275,7 +262,6 @@ import haxe.Json;
 	* @example
 	*     snd.onLoad(callback);
 	*/
-
 	public function onLoad(callback:IWaudSound -> Void):IWaudSound {
 		if (_snd == null) return null;
 		_snd.onLoad(callback);
@@ -291,7 +277,6 @@ import haxe.Json;
 	* @example
 	*     snd.onError(callback);
 	*/
-
 	public function onError(callback:IWaudSound -> Void):IWaudSound {
 		if (_snd == null) return null;
 		_snd.onError(callback);
@@ -305,7 +290,6 @@ import haxe.Json;
 	* @example
 	*     snd.destroy();
 	*/
-
 	public function destroy() {
 		if (_snd == null) return;
 		_snd.destroy();

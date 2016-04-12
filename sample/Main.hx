@@ -146,7 +146,7 @@ class Main extends Application {
 	function _stop() {
 		Waud.stop();
 	}
-    
+
     function _pause() {
 		Waud.pause();
 	}

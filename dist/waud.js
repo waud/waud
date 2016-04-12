@@ -166,11 +166,9 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 		return filename.split(".").pop();
 	}
 	,setVolume: function(val) {
+		if(val >= 0 && val <= 1) this._options.volume = val;
 		if(!this._isLoaded) return;
-		if(val >= 0 && val <= 1) {
-			this._snd.volume = val;
-			this._options.volume = val;
-		}
+		this._snd.volume = this._options.volume;
 	}
 	,getVolume: function() {
 		return this._options.volume;
@@ -741,6 +739,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 				}
 			};
 		}
+		this._gainNode.gain.value = this._options.volume;
 		return HxOverrides.indexOf(this._srcNodes,this._snd,0);
 	}
 	,isPlaying: function() {
@@ -751,8 +750,8 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		this._snd.loop = val;
 	}
 	,setVolume: function(val) {
-		if(this._gainNode == null || !this._isLoaded) return;
 		this._options.volume = val;
+		if(this._gainNode == null || !this._isLoaded) return;
 		this._gainNode.gain.value = this._options.volume;
 	}
 	,getVolume: function() {

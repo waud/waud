@@ -70,11 +70,9 @@ import js.html.AudioElement;
 	}
 
 	public function setVolume(val:Float) {
+		if (val >= 0 && val <= 1) _options.volume = val;
 		if (!_isLoaded) return;
-		if (val >= 0 && val <= 1) {
-			_snd.volume = val;
-			_options.volume = val;
-		}
+		_snd.volume = _options.volume;
 	}
 
 	public function getVolume():Float {
