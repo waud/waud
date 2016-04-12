@@ -1,7 +1,10 @@
 # ![waud logo](https://raw.githubusercontent.com/adireddy/waud/master/logo.png)
 Web Audio Library with HTML5 audio fallback.
 
-[![Build Status](https://travis-ci.org/adireddy/waud.svg?branch=master)](https://travis-ci.org/adireddy/waud) [![npm version](https://badge.fury.io/js/waud.js.svg)](https://badge.fury.io/js/waud.js) [![Code Climate](https://codeclimate.com/github/adireddy/waud/badges/gpa.svg)](https://codeclimate.com/github/adireddy/waud)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
+[![Release](https://img.shields.io/github/release/adireddy/waud.svg)](http://lib.haxe.org/p/waud/)
+[![Build Status](https://travis-ci.org/adireddy/waud.svg?branch=dev)](https://travis-ci.org/adireddy/waud)
+[![npm version](https://badge.fury.io/js/waud.js.svg)](https://badge.fury.io/js/waud.js) [![Code Climate](https://codeclimate.com/github/adireddy/waud/badges/gpa.svg)](https://codeclimate.com/github/adireddy/waud)
 [![Code Climate Issues](https://img.shields.io/codeclimate/issues/github/adireddy/waud.svg)](https://codeclimate.com/github/adireddy/waud/issues)
 
 | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/safari/safari_32x32.png" alt="Safari"> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/chrome/chrome_32x32.png" alt="Chrome"> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/firefox/firefox_32x32.png" alt="Firefox"> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/edge/edge_32x32.png" alt="Edge"> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/opera/opera_32x32.png" alt="Opera"> |
