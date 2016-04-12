@@ -7,7 +7,7 @@ interface IWaudSound {
 	var url:String;
 	var isSpriteSound:Bool;
 	function load(?callback:IWaudSound -> Void):IWaudSound;
-	function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties):IWaudSound;
+	function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties):Int;
 	function stop():Void;
 	function pause():Void;
 	function onEnd(callback:IWaudSound -> Void):IWaudSound;

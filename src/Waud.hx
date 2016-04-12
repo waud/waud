@@ -10,6 +10,9 @@ import js.Browser;
 */
 @:expose @:keep class Waud {
 
+	static inline var PROBABLY:String = "probably";
+	static inline var MAYBE:String = "maybe";
+
 	/**
 	* Tells whether to use web audio api or not.
 	*
@@ -171,7 +174,8 @@ import js.Browser;
 	/**
 	* To initialise the library, make sure you call this first.
 	*
-	* You can also pass an optional parent DOM element to it where all the HTML5 sounds will be appended and also used for touch events to unlock audio on iOS devices.
+	* You can also pass an optional parent DOM element to it where all the HTML5 sounds will be appended
+	* and also used for touch events to unlock audio on iOS devices.
 	*
 	* @static
 	* @method init
@@ -261,8 +265,8 @@ import js.Browser;
 	public static function stop() {
 		if (sounds != null) for (sound in sounds) sound.stop();
 	}
-    
-    /**
+
+	/**
 	* Helper function to pause all the sounds.
 	*
 	* @static
@@ -320,7 +324,7 @@ import js.Browser;
 	*/
 	public static function isOGGSupported():Bool {
 		var canPlay = __audioElement.canPlayType('audio/ogg; codecs="vorbis"');
-		return (isHTML5AudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe"));
+		return (isHTML5AudioSupported && canPlay != null && (canPlay == PROBABLY || canPlay == MAYBE));
 	}
 
 	/**
@@ -334,7 +338,7 @@ import js.Browser;
 	*/
 	public static function isWAVSupported():Bool {
 		var canPlay = __audioElement.canPlayType('audio/wav; codecs="1"');
-		return (isHTML5AudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe"));
+		return (isHTML5AudioSupported && canPlay != null && (canPlay == PROBABLY || canPlay == MAYBE));
 	}
 
 	/**
@@ -348,7 +352,7 @@ import js.Browser;
 	*/
 	public static function isMP3Supported():Bool {
 		var canPlay = __audioElement.canPlayType('audio/mpeg;');
-		return (isHTML5AudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe"));
+		return (isHTML5AudioSupported && canPlay != null && (canPlay == PROBABLY || canPlay == MAYBE));
 	}
 
 	/**
@@ -362,7 +366,7 @@ import js.Browser;
 	*/
 	public static function isAACSupported():Bool {
 		var canPlay = __audioElement.canPlayType('audio/aac;');
-		return (isHTML5AudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe"));
+		return (isHTML5AudioSupported && canPlay != null && (canPlay == PROBABLY || canPlay == MAYBE));
 	}
 
 	/**
@@ -376,7 +380,7 @@ import js.Browser;
 	*/
 	public static function isM4ASupported():Bool {
 		var canPlay = __audioElement.canPlayType('audio/x-m4a;');
-		return (isHTML5AudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe"));
+		return (isHTML5AudioSupported && canPlay != null && (canPlay == PROBABLY || canPlay == MAYBE));
 	}
 
 	/**

@@ -70,11 +70,9 @@ import js.html.AudioElement;
 	}
 
 	public function setVolume(val:Float) {
+		if (val >= 0 && val <= 1) _options.volume = val;
 		if (!_isLoaded) return;
-		if (val >= 0 && val <= 1) {
-			_snd.volume = val;
-			_options.volume = val;
-		}
+		_snd.volume = _options.volume;
 	}
 
 	public function getVolume():Float {
@@ -96,12 +94,12 @@ import js.html.AudioElement;
 		}
 	}
 
-	public function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties):IWaudSound {
+	public function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties):Int {
 		if (!_isLoaded || _snd == null) {
 			trace("sound not loaded");
-			return this;
+			return -1;
 		}
-		if (_muted) return this;
+		if (_muted) return -1;
 		if (isSpriteSound && soundProps != null) {
 			_snd.currentTime = soundProps.start;
 			if (_tmr != null) _tmr.stop();
@@ -110,10 +108,11 @@ import js.html.AudioElement;
 					play(spriteName, soundProps);
 				}
 				else stop();
-			}, Math.ceil(soundProps.duration * 1000));
+			},
+			Math.ceil(soundProps.duration * 1000));
 		}
 		if (!_isPlaying) _snd.play();
-		return this;
+		return 0;
 	}
 
 	public function isPlaying():Bool {

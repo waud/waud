@@ -71,7 +71,7 @@ class Main extends Application {
 		label = new Text("Sprite: ", { font: "26px Tahoma", fill:"#FFFFFF" });
 		_btnContainer.addChild(label);
 		label.position.y = 200;
-		_addButton("Glass", 120, 200, 60, 30, function() { _audSprite.play("glass").onEnd(function(s) { trace("ONEND"); }); });
+		_addButton("Glass", 120, 200, 60, 30, function() { _audSprite.play("glass"); });
 		_addButton("Bell", 180, 200, 60, 30, function() { _audSprite.play("bell"); });
 		_addButton("Can", 240, 200, 60, 30, function() { _audSprite.play("canopening"); });
 
@@ -100,7 +100,7 @@ class Main extends Application {
 		Waud.defaults.onload = _onLoad;
 		_bgSnd = new WaudSound("assets/loop.mp3", { loop:true, autoplay: false, volume: 1, onload: _playBgSound });
 
-		_glassMP3 = new WaudSound("assets/glass.mp3", {preload: false, webaudio: false});
+		_glassMP3 = new WaudSound("assets/glass.mp3");
 		_bellMP3 = new WaudSound("assets/bell.mp3");
 		_canMP3 = new WaudSound("assets/canopening.mp3");
 
@@ -119,8 +119,6 @@ class Main extends Application {
 		_audSprite = new WaudSound("assets/sprite.json");
 
 		_countdown = new WaudSound("assets/countdown.mp3", {webaudio: false});
-
-		_glassMP3.load(_onLoad);
 
 		_resize();
 	}
@@ -148,7 +146,7 @@ class Main extends Application {
 	function _stop() {
 		Waud.stop();
 	}
-    
+
     function _pause() {
 		Waud.pause();
 	}

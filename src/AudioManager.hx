@@ -1,3 +1,5 @@
+import js.html.AudioElement;
+import js.html.SourceElement;
 import js.html.audio.AudioBufferSourceNode;
 import js.html.audio.AudioContext;
 import js.Browser;
@@ -32,15 +34,6 @@ class AudioManager {
 	public var bufferList:Map<String, Dynamic>;
 
 	/**
-	* Reference to playing sounds.
-	*
-	* @property playingSounds
-	* @protected
-	* @type {Map}
-	*/
-	public var playingSounds:Map<String, Dynamic>;
-
-	/**
 	* Audio Context Class determined based on the browser type. Refer {{#crossLink "AudioManager/checkWebAudioAPISupport:method"}}{{/crossLink}} method.
 	*
 	* @property AudioContextClass
@@ -49,6 +42,8 @@ class AudioManager {
 	* @type {AudioContext|webkitAudioContext}
 	*/
 	static var AudioContextClass:Dynamic;
+
+	static inline var AUDIO_CONTEXT:String = "this.audioContext";
 
 	/**
 	* Audio Manager class instantiated in {{#crossLink "Waud/init:method"}}Waud.init{{/crossLink}} method.
@@ -60,7 +55,6 @@ class AudioManager {
 	*/
 	public function new() {
 		bufferList = new Map();
-		playingSounds = new Map();
 
 		types = new Map();
 		types.set("mp3", "audio/mpeg");
@@ -97,15 +91,25 @@ class AudioManager {
 	* @method unlockAudio
 	*/
 	public function unlockAudio() {
-		if (audioContext == null) return;
-		var bfr = audioContext.createBuffer(1, 1, Waud.preferredSampleRate);
-		var src:AudioBufferSourceNode = audioContext.createBufferSource();
-		src.buffer = bfr;
-		src.connect(audioContext.destination);
-		if (Reflect.field(src, "start") != null) src.start(0);
-		else untyped __js__("src").noteOn(0);
-		if (src.onended != null) src.onended = _unlockCallback;
-		else haxe.Timer.delay(_unlockCallback, 1);
+		if (audioContext != null) {
+			var bfr = audioContext.createBuffer(1, 1, Waud.preferredSampleRate);
+			var src:AudioBufferSourceNode = audioContext.createBufferSource();
+			src.buffer = bfr;
+			src.connect(audioContext.destination);
+			if (Reflect.field(src, "start") != null) src.start(0);
+			else untyped __js__("src").noteOn(0);
+			if (src.onended != null) src.onended = _unlockCallback;
+			else haxe.Timer.delay(_unlockCallback, 1);
+		}
+		else {
+			var audio:AudioElement = Browser.document.createAudioElement();
+			var source:SourceElement = Browser.document.createSourceElement();
+			source.src = "data:audio/wave;base64,UklGRjIAAABXQVZFZm10IBIAAAABAAEAQB8AAEAfAAABAAgAAABmYWN0BAAAAAAAAABkYXRhAAAAAA==";
+			audio.appendChild(source);
+			Browser.document.appendChild(audio);
+			audio.play();
+			_unlockCallback();
+		}
 	}
 
 	inline function _unlockCallback() {
@@ -126,7 +130,7 @@ class AudioManager {
 			try {
 				if (AudioContextClass != null) audioContext = cast Type.createInstance(AudioContextClass, []);
 			}
-			catch(e:Dynamic) {
+			catch (e:Dynamic) {
 				audioContext = null;
 			}
 		}
@@ -141,12 +145,11 @@ class AudioManager {
 	* @method destroy
 	*/
 	public function destroy() {
-		if (audioContext != null && untyped __js__("this.audioContext").close != null && untyped __js__("this.audioContext").close != "") {
-			untyped __js__("this.audioContext").close();
+		if (audioContext != null && untyped __js__(AUDIO_CONTEXT).close != null && untyped __js__(AUDIO_CONTEXT).close != "") {
+			untyped __js__(AUDIO_CONTEXT).close();
 		}
 		audioContext = null;
 		bufferList = null;
-		playingSounds = null;
 		types = null;
 	}
 
@@ -160,7 +163,7 @@ class AudioManager {
 	*/
 	public function suspendContext() {
 		if (audioContext != null) {
-			if (untyped __js__("this.audioContext").suspend != null) untyped __js__("this.audioContext").suspend();
+			if (untyped __js__(AUDIO_CONTEXT).suspend != null) untyped __js__(AUDIO_CONTEXT).suspend();
 		}
 	}
 
@@ -173,7 +176,7 @@ class AudioManager {
 	*/
 	public function resumeContext() {
 		if (audioContext != null) {
-			if (untyped __js__("this.audioContext").resume != null) untyped __js__("this.audioContext").resume();
+			if (untyped __js__(AUDIO_CONTEXT).resume != null) untyped __js__(AUDIO_CONTEXT).resume();
 		}
 	}
 }

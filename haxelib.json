@@ -1,29 +1,29 @@
 {
-	"name": "waud",
-	"license": "MIT",
-	"classPath": "src",
-	"tags": [
-		"web audio",
-		"web audio api",
-		"haxe",
-		"javascript",
-		"audio",
-		"web",
-		"sounds",
-		"audiocontext",
-		"library",
-		"waud.js",
-		"waud",
-		"audiosprite",
-		"sprite",
-		"audio sprite"
-	],
-	"description": "Web Audio Library",
-	"contributors": [
-		"adireddy"
-	],
-	"releasenote": "minor bug fixes",
-	"version": "0.4.3",
-	"url": "https://github.com/adireddy/waud",
-	"dependencies": {}
+    "name": "waud",
+    "license": "MIT",
+    "classPath": "src",
+    "tags": [
+	"web audio",
+	"web audio api",
+	"haxe",
+	"javascript",
+	"audio",
+	"web",
+	"sounds",
+	"audiocontext",
+	"library",
+	"waud.js",
+	"waud",
+	"audiosprite",
+	"sprite",
+	"audio sprite"
+    ],
+    "description": "Web Audio Library",
+    "contributors": [
+	"adireddy"
+    ],
+    "releasenote": "bug fix - #8",
+    "version": "0.4.7",
+    "url": "https://github.com/adireddy/waud",
+    "dependencies": {}
 }

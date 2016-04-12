@@ -74,10 +74,10 @@ import haxe.Json;
 	* @method _loadSpriteJson
 	* @param {String} url - Audio Sprite JSON path.
 	*/
-	function _loadSpriteJson(url:String) {
+	function _loadSpriteJson(jsonUrl:String) {
 		var xobj = new XMLHttpRequest();
 		xobj.overrideMimeType("application/json");
-		xobj.open("GET", url, true);
+		xobj.open("GET", jsonUrl, true);
 		xobj.onreadystatechange = function() {
 			if (xobj.readyState == 4 && xobj.status == 200) {
 				_spriteData = Json.parse(xobj.response);
@@ -94,10 +94,14 @@ import haxe.Json;
 	* @method _init
 	* @param {String} url - Audio file path.
 	*/
-	function _init(url:String) {
-		this.url = url;
-		if (Waud.isWebAudioSupported && Waud.useWebAudio && (_options == null || _options.webaudio == null || _options.webaudio)) _snd = new WebAudioAPISound(url, _options);
-		else if (Waud.isHTML5AudioSupported) _snd = new HTML5Sound(url, _options);
+	function _init(soundUrl:String) {
+		url = soundUrl;
+		if (Waud.isWebAudioSupported && Waud.useWebAudio && (_options == null || _options.webaudio == null || _options.webaudio)) {
+			_snd = new WebAudioAPISound(url, _options);
+		}
+		else if (Waud.isHTML5AudioSupported) {
+			_snd = new HTML5Sound(url, _options);
+		}
 		else {
 			trace("no audio support in this browser");
 			return;
@@ -166,12 +170,12 @@ import haxe.Json;
 	*
 	* @method play
 	* @param {String} [spriteName] - Sprite name to play.
-	* @return {IWaudSound} sound instance
+	* @return {Int} sound id
 	* @example
 	*     snd.play();
 	*     snd.play("bell");
 	*/
-	public function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties = null):IWaudSound {
+	public function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties = null):Int {
 		if (_snd == null) return null;
 		if (spriteName != null) {
 			for (snd in _spriteData.sprite) {
@@ -181,8 +185,7 @@ import haxe.Json;
 				}
 			}
 		}
-		_snd.play(spriteName, soundProps);
-		return this;
+		return _snd.play(spriteName, soundProps);
 	}
 
 	/**
