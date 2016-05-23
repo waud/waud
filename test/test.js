@@ -1144,23 +1144,23 @@ utest_Assert.isIterator = function(v,isAnonym) {
 	if(!Lambda.has(fields,"next") || !Lambda.has(fields,"hasNext")) return false;
 	return Reflect.isFunction(Reflect.field(v,"next")) && Reflect.isFunction(Reflect.field(v,"hasNext"));
 };
-utest_Assert.sameAs = function(expected,value,status) {
+utest_Assert.sameAs = function(expected,value,status,approx) {
 	var texpected = utest_Assert.getTypeName(expected);
 	var tvalue = utest_Assert.getTypeName(value);
-	if(texpected != tvalue) {
+	if(texpected != tvalue && !(texpected == "Int" && tvalue == "Float" || texpected == "Float" && tvalue == "Int")) {
 		status.error = "expected type " + texpected + " but it is " + tvalue + (status.path == ""?"":" for field " + status.path);
 		return false;
 	}
 	{
 		var _g = Type["typeof"](expected);
 		switch(_g[1]) {
-		case 2:
-			if(!utest_Assert._floatEquals(expected,value)) {
+		case 2:case 1:
+			if(!utest_Assert._floatEquals(expected,value,approx)) {
 				status.error = "expected " + utest_Assert.q(expected) + " but it is " + utest_Assert.q(value) + (status.path == ""?"":" for field " + status.path);
 				return false;
 			}
 			return true;
-		case 0:case 1:case 3:
+		case 0:case 3:
 			if(expected != value) {
 				status.error = "expected " + utest_Assert.q(expected) + " but it is " + utest_Assert.q(value) + (status.path == ""?"":" for field " + status.path);
 				return false;
@@ -1196,7 +1196,7 @@ utest_Assert.sameAs = function(expected,value,status) {
 					while(_g2 < _g1) {
 						var i = _g2++;
 						if(path == "") status.path = "array[" + i + "]"; else status.path = path + "[" + i + "]";
-						if(!utest_Assert.sameAs(expected[i],value[i],status)) {
+						if(!utest_Assert.sameAs(expected[i],value[i],status,approx)) {
 							status.error = "expected " + utest_Assert.q(expected[i]) + " but it is " + utest_Assert.q(value[i]) + (status.path == ""?"":" for field " + status.path);
 							return false;
 						}
@@ -1260,7 +1260,7 @@ utest_Assert.sameAs = function(expected,value,status) {
 						var key = keys[_g3];
 						++_g3;
 						if(path1 == "") status.path = "hash[" + Std.string(key) + "]"; else status.path = path1 + "[" + Std.string(key) + "]";
-						if(!utest_Assert.sameAs(map.get(key),vmap.get(key),status)) {
+						if(!utest_Assert.sameAs(map.get(key),vmap.get(key),status,approx)) {
 							status.error = "expected " + utest_Assert.q(expected) + " but it is " + utest_Assert.q(value) + (status.path == ""?"":" for field " + status.path);
 							return false;
 						}
@@ -1286,7 +1286,7 @@ utest_Assert.sameAs = function(expected,value,status) {
 					while(_g23 < _g13) {
 						var i2 = _g23++;
 						if(path2 == "") status.path = "iterator[" + i2 + "]"; else status.path = path2 + "[" + i2 + "]";
-						if(!utest_Assert.sameAs(evalues[i2],vvalues[i2],status)) {
+						if(!utest_Assert.sameAs(evalues[i2],vvalues[i2],status,approx)) {
 							status.error = "expected " + utest_Assert.q(expected) + " but it is " + utest_Assert.q(value) + (status.path == ""?"":" for field " + status.path);
 							return false;
 						}
@@ -1308,7 +1308,7 @@ utest_Assert.sameAs = function(expected,value,status) {
 					while(_g24 < _g14) {
 						var i3 = _g24++;
 						if(path3 == "") status.path = "iterable[" + i3 + "]"; else status.path = path3 + "[" + i3 + "]";
-						if(!utest_Assert.sameAs(evalues1[i3],vvalues1[i3],status)) return false;
+						if(!utest_Assert.sameAs(evalues1[i3],vvalues1[i3],status,approx)) return false;
 					}
 				}
 				return true;
@@ -1324,7 +1324,7 @@ utest_Assert.sameAs = function(expected,value,status) {
 					var e = Reflect.field(expected,field);
 					if(Reflect.isFunction(e)) continue;
 					var v = Reflect.field(value,field);
-					if(!utest_Assert.sameAs(e,v,status)) return false;
+					if(!utest_Assert.sameAs(e,v,status,approx)) return false;
 				}
 			}
 			return true;
@@ -1349,7 +1349,7 @@ utest_Assert.sameAs = function(expected,value,status) {
 				while(_g25 < _g16) {
 					var i4 = _g25++;
 					if(path5 == "") status.path = "enum[" + i4 + "]"; else status.path = path5 + "[" + i4 + "]";
-					if(!utest_Assert.sameAs(eparams[i4],vparams[i4],status)) {
+					if(!utest_Assert.sameAs(eparams[i4],vparams[i4],status,approx)) {
 						status.error = "expected " + utest_Assert.q(expected) + " but it is " + utest_Assert.q(value) + (status.path == ""?"":" for field " + status.path);
 						return false;
 					}
@@ -1374,7 +1374,7 @@ utest_Assert.sameAs = function(expected,value,status) {
 					var e2 = Reflect.field(expected,field1);
 					if(Reflect.isFunction(e2)) continue;
 					var v1 = Reflect.field(value,field1);
-					if(!utest_Assert.sameAs(e2,v1,status)) return false;
+					if(!utest_Assert.sameAs(e2,v1,status,approx)) return false;
 				}
 				if(tfields.length > 0) {
 					status.error = "the tested object has extra field(s) (" + tfields.join(", ") + ") not included in the expected ones";
@@ -1403,7 +1403,7 @@ utest_Assert.sameAs = function(expected,value,status) {
 					while(_g26 < _g18) {
 						var i5 = _g26++;
 						if(path7 == "") status.path = "iterator[" + i5 + "]"; else status.path = path7 + "[" + i5 + "]";
-						if(!utest_Assert.sameAs(evalues2[i5],vvalues2[i5],status)) {
+						if(!utest_Assert.sameAs(evalues2[i5],vvalues2[i5],status,approx)) {
 							status.error = "expected " + utest_Assert.q(expected) + " but it is " + utest_Assert.q(value) + (status.path == ""?"":" for field " + status.path);
 							return false;
 						}
@@ -1429,7 +1429,7 @@ utest_Assert.sameAs = function(expected,value,status) {
 					while(_g27 < _g19) {
 						var i6 = _g27++;
 						if(path8 == "") status.path = "iterable[" + i6 + "]"; else status.path = path8 + "[" + i6 + "]";
-						if(!utest_Assert.sameAs(evalues3[i6],vvalues3[i6],status)) return false;
+						if(!utest_Assert.sameAs(evalues3[i6],vvalues3[i6],status,approx)) return false;
 					}
 				}
 				return true;
@@ -1445,9 +1445,10 @@ utest_Assert.sameAs = function(expected,value,status) {
 utest_Assert.q = function(v) {
 	if(typeof(v) == "string") return "\"" + StringTools.replace(v,"\"","\\\"") + "\""; else return Std.string(v);
 };
-utest_Assert.same = function(expected,value,recursive,msg,pos) {
+utest_Assert.same = function(expected,value,recursive,msg,approx,pos) {
+	if(null == approx) approx = 1e-5;
 	var status = { recursive : null == recursive?true:recursive, path : "", error : null};
-	if(utest_Assert.sameAs(expected,value,status)) utest_Assert.pass(msg,pos); else utest_Assert.fail(msg == null?status.error:msg,pos);
+	if(utest_Assert.sameAs(expected,value,status,approx)) utest_Assert.pass(msg,pos); else utest_Assert.fail(msg == null?status.error:msg,pos);
 };
 utest_Assert.raises = function(method,type,msgNotThrown,msgWrongType,pos) {
 	try {
@@ -1675,11 +1676,14 @@ utest_Notifier.prototype = {
 	,__class__: utest_Notifier
 };
 var utest_Runner = function() {
+	this.globalPattern = null;
 	this.fixtures = [];
 	this.onProgress = new utest_Dispatcher();
 	this.onStart = new utest_Dispatcher();
 	this.onComplete = new utest_Dispatcher();
 	this.onPrecheck = new utest_Dispatcher();
+	this.onTestStart = new utest_Dispatcher();
+	this.onTestComplete = new utest_Dispatcher();
 	this.length = 0;
 };
 utest_Runner.__name__ = ["utest","Runner"];
@@ -1689,7 +1693,10 @@ utest_Runner.prototype = {
 	,onStart: null
 	,onComplete: null
 	,onPrecheck: null
+	,onTestStart: null
+	,onTestComplete: null
 	,length: null
+	,globalPattern: null
 	,addCase: function(test,setup,teardown,prefix,pattern) {
 		if(prefix == null) prefix = "test";
 		if(teardown == null) teardown = "teardown";
@@ -1698,7 +1705,7 @@ utest_Runner.prototype = {
 		if(!this.isMethod(test,setup)) setup = null;
 		if(!this.isMethod(test,teardown)) teardown = null;
 		var fields = Type.getInstanceFields(Type.getClass(test));
-		if(pattern == null) {
+		if(this.globalPattern == null && pattern == null) {
 			var _g = 0;
 			while(_g < fields.length) {
 				var field = fields[_g];
@@ -1708,6 +1715,7 @@ utest_Runner.prototype = {
 				this.addFixture(new utest_TestFixture(test,field,setup,teardown));
 			}
 		} else {
+			if(this.globalPattern != null) pattern = this.globalPattern; else pattern = pattern;
 			var _g1 = 0;
 			while(_g1 < fields.length) {
 				var field1 = fields[_g1];
@@ -1747,9 +1755,11 @@ utest_Runner.prototype = {
 		var handler = new utest_TestHandler(fixture);
 		handler.onComplete.add($bind(this,this.testComplete));
 		handler.onPrecheck.add(($_=this.onPrecheck,$bind($_,$_.dispatch)));
+		this.onTestStart.dispatch(handler);
 		handler.execute();
 	}
 	,testComplete: function(h) {
+		this.onTestComplete.dispatch(h);
 		this.onProgress.dispatch({ result : utest_TestResult.ofHandler(h), done : this.pos, totals : this.length});
 		this.runNext();
 	}
@@ -2627,6 +2637,126 @@ utest_ui_text_HtmlReport.prototype = {
 		buf.b += "</ul>\n";
 		buf.b += "</li>\n";
 	}
+	,getTextResults: function() {
+		var newline = "\n";
+		var indents = function(count) {
+			return ((function($this) {
+				var $r;
+				var _g = [];
+				{
+					var _g1 = 0;
+					while(_g1 < count) {
+						var i = _g1++;
+						_g.push("  ");
+					}
+				}
+				$r = _g;
+				return $r;
+			}(this))).join("");
+		};
+		var dumpStack = function(stack) {
+			if(stack.length == 0) return "";
+			var parts = haxe_CallStack.toString(stack).split("\n");
+			var r = [];
+			var _g2 = 0;
+			while(_g2 < parts.length) {
+				var part = parts[_g2];
+				++_g2;
+				if(part.indexOf(" utest.") >= 0) continue;
+				r.push(part);
+			}
+			return r.join(newline);
+		};
+		var buf = new StringBuf();
+		var _g3 = 0;
+		var _g11 = this.result.packageNames();
+		while(_g3 < _g11.length) {
+			var pname = _g11[_g3];
+			++_g3;
+			var pack = this.result.getPackage(pname);
+			if(utest_ui_common_ReportTools.skipResult(this,pack.stats,this.result.stats.isOk)) continue;
+			var _g21 = 0;
+			var _g31 = pack.classNames();
+			while(_g21 < _g31.length) {
+				var cname = _g31[_g21];
+				++_g21;
+				var cls = pack.getClass(cname);
+				if(utest_ui_common_ReportTools.skipResult(this,cls.stats,this.result.stats.isOk)) continue;
+				buf.b += Std.string((pname == ""?"":pname + ".") + cname + newline);
+				var _g4 = 0;
+				var _g5 = cls.methodNames();
+				while(_g4 < _g5.length) {
+					var mname = _g5[_g4];
+					++_g4;
+					var fix = cls.get(mname);
+					if(utest_ui_common_ReportTools.skipResult(this,fix.stats,this.result.stats.isOk)) continue;
+					buf.add(indents(1) + mname + ": ");
+					if(fix.stats.isOk) buf.b += "OK "; else if(fix.stats.hasErrors) buf.b += "ERROR "; else if(fix.stats.hasFailures) buf.b += "FAILURE "; else if(fix.stats.hasWarnings) buf.b += "WARNING ";
+					var messages = "";
+					var _g6 = fix.iterator();
+					while(_g6.head != null) {
+						var assertation;
+						assertation = (function($this) {
+							var $r;
+							_g6.val = _g6.head[0];
+							_g6.head = _g6.head[1];
+							$r = _g6.val;
+							return $r;
+						}(this));
+						switch(assertation[1]) {
+						case 0:
+							buf.b += ".";
+							break;
+						case 1:
+							var pos = assertation[3];
+							var msg = assertation[2];
+							buf.b += "F";
+							messages += indents(2) + "line: " + pos.lineNumber + ", " + msg + newline;
+							break;
+						case 2:
+							var s = assertation[3];
+							var e = assertation[2];
+							buf.b += "E";
+							messages += indents(2) + Std.string(e) + dumpStack(s) + newline;
+							break;
+						case 3:
+							var s1 = assertation[3];
+							var e1 = assertation[2];
+							buf.b += "S";
+							messages += indents(2) + Std.string(e1) + dumpStack(s1) + newline;
+							break;
+						case 4:
+							var s2 = assertation[3];
+							var e2 = assertation[2];
+							buf.b += "T";
+							messages += indents(2) + Std.string(e2) + dumpStack(s2) + newline;
+							break;
+						case 5:
+							var s3 = assertation[3];
+							var missedAsyncs = assertation[2];
+							buf.b += "O";
+							messages += indents(2) + "missed async calls: " + missedAsyncs + dumpStack(s3) + newline;
+							break;
+						case 6:
+							var s4 = assertation[3];
+							var e3 = assertation[2];
+							buf.b += "A";
+							messages += indents(2) + Std.string(e3) + dumpStack(s4) + newline;
+							break;
+						case 7:
+							var msg1 = assertation[2];
+							buf.b += "W";
+							messages += indents(2) + msg1 + newline;
+							break;
+						}
+					}
+					if(newline == null) buf.b += "null"; else buf.b += "" + newline;
+					if(messages == null) buf.b += "null"; else buf.b += "" + messages;
+				}
+			}
+		}
+		return buf.b;
+	}
 	,getHeader: function() {
 		var buf = new StringBuf();
 		if(!utest_ui_common_ReportTools.hasHeader(this,this.result.stats)) return "";
@@ -2682,6 +2812,8 @@ utest_ui_text_HtmlReport.prototype = {
 		this.result = result;
 		this.handler(this);
 		this.restoreTrace();
+		var exposedResult = { isOk : result.stats.isOk, message : this.getTextResults()};
+		if('undefined' != typeof window) window.utest_result = exposedResult;
 	}
 	,formatTime: function(t) {
 		return Math.round(t * 1000) + " ms";
