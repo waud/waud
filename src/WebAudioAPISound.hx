@@ -142,6 +142,10 @@ import js.html.audio.AudioBuffer;
 		else _gainNode.gain.value = _options.volume;
 	}
 
+	public function toggleMute() {
+		mute(!_muted);
+	}
+
 	public function stop() {
 		_pauseTime = 0;
 		if (_snd == null || !_isLoaded || !_isPlaying) return;

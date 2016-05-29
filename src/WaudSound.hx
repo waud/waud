@@ -150,6 +150,19 @@ import haxe.Json;
 	}
 
 	/**
+	* Function to automatically mute or unmute the sound.
+	*
+	* @method mute
+	* @param {Bool} val
+	* @example
+	*     snd.mute(true);
+	*/
+	public function toggleMute() {
+		if (_snd == null) return;
+		_snd.toggleMute();
+	}
+
+	/**
 	* Function to manually load the sound if `preload` was set to `false` with optional onload callback.
 	*
 	* @method load

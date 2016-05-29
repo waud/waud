@@ -14,6 +14,7 @@ interface IWaudSound {
 	function onLoad(callback:IWaudSound -> Void):IWaudSound;
 	function onError(callback:IWaudSound -> Void):IWaudSound;
 	function mute(val:Bool):Void;
+	function toggleMute():Void;
 	function loop(val:Bool):Void;
 	function setVolume(val:Float):Void;
 	function getVolume():Float;

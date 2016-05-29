@@ -94,6 +94,10 @@ import js.html.AudioElement;
 		}
 	}
 
+	public function toggleMute() {
+		mute(!_muted);
+	}
+
 	public function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties):Int {
 		if (!_isLoaded || _snd == null) {
 			trace("sound not loaded");
