@@ -152,10 +152,9 @@ import haxe.Json;
 	/**
 	* Function to automatically mute or unmute the sound.
 	*
-	* @method mute
-	* @param {Bool} val
+	* @method toggleMute
 	* @example
-	*     snd.mute(true);
+	*     snd.toggleMute();
 	*/
 	public function toggleMute() {
 		if (_snd == null) return;
@@ -199,6 +198,18 @@ import haxe.Json;
 			}
 		}
 		return _snd.play(spriteName, soundProps);
+	}
+
+	/**
+	* Function to automatically pause or play the sound.
+	*
+	* @method togglePlay
+	* @example
+	*     snd.togglePlay();
+	*/
+	public function togglePlay() {
+		if (_snd == null) return;
+		_snd.togglePlay();
 	}
 
 	/**

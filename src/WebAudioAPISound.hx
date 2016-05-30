@@ -116,6 +116,11 @@ import js.html.audio.AudioBuffer;
 		return _srcNodes.indexOf(_snd);
 	}
 
+	public function togglePlay() {
+		if (_isPlaying) pause();
+		else play();
+	}
+
 	public function isPlaying():Bool {
 		return _isPlaying;
 	}

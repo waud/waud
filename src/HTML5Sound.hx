@@ -119,6 +119,11 @@ import js.html.AudioElement;
 		return 0;
 	}
 
+	public function togglePlay() {
+		if (_isPlaying) pause();
+		else play();
+	}
+
 	public function isPlaying():Bool {
 		return _isPlaying;
 	}
