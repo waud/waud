@@ -12,7 +12,11 @@ Web Audio Library with HTML5 audio fallback.
 |:--:|:--:|:--:|:--:|:--:|
 | Latest ✓ | Latest ✓ | Latest ✓ | Latest ✓ | Latest ✓ |
 
-:boom: It is recommeded to use same sample rate for all the audio files. Playing different sample rate files can cause issues on some devices. :boom:
+:boom::boom:
+- It is recommeded to use same sample rate for all the audio files. Playing different sample rate files can cause issues on some devices.
+- By default, Waud uses 44100 sample rate. If your audio files have a different sample rate then specify it using [`preferredSampleRate`](http://adireddy.github.io/docs/waud/classes/Waud.html#property_preferredSampleRate) property.
+
+:boom::boom:
 
 ### Installation
 
