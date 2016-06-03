@@ -116,6 +116,11 @@ import js.html.audio.AudioBuffer;
 		return _srcNodes.indexOf(_snd);
 	}
 
+	public function togglePlay() {
+		if (_isPlaying) pause();
+		else play();
+	}
+
 	public function isPlaying():Bool {
 		return _isPlaying;
 	}
@@ -140,6 +145,10 @@ import js.html.audio.AudioBuffer;
 		if (_gainNode == null || !_isLoaded) return;
 		if (val) _gainNode.gain.value = 0;
 		else _gainNode.gain.value = _options.volume;
+	}
+
+	public function toggleMute() {
+		mute(!_muted);
 	}
 
 	public function stop() {

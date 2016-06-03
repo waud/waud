@@ -22,8 +22,8 @@
     "contributors": [
 	"adireddy"
     ],
-    "releasenote": "bug fix - #8",
-    "version": "0.4.7",
+    "releasenote": "added togglePlay and toggleMute methods",
+    "version": "0.4.8",
     "url": "https://github.com/adireddy/waud",
     "dependencies": {}
 }

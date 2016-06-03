@@ -94,6 +94,10 @@ import js.html.AudioElement;
 		}
 	}
 
+	public function toggleMute() {
+		mute(!_muted);
+	}
+
 	public function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties):Int {
 		if (!_isLoaded || _snd == null) {
 			trace("sound not loaded");
@@ -113,6 +117,11 @@ import js.html.AudioElement;
 		}
 		if (!_isPlaying) _snd.play();
 		return 0;
+	}
+
+	public function togglePlay() {
+		if (_isPlaying) pause();
+		else play();
 	}
 
 	public function isPlaying():Bool {

@@ -150,6 +150,18 @@ import haxe.Json;
 	}
 
 	/**
+	* Function to automatically mute or unmute the sound.
+	*
+	* @method toggleMute
+	* @example
+	*     snd.toggleMute();
+	*/
+	public function toggleMute() {
+		if (_snd == null) return;
+		_snd.toggleMute();
+	}
+
+	/**
 	* Function to manually load the sound if `preload` was set to `false` with optional onload callback.
 	*
 	* @method load
@@ -186,6 +198,18 @@ import haxe.Json;
 			}
 		}
 		return _snd.play(spriteName, soundProps);
+	}
+
+	/**
+	* Function to automatically pause or play the sound.
+	*
+	* @method togglePlay
+	* @example
+	*     snd.togglePlay();
+	*/
+	public function togglePlay() {
+		if (_snd == null) return;
+		_snd.togglePlay();
 	}
 
 	/**

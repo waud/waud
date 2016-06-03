@@ -1,6 +1,6 @@
 {
     "name": "waud.js",
-    "version": "0.4.7",
+    "version": "0.4.8",
     "description": "Web Audio Library",
     "main": "./dist/waud.js",
     "scripts": {
@@ -24,7 +24,10 @@
 	"audiocontext",
 	"library",
 	"waud.js",
-	"waud"
+	"waud",
+	"audiosprite",
+	"sprite",
+	"audio sprite"
     ],
     "author": {
 	"name": "Adi Reddy Mora",
