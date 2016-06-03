@@ -12,6 +12,8 @@ Web Audio Library with HTML5 audio fallback.
 |:--:|:--:|:--:|:--:|:--:|
 | Latest ✓ | Latest ✓ | Latest ✓ | Latest ✓ | Latest ✓ |
 
+:boom: It is recommeded to use same sample rate for all the audio files. Playing different sample rate files can cause issues on some devices. :boom:
+
 ### Installation
 
 `npm install waud.js`
