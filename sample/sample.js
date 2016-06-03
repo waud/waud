@@ -271,6 +271,9 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 			}
 		}
 	}
+	,toggleMute: function() {
+		this.mute(!this._muted);
+	}
 	,play: function(spriteName,soundProps) {
 		var _g = this;
 		if(!this._isLoaded || this._snd == null) {
@@ -287,6 +290,9 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 		}
 		if(!this._isPlaying) this._snd.play();
 		return 0;
+	}
+	,togglePlay: function() {
+		if(this._isPlaying) this.pause(); else this.play();
 	}
 	,isPlaying: function() {
 		return this._isPlaying;
@@ -485,45 +491,51 @@ var Main = function() {
 	this._addButton("BG Vol 1",300,150,60,30,function() {
 		_g._bgSnd.setVolume(1);
 	});
-	this._addButton("Stop All",360,150,60,30,$bind(this,this._stop));
-	this._addButton("Pause All",420,150,60,30,$bind(this,this._pause));
+	this._addButton("BG Toggle Play",120,190,100,30,function() {
+		_g._bgSnd.togglePlay();
+	});
+	this._addButton("BG Toggle Mute",220,190,100,30,function() {
+		_g._bgSnd.toggleMute();
+	});
+	this._addButton("Stop All",320,190,60,30,$bind(this,this._stop));
+	this._addButton("Pause All",380,190,60,30,$bind(this,this._pause));
 	label = new PIXI.Text("Sprite: ",{ font : "26px Tahoma", fill : "#FFFFFF"});
 	this._btnContainer.addChild(label);
-	label.position.y = 200;
-	this._addButton("Glass",120,200,60,30,function() {
+	label.position.y = 250;
+	this._addButton("Glass",120,250,60,30,function() {
 		_g._audSprite.play("glass");
 	});
-	this._addButton("Bell",180,200,60,30,function() {
+	this._addButton("Bell",180,250,60,30,function() {
 		_g._audSprite.play("bell");
 	});
-	this._addButton("Can",240,200,60,30,function() {
+	this._addButton("Can",240,250,60,30,function() {
 		_g._audSprite.play("canopening");
 	});
 	label = new PIXI.Text("Test 1: ",{ font : "26px Tahoma", fill : "#FFFFFF"});
 	this._btnContainer.addChild(label);
-	label.position.y = 250;
-	this._addButton("Play",120,250,60,30,function() {
+	label.position.y = 300;
+	this._addButton("Play",120,300,60,30,function() {
 		_g._countdown.play();
 	});
-	this._addButton("Pause",180,250,60,30,function() {
+	this._addButton("Pause",180,300,60,30,function() {
 		_g._countdown.pause();
 	});
-	this._addButton("Stop",240,250,60,30,function() {
+	this._addButton("Stop",240,300,60,30,function() {
 		_g._countdown.stop();
 	});
 	label = new PIXI.Text("Test 2: ",{ font : "26px Tahoma", fill : "#FFFFFF"});
 	this._btnContainer.addChild(label);
-	label.position.y = 300;
-	this._addButton("Play",120,300,60,30,function() {
+	label.position.y = 350;
+	this._addButton("Play",120,350,60,30,function() {
 		_g._audSprite.play("countdown");
 	});
-	this._addButton("Pause",180,300,60,30,function() {
+	this._addButton("Pause",180,350,60,30,function() {
 		_g._audSprite.pause();
 	});
-	this._addButton("Stop",240,300,60,30,function() {
+	this._addButton("Stop",240,350,60,30,function() {
 		_g._audSprite.stop();
 	});
-	this._addButton("DESTROY",120,350,180,30,function() {
+	this._addButton("DESTROY",120,400,180,30,function() {
 		Waud.destroy();
 	});
 	this._ua = new PIXI.Text(window.navigator.userAgent,{ font : "12px Tahoma", fill : "#FFFFFF"});
@@ -1026,6 +1038,10 @@ WaudSound.prototype = {
 		if(this._snd == null) return;
 		this._snd.mute(val);
 	}
+	,toggleMute: function() {
+		if(this._snd == null) return;
+		this._snd.toggleMute();
+	}
 	,load: function(callback) {
 		if(this._snd == null) return null;
 		this._snd.load(callback);
@@ -1046,6 +1062,10 @@ WaudSound.prototype = {
 			}
 		}
 		return this._snd.play(spriteName,soundProps);
+	}
+	,togglePlay: function() {
+		if(this._snd == null) return;
+		this._snd.togglePlay();
 	}
 	,isPlaying: function() {
 		if(this._snd == null) return false;
@@ -1223,6 +1243,9 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		this._gainNode.gain.value = this._options.volume;
 		return HxOverrides.indexOf(this._srcNodes,this._snd,0);
 	}
+	,togglePlay: function() {
+		if(this._isPlaying) this.pause(); else this.play();
+	}
 	,isPlaying: function() {
 		return this._isPlaying;
 	}
@@ -1242,6 +1265,9 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		this._muted = val;
 		if(this._gainNode == null || !this._isLoaded) return;
 		if(val) this._gainNode.gain.value = 0; else this._gainNode.gain.value = this._options.volume;
+	}
+	,toggleMute: function() {
+		this.mute(!this._muted);
 	}
 	,stop: function() {
 		this._pauseTime = 0;
