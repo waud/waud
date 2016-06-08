@@ -3,11 +3,13 @@
 -cmd haxelib install msignal
 -cmd haxelib install utest
 -cmd haxelib install closure
+-cmd haxelib install compiletime
 
 --next
 
 -cp test
 -cp src
+-lib compiletime
 -lib utest
 -main Test
 -js test/test.js
@@ -15,6 +17,7 @@
 --next
 
 -cp src
+-lib compiletime
 Waud
 WaudSound
 HTML5Sound
@@ -27,11 +30,12 @@ WebAudioAPISound
 --next
 
 -cp src
+-lib closure
+-lib compiletime
 Waud
 WaudSound
 HTML5Sound
 WebAudioAPISound
--lib closure
 -D closure_overwrite
 -js dist/waud.min.js
 -dce full
@@ -44,6 +48,7 @@ WebAudioAPISound
 
 -main Main
 -lib pixijs
+-lib compiletime
 -lib msignal
 -js sample/sample.js
 -dce full
