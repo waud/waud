@@ -15,6 +15,17 @@ import haxe.Json;
 	public var isSpriteSound:Bool;
 
 	/**
+	* Duration of the sound.
+	*
+	* @property duration
+	* @type {Float}
+	* @readOnly
+	* @example
+ 	*     snd.duration;
+	*/
+	public var duration(get, null):Float;
+
+	/**
 	* Sound url.
 	*
 	* @property url
@@ -108,6 +119,11 @@ import haxe.Json;
 		}
 
 		_snd.isSpriteSound = isSpriteSound;
+	}
+
+	function get_duration():Float {
+		if (_snd == null) return 0;
+		return _snd.duration;
 	}
 
 	/**
@@ -260,6 +276,35 @@ import haxe.Json;
 	public function pause() {
 		if (_snd == null) return;
 		_snd.pause();
+	}
+
+	/**
+	* Function to set playback position in seconds.
+	*
+	* **Not supported for audio sprites yet.**
+	*
+	* @method setTime
+	* @param {Float} time - playback position in seconds.
+	* @example
+	*     snd.setTime(30);
+	*/
+	public function setTime(time:Float) {
+		if (_snd == null) return;
+		_snd.setTime(time);
+	}
+
+	/**
+	* Function to get the current playback position in seconds.
+	*
+	* **Not supported for audio sprites yet.**
+	*
+	* @method getTime
+	* @example
+	*     snd.getTime();
+	*/
+	public function getTime():Float {
+		if (_snd == null) return 0;
+		return _snd.getTime();
 	}
 
 	/**
