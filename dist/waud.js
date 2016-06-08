@@ -829,16 +829,14 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 	}
 	,setTime: function(time) {
 		if(this._snd == null || !this._isLoaded || time > this._snd.buffer.duration) return;
-		if(this.isSpriteSound && time > this._currentSoundProps.duration) return;
 		if(this._isPlaying) {
 			this.stop();
-			if(this.isSpriteSound) this._pauseTime = this._currentSoundProps.start + time; else this._pauseTime = time;
+			this._pauseTime = time;
 			this.play();
-		} else if(this.isSpriteSound) this._pauseTime = this._currentSoundProps.start + time; else this._pauseTime = time;
+		} else this._pauseTime = time;
 	}
 	,getTime: function() {
 		if(this._snd == null || !this._isLoaded || !this._isPlaying) return 0;
-		if(this.isSpriteSound && this._currentSoundProps != null) return this._manager.audioContext.currentTime - this._playStartTime + this._pauseTime + this._currentSoundProps.start;
 		return this._manager.audioContext.currentTime - this._playStartTime + this._pauseTime;
 	}
 	,onEnd: function(callback) {
@@ -970,6 +968,7 @@ if(Array.prototype.indexOf) HxOverrides.indexOf = function(a,o,i) {
 var __map_reserved = {}
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
+Waud.version = { scripts : { test : "echo \"no test specified\" && exit 0"}, dependencies : { }, repository : { url : "https://github.com/adireddy/waud", type : "git"}, devDependencies : { 'grunt-zip' : "latest", 'grunt-cli' : "latest", async : "~0.9.0", 'grunt-contrib-yuidoc' : "^0.10.0", browserify : "latest", grunt : "latest", 'yuidoc-theme-blue' : "^0.1.9", 'grunt-browserify' : "latest", 'grunt-contrib-uglify' : "latest", yuidocjs : "^0.9.0", 'grunt-haxe' : "latest", 'grunt-shell' : "^1.1.2"}, keywords : ["web audio","web audio api","haxe","javascript","audio","web","sounds","audiocontext","library","waud.js","waud","audiosprite","sprite","audio sprite"], version : "0.4.9", author : { email : "adiinteractive@gmail.com", name : "Adi Reddy Mora"}, description : "Web Audio Library", license : "MIT", name : "waud.js", main : "./dist/waud.js", bugs : { url : "https://github.com/adireddy/waud/issues"}}.version;
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, loop : false, preload : true, webaudio : true, volume : 1};
 Waud.preferredSampleRate = 44100;
