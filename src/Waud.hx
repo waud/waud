@@ -14,6 +14,15 @@ import js.Browser;
 	static inline var MAYBE:String = "maybe";
 
 	/**
+	* Version number.
+	*
+	* @property version
+	* @static
+	* @type {String}
+	*/
+	public static var version:String = CompileTime.parseJsonFile("./package.json").version;
+
+	/**
 	* Tells whether to use web audio api or not.
 	*
 	* You can use this to enable/disable web audio globally for all sounds.
