@@ -83,6 +83,7 @@ class Main extends Application {
 		_addButton("Play", 120, 300, 60, 30, function() { _countdown.play(); });
 		_addButton("Pause", 180, 300, 60, 30, function() { _countdown.pause(); });
 		_addButton("Stop", 240, 300, 60, 30, function() { _countdown.stop(); });
+		_addButton("Seek", 300, 300, 60, 30, function() { _countdown.setTime(_countdown.getTime() + 1); });
 
 		label = new Text("Test 2: ", { font: "26px Tahoma", fill:"#FFFFFF" });
 		_btnContainer.addChild(label);
@@ -90,6 +91,7 @@ class Main extends Application {
 		_addButton("Play", 120, 350, 60, 30, function() { _audSprite.play("countdown"); });
 		_addButton("Pause", 180, 350, 60, 30, function() { _audSprite.pause(); });
 		_addButton("Stop", 240, 350, 60, 30, function() { _audSprite.stop(); });
+		_addButton("Seek", 300, 350, 60, 30, function() { _audSprite.setTime(_audSprite.getTime() + 1); });
 
 		_addButton("DESTROY", 120, 400, 180, 30, function() { Waud.destroy(); });
 
@@ -120,13 +122,14 @@ class Main extends Application {
 
 		_audSprite = new WaudSound("assets/sprite.json");
 
-		_countdown = new WaudSound("assets/countdown.mp3", {webaudio: false});
+		_countdown = new WaudSound("assets/countdown.mp3", {webaudio: true});
 
 		_resize();
 	}
 
 	function _onLoad(snd:IWaudSound) {
 		trace(snd.url);
+		trace(snd.duration);
 	}
 
 	function touchUnlock() {
