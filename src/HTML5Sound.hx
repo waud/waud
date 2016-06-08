@@ -9,7 +9,6 @@ import js.html.AudioElement;
 	var _tmr:Timer;
 
 	public function new(url:String, ?options:WaudSoundOptions = null) {
-		#if debug trace("using html5 audio - " + url); #end
 		super(url, options);
 		_snd = Waud.dom.createAudioElement();
 		_addSource(url);
@@ -53,6 +52,11 @@ import js.html.AudioElement;
 		}
 
 		return this;
+	}
+
+	override function get_duration():Float {
+		if (!_isLoaded) return 0;
+		return duration = _snd.duration;
 	}
 
 	function _addSource(url:String):SourceElement {
@@ -144,6 +148,16 @@ import js.html.AudioElement;
 		if (!_isLoaded || _snd == null) return;
 		_snd.pause();
 		_isPlaying = false;
+	}
+
+	public function setTime(time:Float) {
+		if (!_isLoaded || _snd == null || time > _snd.duration) return;
+		_snd.currentTime = time;
+	}
+
+	public function getTime():Float {
+		if (_snd == null || !_isLoaded || !_isPlaying) return 0;
+		return _snd.currentTime;
 	}
 
 	public function onEnd(callback:IWaudSound -> Void):IWaudSound {
