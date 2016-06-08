@@ -2,6 +2,7 @@
 
 	public var isSpriteSound:Bool;
 	public var url:String;
+	public var duration(get, null):Float;
 
 	var _options:WaudSoundOptions;
 	var _isLoaded:Bool;
@@ -17,6 +18,7 @@
 			trace("initialise Waud using Waud.init() before loading sounds");
 			return;
 		}
+		duration = 0;
 		isSpriteSound = false;
 		url = sndUrl;
 		_isLoaded = false;
@@ -34,5 +36,9 @@
 		options.onerror = (options.onerror != null) ? options.onerror : Waud.defaults.onerror;
 
 		_options = options;
+	}
+
+	function get_duration():Float {
+		return 0;
 	}
 }

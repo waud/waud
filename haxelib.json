@@ -22,8 +22,8 @@
     "contributors": [
 	"adireddy"
     ],
-    "releasenote": "added togglePlay and toggleMute methods",
-    "version": "0.4.8",
+    "releasenote": "added setTime and getTime methods, duration property",
+    "version": "0.4.9",
     "url": "https://github.com/adireddy/waud",
     "dependencies": {}
 }
