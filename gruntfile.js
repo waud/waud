@@ -6,6 +6,9 @@ module.exports = function (grunt) {
         haxe: {
             project: {
                 hxml: "build.hxml"
+            },
+            samples: {
+                hxml: "samples.hxml"
             }
         },
 
@@ -31,7 +34,7 @@ module.exports = function (grunt) {
             npm: {
                 command: "mkdir npm-publish || true && cp -r src dist package.json LICENSE README.md ./npm-publish/ && npm publish ./npm-publish/ && rm -r npm-publish"
             },
-            sample: {
+            samples: {
                 command: "cp ./dist/waud.min.js sample/ && cp -r ./sample/ ../adireddy.github.io/demos/waud/"
             }
         },

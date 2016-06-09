@@ -370,6 +370,25 @@ HxOverrides.indexOf = function(a,obj,i) {
 	}
 	return -1;
 };
+Math.__name__ = true;
+var Reflect = function() { };
+Reflect.__name__ = true;
+Reflect.field = function(o,field) {
+	try {
+		return o[field];
+	} catch( e ) {
+		if (e instanceof js__$Boot_HaxeError) e = e.val;
+		return null;
+	}
+};
+Reflect.isFunction = function(f) {
+	return typeof(f) == "function" && !(f.__name__ || f.__ename__);
+};
+Reflect.compareMethods = function(f1,f2) {
+	if(f1 == f2) return true;
+	if(!Reflect.isFunction(f1) || !Reflect.isFunction(f2)) return false;
+	return f1.scope == f2.scope && f1.method == f2.method && f1.method != null;
+};
 var pixi_plugins_app_Application = function() {
 	this._animationFrameId = null;
 	this.pixelRatio = 1;
@@ -424,7 +443,6 @@ pixi_plugins_app_Application.prototype = {
 		if(this.roundPixels) this.renderer.roundPixels = true;
 		if(parentDom == null) window.document.body.appendChild(this.renderer.view); else parentDom.appendChild(this.renderer.view);
 		this.resumeRendering();
-		this.addStats();
 	}
 	,resumeRendering: function() {
 		if(this.autoResize) window.onresize = $bind(this,this._onWindowResize);
@@ -447,11 +465,8 @@ pixi_plugins_app_Application.prototype = {
 		}
 		this._animationFrameId = window.requestAnimationFrame($bind(this,this._onRequestAnimationFrame));
 	}
-	,addStats: function() {
-		if(window.Perf != null) new Perf().addInfo(["UNKNOWN","WEBGL","CANVAS"][this.renderer.type] + " - " + this.pixelRatio);
-	}
 };
-var Main = function() {
+var Sample2 = function() {
 	var _g = this;
 	pixi_plugins_app_Application.call(this);
 	PIXI.RESOLUTION = this.pixelRatio = window.devicePixelRatio;
@@ -462,152 +477,46 @@ var Main = function() {
 	pixi_plugins_app_Application.prototype.start.call(this);
 	this._btnContainer = new PIXI.Container();
 	this.stage.addChild(this._btnContainer);
-	var label = new PIXI.Text("MP3: ",{ font : "26px Tahoma", fill : "#FFFFFF"});
-	this._btnContainer.addChild(label);
-	this._addButton("Glass",120,0,60,30,function() {
-		_g._glassMP3.play();
+	this._duration = new PIXI.Text("Duration: ",{ font : "20px Tahoma", fill : "#FFFFFF"});
+	this._btnContainer.addChild(this._duration);
+	this._time = new PIXI.Text("Time: ",{ font : "20px Tahoma", fill : "#FFFFFF"});
+	this._time.y = 50;
+	this._btnContainer.addChild(this._time);
+	this._addButton("Play",0,100,80,30,function() {
+		_g._snd.play();
 	});
-	this._addButton("Bell",180,0,60,30,function() {
-		_g._bellMP3.play();
+	this._addButton("getTime()",80,100,80,30,function() {
+		_g._time.text = "Time: " + _g._snd.getTime();
 	});
-	this._addButton("Can",240,0,60,30,function() {
-		_g._canMP3.play();
+	this._addButton("setTime(2)",160,100,80,30,function() {
+		_g._snd.setTime(2);
 	});
-	label = new PIXI.Text("AAC: ",{ font : "26px Tahoma", fill : "#FFFFFF"});
-	this._btnContainer.addChild(label);
-	label.position.y = 50;
-	this._addButton("Glass",120,50,60,30,function() {
-		_g._glassAAC.play();
+	this._addButton("setTime(5)",240,100,80,30,function() {
+		_g._snd.setTime(5);
 	});
-	this._addButton("Bell",180,50,60,30,function() {
-		_g._bellAAC.play();
+	this._addButton("setTime(7)",320,100,80,30,function() {
+		_g._snd.setTime(7);
 	});
-	this._addButton("Can",240,50,60,30,function() {
-		_g._canAAC.play();
+	this._addButton("setTime(10)",400,100,80,30,function() {
+		_g._snd.setTime(10);
 	});
-	label = new PIXI.Text("OGG: ",{ font : "26px Tahoma", fill : "#FFFFFF"});
-	this._btnContainer.addChild(label);
-	label.position.y = 100;
-	this._addButton("Glass",120,100,60,30,function() {
-		_g._glassOGG.play();
-	});
-	this._addButton("Bell",180,100,60,30,function() {
-		_g._bellOGG.play();
-	});
-	this._addButton("Can",240,100,60,30,function() {
-		_g._canOGG.play();
-	});
-	label = new PIXI.Text("Controls: ",{ font : "26px Tahoma", fill : "#FFFFFF"});
-	this._btnContainer.addChild(label);
-	label.position.y = 150;
-	this._addButton("Mute",120,150,60,30,$bind(this,this._mute));
-	this._addButton("Unmute",180,150,60,30,$bind(this,this._unmute));
-	this._addButton("BG Vol 0",240,150,60,30,function() {
-		_g._bgSnd.setVolume(0);
-	});
-	this._addButton("BG Vol 1",300,150,60,30,function() {
-		_g._bgSnd.setVolume(1);
-	});
-	this._addButton("BG Toggle Play",120,190,100,30,function() {
-		_g._bgSnd.togglePlay();
-	});
-	this._addButton("BG Toggle Mute",220,190,100,30,function() {
-		_g._bgSnd.toggleMute();
-	});
-	this._addButton("Stop All",320,190,60,30,$bind(this,this._stop));
-	this._addButton("Pause All",380,190,60,30,$bind(this,this._pause));
-	label = new PIXI.Text("Sprite: ",{ font : "26px Tahoma", fill : "#FFFFFF"});
-	this._btnContainer.addChild(label);
-	label.position.y = 250;
-	this._addButton("Glass",120,250,60,30,function() {
-		_g._audSprite.play("glass");
-	});
-	this._addButton("Bell",180,250,60,30,function() {
-		_g._audSprite.play("bell");
-	});
-	this._addButton("Can",240,250,60,30,function() {
-		_g._audSprite.play("canopening");
-	});
-	label = new PIXI.Text("Test 1: ",{ font : "26px Tahoma", fill : "#FFFFFF"});
-	this._btnContainer.addChild(label);
-	label.position.y = 300;
-	this._addButton("Play",120,300,60,30,function() {
-		_g._countdown.play();
-	});
-	this._addButton("Pause",180,300,60,30,function() {
-		_g._countdown.pause();
-	});
-	this._addButton("Stop",240,300,60,30,function() {
-		_g._countdown.stop();
-	});
-	this._addButton("Seek 1s",300,300,60,30,function() {
-		_g._countdown.setTime(_g._countdown.getTime() + 1);
-	});
-	label = new PIXI.Text("Test 2: ",{ font : "26px Tahoma", fill : "#FFFFFF"});
-	this._btnContainer.addChild(label);
-	label.position.y = 350;
-	this._addButton("Play",120,350,60,30,function() {
-		_g._audSprite.play("countdown");
-	});
-	this._addButton("Pause",180,350,60,30,function() {
-		_g._audSprite.pause();
-	});
-	this._addButton("Stop",240,350,60,30,function() {
-		_g._audSprite.stop();
-	});
-	this._addButton("DESTROY",120,400,180,30,function() {
-		Waud.destroy();
-	});
-	this._ua = new PIXI.Text(window.navigator.userAgent,{ font : "12px Tahoma", fill : "#FFFFFF"});
-	this.stage.addChild(this._ua);
 	Waud.init();
 	Waud.autoMute();
 	Waud.enableTouchUnlock($bind(this,this.touchUnlock));
 	Waud.defaults.onload = $bind(this,this._onLoad);
-	this._bgSnd = new WaudSound("assets/loop.mp3",{ loop : true, autoplay : false, volume : 1, onload : $bind(this,this._playBgSound)});
-	this._glassMP3 = new WaudSound("assets/glass.mp3");
-	this._bellMP3 = new WaudSound("assets/bell.mp3");
-	this._canMP3 = new WaudSound("assets/canopening.mp3");
-	this._glassAAC = new WaudSound("assets/glass.aac");
-	this._bellAAC = new WaudSound("assets/bell.aac");
-	this._canAAC = new WaudSound("assets/canopening.aac");
-	this._glassOGG = new WaudSound("assets/glass.ogg");
-	this._bellOGG = new WaudSound("assets/bell.ogg");
-	this._canOGG = new WaudSound("assets/canopening.ogg");
-	this._ua.text += "\n" + Waud.getFormatSupportString();
-	this._ua.text += "\nWeb Audio API: " + Std.string(Waud.isWebAudioSupported);
-	this._ua.text += "\nHTML5 Audio: " + Std.string(Waud.isHTML5AudioSupported);
-	this._audSprite = new WaudSound("assets/sprite.json");
-	this._countdown = new WaudSound("assets/countdown.mp3",{ webaudio : true});
+	this._snd = new WaudSound("assets/countdown.mp3",{ loop : false, autoplay : false, volume : 1, onload : $bind(this,this._onLoad)});
 	this._resize();
 };
-Main.__name__ = true;
-Main.main = function() {
-	new Main();
+Sample2.__name__ = true;
+Sample2.main = function() {
+	new Sample2();
 };
-Main.__super__ = pixi_plugins_app_Application;
-Main.prototype = $extend(pixi_plugins_app_Application.prototype,{
+Sample2.__super__ = pixi_plugins_app_Application;
+Sample2.prototype = $extend(pixi_plugins_app_Application.prototype,{
 	_onLoad: function(snd) {
-		console.log(snd.url);
-		console.log(snd.get_duration());
+		this._duration.text = "Duration: " + snd.get_duration();
 	}
 	,touchUnlock: function() {
-		if(!this._bgSnd.isPlaying()) this._bgSnd.play();
-	}
-	,_playBgSound: function(snd) {
-		if(!snd.isPlaying()) snd.play();
-	}
-	,_mute: function() {
-		Waud.mute(true);
-	}
-	,_unmute: function() {
-		Waud.mute(false);
-	}
-	,_stop: function() {
-		Waud.stop();
-	}
-	,_pause: function() {
-		Waud.pause();
 	}
 	,_addButton: function(label,x,y,width,height,callback) {
 		var btn = new Button(label,width,height);
@@ -620,165 +529,8 @@ Main.prototype = $extend(pixi_plugins_app_Application.prototype,{
 		this._btnContainer.position.set((window.innerWidth - this._btnContainer.width) / 2,(window.innerHeight - this._btnContainer.height) / 2);
 	}
 });
-Math.__name__ = true;
-var Perf = $hx_exports.Perf = function(pos,offset) {
-	if(offset == null) offset = 0;
-	if(pos == null) pos = "TR";
-	this._perfObj = window.performance;
-	if(Reflect.field(this._perfObj,"memory") != null) this._memoryObj = Reflect.field(this._perfObj,"memory");
-	this._memCheck = this._perfObj != null && this._memoryObj != null && this._memoryObj.totalJSHeapSize > 0;
-	this._pos = pos;
-	this._offset = offset;
-	this.currentFps = 60;
-	this.currentMs = 0;
-	this.currentMem = "0";
-	this.lowFps = 60;
-	this.avgFps = 60;
-	this._measureCount = 0;
-	this._totalFps = 0;
-	this._time = 0;
-	this._ticks = 0;
-	this._fpsMin = 60;
-	this._fpsMax = 60;
-	if(this._perfObj != null && ($_=this._perfObj,$bind($_,$_.now)) != null) this._startTime = this._perfObj.now(); else this._startTime = new Date().getTime();
-	this._prevTime = -Perf.MEASUREMENT_INTERVAL;
-	this._createFpsDom();
-	this._createMsDom();
-	if(this._memCheck) this._createMemoryDom();
-	if(($_=window,$bind($_,$_.requestAnimationFrame)) != null) this.RAF = ($_=window,$bind($_,$_.requestAnimationFrame)); else if(window.mozRequestAnimationFrame != null) this.RAF = window.mozRequestAnimationFrame; else if(window.webkitRequestAnimationFrame != null) this.RAF = window.webkitRequestAnimationFrame; else if(window.msRequestAnimationFrame != null) this.RAF = window.msRequestAnimationFrame;
-	if(($_=window,$bind($_,$_.cancelAnimationFrame)) != null) this.CAF = ($_=window,$bind($_,$_.cancelAnimationFrame)); else if(window.mozCancelAnimationFrame != null) this.CAF = window.mozCancelAnimationFrame; else if(window.webkitCancelAnimationFrame != null) this.CAF = window.webkitCancelAnimationFrame; else if(window.msCancelAnimationFrame != null) this.CAF = window.msCancelAnimationFrame;
-	if(this.RAF != null) this._raf = Reflect.callMethod(window,this.RAF,[$bind(this,this._tick)]);
-};
-Perf.__name__ = true;
-Perf.prototype = {
-	_tick: function(val) {
-		var time;
-		if(this._perfObj != null && ($_=this._perfObj,$bind($_,$_.now)) != null) time = this._perfObj.now(); else time = new Date().getTime();
-		this._ticks++;
-		if(this._raf != null && time > this._prevTime + Perf.MEASUREMENT_INTERVAL) {
-			this.currentMs = Math.round(time - this._startTime);
-			this.ms.innerHTML = "MS: " + this.currentMs;
-			this.currentFps = Math.round(this._ticks * 1000 / (time - this._prevTime));
-			if(this.currentFps > 0 && val > Perf.DELAY_TIME) {
-				this._measureCount++;
-				this._totalFps += this.currentFps;
-				this.lowFps = this._fpsMin = Math.min(this._fpsMin,this.currentFps);
-				this._fpsMax = Math.max(this._fpsMax,this.currentFps);
-				this.avgFps = Math.round(this._totalFps / this._measureCount);
-			}
-			this.fps.innerHTML = "FPS: " + this.currentFps + " (" + this._fpsMin + "-" + this._fpsMax + ")";
-			if(this.currentFps >= 30) this.fps.style.backgroundColor = Perf.FPS_BG_CLR; else if(this.currentFps >= 15) this.fps.style.backgroundColor = Perf.FPS_WARN_BG_CLR; else this.fps.style.backgroundColor = Perf.FPS_PROB_BG_CLR;
-			this._prevTime = time;
-			this._ticks = 0;
-			if(this._memCheck) {
-				this.currentMem = this._getFormattedSize(this._memoryObj.usedJSHeapSize,2);
-				this.memory.innerHTML = "MEM: " + this.currentMem;
-			}
-		}
-		this._startTime = time;
-		if(this._raf != null) this._raf = Reflect.callMethod(window,this.RAF,[$bind(this,this._tick)]);
-	}
-	,_createDiv: function(id,top) {
-		if(top == null) top = 0;
-		var div;
-		var _this = window.document;
-		div = _this.createElement("div");
-		div.id = id;
-		div.className = id;
-		div.style.position = "absolute";
-		var _g = this._pos;
-		switch(_g) {
-		case "TL":
-			div.style.left = this._offset + "px";
-			div.style.top = top + "px";
-			break;
-		case "TR":
-			div.style.right = this._offset + "px";
-			div.style.top = top + "px";
-			break;
-		case "BL":
-			div.style.left = this._offset + "px";
-			div.style.bottom = (this._memCheck?48:32) - top + "px";
-			break;
-		case "BR":
-			div.style.right = this._offset + "px";
-			div.style.bottom = (this._memCheck?48:32) - top + "px";
-			break;
-		}
-		div.style.width = "80px";
-		div.style.height = "12px";
-		div.style.lineHeight = "12px";
-		div.style.padding = "2px";
-		div.style.fontFamily = Perf.FONT_FAMILY;
-		div.style.fontSize = "9px";
-		div.style.fontWeight = "bold";
-		div.style.textAlign = "center";
-		window.document.body.appendChild(div);
-		return div;
-	}
-	,_createFpsDom: function() {
-		this.fps = this._createDiv("fps");
-		this.fps.style.backgroundColor = Perf.FPS_BG_CLR;
-		this.fps.style.zIndex = "995";
-		this.fps.style.color = Perf.FPS_TXT_CLR;
-		this.fps.innerHTML = "FPS: 0";
-	}
-	,_createMsDom: function() {
-		this.ms = this._createDiv("ms",16);
-		this.ms.style.backgroundColor = Perf.MS_BG_CLR;
-		this.ms.style.zIndex = "996";
-		this.ms.style.color = Perf.MS_TXT_CLR;
-		this.ms.innerHTML = "MS: 0";
-	}
-	,_createMemoryDom: function() {
-		this.memory = this._createDiv("memory",32);
-		this.memory.style.backgroundColor = Perf.MEM_BG_CLR;
-		this.memory.style.color = Perf.MEM_TXT_CLR;
-		this.memory.style.zIndex = "997";
-		this.memory.innerHTML = "MEM: 0";
-	}
-	,_getFormattedSize: function(bytes,frac) {
-		if(frac == null) frac = 0;
-		var sizes = ["Bytes","KB","MB","GB","TB"];
-		if(bytes == 0) return "0";
-		var precision = Math.pow(10,frac);
-		var i = Math.floor(Math.log(bytes) / Math.log(1024));
-		return Math.round(bytes * precision / Math.pow(1024,i)) / precision + " " + sizes[i];
-	}
-	,addInfo: function(val) {
-		this.info = this._createDiv("info",this._memCheck?48:32);
-		this.info.style.backgroundColor = Perf.INFO_BG_CLR;
-		this.info.style.color = Perf.INFO_TXT_CLR;
-		this.info.style.zIndex = "998";
-		this.info.innerHTML = val;
-	}
-};
-var Reflect = function() { };
-Reflect.__name__ = true;
-Reflect.field = function(o,field) {
-	try {
-		return o[field];
-	} catch( e ) {
-		if (e instanceof js__$Boot_HaxeError) e = e.val;
-		return null;
-	}
-};
-Reflect.callMethod = function(o,func,args) {
-	return func.apply(o,args);
-};
-Reflect.isFunction = function(f) {
-	return typeof(f) == "function" && !(f.__name__ || f.__ename__);
-};
-Reflect.compareMethods = function(f1,f2) {
-	if(f1 == f2) return true;
-	if(!Reflect.isFunction(f1) || !Reflect.isFunction(f2)) return false;
-	return f1.scope == f2.scope && f1.method == f2.method && f1.method != null;
-};
 var Std = function() { };
 Std.__name__ = true;
-Std.string = function(s) {
-	return js_Boot.__string_rec(s,"");
-};
 Std.parseInt = function(x) {
 	var v = parseInt(x,10);
 	if(v == 0 && (HxOverrides.cca(x,1) == 120 || HxOverrides.cca(x,1) == 88)) v = parseInt(x);
@@ -1456,76 +1208,6 @@ js__$Boot_HaxeError.__name__ = true;
 js__$Boot_HaxeError.__super__ = Error;
 js__$Boot_HaxeError.prototype = $extend(Error.prototype,{
 });
-var js_Boot = function() { };
-js_Boot.__name__ = true;
-js_Boot.__string_rec = function(o,s) {
-	if(o == null) return "null";
-	if(s.length >= 5) return "<...>";
-	var t = typeof(o);
-	if(t == "function" && (o.__name__ || o.__ename__)) t = "object";
-	switch(t) {
-	case "object":
-		if(o instanceof Array) {
-			if(o.__enum__) {
-				if(o.length == 2) return o[0];
-				var str2 = o[0] + "(";
-				s += "\t";
-				var _g1 = 2;
-				var _g = o.length;
-				while(_g1 < _g) {
-					var i1 = _g1++;
-					if(i1 != 2) str2 += "," + js_Boot.__string_rec(o[i1],s); else str2 += js_Boot.__string_rec(o[i1],s);
-				}
-				return str2 + ")";
-			}
-			var l = o.length;
-			var i;
-			var str1 = "[";
-			s += "\t";
-			var _g2 = 0;
-			while(_g2 < l) {
-				var i2 = _g2++;
-				str1 += (i2 > 0?",":"") + js_Boot.__string_rec(o[i2],s);
-			}
-			str1 += "]";
-			return str1;
-		}
-		var tostr;
-		try {
-			tostr = o.toString;
-		} catch( e ) {
-			if (e instanceof js__$Boot_HaxeError) e = e.val;
-			return "???";
-		}
-		if(tostr != null && tostr != Object.toString && typeof(tostr) == "function") {
-			var s2 = o.toString();
-			if(s2 != "[object Object]") return s2;
-		}
-		var k = null;
-		var str = "{\n";
-		s += "\t";
-		var hasp = o.hasOwnProperty != null;
-		for( var k in o ) {
-		if(hasp && !o.hasOwnProperty(k)) {
-			continue;
-		}
-		if(k == "prototype" || k == "__class__" || k == "__super__" || k == "__interfaces__" || k == "__properties__") {
-			continue;
-		}
-		if(str.length != 2) str += ", \n";
-		str += s + k + " : " + js_Boot.__string_rec(o[k],s);
-		}
-		s = s.substring(1);
-		str += "\n" + s + "}";
-		return str;
-	case "function":
-		return "<function>";
-	case "string":
-		return o;
-	default:
-		return String(o);
-	}
-};
 var msignal_Signal = function(valueClasses) {
 	if(valueClasses == null) valueClasses = [];
 	this.valueClasses = valueClasses;
@@ -1783,23 +1465,9 @@ if(Array.prototype.indexOf) HxOverrides.indexOf = function(a,o,i) {
 };
 String.__name__ = true;
 Array.__name__ = true;
-Date.__name__ = ["Date"];
 var Dynamic = { __name__ : ["Dynamic"]};
 var __map_reserved = {}
 msignal_SlotList.NIL = new msignal_SlotList(null,null);
-Perf.MEASUREMENT_INTERVAL = 1000;
-Perf.FONT_FAMILY = "Helvetica,Arial";
-Perf.FPS_BG_CLR = "#00FF00";
-Perf.FPS_WARN_BG_CLR = "#FF8000";
-Perf.FPS_PROB_BG_CLR = "#FF0000";
-Perf.MS_BG_CLR = "#FFFF00";
-Perf.MEM_BG_CLR = "#086A87";
-Perf.INFO_BG_CLR = "#00FFFF";
-Perf.FPS_TXT_CLR = "#000000";
-Perf.MS_TXT_CLR = "#000000";
-Perf.MEM_TXT_CLR = "#FFFFFF";
-Perf.INFO_TXT_CLR = "#000000";
-Perf.DELAY_TIME = 4000;
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
 Waud.version = { scripts : { test : "echo \"no test specified\" && exit 0"}, dependencies : { }, repository : { url : "https://github.com/adireddy/waud", type : "git"}, devDependencies : { 'grunt-zip' : "latest", 'grunt-cli' : "latest", async : "~0.9.0", 'grunt-contrib-yuidoc' : "^0.10.0", browserify : "latest", grunt : "latest", 'yuidoc-theme-blue' : "^0.1.9", 'grunt-browserify' : "latest", 'grunt-contrib-uglify' : "latest", yuidocjs : "^0.9.0", 'grunt-haxe' : "latest", 'grunt-shell' : "^1.1.2"}, keywords : ["web audio","web audio api","haxe","javascript","audio","web","sounds","audiocontext","library","waud.js","waud","audiosprite","sprite","audio sprite"], version : "0.5.0", author : { email : "adiinteractive@gmail.com", name : "Adi Reddy Mora"}, description : "Web Audio Library", license : "MIT", name : "waud.js", main : "./dist/waud.js", bugs : { url : "https://github.com/adireddy/waud/issues"}}.version;
@@ -1815,7 +1483,7 @@ WaudFocusManager.PAGE_SHOW = "pageshow";
 WaudFocusManager.PAGE_HIDE = "pagehide";
 WaudFocusManager.WINDOW = "window";
 WaudFocusManager.DOCUMENT = "document";
-Main.main();
+Sample2.main();
 })(typeof console != "undefined" ? console : {log:function(){}}, typeof window != "undefined" ? window : exports);
 
-//# sourceMappingURL=sample.js.map
+//# sourceMappingURL=sample2.js.map

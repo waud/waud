@@ -1,0 +1,21 @@
+-cp src
+-cp sample
+-lib pixijs
+-lib msignal
+
+-dce full
+-debug
+-D source-map-content
+
+--each
+
+--next
+
+-main Main
+-D stats
+-js sample/sample.js
+
+--next
+
+-main Sample2
+-js sample/sample2.js

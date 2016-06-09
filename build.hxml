@@ -3,13 +3,11 @@
 -cmd haxelib install msignal
 -cmd haxelib install utest
 -cmd haxelib install closure
--cmd haxelib install compiletime
 
 --next
 
 -cp test
 -cp src
--lib compiletime
 -lib utest
 -main Test
 -js test/test.js
@@ -17,7 +15,6 @@
 --next
 
 -cp src
--lib compiletime
 Waud
 WaudSound
 HTML5Sound
@@ -31,7 +28,6 @@ WebAudioAPISound
 
 -cp src
 -lib closure
--lib compiletime
 Waud
 WaudSound
 HTML5Sound
@@ -40,21 +36,6 @@ WebAudioAPISound
 -js dist/waud.min.js
 -dce full
 --no-traces
-
---next
-
--cp src
--cp sample
-
--main Main
--lib pixijs
--lib compiletime
--lib msignal
--js sample/sample.js
--dce full
--debug
--D source-map-content
--D stats
 
 #--next
 #-cmd waudsprite --loop loop --autoplay loop  -o sample/assets/sprite -e m4a sample/assets/*.mp3
