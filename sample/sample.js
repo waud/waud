@@ -540,7 +540,7 @@ var Main = function() {
 	this._addButton("Stop",240,300,60,30,function() {
 		_g._countdown.stop();
 	});
-	this._addButton("Seek",300,300,60,30,function() {
+	this._addButton("Seek 1s",300,300,60,30,function() {
 		_g._countdown.setTime(_g._countdown.getTime() + 1);
 	});
 	label = new PIXI.Text("Test 2: ",{ font : "26px Tahoma", fill : "#FFFFFF"});
@@ -554,9 +554,6 @@ var Main = function() {
 	});
 	this._addButton("Stop",240,350,60,30,function() {
 		_g._audSprite.stop();
-	});
-	this._addButton("Seek",300,350,60,30,function() {
-		_g._audSprite.setTime(_g._audSprite.getTime() + 1);
 	});
 	this._addButton("DESTROY",120,400,180,30,function() {
 		Waud.destroy();
