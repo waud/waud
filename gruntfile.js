@@ -6,6 +6,9 @@ module.exports = function (grunt) {
         haxe: {
             project: {
                 hxml: "build.hxml"
+            },
+            samples: {
+                hxml: "samples.hxml"
             }
         },
 
