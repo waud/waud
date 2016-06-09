@@ -1319,7 +1319,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		this._pauseTime += this._manager.audioContext.currentTime - this._playStartTime;
 	}
 	,setTime: function(time) {
-		if(this._snd == null || !this._isLoaded || time > this._snd.buffer.duration) return;
+		if(!this._isLoaded || time > this.get_duration()) return;
 		if(this._isPlaying) {
 			this.stop();
 			this._pauseTime = time;

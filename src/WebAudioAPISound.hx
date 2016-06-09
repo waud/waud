@@ -172,7 +172,7 @@ import js.html.audio.AudioBuffer;
 	}
 
 	public function setTime(time:Float) {
-		if (_snd == null || !_isLoaded || time > _snd.buffer.duration) return;
+		if (!_isLoaded || time > duration) return;
 
 		if (_isPlaying) {
 			stop();
