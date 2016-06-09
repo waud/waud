@@ -20,7 +20,7 @@ import js.Browser;
 	* @static
 	* @type {String}
 	*/
-	public static var version:String = CompileTime.parseJsonFile("./package.json").version;
+	public static var version:String = MacroUtils.parseJsonFile("./package.json").version;
 
 	/**
 	* Tells whether to use web audio api or not.
