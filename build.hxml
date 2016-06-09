@@ -41,20 +41,5 @@ WebAudioAPISound
 -dce full
 --no-traces
 
---next
-
--cp src
--cp sample
-
--main Main
--lib pixijs
--lib compiletime
--lib msignal
--js sample/sample.js
--dce full
--debug
--D source-map-content
--D stats
-
 #--next
 #-cmd waudsprite --loop loop --autoplay loop  -o sample/assets/sprite -e m4a sample/assets/*.mp3
