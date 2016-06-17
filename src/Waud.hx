@@ -234,11 +234,11 @@ import js.Browser;
 	/**
 	* Helper function to unlock audio on iOS devices.
 	*
-	* You can pass an optional callback which will be triggered on `touchend` event.
+	* You can pass an optional callback which will be triggered after unlocking audio.
 	*
 	* @static
 	* @method enableTouchUnlock
-	* @param {Function} [callback] - Optional callback that triggers after touch unlock.
+	* @param {Function} [callback] - Optional callback that triggers after unlocking audio.
 	* @example
  	*     Waud.enableTouchUnlock(callback);
 	*/

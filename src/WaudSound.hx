@@ -49,7 +49,7 @@ import haxe.Json;
 	* @param {WaudSoundOptions} [options] - Sound options.
 	* @example
 	* 		// MP3 Sound
-	* 		var snd = new WaudSound("assets/loop.mp3", { autoplay: false, loop: true, volume: 0.5, onload: _playBgSound });
+	* 		var snd = new WaudSound("assets/loop.mp3", { autoplay: false, loop: true, volume: 0.5 });
 	*
 	* 		// Force HTML5 Audio
 	* 		var snd = new WaudSound("assets/loop.mp3", { webaudio: false });
