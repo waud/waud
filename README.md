@@ -29,7 +29,7 @@ For haxe users:
 
 Example: 
 ```js
-var snd = new WaudSound("assets/loop.mp3", { autoplay: false, loop: true, volume: 0.5, onload: _playBgSound });
+var snd = new WaudSound("assets/loop.mp3", { autoplay: false, loop: true, volume: 0.5, onload: playBgSound });
 ```
 
 ### Audio Sprite
@@ -57,8 +57,8 @@ Waud.init();
 Waud.enableTouchUnlock(touchUnlock);
 Waud.autoMute();
 
-var _bgSnd = new WaudSound("assets/loop.mp3", {
-	"autoplay": false, "loop":true, "volume": 0.5, "onload": _playBgSound
+var bgSnd = new WaudSound("assets/loop.mp3", {
+	"autoplay": false, "loop":true, "volume": 0.5, "onload": playBgSound
 });
 
 var snd2 = new WaudSound("assets/sound1.wav", {
@@ -71,10 +71,10 @@ var snd2 = new WaudSound("assets/sound1.wav", {
 
 //Touch unlock event for iOS devices
 function touchUnlock() {
-	if (!_bgSnd.isPlaying()) _bgSnd.play();
+	if (!bgSnd.isPlaying()) bgSnd.play();
 }
 
-function _playBgSound(snd) {
+function playBgSound(snd) {
 	if (!snd.isPlaying()) snd.play();
 }
 ```
