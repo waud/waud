@@ -22,8 +22,8 @@
     "contributors": [
 	"adireddy"
     ],
-    "releasenote": "bug fixes and removed compiletime dependency",
-    "version": "0.5.0",
+    "releasenote": "removed macros",
+    "version": "0.5.1",
     "url": "https://github.com/adireddy/waud",
     "dependencies": {}
 }
