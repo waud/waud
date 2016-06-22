@@ -212,6 +212,7 @@ import haxe.Json;
 					break;
 				}
 			}
+			if (soundProps == null) return null;
 		}
 		return _snd.play(spriteName, soundProps);
 	}
