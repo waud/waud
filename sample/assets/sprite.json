@@ -5,7 +5,7 @@
       "name": "bell",
       "start": 0,
       "duration": 2.1149886621315193,
-      "loop": false
+      "loop": true
     },
     {
       "name": "canopening",
