@@ -596,6 +596,7 @@ WaudSound.prototype = {
 					break;
 				}
 			}
+			if(soundProps == null) return null;
 		}
 		return this._snd.play(spriteName,soundProps);
 	}
@@ -783,8 +784,8 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 			this._isPlaying = true;
 			this._snd.onended = function() {
 				_g._pauseTime = 0;
-				if(_g.isSpriteSound && soundProps != null && soundProps.loop && start >= 0 && end > -1) _g.play(spriteName,soundProps);
 				_g._isPlaying = false;
+				if(_g.isSpriteSound && soundProps != null && soundProps.loop != null && soundProps.loop && start >= 0 && end > -1) _g.play(spriteName,soundProps);
 				if(_g._options.onend != null) _g._options.onend(_g);
 			};
 		}

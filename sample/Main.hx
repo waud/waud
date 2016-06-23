@@ -74,8 +74,8 @@ class Main extends Application {
 		_btnContainer.addChild(label);
 		label.position.y = 250;
 		_addButton("Glass", 120, 250, 60, 30, function() { _audSprite.play("glass"); });
-		_addButton("Bell", 180, 250, 60, 30, function() { _audSprite.play("bell"); });
-		_addButton("Can", 240, 250, 60, 30, function() { _audSprite.play("canopening"); });
+		_addButton("Bell (loop)", 180, 250, 120, 30, function() { _audSprite.play("bell"); });
+		_addButton("Can", 300, 250, 60, 30, function() { _audSprite.play("canopening"); });
 
 		label = new Text("Test 1: ", { font: "26px Tahoma", fill:"#FFFFFF" });
 		_btnContainer.addChild(label);
@@ -127,8 +127,8 @@ class Main extends Application {
 	}
 
 	function _onLoad(snd:IWaudSound) {
-		trace(snd.url);
-		trace(snd.duration);
+		//trace(snd.url);
+		//trace(snd.duration);
 	}
 
 	function touchUnlock() {

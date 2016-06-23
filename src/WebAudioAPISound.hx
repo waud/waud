@@ -112,10 +112,10 @@ import js.html.audio.AudioBuffer;
 			_isPlaying = true;
 			_snd.onended = function() {
 				_pauseTime = 0;
-				if (isSpriteSound && soundProps != null && soundProps.loop && start >= 0 && end > -1) {
+				_isPlaying = false;
+				if (isSpriteSound && soundProps != null && soundProps.loop != null && soundProps.loop && start >= 0 && end > -1) {
 					play(spriteName, soundProps);
 				}
-				_isPlaying = false;
 				if (_options.onend != null) _options.onend(this);
 			}
 		}

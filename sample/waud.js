@@ -71,11 +71,11 @@ AudioManager.prototype = {
 };
 var BaseSound = function(sndUrl,options) {
 	if(sndUrl == null || sndUrl == "") {
-		console.log("invalid sound url");
+		haxe_Log.trace("invalid sound url",{ fileName : "BaseSound.hx", lineNumber : 14, className : "BaseSound", methodName : "new"});
 		return;
 	}
 	if(Waud.audioManager == null) {
-		console.log("initialise Waud using Waud.init() before loading sounds");
+		haxe_Log.trace("initialise Waud using Waud.init() before loading sounds",{ fileName : "BaseSound.hx", lineNumber : 18, className : "BaseSound", methodName : "new"});
 		return;
 	}
 	this.duration = 0;
@@ -101,86 +101,6 @@ BaseSound.prototype = {
 		return 0;
 	}
 };
-var Button = function(label,width,height,data,fontSize) {
-	PIXI.Container.call(this);
-	this.action = new msignal_Signal1(Dynamic);
-	this._data = data;
-	this._setupBackground(width,height);
-	this._setupLabel(width,height,fontSize);
-	this._label.text = label;
-};
-Button.__name__ = true;
-Button.__super__ = PIXI.Container;
-Button.prototype = $extend(PIXI.Container.prototype,{
-	_setupBackground: function(width,height) {
-		this._rect = new PIXI.Rectangle(0,0,width,height);
-		this._background = new PIXI.Graphics();
-		this._background.interactive = true;
-		this._redraw(3040510);
-		this.addChild(this._background);
-		this._background.interactive = true;
-		this._background.on("mouseover",$bind(this,this._onMouseOver));
-		this._background.on("mouseout",$bind(this,this._onMouseOut));
-		this._background.on("mousedown",$bind(this,this._onMouseDown));
-		this._background.on("mouseup",$bind(this,this._onMouseUp));
-		this._background.on("mouseupoutside",$bind(this,this._onMouseUpOutside));
-		this._background.on("touchstart",$bind(this,this._onTouchStart));
-		this._background.on("touchend",$bind(this,this._onTouchEnd));
-		this._background.on("touchendoutside",$bind(this,this._onTouchEndOutside));
-	}
-	,_setupLabel: function(width,height,fontSize) {
-		var size;
-		if(fontSize != null) size = fontSize; else size = 12;
-		var style = { };
-		style.font = size + "px Arial";
-		style.fill = "#FFFFFF";
-		this._label = new PIXI.Text("",style);
-		this._label.anchor.set(0.5);
-		this._label.x = width / 2;
-		this._label.y = height / 2;
-		this.addChild(this._label);
-	}
-	,_redraw: function(colour) {
-		var border = 1;
-		this._background.clear();
-		this._background.beginFill(13158);
-		this._background.drawRect(this._rect.x,this._rect.y,this._rect.width,this._rect.height);
-		this._background.endFill();
-		this._background.beginFill(colour);
-		this._background.drawRect(this._rect.x + border / 2,this._rect.y + border / 2,this._rect.width - border,this._rect.height - border);
-		this._background.endFill();
-	}
-	,_onMouseDown: function(target) {
-		if(this._enabled) this._redraw(14644225);
-	}
-	,_onMouseUp: function(target) {
-		if(this._enabled) {
-			this.action.dispatch(this._data);
-			this._redraw(3040510);
-		}
-	}
-	,_onMouseUpOutside: function(target) {
-		if(this._enabled) this._redraw(3040510);
-	}
-	,_onMouseOver: function(target) {
-		if(this._enabled) this._redraw(14644225);
-	}
-	,_onMouseOut: function(target) {
-		if(this._enabled) this._redraw(3040510);
-	}
-	,_onTouchEndOutside: function(target) {
-		if(this._enabled) this._redraw(3040510);
-	}
-	,_onTouchEnd: function(target) {
-		if(this._enabled) {
-			this._redraw(3040510);
-			this.action.dispatch(this._data);
-		}
-	}
-	,_onTouchStart: function(target) {
-		if(this._enabled) this._redraw(14644225);
-	}
-});
 var EReg = function(r,opt) {
 	opt = opt.split("u").join("");
 	this.r = new RegExp(r,opt);
@@ -286,7 +206,7 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 	,play: function(spriteName,soundProps) {
 		var _g = this;
 		if(!this._isLoaded || this._snd == null) {
-			console.log("sound not loaded");
+			haxe_Log.trace("sound not loaded",{ fileName : "HTML5Sound.hx", lineNumber : 107, className : "HTML5Sound", methodName : "play"});
 			return -1;
 		}
 		if(this._muted) return -1;
@@ -370,387 +290,7 @@ HxOverrides.indexOf = function(a,obj,i) {
 	}
 	return -1;
 };
-var pixi_plugins_app_Application = function() {
-	this._animationFrameId = null;
-	this.pixelRatio = 1;
-	this.set_skipFrame(false);
-	this.autoResize = true;
-	this.transparent = false;
-	this.antialias = false;
-	this.forceFXAA = false;
-	this.roundPixels = false;
-	this.clearBeforeRender = true;
-	this.preserveDrawingBuffer = false;
-	this.backgroundColor = 16777215;
-	this.width = window.innerWidth;
-	this.height = window.innerHeight;
-	this.set_fps(60);
-};
-pixi_plugins_app_Application.__name__ = true;
-pixi_plugins_app_Application.prototype = {
-	set_fps: function(val) {
-		this._frameCount = 0;
-		return val >= 1 && val < 60?this.fps = val | 0:this.fps = 60;
-	}
-	,set_skipFrame: function(val) {
-		if(val) {
-			console.log("pixi.plugins.app.Application > Deprecated: skipFrame - use fps property and set it to 30 instead");
-			this.set_fps(30);
-		}
-		return this.skipFrame = val;
-	}
-	,start: function(rendererType,parentDom,canvasElement) {
-		if(rendererType == null) rendererType = "auto";
-		if(canvasElement == null) {
-			var _this = window.document;
-			this.canvas = _this.createElement("canvas");
-			this.canvas.style.width = this.width + "px";
-			this.canvas.style.height = this.height + "px";
-			this.canvas.style.position = "absolute";
-		} else this.canvas = canvasElement;
-		if(parentDom == null) window.document.body.appendChild(this.canvas); else parentDom.appendChild(this.canvas);
-		this.stage = new PIXI.Container();
-		var renderingOptions = { };
-		renderingOptions.view = this.canvas;
-		renderingOptions.backgroundColor = this.backgroundColor;
-		renderingOptions.resolution = this.pixelRatio;
-		renderingOptions.antialias = this.antialias;
-		renderingOptions.forceFXAA = this.forceFXAA;
-		renderingOptions.autoResize = this.autoResize;
-		renderingOptions.transparent = this.transparent;
-		renderingOptions.clearBeforeRender = this.clearBeforeRender;
-		renderingOptions.preserveDrawingBuffer = this.preserveDrawingBuffer;
-		if(rendererType == "auto") this.renderer = PIXI.autoDetectRenderer(this.width,this.height,renderingOptions); else if(rendererType == "canvas") this.renderer = new PIXI.CanvasRenderer(this.width,this.height,renderingOptions); else this.renderer = new PIXI.WebGLRenderer(this.width,this.height,renderingOptions);
-		if(this.roundPixels) this.renderer.roundPixels = true;
-		if(parentDom == null) window.document.body.appendChild(this.renderer.view); else parentDom.appendChild(this.renderer.view);
-		this.resumeRendering();
-		this.addStats();
-	}
-	,resumeRendering: function() {
-		if(this.autoResize) window.onresize = $bind(this,this._onWindowResize);
-		if(this._animationFrameId == null) this._animationFrameId = window.requestAnimationFrame($bind(this,this._onRequestAnimationFrame));
-	}
-	,_onWindowResize: function(event) {
-		this.width = window.innerWidth;
-		this.height = window.innerHeight;
-		this.renderer.resize(this.width,this.height);
-		this.canvas.style.width = this.width + "px";
-		this.canvas.style.height = this.height + "px";
-		if(this.onResize != null) this.onResize();
-	}
-	,_onRequestAnimationFrame: function(elapsedTime) {
-		this._frameCount++;
-		if(this._frameCount == (60 / this.fps | 0)) {
-			this._frameCount = 0;
-			if(this.onUpdate != null) this.onUpdate(elapsedTime);
-			this.renderer.render(this.stage);
-		}
-		this._animationFrameId = window.requestAnimationFrame($bind(this,this._onRequestAnimationFrame));
-	}
-	,addStats: function() {
-		if(window.Perf != null) new Perf().addInfo(["UNKNOWN","WEBGL","CANVAS"][this.renderer.type] + " - " + this.pixelRatio);
-	}
-};
-var Main = function() {
-	var _g = this;
-	pixi_plugins_app_Application.call(this);
-	PIXI.RESOLUTION = this.pixelRatio = window.devicePixelRatio;
-	this.autoResize = true;
-	this.backgroundColor = 6227124;
-	this.roundPixels = true;
-	this.onResize = $bind(this,this._resize);
-	pixi_plugins_app_Application.prototype.start.call(this);
-	this._btnContainer = new PIXI.Container();
-	this.stage.addChild(this._btnContainer);
-	var label = new PIXI.Text("MP3: ",{ font : "26px Tahoma", fill : "#FFFFFF"});
-	this._btnContainer.addChild(label);
-	this._addButton("Glass",120,0,60,30,function() {
-		_g._glassMP3.play();
-	});
-	this._addButton("Bell",180,0,60,30,function() {
-		_g._bellMP3.play();
-	});
-	this._addButton("Can",240,0,60,30,function() {
-		_g._canMP3.play();
-	});
-	label = new PIXI.Text("AAC: ",{ font : "26px Tahoma", fill : "#FFFFFF"});
-	this._btnContainer.addChild(label);
-	label.position.y = 50;
-	this._addButton("Glass",120,50,60,30,function() {
-		_g._glassAAC.play();
-	});
-	this._addButton("Bell",180,50,60,30,function() {
-		_g._bellAAC.play();
-	});
-	this._addButton("Can",240,50,60,30,function() {
-		_g._canAAC.play();
-	});
-	label = new PIXI.Text("OGG: ",{ font : "26px Tahoma", fill : "#FFFFFF"});
-	this._btnContainer.addChild(label);
-	label.position.y = 100;
-	this._addButton("Glass",120,100,60,30,function() {
-		_g._glassOGG.play();
-	});
-	this._addButton("Bell",180,100,60,30,function() {
-		_g._bellOGG.play();
-	});
-	this._addButton("Can",240,100,60,30,function() {
-		_g._canOGG.play();
-	});
-	label = new PIXI.Text("Controls: ",{ font : "26px Tahoma", fill : "#FFFFFF"});
-	this._btnContainer.addChild(label);
-	label.position.y = 150;
-	this._addButton("Mute",120,150,60,30,$bind(this,this._mute));
-	this._addButton("Unmute",180,150,60,30,$bind(this,this._unmute));
-	this._addButton("BG Vol 0",240,150,60,30,function() {
-		_g._bgSnd.setVolume(0);
-	});
-	this._addButton("BG Vol 1",300,150,60,30,function() {
-		_g._bgSnd.setVolume(1);
-	});
-	this._addButton("BG Toggle Play",120,190,100,30,function() {
-		_g._bgSnd.togglePlay();
-	});
-	this._addButton("BG Toggle Mute",220,190,100,30,function() {
-		_g._bgSnd.toggleMute();
-	});
-	this._addButton("Stop All",320,190,60,30,$bind(this,this._stop));
-	this._addButton("Pause All",380,190,60,30,$bind(this,this._pause));
-	label = new PIXI.Text("Sprite: ",{ font : "26px Tahoma", fill : "#FFFFFF"});
-	this._btnContainer.addChild(label);
-	label.position.y = 250;
-	this._addButton("Glass",120,250,60,30,function() {
-		_g._audSprite.play("glass");
-	});
-	this._addButton("Bell (loop)",180,250,120,30,function() {
-		_g._audSprite.play("bell");
-	});
-	this._addButton("Can",300,250,60,30,function() {
-		_g._audSprite.play("canopening");
-	});
-	label = new PIXI.Text("Test 1: ",{ font : "26px Tahoma", fill : "#FFFFFF"});
-	this._btnContainer.addChild(label);
-	label.position.y = 300;
-	this._addButton("Play",120,300,60,30,function() {
-		_g._countdown.play();
-	});
-	this._addButton("Pause",180,300,60,30,function() {
-		_g._countdown.pause();
-	});
-	this._addButton("Stop",240,300,60,30,function() {
-		_g._countdown.stop();
-	});
-	this._addButton("Seek 1s",300,300,60,30,function() {
-		_g._countdown.setTime(_g._countdown.getTime() + 1);
-	});
-	label = new PIXI.Text("Test 2: ",{ font : "26px Tahoma", fill : "#FFFFFF"});
-	this._btnContainer.addChild(label);
-	label.position.y = 350;
-	this._addButton("Play",120,350,60,30,function() {
-		_g._audSprite.play("countdown");
-	});
-	this._addButton("Pause",180,350,60,30,function() {
-		_g._audSprite.pause();
-	});
-	this._addButton("Stop",240,350,60,30,function() {
-		_g._audSprite.stop();
-	});
-	this._addButton("DESTROY",120,400,180,30,function() {
-		Waud.destroy();
-	});
-	this._ua = new PIXI.Text(window.navigator.userAgent,{ font : "12px Tahoma", fill : "#FFFFFF"});
-	this.stage.addChild(this._ua);
-	Waud.init();
-	Waud.autoMute();
-	Waud.enableTouchUnlock($bind(this,this.touchUnlock));
-	Waud.defaults.onload = $bind(this,this._onLoad);
-	this._bgSnd = new WaudSound("assets/loop.mp3",{ loop : true, autoplay : false, volume : 1, onload : $bind(this,this._playBgSound)});
-	this._glassMP3 = new WaudSound("assets/glass.mp3");
-	this._bellMP3 = new WaudSound("assets/bell.mp3");
-	this._canMP3 = new WaudSound("assets/canopening.mp3");
-	this._glassAAC = new WaudSound("assets/glass.aac");
-	this._bellAAC = new WaudSound("assets/bell.aac");
-	this._canAAC = new WaudSound("assets/canopening.aac");
-	this._glassOGG = new WaudSound("assets/glass.ogg");
-	this._bellOGG = new WaudSound("assets/bell.ogg");
-	this._canOGG = new WaudSound("assets/canopening.ogg");
-	this._ua.text += "\n" + Waud.getFormatSupportString();
-	this._ua.text += "\nWeb Audio API: " + Std.string(Waud.isWebAudioSupported);
-	this._ua.text += "\nHTML5 Audio: " + Std.string(Waud.isHTML5AudioSupported);
-	this._audSprite = new WaudSound("assets/sprite.json");
-	this._countdown = new WaudSound("assets/countdown.mp3",{ webaudio : true});
-	this._resize();
-};
-Main.__name__ = true;
-Main.main = function() {
-	new Main();
-};
-Main.__super__ = pixi_plugins_app_Application;
-Main.prototype = $extend(pixi_plugins_app_Application.prototype,{
-	_onLoad: function(snd) {
-	}
-	,touchUnlock: function() {
-		if(!this._bgSnd.isPlaying()) this._bgSnd.play();
-	}
-	,_playBgSound: function(snd) {
-		if(!snd.isPlaying()) snd.play();
-	}
-	,_mute: function() {
-		Waud.mute(true);
-	}
-	,_unmute: function() {
-		Waud.mute(false);
-	}
-	,_stop: function() {
-		Waud.stop();
-	}
-	,_pause: function() {
-		Waud.pause();
-	}
-	,_addButton: function(label,x,y,width,height,callback) {
-		var btn = new Button(label,width,height);
-		btn.position.set(x,y);
-		btn.action.add(callback);
-		btn._enabled = true;
-		this._btnContainer.addChild(btn);
-	}
-	,_resize: function() {
-		this._btnContainer.position.set((window.innerWidth - this._btnContainer.width) / 2,(window.innerHeight - this._btnContainer.height) / 2);
-	}
-});
 Math.__name__ = true;
-var Perf = $hx_exports.Perf = function(pos,offset) {
-	if(offset == null) offset = 0;
-	if(pos == null) pos = "TR";
-	this._perfObj = window.performance;
-	if(Reflect.field(this._perfObj,"memory") != null) this._memoryObj = Reflect.field(this._perfObj,"memory");
-	this._memCheck = this._perfObj != null && this._memoryObj != null && this._memoryObj.totalJSHeapSize > 0;
-	this._pos = pos;
-	this._offset = offset;
-	this.currentFps = 60;
-	this.currentMs = 0;
-	this.currentMem = "0";
-	this.lowFps = 60;
-	this.avgFps = 60;
-	this._measureCount = 0;
-	this._totalFps = 0;
-	this._time = 0;
-	this._ticks = 0;
-	this._fpsMin = 60;
-	this._fpsMax = 60;
-	if(this._perfObj != null && ($_=this._perfObj,$bind($_,$_.now)) != null) this._startTime = this._perfObj.now(); else this._startTime = new Date().getTime();
-	this._prevTime = -Perf.MEASUREMENT_INTERVAL;
-	this._createFpsDom();
-	this._createMsDom();
-	if(this._memCheck) this._createMemoryDom();
-	if(($_=window,$bind($_,$_.requestAnimationFrame)) != null) this.RAF = ($_=window,$bind($_,$_.requestAnimationFrame)); else if(window.mozRequestAnimationFrame != null) this.RAF = window.mozRequestAnimationFrame; else if(window.webkitRequestAnimationFrame != null) this.RAF = window.webkitRequestAnimationFrame; else if(window.msRequestAnimationFrame != null) this.RAF = window.msRequestAnimationFrame;
-	if(($_=window,$bind($_,$_.cancelAnimationFrame)) != null) this.CAF = ($_=window,$bind($_,$_.cancelAnimationFrame)); else if(window.mozCancelAnimationFrame != null) this.CAF = window.mozCancelAnimationFrame; else if(window.webkitCancelAnimationFrame != null) this.CAF = window.webkitCancelAnimationFrame; else if(window.msCancelAnimationFrame != null) this.CAF = window.msCancelAnimationFrame;
-	if(this.RAF != null) this._raf = Reflect.callMethod(window,this.RAF,[$bind(this,this._tick)]);
-};
-Perf.__name__ = true;
-Perf.prototype = {
-	_tick: function(val) {
-		var time;
-		if(this._perfObj != null && ($_=this._perfObj,$bind($_,$_.now)) != null) time = this._perfObj.now(); else time = new Date().getTime();
-		this._ticks++;
-		if(this._raf != null && time > this._prevTime + Perf.MEASUREMENT_INTERVAL) {
-			this.currentMs = Math.round(time - this._startTime);
-			this.ms.innerHTML = "MS: " + this.currentMs;
-			this.currentFps = Math.round(this._ticks * 1000 / (time - this._prevTime));
-			if(this.currentFps > 0 && val > Perf.DELAY_TIME) {
-				this._measureCount++;
-				this._totalFps += this.currentFps;
-				this.lowFps = this._fpsMin = Math.min(this._fpsMin,this.currentFps);
-				this._fpsMax = Math.max(this._fpsMax,this.currentFps);
-				this.avgFps = Math.round(this._totalFps / this._measureCount);
-			}
-			this.fps.innerHTML = "FPS: " + this.currentFps + " (" + this._fpsMin + "-" + this._fpsMax + ")";
-			if(this.currentFps >= 30) this.fps.style.backgroundColor = Perf.FPS_BG_CLR; else if(this.currentFps >= 15) this.fps.style.backgroundColor = Perf.FPS_WARN_BG_CLR; else this.fps.style.backgroundColor = Perf.FPS_PROB_BG_CLR;
-			this._prevTime = time;
-			this._ticks = 0;
-			if(this._memCheck) {
-				this.currentMem = this._getFormattedSize(this._memoryObj.usedJSHeapSize,2);
-				this.memory.innerHTML = "MEM: " + this.currentMem;
-			}
-		}
-		this._startTime = time;
-		if(this._raf != null) this._raf = Reflect.callMethod(window,this.RAF,[$bind(this,this._tick)]);
-	}
-	,_createDiv: function(id,top) {
-		if(top == null) top = 0;
-		var div;
-		var _this = window.document;
-		div = _this.createElement("div");
-		div.id = id;
-		div.className = id;
-		div.style.position = "absolute";
-		var _g = this._pos;
-		switch(_g) {
-		case "TL":
-			div.style.left = this._offset + "px";
-			div.style.top = top + "px";
-			break;
-		case "TR":
-			div.style.right = this._offset + "px";
-			div.style.top = top + "px";
-			break;
-		case "BL":
-			div.style.left = this._offset + "px";
-			div.style.bottom = (this._memCheck?48:32) - top + "px";
-			break;
-		case "BR":
-			div.style.right = this._offset + "px";
-			div.style.bottom = (this._memCheck?48:32) - top + "px";
-			break;
-		}
-		div.style.width = "80px";
-		div.style.height = "12px";
-		div.style.lineHeight = "12px";
-		div.style.padding = "2px";
-		div.style.fontFamily = Perf.FONT_FAMILY;
-		div.style.fontSize = "9px";
-		div.style.fontWeight = "bold";
-		div.style.textAlign = "center";
-		window.document.body.appendChild(div);
-		return div;
-	}
-	,_createFpsDom: function() {
-		this.fps = this._createDiv("fps");
-		this.fps.style.backgroundColor = Perf.FPS_BG_CLR;
-		this.fps.style.zIndex = "995";
-		this.fps.style.color = Perf.FPS_TXT_CLR;
-		this.fps.innerHTML = "FPS: 0";
-	}
-	,_createMsDom: function() {
-		this.ms = this._createDiv("ms",16);
-		this.ms.style.backgroundColor = Perf.MS_BG_CLR;
-		this.ms.style.zIndex = "996";
-		this.ms.style.color = Perf.MS_TXT_CLR;
-		this.ms.innerHTML = "MS: 0";
-	}
-	,_createMemoryDom: function() {
-		this.memory = this._createDiv("memory",32);
-		this.memory.style.backgroundColor = Perf.MEM_BG_CLR;
-		this.memory.style.color = Perf.MEM_TXT_CLR;
-		this.memory.style.zIndex = "997";
-		this.memory.innerHTML = "MEM: 0";
-	}
-	,_getFormattedSize: function(bytes,frac) {
-		if(frac == null) frac = 0;
-		var sizes = ["Bytes","KB","MB","GB","TB"];
-		if(bytes == 0) return "0";
-		var precision = Math.pow(10,frac);
-		var i = Math.floor(Math.log(bytes) / Math.log(1024));
-		return Math.round(bytes * precision / Math.pow(1024,i)) / precision + " " + sizes[i];
-	}
-	,addInfo: function(val) {
-		this.info = this._createDiv("info",this._memCheck?48:32);
-		this.info.style.backgroundColor = Perf.INFO_BG_CLR;
-		this.info.style.color = Perf.INFO_TXT_CLR;
-		this.info.style.zIndex = "998";
-		this.info.innerHTML = val;
-	}
-};
 var Reflect = function() { };
 Reflect.__name__ = true;
 Reflect.field = function(o,field) {
@@ -761,22 +301,8 @@ Reflect.field = function(o,field) {
 		return null;
 	}
 };
-Reflect.callMethod = function(o,func,args) {
-	return func.apply(o,args);
-};
-Reflect.isFunction = function(f) {
-	return typeof(f) == "function" && !(f.__name__ || f.__ename__);
-};
-Reflect.compareMethods = function(f1,f2) {
-	if(f1 == f2) return true;
-	if(!Reflect.isFunction(f1) || !Reflect.isFunction(f2)) return false;
-	return f1.scope == f2.scope && f1.method == f2.method && f1.method != null;
-};
 var Std = function() { };
 Std.__name__ = true;
-Std.string = function(s) {
-	return js_Boot.__string_rec(s,"");
-};
 Std.parseInt = function(x) {
 	var v = parseInt(x,10);
 	if(v == 0 && (HxOverrides.cca(x,1) == 120 || HxOverrides.cca(x,1) == 88)) v = parseInt(x);
@@ -1008,7 +534,7 @@ WaudFocusManager.prototype = {
 };
 var WaudSound = $hx_exports.WaudSound = function(url,options) {
 	if(Waud.audioManager == null) {
-		console.log("initialise Waud using Waud.init() before loading sounds");
+		haxe_Log.trace("initialise Waud using Waud.init() before loading sounds",{ fileName : "WaudSound.hx", lineNumber : 63, className : "WaudSound", methodName : "new"});
 		return;
 	}
 	this._options = options;
@@ -1040,7 +566,7 @@ WaudSound.prototype = {
 	,_init: function(soundUrl) {
 		this.url = soundUrl;
 		if(Waud.isWebAudioSupported && Waud.useWebAudio && (this._options == null || this._options.webaudio == null || this._options.webaudio)) this._snd = new WebAudioAPISound(this.url,this._options); else if(Waud.isHTML5AudioSupported) this._snd = new HTML5Sound(this.url,this._options); else {
-			console.log("no audio support in this browser");
+			haxe_Log.trace("no audio support in this browser",{ fileName : "WaudSound.hx", lineNumber : 117, className : "WaudSound", methodName : "_init"});
 			return;
 		}
 		this._snd.isSpriteSound = this.isSpriteSound;
@@ -1206,7 +732,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 	}
 	,_decodeSuccess: function(buffer) {
 		if(buffer == null) {
-			console.log("empty buffer: " + this.url);
+			haxe_Log.trace("empty buffer: " + this.url,{ fileName : "WebAudioAPISound.hx", lineNumber : 35, className : "WebAudioAPISound", methodName : "_decodeSuccess"});
 			if(this._options.onerror != null) this._options.onerror(this);
 			return;
 		}
@@ -1249,7 +775,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		var _g = this;
 		if(this._isPlaying) return HxOverrides.indexOf(this._srcNodes,this._snd,0);
 		if(!this._isLoaded) {
-			console.log("sound not loaded");
+			haxe_Log.trace("sound not loaded",{ fileName : "WebAudioAPISound.hx", lineNumber : 85, className : "WebAudioAPISound", methodName : "play"});
 			return -1;
 		}
 		if(this._muted) return -1;
@@ -1273,8 +799,9 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 			this._isPlaying = true;
 			this._snd.onended = function() {
 				_g._pauseTime = 0;
+				haxe_Log.trace(spriteName,{ fileName : "WebAudioAPISound.hx", lineNumber : 115, className : "WebAudioAPISound", methodName : "play", customParams : [_g.isSpriteSound,soundProps.loop,start,end]});
+				if(_g.isSpriteSound && soundProps != null && soundProps.loop && start >= 0 && end > -1) _g.play(spriteName,soundProps);
 				_g._isPlaying = false;
-				if(_g.isSpriteSound && soundProps != null && soundProps.loop != null && soundProps.loop && start >= 0 && end > -1) _g.play(spriteName,soundProps);
 				if(_g._options.onend != null) _g._options.onend(_g);
 			};
 		}
@@ -1370,6 +897,11 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 });
 var haxe_IMap = function() { };
 haxe_IMap.__name__ = true;
+var haxe_Log = function() { };
+haxe_Log.__name__ = true;
+haxe_Log.trace = function(v,infos) {
+	js_Boot.__trace(v,infos);
+};
 var haxe_Timer = function(time_ms) {
 	var me = this;
 	this.id = setInterval(function() {
@@ -1457,6 +989,25 @@ js__$Boot_HaxeError.prototype = $extend(Error.prototype,{
 });
 var js_Boot = function() { };
 js_Boot.__name__ = true;
+js_Boot.__unhtml = function(s) {
+	return s.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;");
+};
+js_Boot.__trace = function(v,i) {
+	var msg;
+	if(i != null) msg = i.fileName + ":" + i.lineNumber + ": "; else msg = "";
+	msg += js_Boot.__string_rec(v,"");
+	if(i != null && i.customParams != null) {
+		var _g = 0;
+		var _g1 = i.customParams;
+		while(_g < _g1.length) {
+			var v1 = _g1[_g];
+			++_g;
+			msg += "," + js_Boot.__string_rec(v1,"");
+		}
+	}
+	var d;
+	if(typeof(document) != "undefined" && (d = document.getElementById("haxe:trace")) != null) d.innerHTML += js_Boot.__unhtml(msg) + "<br/>"; else if(typeof console != "undefined" && console.log != null) console.log(msg);
+};
 js_Boot.__string_rec = function(o,s) {
 	if(o == null) return "null";
 	if(s.length >= 5) return "<...>";
@@ -1525,256 +1076,6 @@ js_Boot.__string_rec = function(o,s) {
 		return String(o);
 	}
 };
-var msignal_Signal = function(valueClasses) {
-	if(valueClasses == null) valueClasses = [];
-	this.valueClasses = valueClasses;
-	this.slots = msignal_SlotList.NIL;
-	this.priorityBased = false;
-};
-msignal_Signal.__name__ = true;
-msignal_Signal.prototype = {
-	add: function(listener) {
-		return this.registerListener(listener);
-	}
-	,addOnce: function(listener) {
-		return this.registerListener(listener,true);
-	}
-	,addWithPriority: function(listener,priority) {
-		if(priority == null) priority = 0;
-		return this.registerListener(listener,false,priority);
-	}
-	,addOnceWithPriority: function(listener,priority) {
-		if(priority == null) priority = 0;
-		return this.registerListener(listener,true,priority);
-	}
-	,remove: function(listener) {
-		var slot = this.slots.find(listener);
-		if(slot == null) return null;
-		this.slots = this.slots.filterNot(listener);
-		return slot;
-	}
-	,removeAll: function() {
-		this.slots = msignal_SlotList.NIL;
-	}
-	,registerListener: function(listener,once,priority) {
-		if(priority == null) priority = 0;
-		if(once == null) once = false;
-		if(this.registrationPossible(listener,once)) {
-			var newSlot = this.createSlot(listener,once,priority);
-			if(!this.priorityBased && priority != 0) this.priorityBased = true;
-			if(!this.priorityBased && priority == 0) this.slots = this.slots.prepend(newSlot); else this.slots = this.slots.insertWithPriority(newSlot);
-			return newSlot;
-		}
-		return this.slots.find(listener);
-	}
-	,registrationPossible: function(listener,once) {
-		if(!this.slots.nonEmpty) return true;
-		var existingSlot = this.slots.find(listener);
-		if(existingSlot == null) return true;
-		if(existingSlot.once != once) throw new js__$Boot_HaxeError("You cannot addOnce() then add() the same listener without removing the relationship first.");
-		return false;
-	}
-	,createSlot: function(listener,once,priority) {
-		if(priority == null) priority = 0;
-		if(once == null) once = false;
-		return null;
-	}
-	,get_numListeners: function() {
-		return this.slots.get_length();
-	}
-};
-var msignal_Signal0 = function() {
-	msignal_Signal.call(this);
-};
-msignal_Signal0.__name__ = true;
-msignal_Signal0.__super__ = msignal_Signal;
-msignal_Signal0.prototype = $extend(msignal_Signal.prototype,{
-	dispatch: function() {
-		var slotsToProcess = this.slots;
-		while(slotsToProcess.nonEmpty) {
-			slotsToProcess.head.execute();
-			slotsToProcess = slotsToProcess.tail;
-		}
-	}
-	,createSlot: function(listener,once,priority) {
-		if(priority == null) priority = 0;
-		if(once == null) once = false;
-		return new msignal_Slot0(this,listener,once,priority);
-	}
-});
-var msignal_Signal1 = function(type) {
-	msignal_Signal.call(this,[type]);
-};
-msignal_Signal1.__name__ = true;
-msignal_Signal1.__super__ = msignal_Signal;
-msignal_Signal1.prototype = $extend(msignal_Signal.prototype,{
-	dispatch: function(value) {
-		var slotsToProcess = this.slots;
-		while(slotsToProcess.nonEmpty) {
-			slotsToProcess.head.execute(value);
-			slotsToProcess = slotsToProcess.tail;
-		}
-	}
-	,createSlot: function(listener,once,priority) {
-		if(priority == null) priority = 0;
-		if(once == null) once = false;
-		return new msignal_Slot1(this,listener,once,priority);
-	}
-});
-var msignal_Signal2 = function(type1,type2) {
-	msignal_Signal.call(this,[type1,type2]);
-};
-msignal_Signal2.__name__ = true;
-msignal_Signal2.__super__ = msignal_Signal;
-msignal_Signal2.prototype = $extend(msignal_Signal.prototype,{
-	dispatch: function(value1,value2) {
-		var slotsToProcess = this.slots;
-		while(slotsToProcess.nonEmpty) {
-			slotsToProcess.head.execute(value1,value2);
-			slotsToProcess = slotsToProcess.tail;
-		}
-	}
-	,createSlot: function(listener,once,priority) {
-		if(priority == null) priority = 0;
-		if(once == null) once = false;
-		return new msignal_Slot2(this,listener,once,priority);
-	}
-});
-var msignal_Slot = function(signal,listener,once,priority) {
-	if(priority == null) priority = 0;
-	if(once == null) once = false;
-	this.signal = signal;
-	this.set_listener(listener);
-	this.once = once;
-	this.priority = priority;
-	this.enabled = true;
-};
-msignal_Slot.__name__ = true;
-msignal_Slot.prototype = {
-	remove: function() {
-		this.signal.remove(this.listener);
-	}
-	,set_listener: function(value) {
-		if(value == null) throw new js__$Boot_HaxeError("listener cannot be null");
-		return this.listener = value;
-	}
-};
-var msignal_Slot0 = function(signal,listener,once,priority) {
-	if(priority == null) priority = 0;
-	if(once == null) once = false;
-	msignal_Slot.call(this,signal,listener,once,priority);
-};
-msignal_Slot0.__name__ = true;
-msignal_Slot0.__super__ = msignal_Slot;
-msignal_Slot0.prototype = $extend(msignal_Slot.prototype,{
-	execute: function() {
-		if(!this.enabled) return;
-		if(this.once) this.remove();
-		this.listener();
-	}
-});
-var msignal_Slot1 = function(signal,listener,once,priority) {
-	if(priority == null) priority = 0;
-	if(once == null) once = false;
-	msignal_Slot.call(this,signal,listener,once,priority);
-};
-msignal_Slot1.__name__ = true;
-msignal_Slot1.__super__ = msignal_Slot;
-msignal_Slot1.prototype = $extend(msignal_Slot.prototype,{
-	execute: function(value1) {
-		if(!this.enabled) return;
-		if(this.once) this.remove();
-		if(this.param != null) value1 = this.param;
-		this.listener(value1);
-	}
-});
-var msignal_Slot2 = function(signal,listener,once,priority) {
-	if(priority == null) priority = 0;
-	if(once == null) once = false;
-	msignal_Slot.call(this,signal,listener,once,priority);
-};
-msignal_Slot2.__name__ = true;
-msignal_Slot2.__super__ = msignal_Slot;
-msignal_Slot2.prototype = $extend(msignal_Slot.prototype,{
-	execute: function(value1,value2) {
-		if(!this.enabled) return;
-		if(this.once) this.remove();
-		if(this.param1 != null) value1 = this.param1;
-		if(this.param2 != null) value2 = this.param2;
-		this.listener(value1,value2);
-	}
-});
-var msignal_SlotList = function(head,tail) {
-	this.nonEmpty = false;
-	if(head == null && tail == null) {
-		if(msignal_SlotList.NIL != null) throw new js__$Boot_HaxeError("Parameters head and tail are null. Use the NIL element instead.");
-		this.nonEmpty = false;
-	} else if(head == null) throw new js__$Boot_HaxeError("Parameter head cannot be null."); else {
-		this.head = head;
-		if(tail == null) this.tail = msignal_SlotList.NIL; else this.tail = tail;
-		this.nonEmpty = true;
-	}
-};
-msignal_SlotList.__name__ = true;
-msignal_SlotList.prototype = {
-	get_length: function() {
-		if(!this.nonEmpty) return 0;
-		if(this.tail == msignal_SlotList.NIL) return 1;
-		var result = 0;
-		var p = this;
-		while(p.nonEmpty) {
-			++result;
-			p = p.tail;
-		}
-		return result;
-	}
-	,prepend: function(slot) {
-		return new msignal_SlotList(slot,this);
-	}
-	,insertWithPriority: function(slot) {
-		if(!this.nonEmpty) return new msignal_SlotList(slot);
-		var priority = slot.priority;
-		if(priority >= this.head.priority) return this.prepend(slot);
-		var wholeClone = new msignal_SlotList(this.head);
-		var subClone = wholeClone;
-		var current = this.tail;
-		while(current.nonEmpty) {
-			if(priority > current.head.priority) {
-				subClone.tail = current.prepend(slot);
-				return wholeClone;
-			}
-			subClone = subClone.tail = new msignal_SlotList(current.head);
-			current = current.tail;
-		}
-		subClone.tail = new msignal_SlotList(slot);
-		return wholeClone;
-	}
-	,filterNot: function(listener) {
-		if(!this.nonEmpty || listener == null) return this;
-		if(Reflect.compareMethods(this.head.listener,listener)) return this.tail;
-		var wholeClone = new msignal_SlotList(this.head);
-		var subClone = wholeClone;
-		var current = this.tail;
-		while(current.nonEmpty) {
-			if(Reflect.compareMethods(current.head.listener,listener)) {
-				subClone.tail = current.tail;
-				return wholeClone;
-			}
-			subClone = subClone.tail = new msignal_SlotList(current.head);
-			current = current.tail;
-		}
-		return this;
-	}
-	,find: function(listener) {
-		if(!this.nonEmpty) return null;
-		var p = this;
-		while(p.nonEmpty) {
-			if(Reflect.compareMethods(p.head.listener,listener)) return p.head;
-			p = p.tail;
-		}
-		return null;
-	}
-};
 var $_, $fid = 0;
 function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id__ = $fid++; var f; if( o.hx__closures__ == null ) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__]; if( f == null ) { f = function(){ return f.method.apply(f.scope, arguments); }; f.scope = o; f.method = m; o.hx__closures__[m.__id__] = f; } return f; }
 if(Array.prototype.indexOf) HxOverrides.indexOf = function(a,o,i) {
@@ -1782,23 +1083,7 @@ if(Array.prototype.indexOf) HxOverrides.indexOf = function(a,o,i) {
 };
 String.__name__ = true;
 Array.__name__ = true;
-Date.__name__ = ["Date"];
-var Dynamic = { __name__ : ["Dynamic"]};
 var __map_reserved = {}
-msignal_SlotList.NIL = new msignal_SlotList(null,null);
-Perf.MEASUREMENT_INTERVAL = 1000;
-Perf.FONT_FAMILY = "Helvetica,Arial";
-Perf.FPS_BG_CLR = "#00FF00";
-Perf.FPS_WARN_BG_CLR = "#FF8000";
-Perf.FPS_PROB_BG_CLR = "#FF0000";
-Perf.MS_BG_CLR = "#FFFF00";
-Perf.MEM_BG_CLR = "#086A87";
-Perf.INFO_BG_CLR = "#00FFFF";
-Perf.FPS_TXT_CLR = "#000000";
-Perf.MS_TXT_CLR = "#000000";
-Perf.MEM_TXT_CLR = "#FFFFFF";
-Perf.INFO_TXT_CLR = "#000000";
-Perf.DELAY_TIME = 4000;
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
 Waud.version = "0.5.1";
@@ -1814,7 +1099,6 @@ WaudFocusManager.PAGE_SHOW = "pageshow";
 WaudFocusManager.PAGE_HIDE = "pagehide";
 WaudFocusManager.WINDOW = "window";
 WaudFocusManager.DOCUMENT = "document";
-Main.main();
 })(typeof console != "undefined" ? console : {log:function(){}}, typeof window != "undefined" ? window : exports);
 
-//# sourceMappingURL=sample.js.map
+//# sourceMappingURL=waud.js.map
