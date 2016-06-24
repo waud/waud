@@ -199,10 +199,10 @@ EReg.prototype = {
 };
 var IWaudSound = function() { };
 IWaudSound.__name__ = true;
-var HTML5Sound = function(url,options) {
+var HTML5Sound = function(url,options,src) {
 	BaseSound.call(this,url,options);
 	this._snd = Waud.dom.createElement("audio");
-	this._addSource(url);
+	if(src == null) this._addSource(url); else this._snd.appendChild(src);
 	if(this._options.preload) this.load();
 };
 HTML5Sound.__name__ = true;
@@ -798,12 +798,12 @@ WaudSound.prototype = {
 		if(Waud.isWebAudioSupported && Waud.useWebAudio && (this._options == null || this._options.webaudio == null || this._options.webaudio)) {
 			if(this.isSpriteSound) this._loadSpriteSound(this.url); else this._snd = new WebAudioAPISound(this.url,this._options);
 		} else if(Waud.isHTML5AudioSupported) {
+			var sound = new HTML5Sound(this.url,this._options);
 			var _g = 0;
 			var _g1 = this._spriteData.sprite;
 			while(_g < _g1.length) {
 				var snd = _g1[_g];
 				++_g;
-				var sound = new HTML5Sound(this.url,this._options);
 				sound.isSpriteSound = true;
 				this._spriteSounds.set(snd.name,sound);
 			}

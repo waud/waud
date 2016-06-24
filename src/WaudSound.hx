@@ -1,3 +1,4 @@
+import js.html.SourceElement;
 import js.html.audio.AudioBuffer;
 import js.html.XMLHttpRequestResponseType;
 import js.html.XMLHttpRequest;
@@ -118,8 +119,8 @@ import haxe.Json;
 			else _snd = new WebAudioAPISound(url, _options);
 		}
 		else if (Waud.isHTML5AudioSupported) {
+			var sound = new HTML5Sound(url, _options);
 			for (snd in _spriteData.sprite) {
-				var sound = new HTML5Sound(url, _options);
 				sound.isSpriteSound = true;
 				_spriteSounds.set(snd.name, sound);
 			}

@@ -8,10 +8,11 @@ import js.html.AudioElement;
 	var _src:SourceElement;
 	var _tmr:Timer;
 
-	public function new(url:String, ?options:WaudSoundOptions = null) {
+	public function new(url:String, ?options:WaudSoundOptions = null, ?src:SourceElement) {
 		super(url, options);
 		_snd = Waud.dom.createAudioElement();
-		_addSource(url);
+		if (src == null) _addSource(url);
+		else _snd.appendChild(src);
 		if (_options.preload) load();
 	}
 
