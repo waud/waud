@@ -112,7 +112,6 @@ import js.html.audio.AudioBuffer;
 				}
 			}
 			else {
-				_snd.loop = _options.loop;
 				if (Reflect.field(_snd, "start") != null) _snd.start(0, _pauseTime, _snd.buffer.duration);
 				else untyped __js__("this._snd").noteGrainOn(0, _pauseTime, _snd.buffer.duration);
 			}
@@ -125,6 +124,10 @@ import js.html.audio.AudioBuffer;
 				if (isSpriteSound && soundProps != null && soundProps.loop != null && soundProps.loop && start >= 0 && end > -1) {
 					destroy();
 					play(spriteName, soundProps);
+				}
+				else if(_options.loop) {
+					destroy();
+					play();
 				}
 				if (_options.onend != null) _options.onend(this);
 			}

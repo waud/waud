@@ -1390,10 +1390,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 			this._snd = this._makeSource(buffer);
 			if(start >= 0 && end > -1) {
 				if(Reflect.field(this._snd,"start") != null) this._snd.start(0,start,end); else this._snd.noteGrainOn(0,start,end);
-			} else {
-				this._snd.loop = this._options.loop;
-				if(Reflect.field(this._snd,"start") != null) this._snd.start(0,this._pauseTime,this._snd.buffer.duration); else this._snd.noteGrainOn(0,this._pauseTime,this._snd.buffer.duration);
-			}
+			} else if(Reflect.field(this._snd,"start") != null) this._snd.start(0,this._pauseTime,this._snd.buffer.duration); else this._snd.noteGrainOn(0,this._pauseTime,this._snd.buffer.duration);
 			this._playStartTime = this._manager.audioContext.currentTime;
 			this._isPlaying = true;
 			this._snd.onended = function() {
@@ -1402,6 +1399,9 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 				if(_g.isSpriteSound && soundProps != null && soundProps.loop != null && soundProps.loop && start >= 0 && end > -1) {
 					_g.destroy();
 					_g.play(spriteName,soundProps);
+				} else if(_g._options.loop) {
+					_g.destroy();
+					_g.play();
 				}
 				if(_g._options.onend != null) _g._options.onend(_g);
 			};
