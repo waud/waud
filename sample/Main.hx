@@ -20,6 +20,7 @@ class Main extends Application {
 	var _canOGG:IWaudSound;
 
 	var _audSprite:IWaudSound;
+	var _audSprite1:IWaudSound;
 
 	var _countdown:IWaudSound;
 
@@ -79,20 +80,20 @@ class Main extends Application {
 
 		label = new Text("Test 1: ", { font: "26px Tahoma", fill:"#FFFFFF" });
 		_btnContainer.addChild(label);
-		label.position.y = 300;
-		_addButton("Play", 120, 300, 60, 30, function() { _countdown.play(); });
-		_addButton("Pause", 180, 300, 60, 30, function() { _countdown.pause(); });
-		_addButton("Stop", 240, 300, 60, 30, function() { _countdown.stop(); });
-		_addButton("Seek 1s", 300, 300, 60, 30, function() { _countdown.setTime(_countdown.getTime() + 1); });
+		label.position.y = 350;
+		_addButton("Play", 120, 350, 60, 30, function() { _countdown.play(); });
+		_addButton("Pause", 180, 350, 60, 30, function() { _countdown.pause(); });
+		_addButton("Stop", 240, 350, 60, 30, function() { _countdown.stop(); });
+		_addButton("Seek 1s", 300, 350, 60, 30, function() { _countdown.setTime(_countdown.getTime() + 1); });
 
 		label = new Text("Test 2: ", { font: "26px Tahoma", fill:"#FFFFFF" });
 		_btnContainer.addChild(label);
-		label.position.y = 350;
-		_addButton("Play", 120, 350, 60, 30, function() { _audSprite.play("countdown"); });
-		_addButton("Pause", 180, 350, 60, 30, function() { _audSprite.pause(); });
-		_addButton("Stop", 240, 350, 60, 30, function() { _audSprite.stop(); });
+		label.position.y = 400;
+		_addButton("Play", 120, 400, 60, 30, function() { _audSprite.play("countdown"); });
+		_addButton("Pause", 180, 400, 60, 30, function() { _audSprite.pause(); });
+		_addButton("Stop", 240, 400, 60, 30, function() { _audSprite.stop(); });
 
-		_addButton("DESTROY", 120, 400, 180, 30, function() { Waud.destroy(); });
+		_addButton("DESTROY", 120, 450, 180, 30, function() { Waud.destroy(); });
 
 		_ua = new Text(Browser.navigator.userAgent, { font: "12px Tahoma", fill:"#FFFFFF" });
 		stage.addChild(_ua);
@@ -119,7 +120,7 @@ class Main extends Application {
 		_ua.text += "\nWeb Audio API: " + Waud.isWebAudioSupported;
 		_ua.text += "\nHTML5 Audio: " + Waud.isHTML5AudioSupported;
 
-		_audSprite = new WaudSound("assets/sprite.json");
+		_audSprite = new WaudSound("assets/sprite.json", {webaudio: false});
 
 		_countdown = new WaudSound("assets/countdown.mp3", {webaudio: true});
 

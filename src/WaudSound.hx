@@ -1,3 +1,5 @@
+import js.html.audio.AudioBuffer;
+import js.html.XMLHttpRequestResponseType;
 import js.html.XMLHttpRequest;
 import haxe.Json;
 
@@ -39,6 +41,8 @@ import haxe.Json;
 	var _snd:IWaudSound;
 	var _options:WaudSoundOptions;
 	var _spriteData:AudioSprite;
+	var _spriteSounds:Map<String, IWaudSound>;
+	var _spriteDuration:Float;
 
 	/**
 	* Class to automatically use web audio api with HTML5 audio fallback.
@@ -68,6 +72,8 @@ import haxe.Json;
 
 		if (url.indexOf(".json") > 0) {
 			isSpriteSound = true;
+			_spriteDuration = 0;
+			_spriteSounds = new Map();
 			_loadSpriteJson(url);
 		}
 		else {
@@ -108,20 +114,24 @@ import haxe.Json;
 	function _init(soundUrl:String) {
 		url = soundUrl;
 		if (Waud.isWebAudioSupported && Waud.useWebAudio && (_options == null || _options.webaudio == null || _options.webaudio)) {
-			_snd = new WebAudioAPISound(url, _options);
+			if (isSpriteSound) _loadSpriteSound(url);
+			else _snd = new WebAudioAPISound(url, _options);
 		}
 		else if (Waud.isHTML5AudioSupported) {
-			_snd = new HTML5Sound(url, _options);
+			for (snd in _spriteData.sprite) {
+				var sound = new HTML5Sound(url, _options);
+				sound.isSpriteSound = true;
+				_spriteSounds.set(snd.name, sound);
+			}
 		}
 		else {
 			trace("no audio support in this browser");
 			return;
 		}
-
-		_snd.isSpriteSound = isSpriteSound;
 	}
 
 	function get_duration():Float {
+		if (isSpriteSound) return _spriteDuration;
 		if (_snd == null) return 0;
 		return _snd.duration;
 	}
@@ -134,7 +144,12 @@ import haxe.Json;
 	* @example
 	*     snd.setVolume(0.5);
 	*/
-	public function setVolume(val:Float) {
+	public function setVolume(val:Float, ?spriteName:String) {
+		if (isSpriteSound) {
+			if (spriteName != null && _spriteSounds[spriteName] != null) _spriteSounds[spriteName].setVolume(val);
+			return;
+		}
+
 		if (_snd == null) return;
 		_snd.setVolume(val);
 	}
@@ -147,7 +162,12 @@ import haxe.Json;
 	* @example
 	*     snd.getVolume();
 	*/
-	public function getVolume():Float {
+	public function getVolume(?spriteName:String):Float {
+		if (isSpriteSound) {
+			if (spriteName != null && _spriteSounds[spriteName] != null) return _spriteSounds[spriteName].getVolume();
+			return 0;
+		}
+
 		if (_snd == null) return 0;
 		return _snd.getVolume();
 	}
@@ -160,7 +180,15 @@ import haxe.Json;
 	* @example
 	*     snd.mute(true);
 	*/
-	public function mute(val:Bool) {
+	public function mute(val:Bool, ?spriteName:String) {
+		if (isSpriteSound) {
+			if (spriteName != null && _spriteSounds[spriteName] != null) _spriteSounds[spriteName].mute(val);
+			else {
+				for (snd in _spriteSounds) snd.mute(val);
+			}
+			return;
+		}
+
 		if (_snd == null) return;
 		_snd.mute(val);
 	}
@@ -172,7 +200,15 @@ import haxe.Json;
 	* @example
 	*     snd.toggleMute();
 	*/
-	public function toggleMute() {
+	public function toggleMute(?spriteName:String) {
+		if (isSpriteSound) {
+			if (spriteName != null && _spriteSounds[spriteName] != null) _spriteSounds[spriteName].toggleMute();
+			else {
+				for (snd in _spriteSounds) snd.toggleMute();
+			}
+			return;
+		}
+
 		if (_snd == null) return;
 		_snd.toggleMute();
 	}
@@ -188,7 +224,7 @@ import haxe.Json;
 	*     snd.load(callback);
 	*/
 	public function load(?callback:IWaudSound -> Void):IWaudSound {
-		if (_snd == null) return null;
+		if (_snd == null || isSpriteSound) return null;
 		_snd.load(callback);
 		return this;
 	}
@@ -204,16 +240,23 @@ import haxe.Json;
 	*     snd.play("bell");
 	*/
 	public function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties = null):Int {
-		if (_snd == null) return null;
-		if (spriteName != null) {
-			for (snd in _spriteData.sprite) {
-				if (snd.name == spriteName) {
-					soundProps = snd;
-					break;
+		if (isSpriteSound) {
+			if (spriteName != null) {
+				for (snd in _spriteData.sprite) {
+					if (snd.name == spriteName) {
+						soundProps = snd;
+						break;
+					}
+				}
+				if (soundProps == null) return null;
+				if (_spriteSounds[spriteName] != null) {
+					_spriteSounds[spriteName].stop();
+					return _spriteSounds[spriteName].play(spriteName, soundProps);
 				}
 			}
-			if (soundProps == null) return null;
+			else return null;
 		}
+		if (_snd == null) return null;
 		return _snd.play(spriteName, soundProps);
 	}
 
@@ -224,7 +267,12 @@ import haxe.Json;
 	* @example
 	*     snd.togglePlay();
 	*/
-	public function togglePlay() {
+	public function togglePlay(?spriteName:String) {
+		if (isSpriteSound) {
+			if (spriteName != null && _spriteSounds[spriteName] != null) _spriteSounds[spriteName].togglePlay();
+			return;
+		}
+
 		if (_snd == null) return;
 		_snd.togglePlay();
 	}
@@ -237,7 +285,12 @@ import haxe.Json;
 	* @example
 	*     snd.isPlaying();
 	*/
-	public function isPlaying():Bool {
+	public function isPlaying(?spriteName:String):Bool {
+		if (isSpriteSound) {
+			if (spriteName != null && _spriteSounds[spriteName] != null) return _spriteSounds[spriteName].isPlaying();
+			return false;
+		}
+
 		if (_snd == null) return false;
 		return _snd.isPlaying();
 	}
@@ -251,7 +304,7 @@ import haxe.Json;
 	*     snd.loop(true);
 	*/
 	public function loop(val:Bool) {
-		if (_snd == null) return;
+		if (_snd == null || isSpriteSound) return;
 		_snd.loop(val);
 	}
 
@@ -262,7 +315,15 @@ import haxe.Json;
 	* @example
 	*     snd.stop();
 	*/
-	public function stop() {
+	public function stop(?spriteName:String) {
+		if (isSpriteSound) {
+			if (spriteName != null && _spriteSounds[spriteName] != null) _spriteSounds[spriteName].stop();
+			else {
+				for (snd in _spriteSounds) snd.stop();
+			}
+			return;
+		}
+
 		if (_snd == null) return;
 		_snd.stop();
 	}
@@ -274,7 +335,15 @@ import haxe.Json;
 	* @example
 	*     snd.pause();
 	*/
-	public function pause() {
+	public function pause(?spriteName:String) {
+		if (isSpriteSound) {
+			if (spriteName != null && _spriteSounds[spriteName] != null) _spriteSounds[spriteName].pause();
+			else {
+				for (snd in _spriteSounds) snd.pause();
+			}
+			return;
+		}
+
 		if (_snd == null) return;
 		_snd.pause();
 	}
@@ -290,7 +359,7 @@ import haxe.Json;
 	*     snd.setTime(30);
 	*/
 	public function setTime(time:Float) {
-		if (_snd == null) return;
+		if (_snd == null || isSpriteSound) return;
 		_snd.setTime(time);
 	}
 
@@ -304,7 +373,7 @@ import haxe.Json;
 	*     snd.getTime();
 	*/
 	public function getTime():Float {
-		if (_snd == null) return 0;
+		if (_snd == null || isSpriteSound) return 0;
 		return _snd.getTime();
 	}
 
@@ -317,7 +386,12 @@ import haxe.Json;
 	* @example
 	*     snd.onEnd(callback);
 	*/
-	public function onEnd(callback:IWaudSound -> Void):IWaudSound {
+	public function onEnd(callback:IWaudSound -> Void, ?spriteName:String):IWaudSound {
+		if (isSpriteSound) {
+			if (spriteName != null && _spriteSounds[spriteName] != null) _spriteSounds[spriteName].onEnd(callback);
+			return this;
+		}
+
 		if (_snd == null) return null;
 		_snd.onEnd(callback);
 		return this;
@@ -333,7 +407,7 @@ import haxe.Json;
 	*     snd.onLoad(callback);
 	*/
 	public function onLoad(callback:IWaudSound -> Void):IWaudSound {
-		if (_snd == null) return null;
+		if (_snd == null || isSpriteSound) return null;
 		_snd.onLoad(callback);
 		return this;
 	}
@@ -348,7 +422,7 @@ import haxe.Json;
 	*     snd.onError(callback);
 	*/
 	public function onError(callback:IWaudSound -> Void):IWaudSound {
-		if (_snd == null) return null;
+		if (_snd == null || isSpriteSound) return null;
 		_snd.onError(callback);
 		return this;
 	}
@@ -361,8 +435,48 @@ import haxe.Json;
 	*     snd.destroy();
 	*/
 	public function destroy() {
+		if (isSpriteSound) {
+			for (snd in _spriteSounds) snd.destroy();
+			return;
+		}
+
 		if (_snd == null) return;
 		_snd.destroy();
 		_snd = null;
+	}
+
+	function _loadSpriteSound(?url:String) {
+		var request = new XMLHttpRequest();
+		request.open("GET", url, true);
+		request.responseType = XMLHttpRequestResponseType.ARRAYBUFFER;
+		request.onload = _onSpriteSoundLoaded;
+		request.onerror = _onSpriteSoundError;
+		request.send();
+	}
+
+	function _onSpriteSoundLoaded(evt) {
+		Waud.audioManager.audioContext.decodeAudioData(evt.target.response, _decodeSuccess, _onSpriteSoundError);
+	}
+
+	function _onSpriteSoundError() {
+		if (_options != null && _options.onerror != null) _options.onerror(this);
+	}
+
+	function _decodeSuccess(buffer:AudioBuffer) {
+		if (buffer == null) {
+			trace("empty buffer: " + url);
+			_onSpriteSoundError();
+			return;
+		}
+		Waud.audioManager.bufferList.set(url, buffer);
+		_spriteDuration = buffer.duration;
+
+		if (_options != null && _options.onload != null) _options.onload(this);
+
+		for (snd in _spriteData.sprite) {
+			var sound = new WebAudioAPISound(url, _options, true, buffer.duration);
+			sound.isSpriteSound = true;
+			_spriteSounds.set(snd.name, sound);
+		}
 	}
 }
