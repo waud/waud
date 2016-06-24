@@ -1,4 +1,4 @@
-# ![waud logo](https://raw.githubusercontent.com/adireddy/waud/master/logo.png)
+# ![waud logo](https://raw.githubusercontent.com/adireddy/waud/dev/logo.png)
 Web Audio Library with HTML5 audio fallback.
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
@@ -12,7 +12,7 @@ Web Audio Library with HTML5 audio fallback.
 |:--:|:--:|:--:|:--:|:--:|
 | Latest ✓ | Latest ✓ | Latest ✓ | Latest ✓ | Latest ✓ |
 
-- It is recommeded to use same **sample rate** for all the audio files. Playing different **sample rate** files can cause issues on some devices.
+- It is recommended to use same **sample rate** for all the audio files. Playing different **sample rate** files can cause issues on some devices.
 - By default, **Waud** uses **44100** sample rate. If your audio files have a different sample rate then specify it using [**`Waud.preferredSampleRate`**](http://adireddy.github.io/docs/waud/classes/Waud.html#property_preferredSampleRate) property.
 
 ### Installation
@@ -29,7 +29,7 @@ For haxe users:
 
 Example: 
 ```js
-var snd = new WaudSound("assets/loop.mp3", { autoplay: false, loop: true, volume: 0.5, onload: _playBgSound });
+var snd = new WaudSound("assets/loop.mp3", { autoplay: false, loop: true, volume: 0.5, onload: playBgSound });
 ```
 
 ### Audio Sprite
@@ -57,8 +57,8 @@ Waud.init();
 Waud.enableTouchUnlock(touchUnlock);
 Waud.autoMute();
 
-var _bgSnd = new WaudSound("assets/loop.mp3", {
-	"autoplay": false, "loop":true, "volume": 0.5, "onload": _playBgSound
+var bgSnd = new WaudSound("assets/loop.mp3", {
+	"autoplay": false, "loop":true, "volume": 0.5, "onload": playBgSound
 });
 
 var snd2 = new WaudSound("assets/sound1.wav", {
@@ -71,10 +71,10 @@ var snd2 = new WaudSound("assets/sound1.wav", {
 
 //Touch unlock event for iOS devices
 function touchUnlock() {
-	if (!_bgSnd.isPlaying()) _bgSnd.play();
+	if (!bgSnd.isPlaying()) bgSnd.play();
 }
 
-function _playBgSound(snd) {
+function playBgSound(snd) {
 	if (!snd.isPlaying()) snd.play();
 }
 ```

@@ -20,7 +20,7 @@ import js.Browser;
 	* @static
 	* @type {String}
 	*/
-	public static var version:String = MacroUtils.parseJsonFile("./package.json").version;
+	public static var version:String = "0.5.2";
 
 	/**
 	* Tells whether to use web audio api or not.
@@ -234,11 +234,11 @@ import js.Browser;
 	/**
 	* Helper function to unlock audio on iOS devices.
 	*
-	* You can pass an optional callback which will be triggered on `touchend` event.
+	* You can pass an optional callback which will be triggered after unlocking audio.
 	*
 	* @static
 	* @method enableTouchUnlock
-	* @param {Function} [callback] - Optional callback that triggers after touch unlock.
+	* @param {Function} [callback] - Optional callback that triggers after unlocking audio.
 	* @example
  	*     Waud.enableTouchUnlock(callback);
 	*/

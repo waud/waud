@@ -15,53 +15,17 @@ import js.html.audio.AudioBuffer;
 	var _pauseTime:Float;
 	var _currentSoundProps:AudioSpriteSoundProperties;
 
-	public function new(url:String, ?options:WaudSoundOptions = null) {
+	public function new(url:String, ?options:WaudSoundOptions = null, ?loaded:Bool = false, ?d:Float = 0) {
 		super(url, options);
 		_playStartTime = 0;
 		_pauseTime = 0;
 		_srcNodes = [];
 		_gainNodes = [];
 		_currentSoundProps = null;
+		_isLoaded = loaded;
+		duration = d;
 		_manager = Waud.audioManager;
-		if (_options.preload) load();
-	}
-
-	function _onSoundLoaded(evt) {
-		_manager.audioContext.decodeAudioData(evt.target.response, _decodeSuccess, _error);
-	}
-
-	function _decodeSuccess(buffer:AudioBuffer) {
-		if (buffer == null) {
-			trace("empty buffer: " + url);
-			_error();
-			return;
-		}
-		_manager.bufferList.set(url, buffer);
-		_isLoaded = true;
-		duration = buffer.duration;
-		if (_options.onload != null) _options.onload(this);
-		if (_options.autoplay) play();
-	}
-
-	inline function _error() {
-		if (_options.onerror != null) _options.onerror(this);
-	}
-
-	function _makeSource(buffer:AudioBuffer):AudioBufferSourceNode {
-		var source:AudioBufferSourceNode = _manager.audioContext.createBufferSource();
-		source.buffer = buffer;
-		if (untyped __js__("this._manager.audioContext").createGain != null) _gainNode = _manager.audioContext.createGain();
-		else _gainNode = untyped __js__("this._manager.audioContext").createGainNode();
-		source.connect(_gainNode);
-		_gainNode.connect(_manager.audioContext.destination);
-		_srcNodes.push(source);
-		_gainNodes.push(_gainNode);
-		return source;
-	}
-
-	override function get_duration():Float {
-		if (!_isLoaded) return 0;
-		return duration;
+		if (_options.preload && !loaded) load();
 	}
 
 	public function load(?callback:IWaudSound -> Void):IWaudSound {
@@ -79,13 +43,57 @@ import js.html.audio.AudioBuffer;
 		return this;
 	}
 
+	function _onSoundLoaded(evt) {
+		_manager.audioContext.decodeAudioData(evt.target.response, _decodeSuccess, _error);
+	}
+
+	function _error() {
+		if (_options.onerror != null) _options.onerror(this);
+	}
+
+	function _decodeSuccess(buffer:AudioBuffer) {
+		if (buffer == null) {
+			trace("empty buffer: " + url);
+			_error();
+			return;
+		}
+		_manager.bufferList.set(url, buffer);
+		_isLoaded = true;
+		duration = buffer.duration;
+		if (_options.onload != null) _options.onload(this);
+		if (_options.autoplay) play();
+	}
+
+	function _makeSource(buffer:AudioBuffer):AudioBufferSourceNode {
+		var source:AudioBufferSourceNode = _manager.audioContext.createBufferSource();
+		source.buffer = buffer;
+		if (untyped __js__("this._manager.audioContext").createGain != null) _gainNode = _manager.audioContext.createGain();
+		else _gainNode = untyped __js__("this._manager.audioContext").createGainNode();
+
+		source.connect(_gainNode);
+		_gainNode.connect(_manager.audioContext.destination);
+		_srcNodes.push(source);
+		_gainNodes.push(_gainNode);
+
+		if (_muted) _gainNode.gain.value = 0;
+		else _gainNode.gain.value = _options.volume;
+
+		return source;
+	}
+
+	override function get_duration():Float {
+		if (!_isLoaded) return 0;
+		return duration;
+	}
+
 	public function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties):Int {
 		if (_isPlaying) return _srcNodes.indexOf(_snd);
 		if (!_isLoaded) {
 			trace("sound not loaded");
 			return -1;
 		}
-		if (_muted) return -1;
+
+		//if (_muted) return -1;
 		var start:Float = 0;
 		var end:Float = -1;
 		if (isSpriteSound && soundProps != null) {
@@ -96,6 +104,7 @@ import js.html.audio.AudioBuffer;
 		var buffer = _manager.bufferList.get(url);
 		if (buffer != null) {
 			_snd = _makeSource(buffer);
+
 			if (start >= 0 && end > -1) {
 				if (Reflect.field(_snd, "start") != null) _snd.start(0, start, end);
 				else {
@@ -103,7 +112,6 @@ import js.html.audio.AudioBuffer;
 				}
 			}
 			else {
-				_snd.loop = _options.loop;
 				if (Reflect.field(_snd, "start") != null) _snd.start(0, _pauseTime, _snd.buffer.duration);
 				else untyped __js__("this._snd").noteGrainOn(0, _pauseTime, _snd.buffer.duration);
 			}
@@ -112,24 +120,28 @@ import js.html.audio.AudioBuffer;
 			_isPlaying = true;
 			_snd.onended = function() {
 				_pauseTime = 0;
-				if (isSpriteSound && soundProps != null && soundProps.loop && start >= 0 && end > -1) {
+				_isPlaying = false;
+				if (isSpriteSound && soundProps != null && soundProps.loop != null && soundProps.loop && start >= 0 && end > -1) {
+					destroy();
 					play(spriteName, soundProps);
 				}
-				_isPlaying = false;
+				else if(_options.loop) {
+					destroy();
+					play();
+				}
 				if (_options.onend != null) _options.onend(this);
 			}
 		}
-		_gainNode.gain.value = _options.volume;
 
 		return _srcNodes.indexOf(_snd);
 	}
 
-	public function togglePlay() {
+	public function togglePlay(?spriteName:String) {
 		if (_isPlaying) pause();
 		else play();
 	}
 
-	public function isPlaying():Bool {
+	public function isPlaying(?spriteName:String):Bool {
 		return _isPlaying;
 	}
 
@@ -138,34 +150,34 @@ import js.html.audio.AudioBuffer;
 		_snd.loop = val;
 	}
 
-	public function setVolume(val:Float) {
+	public function setVolume(val:Float, ?spriteName:String) {
 		_options.volume = val;
 		if (_gainNode == null || !_isLoaded) return;
 		_gainNode.gain.value = _options.volume;
 	}
 
-	public function getVolume():Float {
+	public function getVolume(?spriteName:String):Float {
 		return _options.volume;
 	}
 
-	public function mute(val:Bool) {
+	public function mute(val:Bool, ?spriteName:String) {
 		_muted = val;
 		if (_gainNode == null || !_isLoaded) return;
 		if (val) _gainNode.gain.value = 0;
 		else _gainNode.gain.value = _options.volume;
 	}
 
-	public function toggleMute() {
+	public function toggleMute(?spriteName:String) {
 		mute(!_muted);
 	}
 
-	public function stop() {
+	public function stop(?spriteName:String) {
 		_pauseTime = 0;
 		if (_snd == null || !_isLoaded || !_isPlaying) return;
 		destroy();
 	}
 
-	public function pause() {
+	public function pause(?spriteName:String) {
 		if (_snd == null || !_isLoaded || !_isPlaying) return;
 		destroy();
 		_pauseTime += _manager.audioContext.currentTime - _playStartTime;
@@ -187,7 +199,7 @@ import js.html.audio.AudioBuffer;
 		return _manager.audioContext.currentTime - _playStartTime + _pauseTime;
 	}
 
-	public function onEnd(callback:IWaudSound -> Void):IWaudSound {
+	public function onEnd(callback:IWaudSound -> Void, ?spriteName:String):IWaudSound {
 		_options.onend = callback;
 		return this;
 	}

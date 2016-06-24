@@ -1,0 +1,6 @@
+.idea
+*.iml
+out
+gen
+.haxelib
+node_modules

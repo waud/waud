@@ -8,10 +8,11 @@ import js.html.AudioElement;
 	var _src:SourceElement;
 	var _tmr:Timer;
 
-	public function new(url:String, ?options:WaudSoundOptions = null) {
+	public function new(url:String, ?options:WaudSoundOptions = null, ?src:SourceElement) {
 		super(url, options);
 		_snd = Waud.dom.createAudioElement();
-		_addSource(url);
+		if (src == null) _addSource(url);
+		else _snd.appendChild(src);
 		if (_options.preload) load();
 	}
 
@@ -73,17 +74,17 @@ import js.html.AudioElement;
 		return filename.split(".").pop();
 	}
 
-	public function setVolume(val:Float) {
+	public function setVolume(val:Float, ?spriteName:String) {
 		if (val >= 0 && val <= 1) _options.volume = val;
 		if (!_isLoaded) return;
 		_snd.volume = _options.volume;
 	}
 
-	public function getVolume():Float {
+	public function getVolume(?spriteName:String):Float {
 		return _options.volume;
 	}
 
-	public function mute(val:Bool) {
+	public function mute(val:Bool, ?spriteName:String) {
 		if (!_isLoaded) return;
 		_snd.muted = val;
 		if (WaudUtils.isiOS()) {
@@ -98,7 +99,7 @@ import js.html.AudioElement;
 		}
 	}
 
-	public function toggleMute() {
+	public function toggleMute(?spriteName:String) {
 		mute(!_muted);
 	}
 
@@ -123,12 +124,12 @@ import js.html.AudioElement;
 		return 0;
 	}
 
-	public function togglePlay() {
+	public function togglePlay(?spriteName:String) {
 		if (_isPlaying) pause();
 		else play();
 	}
 
-	public function isPlaying():Bool {
+	public function isPlaying(?spriteName:String):Bool {
 		return _isPlaying;
 	}
 
@@ -137,14 +138,14 @@ import js.html.AudioElement;
 		_snd.loop = val;
 	}
 
-	public function stop() {
+	public function stop(?spriteName:String) {
 		if (!_isLoaded || _snd == null) return;
 		_snd.pause();
 		_snd.currentTime = 0;
 		_isPlaying = false;
 	}
 
-	public function pause() {
+	public function pause(?spriteName:String) {
 		if (!_isLoaded || _snd == null) return;
 		_snd.pause();
 		_isPlaying = false;
@@ -160,7 +161,7 @@ import js.html.AudioElement;
 		return _snd.currentTime;
 	}
 
-	public function onEnd(callback:IWaudSound -> Void):IWaudSound {
+	public function onEnd(callback:IWaudSound -> Void, ?spriteName:String):IWaudSound {
 		_options.onend = callback;
 		return this;
 	}

@@ -9,19 +9,19 @@ interface IWaudSound {
 	var duration(get, null):Float;
 	function load(?callback:IWaudSound -> Void):IWaudSound;
 	function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties):Int;
-	function togglePlay():Void;
-	function stop():Void;
-	function pause():Void;
+	function togglePlay(?spriteName:String):Void;
+	function stop(?spriteName:String):Void;
+	function pause(?spriteName:String):Void;
 	function setTime(time:Float):Void;
 	function getTime():Float;
-	function onEnd(callback:IWaudSound -> Void):IWaudSound;
+	function onEnd(callback:IWaudSound -> Void, ?spriteName:String):IWaudSound;
 	function onLoad(callback:IWaudSound -> Void):IWaudSound;
 	function onError(callback:IWaudSound -> Void):IWaudSound;
-	function mute(val:Bool):Void;
-	function toggleMute():Void;
+	function mute(val:Bool, ?spriteName:String):Void;
+	function toggleMute(?spriteName:String):Void;
 	function loop(val:Bool):Void;
-	function setVolume(val:Float):Void;
-	function getVolume():Float;
-	function isPlaying():Bool;
+	function setVolume(val:Float, ?spriteName:String):Void;
+	function getVolume(?spriteName:String):Float;
+	function isPlaying(?spriteName:String):Bool;
 	function destroy():Void;
 }

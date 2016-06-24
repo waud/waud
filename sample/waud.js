@@ -14,6 +14,7 @@ var AudioManager = function() {
 	this.types.set("aac","audio/aac");
 	this.types.set("m4a","audio/x-m4a");
 };
+AudioManager.__name__ = true;
 AudioManager.prototype = {
 	checkWebAudioAPISupport: function() {
 		if(Reflect.field(window,"AudioContext") != null) {
@@ -70,11 +71,11 @@ AudioManager.prototype = {
 };
 var BaseSound = function(sndUrl,options) {
 	if(sndUrl == null || sndUrl == "") {
-		console.log("invalid sound url");
+		haxe_Log.trace("invalid sound url",{ fileName : "BaseSound.hx", lineNumber : 14, className : "BaseSound", methodName : "new"});
 		return;
 	}
 	if(Waud.audioManager == null) {
-		console.log("initialise Waud using Waud.init() before loading sounds");
+		haxe_Log.trace("initialise Waud using Waud.init() before loading sounds",{ fileName : "BaseSound.hx", lineNumber : 18, className : "BaseSound", methodName : "new"});
 		return;
 	}
 	this.duration = 0;
@@ -94,6 +95,7 @@ var BaseSound = function(sndUrl,options) {
 	if(options.onerror != null) options.onerror = options.onerror; else options.onerror = Waud.defaults.onerror;
 	this._options = options;
 };
+BaseSound.__name__ = true;
 BaseSound.prototype = {
 	get_duration: function() {
 		return 0;
@@ -103,6 +105,7 @@ var EReg = function(r,opt) {
 	opt = opt.split("u").join("");
 	this.r = new RegExp(r,opt);
 };
+EReg.__name__ = true;
 EReg.prototype = {
 	match: function(s) {
 		if(this.r.global) this.r.lastIndex = 0;
@@ -115,12 +118,14 @@ EReg.prototype = {
 	}
 };
 var IWaudSound = function() { };
-var HTML5Sound = function(url,options,src) {
+IWaudSound.__name__ = true;
+var HTML5Sound = function(url,options) {
 	BaseSound.call(this,url,options);
 	this._snd = Waud.dom.createElement("audio");
-	if(src == null) this._addSource(url); else this._snd.appendChild(src);
+	this._addSource(url);
 	if(this._options.preload) this.load();
 };
+HTML5Sound.__name__ = true;
 HTML5Sound.__interfaces__ = [IWaudSound];
 HTML5Sound.__super__ = BaseSound;
 HTML5Sound.prototype = $extend(BaseSound.prototype,{
@@ -174,15 +179,15 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 	,_getExt: function(filename) {
 		return filename.split(".").pop();
 	}
-	,setVolume: function(val,spriteName) {
+	,setVolume: function(val) {
 		if(val >= 0 && val <= 1) this._options.volume = val;
 		if(!this._isLoaded) return;
 		this._snd.volume = this._options.volume;
 	}
-	,getVolume: function(spriteName) {
+	,getVolume: function() {
 		return this._options.volume;
 	}
-	,mute: function(val,spriteName) {
+	,mute: function(val) {
 		if(!this._isLoaded) return;
 		this._snd.muted = val;
 		if(WaudUtils.isiOS()) {
@@ -195,13 +200,13 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 			}
 		}
 	}
-	,toggleMute: function(spriteName) {
+	,toggleMute: function() {
 		this.mute(!this._muted);
 	}
 	,play: function(spriteName,soundProps) {
 		var _g = this;
 		if(!this._isLoaded || this._snd == null) {
-			console.log("sound not loaded");
+			haxe_Log.trace("sound not loaded",{ fileName : "HTML5Sound.hx", lineNumber : 107, className : "HTML5Sound", methodName : "play"});
 			return -1;
 		}
 		if(this._muted) return -1;
@@ -215,23 +220,23 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 		if(!this._isPlaying) this._snd.play();
 		return 0;
 	}
-	,togglePlay: function(spriteName) {
+	,togglePlay: function() {
 		if(this._isPlaying) this.pause(); else this.play();
 	}
-	,isPlaying: function(spriteName) {
+	,isPlaying: function() {
 		return this._isPlaying;
 	}
 	,loop: function(val) {
 		if(!this._isLoaded || this._snd == null) return;
 		this._snd.loop = val;
 	}
-	,stop: function(spriteName) {
+	,stop: function() {
 		if(!this._isLoaded || this._snd == null) return;
 		this._snd.pause();
 		this._snd.currentTime = 0;
 		this._isPlaying = false;
 	}
-	,pause: function(spriteName) {
+	,pause: function() {
 		if(!this._isLoaded || this._snd == null) return;
 		this._snd.pause();
 		this._isPlaying = false;
@@ -244,7 +249,7 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 		if(this._snd == null || !this._isLoaded || !this._isPlaying) return 0;
 		return this._snd.currentTime;
 	}
-	,onEnd: function(callback,spriteName) {
+	,onEnd: function(callback) {
 		this._options.onend = callback;
 		return this;
 	}
@@ -267,6 +272,7 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 	}
 });
 var HxOverrides = function() { };
+HxOverrides.__name__ = true;
 HxOverrides.cca = function(s,index) {
 	var x = s.charCodeAt(index);
 	if(x != x) return undefined;
@@ -284,7 +290,9 @@ HxOverrides.indexOf = function(a,obj,i) {
 	}
 	return -1;
 };
+Math.__name__ = true;
 var Reflect = function() { };
+Reflect.__name__ = true;
 Reflect.field = function(o,field) {
 	try {
 		return o[field];
@@ -294,6 +302,7 @@ Reflect.field = function(o,field) {
 	}
 };
 var Std = function() { };
+Std.__name__ = true;
 Std.parseInt = function(x) {
 	var v = parseInt(x,10);
 	if(v == 0 && (HxOverrides.cca(x,1) == 120 || HxOverrides.cca(x,1) == 88)) v = parseInt(x);
@@ -301,6 +310,7 @@ Std.parseInt = function(x) {
 	return v;
 };
 var Type = function() { };
+Type.__name__ = true;
 Type.createInstance = function(cl,args) {
 	var _g = args.length;
 	switch(_g) {
@@ -328,6 +338,7 @@ Type.createInstance = function(cl,args) {
 	return null;
 };
 var Waud = $hx_exports.Waud = function() { };
+Waud.__name__ = true;
 Waud.init = function(d) {
 	if(Waud.__audioElement == null) {
 		if(d == null) d = window.document;
@@ -487,6 +498,7 @@ var WaudFocusManager = $hx_exports.WaudFocusManager = function() {
 		window.onpagehide = $bind(_g,_g._blur);
 	};
 };
+WaudFocusManager.__name__ = true;
 WaudFocusManager.prototype = {
 	_handleVisibilityChange: function() {
 		if(Reflect.field(window.document,this._hidden) != null && Reflect.field(window.document,this._hidden) && this.blur != null) this.blur(); else if(this.focus != null) this.focus();
@@ -522,14 +534,12 @@ WaudFocusManager.prototype = {
 };
 var WaudSound = $hx_exports.WaudSound = function(url,options) {
 	if(Waud.audioManager == null) {
-		console.log("initialise Waud using Waud.init() before loading sounds");
+		haxe_Log.trace("initialise Waud using Waud.init() before loading sounds",{ fileName : "WaudSound.hx", lineNumber : 63, className : "WaudSound", methodName : "new"});
 		return;
 	}
 	this._options = options;
 	if(url.indexOf(".json") > 0) {
 		this.isSpriteSound = true;
-		this._spriteDuration = 0;
-		this._spriteSounds = new haxe_ds_StringMap();
 		this._loadSpriteJson(url);
 	} else {
 		this.isSpriteSound = false;
@@ -537,6 +547,7 @@ var WaudSound = $hx_exports.WaudSound = function(url,options) {
 	}
 	Waud.sounds.set(url,this);
 };
+WaudSound.__name__ = true;
 WaudSound.__interfaces__ = [IWaudSound];
 WaudSound.prototype = {
 	_loadSpriteJson: function(jsonUrl) {
@@ -554,223 +565,105 @@ WaudSound.prototype = {
 	}
 	,_init: function(soundUrl) {
 		this.url = soundUrl;
-		if(Waud.isWebAudioSupported && Waud.useWebAudio && (this._options == null || this._options.webaudio == null || this._options.webaudio)) {
-			if(this.isSpriteSound) this._loadSpriteSound(this.url); else this._snd = new WebAudioAPISound(this.url,this._options);
-		} else if(Waud.isHTML5AudioSupported) {
-			var sound = new HTML5Sound(this.url,this._options);
+		if(Waud.isWebAudioSupported && Waud.useWebAudio && (this._options == null || this._options.webaudio == null || this._options.webaudio)) this._snd = new WebAudioAPISound(this.url,this._options); else if(Waud.isHTML5AudioSupported) this._snd = new HTML5Sound(this.url,this._options); else {
+			haxe_Log.trace("no audio support in this browser",{ fileName : "WaudSound.hx", lineNumber : 117, className : "WaudSound", methodName : "_init"});
+			return;
+		}
+		this._snd.isSpriteSound = this.isSpriteSound;
+	}
+	,get_duration: function() {
+		if(this._snd == null) return 0;
+		return this._snd.get_duration();
+	}
+	,setVolume: function(val) {
+		if(this._snd == null) return;
+		this._snd.setVolume(val);
+	}
+	,getVolume: function() {
+		if(this._snd == null) return 0;
+		return this._snd.getVolume();
+	}
+	,mute: function(val) {
+		if(this._snd == null) return;
+		this._snd.mute(val);
+	}
+	,toggleMute: function() {
+		if(this._snd == null) return;
+		this._snd.toggleMute();
+	}
+	,load: function(callback) {
+		if(this._snd == null) return null;
+		this._snd.load(callback);
+		return this;
+	}
+	,play: function(spriteName,soundProps) {
+		if(this._snd == null) return null;
+		if(spriteName != null) {
 			var _g = 0;
 			var _g1 = this._spriteData.sprite;
 			while(_g < _g1.length) {
 				var snd = _g1[_g];
 				++_g;
-				sound.isSpriteSound = true;
-				this._spriteSounds.set(snd.name,sound);
-			}
-		} else {
-			console.log("no audio support in this browser");
-			return;
-		}
-	}
-	,get_duration: function() {
-		if(this.isSpriteSound) return this._spriteDuration;
-		if(this._snd == null) return 0;
-		return this._snd.get_duration();
-	}
-	,setVolume: function(val,spriteName) {
-		if(this.isSpriteSound) {
-			if(spriteName != null && this._spriteSounds.get(spriteName) != null) this._spriteSounds.get(spriteName).setVolume(val);
-			return;
-		}
-		if(this._snd == null) return;
-		this._snd.setVolume(val);
-	}
-	,getVolume: function(spriteName) {
-		if(this.isSpriteSound) {
-			if(spriteName != null && this._spriteSounds.get(spriteName) != null) return this._spriteSounds.get(spriteName).getVolume();
-			return 0;
-		}
-		if(this._snd == null) return 0;
-		return this._snd.getVolume();
-	}
-	,mute: function(val,spriteName) {
-		if(this.isSpriteSound) {
-			if(spriteName != null && this._spriteSounds.get(spriteName) != null) this._spriteSounds.get(spriteName).mute(val); else {
-				var $it0 = this._spriteSounds.iterator();
-				while( $it0.hasNext() ) {
-					var snd = $it0.next();
-					snd.mute(val);
+				if(snd.name == spriteName) {
+					soundProps = snd;
+					break;
 				}
 			}
-			return;
+			if(soundProps == null) return null;
 		}
-		if(this._snd == null) return;
-		this._snd.mute(val);
-	}
-	,toggleMute: function(spriteName) {
-		if(this.isSpriteSound) {
-			if(spriteName != null && this._spriteSounds.get(spriteName) != null) this._spriteSounds.get(spriteName).toggleMute(); else {
-				var $it0 = this._spriteSounds.iterator();
-				while( $it0.hasNext() ) {
-					var snd = $it0.next();
-					snd.toggleMute();
-				}
-			}
-			return;
-		}
-		if(this._snd == null) return;
-		this._snd.toggleMute();
-	}
-	,load: function(callback) {
-		if(this._snd == null || this.isSpriteSound) return null;
-		this._snd.load(callback);
-		return this;
-	}
-	,play: function(spriteName,soundProps) {
-		if(this.isSpriteSound) {
-			if(spriteName != null) {
-				var _g = 0;
-				var _g1 = this._spriteData.sprite;
-				while(_g < _g1.length) {
-					var snd = _g1[_g];
-					++_g;
-					if(snd.name == spriteName) {
-						soundProps = snd;
-						break;
-					}
-				}
-				if(soundProps == null) return null;
-				if(this._spriteSounds.get(spriteName) != null) {
-					this._spriteSounds.get(spriteName).stop();
-					return this._spriteSounds.get(spriteName).play(spriteName,soundProps);
-				}
-			} else return null;
-		}
-		if(this._snd == null) return null;
 		return this._snd.play(spriteName,soundProps);
 	}
-	,togglePlay: function(spriteName) {
-		if(this.isSpriteSound) {
-			if(spriteName != null && this._spriteSounds.get(spriteName) != null) this._spriteSounds.get(spriteName).togglePlay();
-			return;
-		}
+	,togglePlay: function() {
 		if(this._snd == null) return;
 		this._snd.togglePlay();
 	}
-	,isPlaying: function(spriteName) {
-		if(this.isSpriteSound) {
-			if(spriteName != null && this._spriteSounds.get(spriteName) != null) return this._spriteSounds.get(spriteName).isPlaying();
-			return false;
-		}
+	,isPlaying: function() {
 		if(this._snd == null) return false;
 		return this._snd.isPlaying();
 	}
 	,loop: function(val) {
-		if(this._snd == null || this.isSpriteSound) return;
+		if(this._snd == null) return;
 		this._snd.loop(val);
 	}
-	,stop: function(spriteName) {
-		if(this.isSpriteSound) {
-			if(spriteName != null && this._spriteSounds.get(spriteName) != null) this._spriteSounds.get(spriteName).stop(); else {
-				var $it0 = this._spriteSounds.iterator();
-				while( $it0.hasNext() ) {
-					var snd = $it0.next();
-					snd.stop();
-				}
-			}
-			return;
-		}
+	,stop: function() {
 		if(this._snd == null) return;
 		this._snd.stop();
 	}
-	,pause: function(spriteName) {
-		if(this.isSpriteSound) {
-			if(spriteName != null && this._spriteSounds.get(spriteName) != null) this._spriteSounds.get(spriteName).pause(); else {
-				var $it0 = this._spriteSounds.iterator();
-				while( $it0.hasNext() ) {
-					var snd = $it0.next();
-					snd.pause();
-				}
-			}
-			return;
-		}
+	,pause: function() {
 		if(this._snd == null) return;
 		this._snd.pause();
 	}
 	,setTime: function(time) {
-		if(this._snd == null || this.isSpriteSound) return;
+		if(this._snd == null) return;
 		this._snd.setTime(time);
 	}
 	,getTime: function() {
-		if(this._snd == null || this.isSpriteSound) return 0;
+		if(this._snd == null) return 0;
 		return this._snd.getTime();
 	}
-	,onEnd: function(callback,spriteName) {
-		if(this.isSpriteSound) {
-			if(spriteName != null && this._spriteSounds.get(spriteName) != null) this._spriteSounds.get(spriteName).onEnd(callback);
-			return this;
-		}
+	,onEnd: function(callback) {
 		if(this._snd == null) return null;
 		this._snd.onEnd(callback);
 		return this;
 	}
 	,onLoad: function(callback) {
-		if(this._snd == null || this.isSpriteSound) return null;
+		if(this._snd == null) return null;
 		this._snd.onLoad(callback);
 		return this;
 	}
 	,onError: function(callback) {
-		if(this._snd == null || this.isSpriteSound) return null;
+		if(this._snd == null) return null;
 		this._snd.onError(callback);
 		return this;
 	}
 	,destroy: function() {
-		if(this.isSpriteSound) {
-			var $it0 = this._spriteSounds.iterator();
-			while( $it0.hasNext() ) {
-				var snd = $it0.next();
-				snd.destroy();
-			}
-			return;
-		}
 		if(this._snd == null) return;
 		this._snd.destroy();
 		this._snd = null;
 	}
-	,_loadSpriteSound: function(url) {
-		var request = new XMLHttpRequest();
-		request.open("GET",url,true);
-		request.responseType = "arraybuffer";
-		request.onload = $bind(this,this._onSpriteSoundLoaded);
-		request.onerror = $bind(this,this._onSpriteSoundError);
-		request.send();
-	}
-	,_onSpriteSoundLoaded: function(evt) {
-		Waud.audioManager.audioContext.decodeAudioData(evt.target.response,$bind(this,this._decodeSuccess),$bind(this,this._onSpriteSoundError));
-	}
-	,_onSpriteSoundError: function() {
-		if(this._options != null && this._options.onerror != null) this._options.onerror(this);
-	}
-	,_decodeSuccess: function(buffer) {
-		if(buffer == null) {
-			console.log("empty buffer: " + this.url);
-			this._onSpriteSoundError();
-			return;
-		}
-		Waud.audioManager.bufferList.set(this.url,buffer);
-		this._spriteDuration = buffer.duration;
-		if(this._options != null && this._options.onload != null) this._options.onload(this);
-		var _g = 0;
-		var _g1 = this._spriteData.sprite;
-		while(_g < _g1.length) {
-			var snd = _g1[_g];
-			++_g;
-			var sound = new WebAudioAPISound(this.url,this._options,true,buffer.duration);
-			sound.isSpriteSound = true;
-			this._spriteSounds.set(snd.name,sound);
-		}
-	}
 };
 var WaudUtils = $hx_exports.WaudUtils = function() { };
+WaudUtils.__name__ = true;
 WaudUtils.isAndroid = function(ua) {
 	if(ua == null) ua = window.navigator.userAgent;
 	return new EReg("Android","i").match(ua);
@@ -820,24 +713,53 @@ WaudUtils.getiOSVersion = function(ua) {
 	}
 	return matched;
 };
-var WebAudioAPISound = function(url,options,loaded,d) {
-	if(d == null) d = 0;
-	if(loaded == null) loaded = false;
+var WebAudioAPISound = function(url,options) {
 	BaseSound.call(this,url,options);
 	this._playStartTime = 0;
 	this._pauseTime = 0;
 	this._srcNodes = [];
 	this._gainNodes = [];
 	this._currentSoundProps = null;
-	this._isLoaded = loaded;
-	this.duration = d;
 	this._manager = Waud.audioManager;
-	if(this._options.preload && !loaded) this.load();
+	if(this._options.preload) this.load();
 };
+WebAudioAPISound.__name__ = true;
 WebAudioAPISound.__interfaces__ = [IWaudSound];
 WebAudioAPISound.__super__ = BaseSound;
 WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
-	load: function(callback) {
+	_onSoundLoaded: function(evt) {
+		this._manager.audioContext.decodeAudioData(evt.target.response,$bind(this,this._decodeSuccess),$bind(this,this._error));
+	}
+	,_decodeSuccess: function(buffer) {
+		if(buffer == null) {
+			haxe_Log.trace("empty buffer: " + this.url,{ fileName : "WebAudioAPISound.hx", lineNumber : 35, className : "WebAudioAPISound", methodName : "_decodeSuccess"});
+			if(this._options.onerror != null) this._options.onerror(this);
+			return;
+		}
+		this._manager.bufferList.set(this.url,buffer);
+		this._isLoaded = true;
+		this.duration = buffer.duration;
+		if(this._options.onload != null) this._options.onload(this);
+		if(this._options.autoplay) this.play();
+	}
+	,_error: function() {
+		if(this._options.onerror != null) this._options.onerror(this);
+	}
+	,_makeSource: function(buffer) {
+		var source = this._manager.audioContext.createBufferSource();
+		source.buffer = buffer;
+		if(this._manager.audioContext.createGain != null) this._gainNode = this._manager.audioContext.createGain(); else this._gainNode = this._manager.audioContext.createGainNode();
+		source.connect(this._gainNode);
+		this._gainNode.connect(this._manager.audioContext.destination);
+		this._srcNodes.push(source);
+		this._gainNodes.push(this._gainNode);
+		return source;
+	}
+	,get_duration: function() {
+		if(!this._isLoaded) return 0;
+		return this.duration;
+	}
+	,load: function(callback) {
 		if(!this._isLoaded) {
 			var request = new XMLHttpRequest();
 			request.open("GET",this.url,true);
@@ -849,46 +771,14 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		}
 		return this;
 	}
-	,_onSoundLoaded: function(evt) {
-		this._manager.audioContext.decodeAudioData(evt.target.response,$bind(this,this._decodeSuccess),$bind(this,this._error));
-	}
-	,_error: function() {
-		if(this._options.onerror != null) this._options.onerror(this);
-	}
-	,_decodeSuccess: function(buffer) {
-		if(buffer == null) {
-			console.log("empty buffer: " + this.url);
-			this._error();
-			return;
-		}
-		this._manager.bufferList.set(this.url,buffer);
-		this._isLoaded = true;
-		this.duration = buffer.duration;
-		if(this._options.onload != null) this._options.onload(this);
-		if(this._options.autoplay) this.play();
-	}
-	,_makeSource: function(buffer) {
-		var source = this._manager.audioContext.createBufferSource();
-		source.buffer = buffer;
-		if(this._manager.audioContext.createGain != null) this._gainNode = this._manager.audioContext.createGain(); else this._gainNode = this._manager.audioContext.createGainNode();
-		source.connect(this._gainNode);
-		this._gainNode.connect(this._manager.audioContext.destination);
-		this._srcNodes.push(source);
-		this._gainNodes.push(this._gainNode);
-		if(this._muted) this._gainNode.gain.value = 0; else this._gainNode.gain.value = this._options.volume;
-		return source;
-	}
-	,get_duration: function() {
-		if(!this._isLoaded) return 0;
-		return this.duration;
-	}
 	,play: function(spriteName,soundProps) {
 		var _g = this;
 		if(this._isPlaying) return HxOverrides.indexOf(this._srcNodes,this._snd,0);
 		if(!this._isLoaded) {
-			console.log("sound not loaded");
+			haxe_Log.trace("sound not loaded",{ fileName : "WebAudioAPISound.hx", lineNumber : 85, className : "WebAudioAPISound", methodName : "play"});
 			return -1;
 		}
+		if(this._muted) return -1;
 		var start = 0;
 		var end = -1;
 		if(this.isSpriteSound && soundProps != null) {
@@ -901,56 +791,55 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 			this._snd = this._makeSource(buffer);
 			if(start >= 0 && end > -1) {
 				if(Reflect.field(this._snd,"start") != null) this._snd.start(0,start,end); else this._snd.noteGrainOn(0,start,end);
-			} else if(Reflect.field(this._snd,"start") != null) this._snd.start(0,this._pauseTime,this._snd.buffer.duration); else this._snd.noteGrainOn(0,this._pauseTime,this._snd.buffer.duration);
+			} else {
+				this._snd.loop = this._options.loop;
+				if(Reflect.field(this._snd,"start") != null) this._snd.start(0,this._pauseTime,this._snd.buffer.duration); else this._snd.noteGrainOn(0,this._pauseTime,this._snd.buffer.duration);
+			}
 			this._playStartTime = this._manager.audioContext.currentTime;
 			this._isPlaying = true;
 			this._snd.onended = function() {
 				_g._pauseTime = 0;
+				haxe_Log.trace(spriteName,{ fileName : "WebAudioAPISound.hx", lineNumber : 115, className : "WebAudioAPISound", methodName : "play", customParams : [_g.isSpriteSound,soundProps.loop,start,end]});
+				if(_g.isSpriteSound && soundProps != null && soundProps.loop && start >= 0 && end > -1) _g.play(spriteName,soundProps);
 				_g._isPlaying = false;
-				if(_g.isSpriteSound && soundProps != null && soundProps.loop != null && soundProps.loop && start >= 0 && end > -1) {
-					_g.destroy();
-					_g.play(spriteName,soundProps);
-				} else if(_g._options.loop) {
-					_g.destroy();
-					_g.play();
-				}
 				if(_g._options.onend != null) _g._options.onend(_g);
 			};
 		}
+		this._gainNode.gain.value = this._options.volume;
 		return HxOverrides.indexOf(this._srcNodes,this._snd,0);
 	}
-	,togglePlay: function(spriteName) {
+	,togglePlay: function() {
 		if(this._isPlaying) this.pause(); else this.play();
 	}
-	,isPlaying: function(spriteName) {
+	,isPlaying: function() {
 		return this._isPlaying;
 	}
 	,loop: function(val) {
 		if(this._snd == null || !this._isLoaded) return;
 		this._snd.loop = val;
 	}
-	,setVolume: function(val,spriteName) {
+	,setVolume: function(val) {
 		this._options.volume = val;
 		if(this._gainNode == null || !this._isLoaded) return;
 		this._gainNode.gain.value = this._options.volume;
 	}
-	,getVolume: function(spriteName) {
+	,getVolume: function() {
 		return this._options.volume;
 	}
-	,mute: function(val,spriteName) {
+	,mute: function(val) {
 		this._muted = val;
 		if(this._gainNode == null || !this._isLoaded) return;
 		if(val) this._gainNode.gain.value = 0; else this._gainNode.gain.value = this._options.volume;
 	}
-	,toggleMute: function(spriteName) {
+	,toggleMute: function() {
 		this.mute(!this._muted);
 	}
-	,stop: function(spriteName) {
+	,stop: function() {
 		this._pauseTime = 0;
 		if(this._snd == null || !this._isLoaded || !this._isPlaying) return;
 		this.destroy();
 	}
-	,pause: function(spriteName) {
+	,pause: function() {
 		if(this._snd == null || !this._isLoaded || !this._isPlaying) return;
 		this.destroy();
 		this._pauseTime += this._manager.audioContext.currentTime - this._playStartTime;
@@ -967,7 +856,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		if(this._snd == null || !this._isLoaded || !this._isPlaying) return 0;
 		return this._manager.audioContext.currentTime - this._playStartTime + this._pauseTime;
 	}
-	,onEnd: function(callback,spriteName) {
+	,onEnd: function(callback) {
 		this._options.onend = callback;
 		return this;
 	}
@@ -1007,12 +896,19 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 	}
 });
 var haxe_IMap = function() { };
+haxe_IMap.__name__ = true;
+var haxe_Log = function() { };
+haxe_Log.__name__ = true;
+haxe_Log.trace = function(v,infos) {
+	js_Boot.__trace(v,infos);
+};
 var haxe_Timer = function(time_ms) {
 	var me = this;
 	this.id = setInterval(function() {
 		me.run();
 	},time_ms);
 };
+haxe_Timer.__name__ = true;
 haxe_Timer.delay = function(f,time_ms) {
 	var t = new haxe_Timer(time_ms);
 	t.run = function() {
@@ -1036,6 +932,7 @@ var haxe_ds__$StringMap_StringMapIterator = function(map,keys) {
 	this.index = 0;
 	this.count = keys.length;
 };
+haxe_ds__$StringMap_StringMapIterator.__name__ = true;
 haxe_ds__$StringMap_StringMapIterator.prototype = {
 	hasNext: function() {
 		return this.index < this.count;
@@ -1047,6 +944,7 @@ haxe_ds__$StringMap_StringMapIterator.prototype = {
 var haxe_ds_StringMap = function() {
 	this.h = { };
 };
+haxe_ds_StringMap.__name__ = true;
 haxe_ds_StringMap.__interfaces__ = [haxe_IMap];
 haxe_ds_StringMap.prototype = {
 	set: function(key,value) {
@@ -1085,14 +983,106 @@ var js__$Boot_HaxeError = function(val) {
 	this.message = String(val);
 	if(Error.captureStackTrace) Error.captureStackTrace(this,js__$Boot_HaxeError);
 };
+js__$Boot_HaxeError.__name__ = true;
 js__$Boot_HaxeError.__super__ = Error;
 js__$Boot_HaxeError.prototype = $extend(Error.prototype,{
 });
+var js_Boot = function() { };
+js_Boot.__name__ = true;
+js_Boot.__unhtml = function(s) {
+	return s.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;");
+};
+js_Boot.__trace = function(v,i) {
+	var msg;
+	if(i != null) msg = i.fileName + ":" + i.lineNumber + ": "; else msg = "";
+	msg += js_Boot.__string_rec(v,"");
+	if(i != null && i.customParams != null) {
+		var _g = 0;
+		var _g1 = i.customParams;
+		while(_g < _g1.length) {
+			var v1 = _g1[_g];
+			++_g;
+			msg += "," + js_Boot.__string_rec(v1,"");
+		}
+	}
+	var d;
+	if(typeof(document) != "undefined" && (d = document.getElementById("haxe:trace")) != null) d.innerHTML += js_Boot.__unhtml(msg) + "<br/>"; else if(typeof console != "undefined" && console.log != null) console.log(msg);
+};
+js_Boot.__string_rec = function(o,s) {
+	if(o == null) return "null";
+	if(s.length >= 5) return "<...>";
+	var t = typeof(o);
+	if(t == "function" && (o.__name__ || o.__ename__)) t = "object";
+	switch(t) {
+	case "object":
+		if(o instanceof Array) {
+			if(o.__enum__) {
+				if(o.length == 2) return o[0];
+				var str2 = o[0] + "(";
+				s += "\t";
+				var _g1 = 2;
+				var _g = o.length;
+				while(_g1 < _g) {
+					var i1 = _g1++;
+					if(i1 != 2) str2 += "," + js_Boot.__string_rec(o[i1],s); else str2 += js_Boot.__string_rec(o[i1],s);
+				}
+				return str2 + ")";
+			}
+			var l = o.length;
+			var i;
+			var str1 = "[";
+			s += "\t";
+			var _g2 = 0;
+			while(_g2 < l) {
+				var i2 = _g2++;
+				str1 += (i2 > 0?",":"") + js_Boot.__string_rec(o[i2],s);
+			}
+			str1 += "]";
+			return str1;
+		}
+		var tostr;
+		try {
+			tostr = o.toString;
+		} catch( e ) {
+			if (e instanceof js__$Boot_HaxeError) e = e.val;
+			return "???";
+		}
+		if(tostr != null && tostr != Object.toString && typeof(tostr) == "function") {
+			var s2 = o.toString();
+			if(s2 != "[object Object]") return s2;
+		}
+		var k = null;
+		var str = "{\n";
+		s += "\t";
+		var hasp = o.hasOwnProperty != null;
+		for( var k in o ) {
+		if(hasp && !o.hasOwnProperty(k)) {
+			continue;
+		}
+		if(k == "prototype" || k == "__class__" || k == "__super__" || k == "__interfaces__" || k == "__properties__") {
+			continue;
+		}
+		if(str.length != 2) str += ", \n";
+		str += s + k + " : " + js_Boot.__string_rec(o[k],s);
+		}
+		s = s.substring(1);
+		str += "\n" + s + "}";
+		return str;
+	case "function":
+		return "<function>";
+	case "string":
+		return o;
+	default:
+		return String(o);
+	}
+};
 var $_, $fid = 0;
 function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id__ = $fid++; var f; if( o.hx__closures__ == null ) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__]; if( f == null ) { f = function(){ return f.method.apply(f.scope, arguments); }; f.scope = o; f.method = m; o.hx__closures__[m.__id__] = f; } return f; }
 if(Array.prototype.indexOf) HxOverrides.indexOf = function(a,o,i) {
 	return Array.prototype.indexOf.call(a,o,i);
 };
+String.__name__ = true;
+Array.__name__ = true;
 var __map_reserved = {}
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
