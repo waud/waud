@@ -315,11 +315,13 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 		this._snd.pause();
 		this._snd.currentTime = 0;
 		this._isPlaying = false;
+		if(this._tmr != null) this._tmr.stop();
 	}
 	,pause: function(spriteName) {
 		if(!this._isLoaded || this._snd == null) return;
 		this._snd.pause();
 		this._isPlaying = false;
+		if(this._tmr != null) this._tmr.stop();
 	}
 	,setTime: function(time) {
 		if(!this._isLoaded || this._snd == null || time > this._snd.duration) return;
@@ -1598,7 +1600,7 @@ var __map_reserved = {}
 msignal_SlotList.NIL = new msignal_SlotList(null,null);
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.5.1";
+Waud.version = "0.5.2";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, loop : false, preload : true, webaudio : true, volume : 1};
 Waud.preferredSampleRate = 44100;

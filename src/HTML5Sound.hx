@@ -143,12 +143,14 @@ import js.html.AudioElement;
 		_snd.pause();
 		_snd.currentTime = 0;
 		_isPlaying = false;
+		if (_tmr != null) _tmr.stop();
 	}
 
 	public function pause(?spriteName:String) {
 		if (!_isLoaded || _snd == null) return;
 		_snd.pause();
 		_isPlaying = false;
+		if (_tmr != null) _tmr.stop();
 	}
 
 	public function setTime(time:Float) {
