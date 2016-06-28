@@ -87,7 +87,7 @@ import js.html.audio.AudioBuffer;
 	}
 
 	public function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties):Int {
-		if (_isPlaying) return _srcNodes.indexOf(_snd);
+		if (_isPlaying) stop(spriteName);
 		if (!_isLoaded) {
 			trace("sound not loaded");
 			return -1;

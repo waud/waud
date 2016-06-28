@@ -108,6 +108,7 @@ import js.html.AudioElement;
 			trace("sound not loaded");
 			return -1;
 		}
+		if (_isPlaying) stop(spriteName);
 		if (_muted) return -1;
 		if (isSpriteSound && soundProps != null) {
 			_snd.currentTime = soundProps.start;
@@ -116,11 +117,11 @@ import js.html.AudioElement;
 				if (soundProps.loop != null && soundProps.loop) {
 					play(spriteName, soundProps);
 				}
-				else stop();
+				else stop(spriteName);
 			},
 			Math.ceil(soundProps.duration * 1000));
 		}
-		if (!_isPlaying) _snd.play();
+		Timer.delay(_snd.play, 100);
 		return 0;
 	}
 
@@ -140,8 +141,11 @@ import js.html.AudioElement;
 
 	public function stop(?spriteName:String) {
 		if (!_isLoaded || _snd == null) return;
-		_snd.pause();
 		_snd.currentTime = 0;
+		try {
+			_snd.pause();
+		}
+		catch (e:Dynamic) {}
 		_isPlaying = false;
 		if (_tmr != null) _tmr.stop();
 	}

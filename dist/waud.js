@@ -199,7 +199,6 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 		this.mute(!this._muted);
 	}
 	,play: function(spriteName,soundProps) {
-		var _g = this;
 		if(!this._isLoaded || this._snd == null) {
 			console.log("sound not loaded");
 			return -1;
@@ -209,10 +208,11 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 			this._snd.currentTime = soundProps.start;
 			if(this._tmr != null) this._tmr.stop();
 			this._tmr = haxe_Timer.delay(function() {
-				if(soundProps.loop != null && soundProps.loop) _g.play(spriteName,soundProps); else _g.stop();
+				if(soundProps.loop != null && soundProps.loop) {
+				}
 			},Math.ceil(soundProps.duration * 1000));
 		}
-		if(!this._isPlaying) this._snd.play();
+		this._snd.play();
 		return 0;
 	}
 	,togglePlay: function(spriteName) {
@@ -549,7 +549,10 @@ WaudSound.prototype = {
 		xobj.onreadystatechange = function() {
 			if(xobj.readyState == 4 && xobj.status == 200) {
 				_g._spriteData = JSON.parse(xobj.response);
-				_g._init(_g._spriteData.src);
+				var url = _g._spriteData.src;
+				if(jsonUrl.indexOf("/") > -1) url = jsonUrl.substring(0,jsonUrl.lastIndexOf("/") + 1) + url;
+				_g._init(url);
+				console.log(url);
 			}
 		};
 		xobj.send(null);
@@ -886,7 +889,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 	}
 	,play: function(spriteName,soundProps) {
 		var _g = this;
-		if(this._isPlaying) return HxOverrides.indexOf(this._srcNodes,this._snd,0);
+		if(this._isPlaying) this.stop(spriteName);
 		if(!this._isLoaded) {
 			console.log("sound not loaded");
 			return -1;
