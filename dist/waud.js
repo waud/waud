@@ -207,13 +207,14 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 		if(this._isPlaying) this.stop(spriteName);
 		if(this._muted) return -1;
 		if(this.isSpriteSound && soundProps != null) {
-			this._snd.currentTime = soundProps.start;
+			if(this._pauseTime == null) this._snd.currentTime = soundProps.start; else this._snd.currentTime = this._pauseTime;
 			if(this._tmr != null) this._tmr.stop();
 			this._tmr = haxe_Timer.delay(function() {
 				if(soundProps.loop != null && soundProps.loop) _g.play(spriteName,soundProps); else _g.stop(spriteName);
 			},Math.ceil(soundProps.duration * 1000));
 		}
 		haxe_Timer.delay(($_=this._snd,$bind($_,$_.play)),100);
+		this._pauseTime = null;
 		return 0;
 	}
 	,togglePlay: function(spriteName) {
@@ -229,17 +230,14 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 	,stop: function(spriteName) {
 		if(!this._isLoaded || this._snd == null) return;
 		this._snd.currentTime = 0;
-		try {
-			this._snd.pause();
-		} catch( e ) {
-			if (e instanceof js__$Boot_HaxeError) e = e.val;
-		}
+		this._snd.pause();
 		this._isPlaying = false;
 		if(this._tmr != null) this._tmr.stop();
 	}
 	,pause: function(spriteName) {
 		if(!this._isLoaded || this._snd == null) return;
 		this._snd.pause();
+		this._pauseTime = this._snd.currentTime;
 		this._isPlaying = false;
 		if(this._tmr != null) this._tmr.stop();
 	}
@@ -567,13 +565,15 @@ WaudSound.prototype = {
 			if(this.isSpriteSound) this._loadSpriteSound(this.url); else this._snd = new WebAudioAPISound(this.url,this._options);
 		} else if(Waud.isHTML5AudioSupported) {
 			var sound = new HTML5Sound(this.url,this._options);
-			var _g = 0;
-			var _g1 = this._spriteData.sprite;
-			while(_g < _g1.length) {
-				var snd = _g1[_g];
-				++_g;
-				sound.isSpriteSound = true;
-				this._spriteSounds.set(snd.name,sound);
+			if(this._spriteData != null && this._spriteData.sprite != null) {
+				var _g = 0;
+				var _g1 = this._spriteData.sprite;
+				while(_g < _g1.length) {
+					var snd = _g1[_g];
+					++_g;
+					sound.isSpriteSound = true;
+					this._spriteSounds.set(snd.name,sound);
+				}
 			}
 		} else {
 			console.log("no audio support in this browser");

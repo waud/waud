@@ -116,15 +116,18 @@ import haxe.Json;
 	*/
 	function _init(soundUrl:String) {
 		url = soundUrl;
+
 		if (Waud.isWebAudioSupported && Waud.useWebAudio && (_options == null || _options.webaudio == null || _options.webaudio)) {
 			if (isSpriteSound) _loadSpriteSound(url);
 			else _snd = new WebAudioAPISound(url, _options);
 		}
 		else if (Waud.isHTML5AudioSupported) {
 			var sound = new HTML5Sound(url, _options);
-			for (snd in _spriteData.sprite) {
-				sound.isSpriteSound = true;
-				_spriteSounds.set(snd.name, sound);
+			if (_spriteData != null && _spriteData.sprite != null) {
+				for (snd in _spriteData.sprite) {
+					sound.isSpriteSound = true;
+					_spriteSounds.set(snd.name, sound);
+				}
 			}
 		}
 		else {
