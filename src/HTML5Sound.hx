@@ -104,7 +104,8 @@ import js.html.AudioElement;
 		mute(!_muted);
 	}
 
-	public function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties):Int {
+	public function play(?sprite:String, ?soundProps:AudioSpriteSoundProperties):Int {
+		spriteName = sprite;
 		if (!_isLoaded || _snd == null) {
 			trace("sound not loaded");
 			return -1;

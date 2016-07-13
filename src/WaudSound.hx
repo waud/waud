@@ -39,10 +39,22 @@ import haxe.Json;
 	*/
 	public var url:String;
 
+	/**
+	* Sound sprite name.
+	*
+	* @property spriteName
+	* @type {String}
+	* @readOnly
+	* @example
+ 	*     snd.spriteName;
+	*/
+	public var spriteName:String;
+
 	var _snd:IWaudSound;
 	var _options:WaudSoundOptions;
 	var _spriteData:AudioSprite;
 	var _spriteSounds:Map<String, IWaudSound>;
+	var _spriteSoundEndCallbacks:Map<String, IWaudSound -> Void>;
 	var _spriteDuration:Float;
 
 	/**
@@ -75,6 +87,7 @@ import haxe.Json;
 			isSpriteSound = true;
 			_spriteDuration = 0;
 			_spriteSounds = new Map();
+			_spriteSoundEndCallbacks = new Map();
 			_loadSpriteJson(url);
 		}
 		else {
@@ -394,7 +407,7 @@ import haxe.Json;
 	*/
 	public function onEnd(callback:IWaudSound -> Void, ?spriteName:String):IWaudSound {
 		if (isSpriteSound) {
-			if (spriteName != null && _spriteSounds[spriteName] != null) _spriteSounds[spriteName].onEnd(callback);
+			if (spriteName != null) _spriteSoundEndCallbacks[spriteName] = callback;
 			return this;
 		}
 
@@ -483,6 +496,11 @@ import haxe.Json;
 			var sound = new WebAudioAPISound(url, _options, true, buffer.duration);
 			sound.isSpriteSound = true;
 			_spriteSounds.set(snd.name, sound);
+			sound.onEnd(_spriteOnEnd, snd.name);
 		}
+	}
+
+	function _spriteOnEnd(snd:IWaudSound) {
+		if (_spriteSoundEndCallbacks[snd.spriteName] != null) _spriteSoundEndCallbacks[snd.spriteName](snd);
 	}
 }

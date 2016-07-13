@@ -1,3 +1,4 @@
+import haxe.Timer;
 import js.Browser;
 import pixi.core.Pixi;
 import pixi.core.text.Text;
@@ -77,6 +78,7 @@ class Main extends Application {
 		_addButton("Glass", 120, 250, 60, 30, function() { _audSprite.play("glass"); });
 		_addButton("Bell (loop)", 180, 250, 120, 30, function() { _audSprite.play("bell"); });
 		_addButton("Can", 300, 250, 60, 30, function() { _audSprite.play("canopening"); });
+		_addButton("Play All", 360, 250, 60, 30, playAllTheThings);
 
 		label = new Text("Test 1: ", { font: "26px Tahoma", fill:"#FFFFFF" });
 		_btnContainer.addChild(label);
@@ -120,7 +122,10 @@ class Main extends Application {
 		_ua.text += "\nWeb Audio API: " + Waud.isWebAudioSupported;
 		_ua.text += "\nHTML5 Audio: " + Waud.isHTML5AudioSupported;
 
-		_audSprite = new WaudSound("assets/sprite.json", {webaudio: false});
+		_audSprite = new WaudSound("assets/sprite.json", {webaudio: true});
+		_audSprite.onEnd(function(snd:IWaudSound) {trace("Glass finished.");}, "glass");
+		_audSprite.onEnd(function(snd:IWaudSound) {trace("Bell finished.");}, "bell");
+		_audSprite.onEnd(function(snd:IWaudSound) {trace("Canopening finished.");}, "canopening");
 
 		_countdown = new WaudSound("assets/countdown.mp3", {webaudio: true});
 
@@ -154,6 +159,12 @@ class Main extends Application {
 
     function _pause() {
 		Waud.pause();
+	}
+
+	function playAllTheThings() {
+		Timer.delay( function() {_audSprite.play("glass");}, 100);
+		Timer.delay( function() {_audSprite.play("bell");}, 200);
+		Timer.delay( function() {_audSprite.play("canopening");}, 300);
 	}
 
 	function _addButton(label:String, x:Float, y:Float, width:Float, height:Float, callback:Dynamic) {

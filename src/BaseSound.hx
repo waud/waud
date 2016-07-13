@@ -3,6 +3,7 @@
 	public var isSpriteSound:Bool;
 	public var url:String;
 	public var duration(get, null):Float;
+	public var spriteName:String;
 
 	var _options:WaudSoundOptions;
 	var _isLoaded:Bool;

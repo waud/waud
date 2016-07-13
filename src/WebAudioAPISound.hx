@@ -86,7 +86,8 @@ import js.html.audio.AudioBuffer;
 		return duration;
 	}
 
-	public function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties):Int {
+	public function play(?sprite:String, ?soundProps:AudioSpriteSoundProperties):Int {
+		spriteName = sprite;
 		if (_isPlaying) stop(spriteName);
 		if (!_isLoaded) {
 			trace("sound not loaded");
@@ -129,7 +130,7 @@ import js.html.audio.AudioBuffer;
 					destroy();
 					play();
 				}
-				if (_options.onend != null) _options.onend(this);
+				else if (_options.onend != null) _options.onend(this);
 			}
 		}
 
