@@ -555,10 +555,10 @@ var Main = function() {
 		_g._audSprite.play("countdown");
 	});
 	this._addButton("Pause",180,400,60,30,function() {
-		_g._audSprite.pause();
+		_g._audSprite.pause("countdown");
 	});
 	this._addButton("Stop",240,400,60,30,function() {
-		_g._audSprite.stop();
+		_g._audSprite.stop("countdown");
 	});
 	this._addButton("DESTROY",120,450,180,30,function() {
 		Waud.destroy();
@@ -1051,13 +1051,13 @@ WaudSound.prototype = {
 		if(Waud.isWebAudioSupported && Waud.useWebAudio && (this._options == null || this._options.webaudio == null || this._options.webaudio)) {
 			if(this.isSpriteSound) this._loadSpriteSound(this.url); else this._snd = new WebAudioAPISound(this.url,this._options);
 		} else if(Waud.isHTML5AudioSupported) {
-			var sound = new HTML5Sound(this.url,this._options);
 			if(this._spriteData != null && this._spriteData.sprite != null) {
 				var _g = 0;
 				var _g1 = this._spriteData.sprite;
 				while(_g < _g1.length) {
 					var snd = _g1[_g];
 					++_g;
+					var sound = new HTML5Sound(this.url,this._options);
 					sound.isSpriteSound = true;
 					this._spriteSounds.set(snd.name,sound);
 				}

@@ -22,8 +22,8 @@
     "contributors": [
 	"adireddy"
     ],
-    "releasenote": "html5 audio bug fixes",
-    "version": "0.5.6",
+    "releasenote": "improved html5 audio sprite support",
+    "version": "0.5.7",
     "url": "https://github.com/adireddy/waud",
     "dependencies": {}
 }

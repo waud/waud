@@ -90,8 +90,8 @@ class Main extends Application {
 		_btnContainer.addChild(label);
 		label.position.y = 400;
 		_addButton("Play", 120, 400, 60, 30, function() { _audSprite.play("countdown"); });
-		_addButton("Pause", 180, 400, 60, 30, function() { _audSprite.pause(); });
-		_addButton("Stop", 240, 400, 60, 30, function() { _audSprite.stop(); });
+		_addButton("Pause", 180, 400, 60, 30, function() { _audSprite.pause("countdown"); });
+		_addButton("Stop", 240, 400, 60, 30, function() { _audSprite.stop("countdown"); });
 
 		_addButton("DESTROY", 120, 450, 180, 30, function() { Waud.destroy(); });
 
