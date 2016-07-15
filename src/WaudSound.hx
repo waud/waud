@@ -39,10 +39,22 @@ import haxe.Json;
 	*/
 	public var url:String;
 
+	/**
+	* Sound sprite name.
+	*
+	* @property spriteName
+	* @type {String}
+	* @readOnly
+	* @example
+ 	*     snd.spriteName;
+	*/
+	public var spriteName:String;
+
 	var _snd:IWaudSound;
 	var _options:WaudSoundOptions;
 	var _spriteData:AudioSprite;
 	var _spriteSounds:Map<String, IWaudSound>;
+	var _spriteSoundEndCallbacks:Map<String, IWaudSound -> Void>;
 	var _spriteDuration:Float;
 
 	/**
@@ -75,6 +87,7 @@ import haxe.Json;
 			isSpriteSound = true;
 			_spriteDuration = 0;
 			_spriteSounds = new Map();
+			_spriteSoundEndCallbacks = new Map();
 			_loadSpriteJson(url);
 		}
 		else {
@@ -99,7 +112,9 @@ import haxe.Json;
 		xobj.onreadystatechange = function() {
 			if (xobj.readyState == 4 && xobj.status == 200) {
 				_spriteData = Json.parse(xobj.response);
-				_init(_spriteData.src);
+				var url = _spriteData.src;
+				if (jsonUrl.indexOf("/") > -1) url = jsonUrl.substring(0, jsonUrl.lastIndexOf("/") + 1) + url;
+				_init(url);
 			}
 		};
 		xobj.send(null);
@@ -114,16 +129,20 @@ import haxe.Json;
 	*/
 	function _init(soundUrl:String) {
 		url = soundUrl;
+
 		if (Waud.isWebAudioSupported && Waud.useWebAudio && (_options == null || _options.webaudio == null || _options.webaudio)) {
 			if (isSpriteSound) _loadSpriteSound(url);
 			else _snd = new WebAudioAPISound(url, _options);
 		}
 		else if (Waud.isHTML5AudioSupported) {
-			var sound = new HTML5Sound(url, _options);
-			for (snd in _spriteData.sprite) {
-				sound.isSpriteSound = true;
-				_spriteSounds.set(snd.name, sound);
+			if (_spriteData != null && _spriteData.sprite != null) {
+				for (snd in _spriteData.sprite) {
+					var sound = new HTML5Sound(url, _options);
+					sound.isSpriteSound = true;
+					_spriteSounds.set(snd.name, sound);
+				}
 			}
+			else _snd = new HTML5Sound(url, _options);
 		}
 		else {
 			trace("no audio support in this browser");
@@ -389,7 +408,7 @@ import haxe.Json;
 	*/
 	public function onEnd(callback:IWaudSound -> Void, ?spriteName:String):IWaudSound {
 		if (isSpriteSound) {
-			if (spriteName != null && _spriteSounds[spriteName] != null) _spriteSounds[spriteName].onEnd(callback);
+			if (spriteName != null) _spriteSoundEndCallbacks[spriteName] = callback;
 			return this;
 		}
 
@@ -478,6 +497,11 @@ import haxe.Json;
 			var sound = new WebAudioAPISound(url, _options, true, buffer.duration);
 			sound.isSpriteSound = true;
 			_spriteSounds.set(snd.name, sound);
+			sound.onEnd(_spriteOnEnd, snd.name);
 		}
+	}
+
+	function _spriteOnEnd(snd:IWaudSound) {
+		if (_spriteSoundEndCallbacks[snd.spriteName] != null) _spriteSoundEndCallbacks[snd.spriteName](snd);
 	}
 }

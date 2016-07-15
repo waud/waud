@@ -7,6 +7,7 @@ import js.html.AudioElement;
 	var _snd:AudioElement;
 	var _src:SourceElement;
 	var _tmr:Timer;
+	var _pauseTime:Float;
 
 	public function new(url:String, ?options:WaudSoundOptions = null, ?src:SourceElement) {
 		super(url, options);
@@ -14,6 +15,7 @@ import js.html.AudioElement;
 		if (src == null) _addSource(url);
 		else _snd.appendChild(src);
 		if (_options.preload) load();
+		if (_b64.match(url)) url = "";
 	}
 
 	public function load(?callback:IWaudSound -> Void):IWaudSound {
@@ -103,24 +105,27 @@ import js.html.AudioElement;
 		mute(!_muted);
 	}
 
-	public function play(?spriteName:String, ?soundProps:AudioSpriteSoundProperties):Int {
+	public function play(?sprite:String, ?soundProps:AudioSpriteSoundProperties):Int {
+		spriteName = sprite;
 		if (!_isLoaded || _snd == null) {
 			trace("sound not loaded");
 			return -1;
 		}
+		if (_isPlaying) stop(spriteName);
 		if (_muted) return -1;
 		if (isSpriteSound && soundProps != null) {
-			_snd.currentTime = soundProps.start;
+			_snd.currentTime = _pauseTime == null ? soundProps.start : _pauseTime;
 			if (_tmr != null) _tmr.stop();
 			_tmr = Timer.delay(function() {
 				if (soundProps.loop != null && soundProps.loop) {
 					play(spriteName, soundProps);
 				}
-				else stop();
+				else stop(spriteName);
 			},
 			Math.ceil(soundProps.duration * 1000));
 		}
-		if (!_isPlaying) _snd.play();
+		Timer.delay(_snd.play, 100);
+		_pauseTime = null;
 		return 0;
 	}
 
@@ -140,15 +145,18 @@ import js.html.AudioElement;
 
 	public function stop(?spriteName:String) {
 		if (!_isLoaded || _snd == null) return;
-		_snd.pause();
 		_snd.currentTime = 0;
+		_snd.pause();
 		_isPlaying = false;
+		if (_tmr != null) _tmr.stop();
 	}
 
 	public function pause(?spriteName:String) {
 		if (!_isLoaded || _snd == null) return;
 		_snd.pause();
+		_pauseTime = _snd.currentTime;
 		_isPlaying = false;
+		if (_tmr != null) _tmr.stop();
 	}
 
 	public function setTime(time:Float) {
