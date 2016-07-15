@@ -1,8 +1,13 @@
+import js.Browser;
+import js.html.Uint8Array;
+import js.html.ArrayBuffer;
 import js.html.XMLHttpRequestResponseType;
 import js.html.XMLHttpRequest;
 import js.html.audio.GainNode;
 import js.html.audio.AudioBufferSourceNode;
 import js.html.audio.AudioBuffer;
+
+using StringTools;
 
 @:keep class WebAudioAPISound extends BaseSound implements IWaudSound {
 
@@ -25,7 +30,12 @@ import js.html.audio.AudioBuffer;
 		_isLoaded = loaded;
 		duration = d;
 		_manager = Waud.audioManager;
-		if (_options.preload && !loaded) load();
+
+		if (_b64.match(url)) {
+			_decodeAudio(_base64ToArrayBuffer(url));
+			url = "";
+		}
+		else if (_options.preload && !loaded) load();
 	}
 
 	public function load(?callback:IWaudSound -> Void):IWaudSound {
@@ -43,8 +53,20 @@ import js.html.audio.AudioBuffer;
 		return this;
 	}
 
+	function _base64ToArrayBuffer(base64:String):ArrayBuffer {
+		var raw = Browser.window.atob(base64.split(",")[1]);
+		var rawLength = raw.length;
+		var array = new Uint8Array(new ArrayBuffer(rawLength));
+		for(i in 0 ... rawLength) array[i] = raw.charCodeAt(i);
+		return array.buffer;
+	}
+
 	function _onSoundLoaded(evt) {
-		_manager.audioContext.decodeAudioData(evt.target.response, _decodeSuccess, _error);
+		_decodeAudio(evt.target.response);
+	}
+
+	inline function _decodeAudio(data:ArrayBuffer) {
+		_manager.audioContext.decodeAudioData(data, _decodeSuccess, _error);
 	}
 
 	function _error() {
@@ -126,7 +148,7 @@ import js.html.audio.AudioBuffer;
 					destroy();
 					play(spriteName, soundProps);
 				}
-				else if(_options.loop) {
+				else if (_options.loop) {
 					destroy();
 					play();
 				}
