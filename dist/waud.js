@@ -69,6 +69,7 @@ AudioManager.prototype = {
 	}
 };
 var BaseSound = function(sndUrl,options) {
+	this._b64 = new EReg("(^data:audio).*(;base64,)","i");
 	if(sndUrl == null || sndUrl == "") {
 		console.log("invalid sound url");
 		return;
@@ -120,6 +121,7 @@ var HTML5Sound = function(url,options,src) {
 	this._snd = Waud.dom.createElement("audio");
 	if(src == null) this._addSource(url); else this._snd.appendChild(src);
 	if(this._options.preload) this.load();
+	if(this._b64.match(url)) url = "";
 };
 HTML5Sound.__interfaces__ = [IWaudSound];
 HTML5Sound.__super__ = BaseSound;
@@ -576,7 +578,7 @@ WaudSound.prototype = {
 					sound.isSpriteSound = true;
 					this._spriteSounds.set(snd.name,sound);
 				}
-			}
+			} else this._snd = new HTML5Sound(this.url,this._options);
 		} else {
 			console.log("no audio support in this browser");
 			return;
@@ -850,7 +852,10 @@ var WebAudioAPISound = function(url,options,loaded,d) {
 	this._isLoaded = loaded;
 	this.duration = d;
 	this._manager = Waud.audioManager;
-	if(this._options.preload && !loaded) this.load();
+	if(this._b64.match(url)) {
+		this._decodeAudio(this._base64ToArrayBuffer(url));
+		url = "";
+	} else if(this._options.preload && !loaded) this.load();
 };
 WebAudioAPISound.__interfaces__ = [IWaudSound];
 WebAudioAPISound.__super__ = BaseSound;
@@ -867,8 +872,22 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		}
 		return this;
 	}
+	,_base64ToArrayBuffer: function(base64) {
+		var raw = window.atob(base64.split(",")[1]);
+		var rawLength = raw.length;
+		var array = new Uint8Array(new ArrayBuffer(rawLength));
+		var _g = 0;
+		while(_g < rawLength) {
+			var i = _g++;
+			array[i] = HxOverrides.cca(raw,i);
+		}
+		return array.buffer;
+	}
 	,_onSoundLoaded: function(evt) {
 		this._manager.audioContext.decodeAudioData(evt.target.response,$bind(this,this._decodeSuccess),$bind(this,this._error));
+	}
+	,_decodeAudio: function(data) {
+		this._manager.audioContext.decodeAudioData(data,$bind(this,this._decodeSuccess),$bind(this,this._error));
 	}
 	,_error: function() {
 		if(this._options.onerror != null) this._options.onerror(this);
