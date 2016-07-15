@@ -7,8 +7,6 @@ import js.html.audio.GainNode;
 import js.html.audio.AudioBufferSourceNode;
 import js.html.audio.AudioBuffer;
 
-using StringTools;
-
 @:keep class WebAudioAPISound extends BaseSound implements IWaudSound {
 
 	var _srcNodes:Array<AudioBufferSourceNode>;
@@ -57,7 +55,7 @@ using StringTools;
 		var raw = Browser.window.atob(base64.split(",")[1]);
 		var rawLength = raw.length;
 		var array = new Uint8Array(new ArrayBuffer(rawLength));
-		for(i in 0 ... rawLength) array[i] = raw.charCodeAt(i);
+		for (i in 0 ... rawLength) array[i] = raw.charCodeAt(i);
 		return array.buffer;
 	}
 
