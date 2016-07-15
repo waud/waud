@@ -15,6 +15,7 @@ import js.html.AudioElement;
 		if (src == null) _addSource(url);
 		else _snd.appendChild(src);
 		if (_options.preload) load();
+		if (_b64.match(url)) url = "";
 	}
 
 	public function load(?callback:IWaudSound -> Void):IWaudSound {
