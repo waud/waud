@@ -13,12 +13,16 @@ class Main extends Application {
 	var _glassAAC:IWaudSound;
 	var _bellAAC:IWaudSound;
 	var _canAAC:IWaudSound;
+	var _funkMP3:IWaudSound;
 	var _glassMP3:IWaudSound;
 	var _bellMP3:IWaudSound;
 	var _canMP3:IWaudSound;
 	var _glassOGG:IWaudSound;
 	var _bellOGG:IWaudSound;
 	var _canOGG:IWaudSound;
+
+	var _sound1M4A:IWaudSound;
+	var _sound2M4A:IWaudSound;
 
 	var _audSprite:IWaudSound;
 	var _audSprite1:IWaudSound;
@@ -41,61 +45,68 @@ class Main extends Application {
 
 		var label:Text = new Text("MP3: ", { font: "26px Tahoma", fill:"#FFFFFF" });
 		_btnContainer.addChild(label);
-		_addButton("Glass", 120, 0, 60, 30, function() { _glassMP3.play(); });
-		_addButton("Bell", 180, 0, 60, 30, function() { _bellMP3.play(); });
-		_addButton("Can", 240, 0, 60, 30, function() { _canMP3.play(); });
+		_addButton("Funk", 200, 0, 60, 30, function() { _funkMP3.play(); });
+		_addButton("Glass", 260, 0, 60, 30, function() { _glassMP3.play(); });
+		_addButton("Bell", 320, 0, 60, 30, function() { _bellMP3.play(); });
+		_addButton("Can", 380, 0, 60, 30, function() { _canMP3.play(); });
+
+		label = new Text("M4A: ", { font: "26px Tahoma", fill:"#FFFFFF" });
+		_btnContainer.addChild(label);
+		label.position.y = 50;
+		_addButton("Sound 1", 200, 50, 60, 30, function() { _sound1M4A.play(); });
+		_addButton("Sound 2", 260, 50, 60, 30, function() { _sound2M4A.play(); });
 
 		label = new Text("AAC: ", { font: "26px Tahoma", fill:"#FFFFFF" });
 		_btnContainer.addChild(label);
-		label.position.y = 50;
-		_addButton("Glass", 120, 50, 60, 30, function() { _glassAAC.play(); });
-		_addButton("Bell", 180, 50, 60, 30, function() { _bellAAC.play(); });
-		_addButton("Can", 240, 50, 60, 30, function() { _canAAC.play(); });
+		label.position.y = 100;
+		_addButton("Glass", 200, 100, 60, 30, function() { _glassAAC.play(); });
+		_addButton("Bell", 260, 100, 60, 30, function() { _bellAAC.play(); });
+		_addButton("Can", 320, 100, 60, 30, function() { _canAAC.play(); });
 
 		label = new Text("OGG: ", { font: "26px Tahoma", fill:"#FFFFFF" });
 		_btnContainer.addChild(label);
-		label.position.y = 100;
-		_addButton("Glass", 120, 100, 60, 30, function() { _glassOGG.play(); });
-		_addButton("Bell", 180, 100, 60, 30, function() { _bellOGG.play(); });
-		_addButton("Can", 240, 100, 60, 30, function() { _canOGG.play(); });
+		label.position.y = 150;
+		_addButton("Glass", 200, 150, 60, 30, function() { _glassOGG.play(); });
+		_addButton("Bell", 260, 150, 60, 30, function() { _bellOGG.play(); });
+		_addButton("Can", 320, 150, 60, 30, function() { _canOGG.play(); });
 
 		label = new Text("Controls: ", { font: "26px Tahoma", fill:"#FFFFFF" });
 		_btnContainer.addChild(label);
-		label.position.y = 150;
-		_addButton("Mute", 120, 150, 60, 30, _mute);
-		_addButton("Unmute", 180, 150, 60, 30, _unmute);
-		_addButton("BG Vol 0", 240, 150, 60, 30, function() { _bgSnd.setVolume(0); });
-		_addButton("BG Vol 1", 300, 150, 60, 30, function() { _bgSnd.setVolume(1); });
-		_addButton("BG Toggle Play", 120, 190, 100, 30, function() { _bgSnd.togglePlay(); });
-		_addButton("BG Toggle Mute", 220, 190, 100, 30, function() { _bgSnd.toggleMute(); });
-		_addButton("Stop All", 320, 190, 60, 30, _stop);
-        _addButton("Pause All", 380, 190, 60, 30, _pause);
+		label.position.y = 200;
+		_addButton("Mute", 200, 200, 60, 30, _mute);
+		_addButton("Unmute", 260, 200, 60, 30, _unmute);
+		_addButton("BG Vol 0", 320, 200, 60, 30, function() { _bgSnd.setVolume(0); });
+		_addButton("BG Vol 1", 380, 200, 60, 30, function() { _bgSnd.setVolume(1); });
+		_addButton("BG Toggle Play", 200, 240, 100, 30, function() { _bgSnd.togglePlay(); });
+		_addButton("BG Toggle Mute", 300, 240, 100, 30, function() { _bgSnd.toggleMute(); });
+		_addButton("Stop All", 400, 240, 60, 30, _stop);
+        _addButton("Pause All", 460, 240, 60, 30, _pause);
 
 		// Audio Sprite
-		label = new Text("Sprite: ", { font: "26px Tahoma", fill:"#FFFFFF" });
+		label = new Text("Sprite (M4A): ", { font: "26px Tahoma", fill:"#FFFFFF" });
 		_btnContainer.addChild(label);
-		label.position.y = 250;
-		_addButton("Glass", 120, 250, 60, 30, function() { _audSprite.play("glass"); });
-		_addButton("Bell (loop)", 180, 250, 120, 30, function() { _audSprite.play("bell"); });
-		_addButton("Can", 300, 250, 60, 30, function() { _audSprite.play("canopening"); });
-		_addButton("Play All", 360, 250, 60, 30, playAllTheThings);
+		label.position.y = 300;
+		_addButton("Glass", 200, 300, 60, 30, function() { _audSprite.play("glass"); });
+		_addButton("Bell (loop)", 260, 300, 120, 30, function() { _audSprite.play("bell"); });
+		_addButton("Can", 380, 300, 60, 30, function() { _audSprite.play("canopening"); });
+		_addButton("Play All", 440, 300, 60, 30, playAllTheThings);
 
 		label = new Text("Test 1: ", { font: "26px Tahoma", fill:"#FFFFFF" });
 		_btnContainer.addChild(label);
 		label.position.y = 350;
-		_addButton("Play", 120, 350, 60, 30, function() { _countdown.play(); });
-		_addButton("Pause", 180, 350, 60, 30, function() { _countdown.pause(); });
-		_addButton("Stop", 240, 350, 60, 30, function() { _countdown.stop(); });
-		_addButton("Seek 1s", 300, 350, 60, 30, function() { _countdown.setTime(_countdown.getTime() + 1); });
+		_addButton("Play", 200, 350, 60, 30, function() { _countdown.play(); });
+		_addButton("Pause", 260, 350, 60, 30, function() { _countdown.pause(); });
+		_addButton("Stop", 320, 350, 60, 30, function() { _countdown.stop(); });
+		_addButton("Seek 1s", 380, 350, 60, 30, function() { _countdown.setTime(_countdown.getTime() + 1); });
 
-		label = new Text("Test 2: ", { font: "26px Tahoma", fill:"#FFFFFF" });
+		label = new Text("Test 2 (M4A): ", { font: "26px Tahoma", fill:"#FFFFFF" });
 		_btnContainer.addChild(label);
 		label.position.y = 400;
-		_addButton("Play", 120, 400, 60, 30, function() { _audSprite.play("countdown"); });
-		_addButton("Pause", 180, 400, 60, 30, function() { _audSprite.pause("countdown"); });
-		_addButton("Stop", 240, 400, 60, 30, function() { _audSprite.stop("countdown"); });
+		_addButton("Play", 200, 400, 60, 30, function() { _audSprite.play("countdown"); });
+		_addButton("Pause", 260, 400, 60, 30, function() { _audSprite.pause("countdown"); });
+		_addButton("Stop", 320, 400, 60, 30, function() { _audSprite.stop("countdown"); });
 
-		_addButton("DESTROY", 120, 450, 180, 30, function() { Waud.destroy(); });
+		_addButton("DESTROY", 200, 450, 180, 30, function() { Waud.destroy(); });
 
 		_ua = new Text(Browser.navigator.userAgent, { font: "12px Tahoma", fill:"#FFFFFF" });
 		stage.addChild(_ua);
@@ -106,9 +117,13 @@ class Main extends Application {
 		Waud.defaults.onload = _onLoad;
 		_bgSnd = new WaudSound("assets/loop.mp3", { loop:true, autoplay: false, volume: 1, onload: _playBgSound });
 
+		_funkMP3 = new WaudSound("assets/funk100.mp3");
 		_glassMP3 = new WaudSound("assets/glass.mp3");
 		_bellMP3 = new WaudSound("assets/bell.mp3");
 		_canMP3 = new WaudSound("assets/canopening.mp3");
+
+		_sound1M4A = new WaudSound("assets/l1.m4a");
+		_sound2M4A = new WaudSound("assets/l2.m4a");
 
 		_glassAAC = new WaudSound("assets/glass.aac");
 		_bellAAC = new WaudSound("assets/bell.aac");

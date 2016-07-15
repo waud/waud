@@ -470,99 +470,111 @@ var Main = function() {
 	this.stage.addChild(this._btnContainer);
 	var label = new PIXI.Text("MP3: ",{ font : "26px Tahoma", fill : "#FFFFFF"});
 	this._btnContainer.addChild(label);
-	this._addButton("Glass",120,0,60,30,function() {
+	this._addButton("Funk",200,0,60,30,function() {
+		_g._funkMP3.play();
+	});
+	this._addButton("Glass",260,0,60,30,function() {
 		_g._glassMP3.play();
 	});
-	this._addButton("Bell",180,0,60,30,function() {
+	this._addButton("Bell",320,0,60,30,function() {
 		_g._bellMP3.play();
 	});
-	this._addButton("Can",240,0,60,30,function() {
+	this._addButton("Can",380,0,60,30,function() {
 		_g._canMP3.play();
+	});
+	label = new PIXI.Text("M4A: ",{ font : "26px Tahoma", fill : "#FFFFFF"});
+	this._btnContainer.addChild(label);
+	label.position.y = 50;
+	this._addButton("Sound 1",200,50,60,30,function() {
+		_g._sound1M4A.play();
+	});
+	this._addButton("Sound 2",260,50,60,30,function() {
+		_g._sound2M4A.play();
 	});
 	label = new PIXI.Text("AAC: ",{ font : "26px Tahoma", fill : "#FFFFFF"});
 	this._btnContainer.addChild(label);
-	label.position.y = 50;
-	this._addButton("Glass",120,50,60,30,function() {
+	label.position.y = 100;
+	this._addButton("Glass",200,100,60,30,function() {
 		_g._glassAAC.play();
 	});
-	this._addButton("Bell",180,50,60,30,function() {
+	this._addButton("Bell",260,100,60,30,function() {
 		_g._bellAAC.play();
 	});
-	this._addButton("Can",240,50,60,30,function() {
+	this._addButton("Can",320,100,60,30,function() {
 		_g._canAAC.play();
 	});
 	label = new PIXI.Text("OGG: ",{ font : "26px Tahoma", fill : "#FFFFFF"});
 	this._btnContainer.addChild(label);
-	label.position.y = 100;
-	this._addButton("Glass",120,100,60,30,function() {
+	label.position.y = 150;
+	this._addButton("Glass",200,150,60,30,function() {
 		_g._glassOGG.play();
 	});
-	this._addButton("Bell",180,100,60,30,function() {
+	this._addButton("Bell",260,150,60,30,function() {
 		_g._bellOGG.play();
 	});
-	this._addButton("Can",240,100,60,30,function() {
+	this._addButton("Can",320,150,60,30,function() {
 		_g._canOGG.play();
 	});
 	label = new PIXI.Text("Controls: ",{ font : "26px Tahoma", fill : "#FFFFFF"});
 	this._btnContainer.addChild(label);
-	label.position.y = 150;
-	this._addButton("Mute",120,150,60,30,$bind(this,this._mute));
-	this._addButton("Unmute",180,150,60,30,$bind(this,this._unmute));
-	this._addButton("BG Vol 0",240,150,60,30,function() {
+	label.position.y = 200;
+	this._addButton("Mute",200,200,60,30,$bind(this,this._mute));
+	this._addButton("Unmute",260,200,60,30,$bind(this,this._unmute));
+	this._addButton("BG Vol 0",320,200,60,30,function() {
 		_g._bgSnd.setVolume(0);
 	});
-	this._addButton("BG Vol 1",300,150,60,30,function() {
+	this._addButton("BG Vol 1",380,200,60,30,function() {
 		_g._bgSnd.setVolume(1);
 	});
-	this._addButton("BG Toggle Play",120,190,100,30,function() {
+	this._addButton("BG Toggle Play",200,240,100,30,function() {
 		_g._bgSnd.togglePlay();
 	});
-	this._addButton("BG Toggle Mute",220,190,100,30,function() {
+	this._addButton("BG Toggle Mute",300,240,100,30,function() {
 		_g._bgSnd.toggleMute();
 	});
-	this._addButton("Stop All",320,190,60,30,$bind(this,this._stop));
-	this._addButton("Pause All",380,190,60,30,$bind(this,this._pause));
-	label = new PIXI.Text("Sprite: ",{ font : "26px Tahoma", fill : "#FFFFFF"});
+	this._addButton("Stop All",400,240,60,30,$bind(this,this._stop));
+	this._addButton("Pause All",460,240,60,30,$bind(this,this._pause));
+	label = new PIXI.Text("Sprite (M4A): ",{ font : "26px Tahoma", fill : "#FFFFFF"});
 	this._btnContainer.addChild(label);
-	label.position.y = 250;
-	this._addButton("Glass",120,250,60,30,function() {
+	label.position.y = 300;
+	this._addButton("Glass",200,300,60,30,function() {
 		_g._audSprite.play("glass");
 	});
-	this._addButton("Bell (loop)",180,250,120,30,function() {
+	this._addButton("Bell (loop)",260,300,120,30,function() {
 		_g._audSprite.play("bell");
 	});
-	this._addButton("Can",300,250,60,30,function() {
+	this._addButton("Can",380,300,60,30,function() {
 		_g._audSprite.play("canopening");
 	});
-	this._addButton("Play All",360,250,60,30,$bind(this,this.playAllTheThings));
+	this._addButton("Play All",440,300,60,30,$bind(this,this.playAllTheThings));
 	label = new PIXI.Text("Test 1: ",{ font : "26px Tahoma", fill : "#FFFFFF"});
 	this._btnContainer.addChild(label);
 	label.position.y = 350;
-	this._addButton("Play",120,350,60,30,function() {
+	this._addButton("Play",200,350,60,30,function() {
 		_g._countdown.play();
 	});
-	this._addButton("Pause",180,350,60,30,function() {
+	this._addButton("Pause",260,350,60,30,function() {
 		_g._countdown.pause();
 	});
-	this._addButton("Stop",240,350,60,30,function() {
+	this._addButton("Stop",320,350,60,30,function() {
 		_g._countdown.stop();
 	});
-	this._addButton("Seek 1s",300,350,60,30,function() {
+	this._addButton("Seek 1s",380,350,60,30,function() {
 		_g._countdown.setTime(_g._countdown.getTime() + 1);
 	});
-	label = new PIXI.Text("Test 2: ",{ font : "26px Tahoma", fill : "#FFFFFF"});
+	label = new PIXI.Text("Test 2 (M4A): ",{ font : "26px Tahoma", fill : "#FFFFFF"});
 	this._btnContainer.addChild(label);
 	label.position.y = 400;
-	this._addButton("Play",120,400,60,30,function() {
+	this._addButton("Play",200,400,60,30,function() {
 		_g._audSprite.play("countdown");
 	});
-	this._addButton("Pause",180,400,60,30,function() {
+	this._addButton("Pause",260,400,60,30,function() {
 		_g._audSprite.pause("countdown");
 	});
-	this._addButton("Stop",240,400,60,30,function() {
+	this._addButton("Stop",320,400,60,30,function() {
 		_g._audSprite.stop("countdown");
 	});
-	this._addButton("DESTROY",120,450,180,30,function() {
+	this._addButton("DESTROY",200,450,180,30,function() {
 		Waud.destroy();
 	});
 	this._ua = new PIXI.Text(window.navigator.userAgent,{ font : "12px Tahoma", fill : "#FFFFFF"});
@@ -572,9 +584,12 @@ var Main = function() {
 	Waud.enableTouchUnlock($bind(this,this.touchUnlock));
 	Waud.defaults.onload = $bind(this,this._onLoad);
 	this._bgSnd = new WaudSound("assets/loop.mp3",{ loop : true, autoplay : false, volume : 1, onload : $bind(this,this._playBgSound)});
+	this._funkMP3 = new WaudSound("assets/funk100.mp3");
 	this._glassMP3 = new WaudSound("assets/glass.mp3");
 	this._bellMP3 = new WaudSound("assets/bell.mp3");
 	this._canMP3 = new WaudSound("assets/canopening.mp3");
+	this._sound1M4A = new WaudSound("assets/l1.m4a");
+	this._sound2M4A = new WaudSound("assets/l2.m4a");
 	this._glassAAC = new WaudSound("assets/glass.aac");
 	this._bellAAC = new WaudSound("assets/bell.aac");
 	this._canAAC = new WaudSound("assets/canopening.aac");
