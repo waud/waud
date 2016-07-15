@@ -142,6 +142,7 @@ import haxe.Json;
 					_spriteSounds.set(snd.name, sound);
 				}
 			}
+			else _snd = new HTML5Sound(url, _options);
 		}
 		else {
 			trace("no audio support in this browser");
