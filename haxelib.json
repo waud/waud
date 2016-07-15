@@ -22,8 +22,8 @@
     "contributors": [
 	"adireddy"
     ],
-    "releasenote": "audio sprite onEnd event bug fix",
-    "version": "0.5.8",
+    "releasenote": "added base64 string support and bug fixes",
+    "version": "0.5.9",
     "url": "https://github.com/adireddy/waud",
     "dependencies": {}
 }
