@@ -9,8 +9,10 @@
 	var _isLoaded:Bool;
 	var _isPlaying:Bool;
 	var _muted:Bool;
+	var _b64:EReg;
 
 	public function new(sndUrl:String, ?options:WaudSoundOptions = null) {
+		_b64 = ~/(^data:audio).*(;base64,)/i;
 		if (sndUrl == null || sndUrl == "") {
 			trace("invalid sound url");
 			return;
