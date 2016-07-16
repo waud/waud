@@ -59,7 +59,8 @@ import js.html.AudioElement;
 
 	override function get_duration():Float {
 		if (!_isLoaded) return 0;
-		return duration = _snd.duration;
+		duration = _snd.duration;
+		return duration;
 	}
 
 	function _addSource(url:String):SourceElement {
