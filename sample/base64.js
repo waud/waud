@@ -69,6 +69,117 @@ AudioManager.prototype = {
 		this.types = null;
 	}
 };
+var pixi_plugins_app_Application = function() {
+	this._animationFrameId = null;
+	this.pixelRatio = 1;
+	this.set_skipFrame(false);
+	this.autoResize = true;
+	this.transparent = false;
+	this.antialias = false;
+	this.forceFXAA = false;
+	this.roundPixels = false;
+	this.clearBeforeRender = true;
+	this.preserveDrawingBuffer = false;
+	this.backgroundColor = 16777215;
+	this.width = window.innerWidth;
+	this.height = window.innerHeight;
+	this.set_fps(60);
+};
+pixi_plugins_app_Application.__name__ = true;
+pixi_plugins_app_Application.prototype = {
+	set_fps: function(val) {
+		this._frameCount = 0;
+		return val >= 1 && val < 60?this.fps = val | 0:this.fps = 60;
+	}
+	,set_skipFrame: function(val) {
+		if(val) {
+			console.log("pixi.plugins.app.Application > Deprecated: skipFrame - use fps property and set it to 30 instead");
+			this.set_fps(30);
+		}
+		return this.skipFrame = val;
+	}
+	,start: function(rendererType,parentDom,canvasElement) {
+		if(rendererType == null) rendererType = "auto";
+		if(canvasElement == null) {
+			var _this = window.document;
+			this.canvas = _this.createElement("canvas");
+			this.canvas.style.width = this.width + "px";
+			this.canvas.style.height = this.height + "px";
+			this.canvas.style.position = "absolute";
+		} else this.canvas = canvasElement;
+		if(parentDom == null) window.document.body.appendChild(this.canvas); else parentDom.appendChild(this.canvas);
+		this.stage = new PIXI.Container();
+		var renderingOptions = { };
+		renderingOptions.view = this.canvas;
+		renderingOptions.backgroundColor = this.backgroundColor;
+		renderingOptions.resolution = this.pixelRatio;
+		renderingOptions.antialias = this.antialias;
+		renderingOptions.forceFXAA = this.forceFXAA;
+		renderingOptions.autoResize = this.autoResize;
+		renderingOptions.transparent = this.transparent;
+		renderingOptions.clearBeforeRender = this.clearBeforeRender;
+		renderingOptions.preserveDrawingBuffer = this.preserveDrawingBuffer;
+		if(rendererType == "auto") this.renderer = PIXI.autoDetectRenderer(this.width,this.height,renderingOptions); else if(rendererType == "canvas") this.renderer = new PIXI.CanvasRenderer(this.width,this.height,renderingOptions); else this.renderer = new PIXI.WebGLRenderer(this.width,this.height,renderingOptions);
+		if(this.roundPixels) this.renderer.roundPixels = true;
+		if(parentDom == null) window.document.body.appendChild(this.renderer.view); else parentDom.appendChild(this.renderer.view);
+		this.resumeRendering();
+	}
+	,resumeRendering: function() {
+		if(this.autoResize) window.onresize = $bind(this,this._onWindowResize);
+		if(this._animationFrameId == null) this._animationFrameId = window.requestAnimationFrame($bind(this,this._onRequestAnimationFrame));
+	}
+	,_onWindowResize: function(event) {
+		this.width = window.innerWidth;
+		this.height = window.innerHeight;
+		this.renderer.resize(this.width,this.height);
+		this.canvas.style.width = this.width + "px";
+		this.canvas.style.height = this.height + "px";
+		if(this.onResize != null) this.onResize();
+	}
+	,_onRequestAnimationFrame: function(elapsedTime) {
+		this._frameCount++;
+		if(this._frameCount == (60 / this.fps | 0)) {
+			this._frameCount = 0;
+			if(this.onUpdate != null) this.onUpdate(elapsedTime);
+			this.renderer.render(this.stage);
+		}
+		this._animationFrameId = window.requestAnimationFrame($bind(this,this._onRequestAnimationFrame));
+	}
+};
+var Base64 = function() {
+	pixi_plugins_app_Application.call(this);
+	PIXI.RESOLUTION = this.pixelRatio = window.devicePixelRatio;
+	this.autoResize = true;
+	this.backgroundColor = 6227124;
+	this.roundPixels = true;
+	this.onResize = $bind(this,this._resize);
+	pixi_plugins_app_Application.prototype.start.call(this);
+	this._btnContainer = new PIXI.Container();
+	this.stage.addChild(this._btnContainer);
+	this._duration = new PIXI.Text("Duration: ",{ font : "20px Tahoma", fill : "#FFFFFF"});
+	this._btnContainer.addChild(this._duration);
+	Waud.init();
+	Waud.autoMute();
+	Waud.enableTouchUnlock($bind(this,this.touchUnlock));
+	this._snd = new WaudBase64Pack("assets/bundle.json",$bind(this,this._onLoad));
+	this._resize();
+};
+Base64.__name__ = true;
+Base64.main = function() {
+	new Base64();
+};
+Base64.__super__ = pixi_plugins_app_Application;
+Base64.prototype = $extend(pixi_plugins_app_Application.prototype,{
+	_onLoad: function(snds) {
+		(__map_reserved["resources/beep.mp3"] != null?snds.getReserved("resources/beep.mp3"):snds.h["resources/beep.mp3"]).play();
+		(__map_reserved["resources/beep.mp3"] != null?snds.getReserved("resources/beep.mp3"):snds.h["resources/beep.mp3"]).loop(true);
+	}
+	,touchUnlock: function() {
+	}
+	,_resize: function() {
+		this._btnContainer.position.set((window.innerWidth - this._btnContainer.width) / 2,(window.innerHeight - this._btnContainer.height) / 2);
+	}
+});
 var BaseSound = function(sndUrl,options) {
 	this._b64 = new EReg("(^data:audio).*(;base64,)","i");
 	if(sndUrl == null || sndUrl == "") {
@@ -102,86 +213,6 @@ BaseSound.prototype = {
 		return 0;
 	}
 };
-var Button = function(label,width,height,data,fontSize) {
-	PIXI.Container.call(this);
-	this.action = new msignal_Signal1(Dynamic);
-	this._data = data;
-	this._setupBackground(width,height);
-	this._setupLabel(width,height,fontSize);
-	this._label.text = label;
-};
-Button.__name__ = true;
-Button.__super__ = PIXI.Container;
-Button.prototype = $extend(PIXI.Container.prototype,{
-	_setupBackground: function(width,height) {
-		this._rect = new PIXI.Rectangle(0,0,width,height);
-		this._background = new PIXI.Graphics();
-		this._background.interactive = true;
-		this._redraw(3040510);
-		this.addChild(this._background);
-		this._background.interactive = true;
-		this._background.on("mouseover",$bind(this,this._onMouseOver));
-		this._background.on("mouseout",$bind(this,this._onMouseOut));
-		this._background.on("mousedown",$bind(this,this._onMouseDown));
-		this._background.on("mouseup",$bind(this,this._onMouseUp));
-		this._background.on("mouseupoutside",$bind(this,this._onMouseUpOutside));
-		this._background.on("touchstart",$bind(this,this._onTouchStart));
-		this._background.on("touchend",$bind(this,this._onTouchEnd));
-		this._background.on("touchendoutside",$bind(this,this._onTouchEndOutside));
-	}
-	,_setupLabel: function(width,height,fontSize) {
-		var size;
-		if(fontSize != null) size = fontSize; else size = 12;
-		var style = { };
-		style.font = size + "px Arial";
-		style.fill = "#FFFFFF";
-		this._label = new PIXI.Text("",style);
-		this._label.anchor.set(0.5);
-		this._label.x = width / 2;
-		this._label.y = height / 2;
-		this.addChild(this._label);
-	}
-	,_redraw: function(colour) {
-		var border = 1;
-		this._background.clear();
-		this._background.beginFill(13158);
-		this._background.drawRect(this._rect.x,this._rect.y,this._rect.width,this._rect.height);
-		this._background.endFill();
-		this._background.beginFill(colour);
-		this._background.drawRect(this._rect.x + border / 2,this._rect.y + border / 2,this._rect.width - border,this._rect.height - border);
-		this._background.endFill();
-	}
-	,_onMouseDown: function(target) {
-		if(this._enabled) this._redraw(14644225);
-	}
-	,_onMouseUp: function(target) {
-		if(this._enabled) {
-			this.action.dispatch(this._data);
-			this._redraw(3040510);
-		}
-	}
-	,_onMouseUpOutside: function(target) {
-		if(this._enabled) this._redraw(3040510);
-	}
-	,_onMouseOver: function(target) {
-		if(this._enabled) this._redraw(14644225);
-	}
-	,_onMouseOut: function(target) {
-		if(this._enabled) this._redraw(3040510);
-	}
-	,_onTouchEndOutside: function(target) {
-		if(this._enabled) this._redraw(3040510);
-	}
-	,_onTouchEnd: function(target) {
-		if(this._enabled) {
-			this._redraw(3040510);
-			this.action.dispatch(this._data);
-		}
-	}
-	,_onTouchStart: function(target) {
-		if(this._enabled) this._redraw(14644225);
-	}
-});
 var EReg = function(r,opt) {
 	opt = opt.split("u").join("");
 	this.r = new RegExp(r,opt);
@@ -389,6 +420,16 @@ Reflect.field = function(o,field) {
 		return null;
 	}
 };
+Reflect.fields = function(o) {
+	var a = [];
+	if(o != null) {
+		var hasOwnProperty = Object.prototype.hasOwnProperty;
+		for( var f in o ) {
+		if(f != "__id__" && f != "hx__closures__" && hasOwnProperty.call(o,f)) a.push(f);
+		}
+	}
+	return a;
+};
 Reflect.isFunction = function(f) {
 	return typeof(f) == "function" && !(f.__name__ || f.__ename__);
 };
@@ -397,146 +438,6 @@ Reflect.compareMethods = function(f1,f2) {
 	if(!Reflect.isFunction(f1) || !Reflect.isFunction(f2)) return false;
 	return f1.scope == f2.scope && f1.method == f2.method && f1.method != null;
 };
-var pixi_plugins_app_Application = function() {
-	this._animationFrameId = null;
-	this.pixelRatio = 1;
-	this.set_skipFrame(false);
-	this.autoResize = true;
-	this.transparent = false;
-	this.antialias = false;
-	this.forceFXAA = false;
-	this.roundPixels = false;
-	this.clearBeforeRender = true;
-	this.preserveDrawingBuffer = false;
-	this.backgroundColor = 16777215;
-	this.width = window.innerWidth;
-	this.height = window.innerHeight;
-	this.set_fps(60);
-};
-pixi_plugins_app_Application.__name__ = true;
-pixi_plugins_app_Application.prototype = {
-	set_fps: function(val) {
-		this._frameCount = 0;
-		return val >= 1 && val < 60?this.fps = val | 0:this.fps = 60;
-	}
-	,set_skipFrame: function(val) {
-		if(val) {
-			console.log("pixi.plugins.app.Application > Deprecated: skipFrame - use fps property and set it to 30 instead");
-			this.set_fps(30);
-		}
-		return this.skipFrame = val;
-	}
-	,start: function(rendererType,parentDom,canvasElement) {
-		if(rendererType == null) rendererType = "auto";
-		if(canvasElement == null) {
-			var _this = window.document;
-			this.canvas = _this.createElement("canvas");
-			this.canvas.style.width = this.width + "px";
-			this.canvas.style.height = this.height + "px";
-			this.canvas.style.position = "absolute";
-		} else this.canvas = canvasElement;
-		if(parentDom == null) window.document.body.appendChild(this.canvas); else parentDom.appendChild(this.canvas);
-		this.stage = new PIXI.Container();
-		var renderingOptions = { };
-		renderingOptions.view = this.canvas;
-		renderingOptions.backgroundColor = this.backgroundColor;
-		renderingOptions.resolution = this.pixelRatio;
-		renderingOptions.antialias = this.antialias;
-		renderingOptions.forceFXAA = this.forceFXAA;
-		renderingOptions.autoResize = this.autoResize;
-		renderingOptions.transparent = this.transparent;
-		renderingOptions.clearBeforeRender = this.clearBeforeRender;
-		renderingOptions.preserveDrawingBuffer = this.preserveDrawingBuffer;
-		if(rendererType == "auto") this.renderer = PIXI.autoDetectRenderer(this.width,this.height,renderingOptions); else if(rendererType == "canvas") this.renderer = new PIXI.CanvasRenderer(this.width,this.height,renderingOptions); else this.renderer = new PIXI.WebGLRenderer(this.width,this.height,renderingOptions);
-		if(this.roundPixels) this.renderer.roundPixels = true;
-		if(parentDom == null) window.document.body.appendChild(this.renderer.view); else parentDom.appendChild(this.renderer.view);
-		this.resumeRendering();
-	}
-	,resumeRendering: function() {
-		if(this.autoResize) window.onresize = $bind(this,this._onWindowResize);
-		if(this._animationFrameId == null) this._animationFrameId = window.requestAnimationFrame($bind(this,this._onRequestAnimationFrame));
-	}
-	,_onWindowResize: function(event) {
-		this.width = window.innerWidth;
-		this.height = window.innerHeight;
-		this.renderer.resize(this.width,this.height);
-		this.canvas.style.width = this.width + "px";
-		this.canvas.style.height = this.height + "px";
-		if(this.onResize != null) this.onResize();
-	}
-	,_onRequestAnimationFrame: function(elapsedTime) {
-		this._frameCount++;
-		if(this._frameCount == (60 / this.fps | 0)) {
-			this._frameCount = 0;
-			if(this.onUpdate != null) this.onUpdate(elapsedTime);
-			this.renderer.render(this.stage);
-		}
-		this._animationFrameId = window.requestAnimationFrame($bind(this,this._onRequestAnimationFrame));
-	}
-};
-var Sample2 = function() {
-	var _g = this;
-	pixi_plugins_app_Application.call(this);
-	PIXI.RESOLUTION = this.pixelRatio = window.devicePixelRatio;
-	this.autoResize = true;
-	this.backgroundColor = 6227124;
-	this.roundPixels = true;
-	this.onResize = $bind(this,this._resize);
-	pixi_plugins_app_Application.prototype.start.call(this);
-	this._btnContainer = new PIXI.Container();
-	this.stage.addChild(this._btnContainer);
-	this._duration = new PIXI.Text("Duration: ",{ font : "20px Tahoma", fill : "#FFFFFF"});
-	this._btnContainer.addChild(this._duration);
-	this._time = new PIXI.Text("Time: ",{ font : "20px Tahoma", fill : "#FFFFFF"});
-	this._time.y = 50;
-	this._btnContainer.addChild(this._time);
-	this._addButton("Play",0,100,80,30,function() {
-		_g._snd.play();
-	});
-	this._addButton("getTime()",80,100,80,30,function() {
-		_g._time.text = "Time: " + _g._snd.getTime();
-	});
-	this._addButton("setTime(2)",160,100,80,30,function() {
-		_g._snd.setTime(2);
-	});
-	this._addButton("setTime(5)",240,100,80,30,function() {
-		_g._snd.setTime(5);
-	});
-	this._addButton("setTime(7)",320,100,80,30,function() {
-		_g._snd.setTime(7);
-	});
-	this._addButton("setTime(10)",400,100,80,30,function() {
-		_g._snd.setTime(10);
-	});
-	Waud.init();
-	Waud.autoMute();
-	Waud.enableTouchUnlock($bind(this,this.touchUnlock));
-	Waud.defaults.onload = $bind(this,this._onLoad);
-	this._snd = new WaudSound("assets/countdown.mp3",{ loop : false, autoplay : false, volume : 1, onload : $bind(this,this._onLoad)});
-	this._resize();
-};
-Sample2.__name__ = true;
-Sample2.main = function() {
-	new Sample2();
-};
-Sample2.__super__ = pixi_plugins_app_Application;
-Sample2.prototype = $extend(pixi_plugins_app_Application.prototype,{
-	_onLoad: function(snd) {
-		this._duration.text = "Duration: " + snd.get_duration();
-	}
-	,touchUnlock: function() {
-	}
-	,_addButton: function(label,x,y,width,height,callback) {
-		var btn = new Button(label,width,height);
-		btn.position.set(x,y);
-		btn.action.add(callback);
-		btn._enabled = true;
-		this._btnContainer.addChild(btn);
-	}
-	,_resize: function() {
-		this._btnContainer.position.set((window.innerWidth - this._btnContainer.width) / 2,(window.innerHeight - this._btnContainer.height) / 2);
-	}
-});
 var Std = function() { };
 Std.__name__ = true;
 Std.parseInt = function(x) {
@@ -695,6 +596,51 @@ Waud.destroy = function() {
 		Waud._focusManager.clearEvents();
 		Waud._focusManager.blur = null;
 		Waud._focusManager.focus = null;
+	}
+};
+var WaudBase64Pack = $hx_exports.WaudBase64Pack = function(url,onLoaded,onError) {
+	if(Waud.audioManager == null) {
+		console.log("initialise Waud using Waud.init() before loading sounds");
+		return;
+	}
+	if(url.indexOf(".json") > 0) {
+		this._soundCount = 0;
+		this._loadCount = 0;
+		this._onLoaded = onLoaded;
+		this._onError = onError;
+		this._sounds = new haxe_ds_StringMap();
+		this._loadBase64Json(url);
+	}
+};
+WaudBase64Pack.__name__ = true;
+WaudBase64Pack.prototype = {
+	_loadBase64Json: function(base64Url) {
+		var _g2 = this;
+		var xobj = new XMLHttpRequest();
+		xobj.open("GET",base64Url,true);
+		xobj.onreadystatechange = function() {
+			if(xobj.readyState == 4 && xobj.status == 200) {
+				var res = JSON.parse(xobj.responseText);
+				var _g = 0;
+				var _g1 = Reflect.fields(res);
+				while(_g < _g1.length) {
+					var n = _g1[_g];
+					++_g;
+					_g2._soundCount++;
+					_g2._createSound(n,Reflect.field(res,n));
+				}
+			}
+		};
+		xobj.send(null);
+	}
+	,_createSound: function(id,dataURI) {
+		var _g = this;
+		var snd = new WaudSound(dataURI,{ onload : function(s) {
+			_g._loadCount++;
+			_g._sounds.set(id,s);
+			Waud.sounds.set(id,s);
+			if(_g._loadCount == _g._soundCount && _g._onLoaded != null) _g._onLoaded(_g._sounds);
+		}});
 	}
 };
 var WaudFocusManager = $hx_exports.WaudFocusManager = function() {
@@ -1634,7 +1580,6 @@ if(Array.prototype.indexOf) HxOverrides.indexOf = function(a,o,i) {
 String.__name__ = true;
 Array.__name__ = true;
 Date.__name__ = ["Date"];
-var Dynamic = { __name__ : ["Dynamic"]};
 var __map_reserved = {}
 msignal_SlotList.NIL = new msignal_SlotList(null,null);
 Waud.PROBABLY = "probably";
@@ -1652,7 +1597,7 @@ WaudFocusManager.PAGE_SHOW = "pageshow";
 WaudFocusManager.PAGE_HIDE = "pagehide";
 WaudFocusManager.WINDOW = "window";
 WaudFocusManager.DOCUMENT = "document";
-Sample2.main();
+Base64.main();
 })(typeof console != "undefined" ? console : {log:function(){}}, typeof window != "undefined" ? window : exports);
 
-//# sourceMappingURL=sample2.js.map
+//# sourceMappingURL=base64.js.map
