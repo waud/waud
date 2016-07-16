@@ -77,6 +77,14 @@ import js.html.XMLHttpRequest;
 				_sounds.set(id, s);
 				Waud.sounds.set(id, s);
 				if (_loadCount == _soundCount && _onLoaded != null) _onLoaded(_sounds);
+			},
+			onerror:function(s:IWaudSound) {
+				_loadCount++;
+				_sounds.set(id, null);
+				if (_loadCount == _soundCount && _onLoaded != null) {
+					_onLoaded(_sounds);
+					if (_onError != null) _onError();
+				}
 			}
 		});
 	}
