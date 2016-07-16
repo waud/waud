@@ -147,6 +147,7 @@ pixi_plugins_app_Application.prototype = {
 	}
 };
 var Base64 = function() {
+	var _g = this;
 	pixi_plugins_app_Application.call(this);
 	PIXI.RESOLUTION = this.pixelRatio = window.devicePixelRatio;
 	this.autoResize = true;
@@ -156,12 +157,24 @@ var Base64 = function() {
 	pixi_plugins_app_Application.prototype.start.call(this);
 	this._btnContainer = new PIXI.Container();
 	this.stage.addChild(this._btnContainer);
-	this._duration = new PIXI.Text("Duration: ",{ font : "20px Tahoma", fill : "#FFFFFF"});
-	this._btnContainer.addChild(this._duration);
+	this._base64sounds = new PIXI.Text("Base64 Sounds: ",{ font : "20px Tahoma", fill : "#FFFFFF"});
+	this._btnContainer.addChild(this._base64sounds);
+	this._addButton("Beep",0,40,80,30,function() {
+		_g._beep.play();
+	});
+	this._addButton("Sound 1",80,40,80,30,function() {
+		_g._sound1.play();
+	});
+	this._addButton("Sound 2",160,40,80,30,function() {
+		_g._sound2.play();
+	});
+	this._addButton("Sound 3",240,40,80,30,function() {
+		_g._sound3.play();
+	});
 	Waud.init();
 	Waud.autoMute();
 	Waud.enableTouchUnlock($bind(this,this.touchUnlock));
-	this._snd = new WaudBase64Pack("assets/bundle.json",$bind(this,this._onLoad));
+	this._snd = new WaudBase64Pack("assets/sounds.json",$bind(this,this._onLoad));
 	this._resize();
 };
 Base64.__name__ = true;
@@ -171,10 +184,19 @@ Base64.main = function() {
 Base64.__super__ = pixi_plugins_app_Application;
 Base64.prototype = $extend(pixi_plugins_app_Application.prototype,{
 	_onLoad: function(snds) {
-		(__map_reserved["resources/beep.mp3"] != null?snds.getReserved("resources/beep.mp3"):snds.h["resources/beep.mp3"]).play();
-		(__map_reserved["resources/beep.mp3"] != null?snds.getReserved("resources/beep.mp3"):snds.h["resources/beep.mp3"]).loop(true);
+		this._beep = __map_reserved["test/beep.mp3"] != null?snds.getReserved("test/beep.mp3"):snds.h["test/beep.mp3"];
+		this._sound1 = __map_reserved["test/sound1.wav"] != null?snds.getReserved("test/sound1.wav"):snds.h["test/sound1.wav"];
+		this._sound2 = __map_reserved["test/sound2.aac"] != null?snds.getReserved("test/sound2.aac"):snds.h["test/sound2.aac"];
+		this._sound3 = __map_reserved["test/sound3.ogg"] != null?snds.getReserved("test/sound3.ogg"):snds.h["test/sound3.ogg"];
 	}
 	,touchUnlock: function() {
+	}
+	,_addButton: function(label,x,y,width,height,callback) {
+		var btn = new Button(label,width,height);
+		btn.position.set(x,y);
+		btn.action.add(callback);
+		btn._enabled = true;
+		this._btnContainer.addChild(btn);
 	}
 	,_resize: function() {
 		this._btnContainer.position.set((window.innerWidth - this._btnContainer.width) / 2,(window.innerHeight - this._btnContainer.height) / 2);
@@ -213,6 +235,86 @@ BaseSound.prototype = {
 		return 0;
 	}
 };
+var Button = function(label,width,height,data,fontSize) {
+	PIXI.Container.call(this);
+	this.action = new msignal_Signal1(Dynamic);
+	this._data = data;
+	this._setupBackground(width,height);
+	this._setupLabel(width,height,fontSize);
+	this._label.text = label;
+};
+Button.__name__ = true;
+Button.__super__ = PIXI.Container;
+Button.prototype = $extend(PIXI.Container.prototype,{
+	_setupBackground: function(width,height) {
+		this._rect = new PIXI.Rectangle(0,0,width,height);
+		this._background = new PIXI.Graphics();
+		this._background.interactive = true;
+		this._redraw(3040510);
+		this.addChild(this._background);
+		this._background.interactive = true;
+		this._background.on("mouseover",$bind(this,this._onMouseOver));
+		this._background.on("mouseout",$bind(this,this._onMouseOut));
+		this._background.on("mousedown",$bind(this,this._onMouseDown));
+		this._background.on("mouseup",$bind(this,this._onMouseUp));
+		this._background.on("mouseupoutside",$bind(this,this._onMouseUpOutside));
+		this._background.on("touchstart",$bind(this,this._onTouchStart));
+		this._background.on("touchend",$bind(this,this._onTouchEnd));
+		this._background.on("touchendoutside",$bind(this,this._onTouchEndOutside));
+	}
+	,_setupLabel: function(width,height,fontSize) {
+		var size;
+		if(fontSize != null) size = fontSize; else size = 12;
+		var style = { };
+		style.font = size + "px Arial";
+		style.fill = "#FFFFFF";
+		this._label = new PIXI.Text("",style);
+		this._label.anchor.set(0.5);
+		this._label.x = width / 2;
+		this._label.y = height / 2;
+		this.addChild(this._label);
+	}
+	,_redraw: function(colour) {
+		var border = 1;
+		this._background.clear();
+		this._background.beginFill(13158);
+		this._background.drawRect(this._rect.x,this._rect.y,this._rect.width,this._rect.height);
+		this._background.endFill();
+		this._background.beginFill(colour);
+		this._background.drawRect(this._rect.x + border / 2,this._rect.y + border / 2,this._rect.width - border,this._rect.height - border);
+		this._background.endFill();
+	}
+	,_onMouseDown: function(target) {
+		if(this._enabled) this._redraw(14644225);
+	}
+	,_onMouseUp: function(target) {
+		if(this._enabled) {
+			this.action.dispatch(this._data);
+			this._redraw(3040510);
+		}
+	}
+	,_onMouseUpOutside: function(target) {
+		if(this._enabled) this._redraw(3040510);
+	}
+	,_onMouseOver: function(target) {
+		if(this._enabled) this._redraw(14644225);
+	}
+	,_onMouseOut: function(target) {
+		if(this._enabled) this._redraw(3040510);
+	}
+	,_onTouchEndOutside: function(target) {
+		if(this._enabled) this._redraw(3040510);
+	}
+	,_onTouchEnd: function(target) {
+		if(this._enabled) {
+			this._redraw(3040510);
+			this.action.dispatch(this._data);
+		}
+	}
+	,_onTouchStart: function(target) {
+		if(this._enabled) this._redraw(14644225);
+	}
+});
 var EReg = function(r,opt) {
 	opt = opt.split("u").join("");
 	this.r = new RegExp(r,opt);
@@ -272,7 +374,8 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 	}
 	,get_duration: function() {
 		if(!this._isLoaded) return 0;
-		return this.duration = this._snd.duration;
+		this.duration = this._snd.duration;
+		return this.duration;
 	}
 	,_addSource: function(url) {
 		this._src = Waud.dom.createElement("source");
@@ -640,6 +743,13 @@ WaudBase64Pack.prototype = {
 			_g._sounds.set(id,s);
 			Waud.sounds.set(id,s);
 			if(_g._loadCount == _g._soundCount && _g._onLoaded != null) _g._onLoaded(_g._sounds);
+		}, onerror : function(s1) {
+			_g._loadCount++;
+			_g._sounds.set(id,null);
+			if(_g._loadCount == _g._soundCount && _g._onLoaded != null) {
+				_g._onLoaded(_g._sounds);
+				if(_g._onError != null) _g._onError();
+			}
 		}});
 	}
 };
@@ -1580,6 +1690,7 @@ if(Array.prototype.indexOf) HxOverrides.indexOf = function(a,o,i) {
 String.__name__ = true;
 Array.__name__ = true;
 Date.__name__ = ["Date"];
+var Dynamic = { __name__ : ["Dynamic"]};
 var __map_reserved = {}
 msignal_SlotList.NIL = new msignal_SlotList(null,null);
 Waud.PROBABLY = "probably";

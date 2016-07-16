@@ -241,7 +241,8 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 	}
 	,get_duration: function() {
 		if(!this._isLoaded) return 0;
-		return this.duration = this._snd.duration;
+		this.duration = this._snd.duration;
+		return this.duration;
 	}
 	,_addSource: function(url) {
 		this._src = Waud.dom.createElement("source");

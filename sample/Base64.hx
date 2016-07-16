@@ -10,8 +10,11 @@ class Base64 extends Application {
 	var _btnContainer:Container;
 
 	var _snd:WaudBase64Pack;
-	var _duration:Text;
-	var _time:Text;
+	var _base64sounds:Text;
+	var _beep:IWaudSound;
+	var _sound1:IWaudSound;
+	var _sound2:IWaudSound;
+	var _sound3:IWaudSound;
 
 	public function new() {
 		super();
@@ -25,29 +28,26 @@ class Base64 extends Application {
 		_btnContainer = new Container();
 		stage.addChild(_btnContainer);
 
-		_duration = new Text("Duration: ", { font: "20px Tahoma", fill:"#FFFFFF" });
-		_btnContainer.addChild(_duration);
-//		_time = new Text("Time: ", { font: "20px Tahoma", fill:"#FFFFFF" });
-//		_time.y = 50;
-//		_btnContainer.addChild(_time);
-//		_addButton("Play", 0, 100, 80, 30, function() { _snd.play(); });
-//		_addButton("getTime()", 80, 100, 80, 30, function() { _time.text = "Time: " + _snd.getTime(); });
-//		_addButton("setTime(2)", 160, 100, 80, 30, function() { _snd.setTime(2); });
-//		_addButton("setTime(5)", 240, 100, 80, 30, function() { _snd.setTime(5); });
-//		_addButton("setTime(7)", 320, 100, 80, 30, function() { _snd.setTime(7); });
-//		_addButton("setTime(10)", 400, 100, 80, 30, function() { _snd.setTime(10); });
+		_base64sounds = new Text("Base64 Sounds: ", { font: "20px Tahoma", fill:"#FFFFFF" });
+		_btnContainer.addChild(_base64sounds);
+		_addButton("Beep", 0, 40, 80, 30, function() { _beep.play(); });
+		_addButton("Sound 1", 80, 40, 80, 30, function() { _sound1.play(); });
+		_addButton("Sound 2", 160, 40, 80, 30, function() { _sound2.play(); });
+		_addButton("Sound 3", 240, 40, 80, 30, function() { _sound3.play(); });
 
 		Waud.init();
 		Waud.autoMute();
 		Waud.enableTouchUnlock(touchUnlock);
-		_snd = new WaudBase64Pack("assets/bundle.json", _onLoad);
+		_snd = new WaudBase64Pack("assets/sounds.json", _onLoad);
 
 		_resize();
 	}
 
 	function _onLoad(snds:Map<String, IWaudSound>) {
-		snds.get("resources/beep.mp3").play();
-		snds.get("resources/beep.mp3").loop(true);
+		_beep = snds.get("test/beep.mp3");
+		_sound1 = snds.get("test/sound1.wav");
+		_sound2 = snds.get("test/sound2.aac");
+		_sound3 = snds.get("test/sound3.ogg");
 	}
 
 	function touchUnlock() {
