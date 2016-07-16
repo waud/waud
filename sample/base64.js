@@ -746,9 +746,9 @@ WaudSound.prototype = {
 		xobj.onreadystatechange = function() {
 			if(xobj.readyState == 4 && xobj.status == 200) {
 				_g._spriteData = JSON.parse(xobj.responseText);
-				var url = _g._spriteData.src;
-				if(jsonUrl.indexOf("/") > -1) url = jsonUrl.substring(0,jsonUrl.lastIndexOf("/") + 1) + url;
-				_g._init(url);
+				var src = _g._spriteData.src;
+				if(jsonUrl.indexOf("/") > -1) src = jsonUrl.substring(0,jsonUrl.lastIndexOf("/") + 1) + src;
+				_g._init(src);
 			}
 		};
 		xobj.send(null);
