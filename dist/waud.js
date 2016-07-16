@@ -544,18 +544,21 @@ var WaudSound = $hx_exports.WaudSound = function(url,options) {
 		this.isSpriteSound = false;
 		this._init(url);
 	}
-	Waud.sounds.set(url,this);
+	if(new EReg("(^data:audio).*(;base64,)","i").match(url)) {
+		var key = "snd" + new Date().getTime();
+		Waud.sounds.set(key,this);
+		url = "";
+	} else Waud.sounds.set(url,this);
 };
 WaudSound.__interfaces__ = [IWaudSound];
 WaudSound.prototype = {
 	_loadSpriteJson: function(jsonUrl) {
 		var _g = this;
 		var xobj = new XMLHttpRequest();
-		xobj.overrideMimeType("application/json");
 		xobj.open("GET",jsonUrl,true);
 		xobj.onreadystatechange = function() {
 			if(xobj.readyState == 4 && xobj.status == 200) {
-				_g._spriteData = JSON.parse(xobj.response);
+				_g._spriteData = JSON.parse(xobj.responseText);
 				var url = _g._spriteData.src;
 				if(jsonUrl.indexOf("/") > -1) url = jsonUrl.substring(0,jsonUrl.lastIndexOf("/") + 1) + url;
 				_g._init(url);
@@ -939,7 +942,10 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 			this._snd = this._makeSource(buffer);
 			if(start >= 0 && end > -1) {
 				if(Reflect.field(this._snd,"start") != null) this._snd.start(0,start,end); else this._snd.noteGrainOn(0,start,end);
-			} else if(Reflect.field(this._snd,"start") != null) this._snd.start(0,this._pauseTime,this._snd.buffer.duration); else this._snd.noteGrainOn(0,this._pauseTime,this._snd.buffer.duration);
+			} else {
+				if(Reflect.field(this._snd,"start") != null) this._snd.start(0,this._pauseTime,this._snd.buffer.duration); else this._snd.noteGrainOn(0,this._pauseTime,this._snd.buffer.duration);
+				this._snd.loop = this._options.loop;
+			}
 			this._playStartTime = this._manager.audioContext.currentTime;
 			this._isPlaying = true;
 			this._snd.onended = function() {
@@ -948,9 +954,6 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 				if(_g.isSpriteSound && soundProps != null && soundProps.loop != null && soundProps.loop && start >= 0 && end > -1) {
 					_g.destroy();
 					_g.play(_g.spriteName,soundProps);
-				} else if(_g._options.loop) {
-					_g.destroy();
-					_g.play();
 				} else if(_g._options.onend != null) _g._options.onend(_g);
 			};
 		}
@@ -963,8 +966,8 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		return this._isPlaying;
 	}
 	,loop: function(val) {
-		if(this._snd == null || !this._isLoaded) return;
-		this._snd.loop = val;
+		this._options.loop = val;
+		if(this._snd != null) this._snd.loop = val;
 	}
 	,setVolume: function(val,spriteName) {
 		this._options.volume = val;
