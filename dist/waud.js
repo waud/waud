@@ -302,6 +302,16 @@ Reflect.field = function(o,field) {
 		return null;
 	}
 };
+Reflect.fields = function(o) {
+	var a = [];
+	if(o != null) {
+		var hasOwnProperty = Object.prototype.hasOwnProperty;
+		for( var f in o ) {
+		if(f != "__id__" && f != "hx__closures__" && hasOwnProperty.call(o,f)) a.push(f);
+		}
+	}
+	return a;
+};
 var Std = function() { };
 Std.parseInt = function(x) {
 	var v = parseInt(x,10);
@@ -457,6 +467,57 @@ Waud.destroy = function() {
 		Waud._focusManager.clearEvents();
 		Waud._focusManager.blur = null;
 		Waud._focusManager.focus = null;
+	}
+};
+var WaudBase64Pack = $hx_exports.WaudBase64Pack = function(url,onLoaded,onError) {
+	if(Waud.audioManager == null) {
+		console.log("initialise Waud using Waud.init() before loading sounds");
+		return;
+	}
+	if(url.indexOf(".json") > 0) {
+		this._soundCount = 0;
+		this._loadCount = 0;
+		this._onLoaded = onLoaded;
+		this._onError = onError;
+		this._sounds = new haxe_ds_StringMap();
+		this._loadBase64Json(url);
+	}
+};
+WaudBase64Pack.prototype = {
+	_loadBase64Json: function(base64Url) {
+		var _g2 = this;
+		var xobj = new XMLHttpRequest();
+		xobj.open("GET",base64Url,true);
+		xobj.onreadystatechange = function() {
+			if(xobj.readyState == 4 && xobj.status == 200) {
+				var res = JSON.parse(xobj.responseText);
+				var _g = 0;
+				var _g1 = Reflect.fields(res);
+				while(_g < _g1.length) {
+					var n = _g1[_g];
+					++_g;
+					_g2._soundCount++;
+					_g2._createSound(n,Reflect.field(res,n));
+				}
+			}
+		};
+		xobj.send(null);
+	}
+	,_createSound: function(id,dataURI) {
+		var _g = this;
+		var snd = new WaudSound(dataURI,{ onload : function(s) {
+			_g._loadCount++;
+			_g._sounds.set(id,s);
+			Waud.sounds.set(id,s);
+			if(_g._loadCount == _g._soundCount && _g._onLoaded != null) _g._onLoaded(_g._sounds);
+		}, onerror : function(s1) {
+			_g._loadCount++;
+			_g._sounds.set(id,null);
+			if(_g._loadCount == _g._soundCount && _g._onLoaded != null) {
+				_g._onLoaded(_g._sounds);
+				if(_g._onError != null) _g._onError();
+			}
+		}});
 	}
 };
 var WaudFocusManager = $hx_exports.WaudFocusManager = function() {
