@@ -186,6 +186,7 @@
 		    1,
 		    2,
 		    4,
+		    100,
 		    200,
 		    1000
 		]
@@ -320,7 +321,7 @@
 		"compareOpPolicy": "around",
 		"bitwiseOpPolicy": "around",
 		"boolOpPolicy": "around",
-		"intervalOpPolicy": "none",
+		"intervalOpPolicy": "around",
 		"arrowPolicy": "around",
 		"functionArgPolicy": "around"
 	    },
@@ -395,7 +396,7 @@
 	},
 	{
 	    "props": {
-		"max": 3,
+		"max": 8,
 		"severity": "WARNING"
 	    },
 	    "type": "ReturnCount"

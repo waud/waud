@@ -16,14 +16,16 @@
 	"waud",
 	"audiosprite",
 	"sprite",
-	"audio sprite"
+	"audio sprite",
+	"base64",
+	"dataURI"
     ],
     "description": "Web Audio Library",
     "contributors": [
 	"adireddy"
     ],
-    "releasenote": "added base64 string support and bug fixes",
-    "version": "0.5.9",
+    "releasenote": "added support to load base64 JSON with multiple data URI's",
+    "version": "0.6.1",
     "url": "https://github.com/adireddy/waud",
     "dependencies": {}
 }

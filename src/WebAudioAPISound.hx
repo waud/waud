@@ -135,6 +135,7 @@ import js.html.audio.AudioBuffer;
 			else {
 				if (Reflect.field(_snd, "start") != null) _snd.start(0, _pauseTime, _snd.buffer.duration);
 				else untyped __js__("this._snd").noteGrainOn(0, _pauseTime, _snd.buffer.duration);
+				_snd.loop = _options.loop;
 			}
 
 			_playStartTime = _manager.audioContext.currentTime;
@@ -145,10 +146,6 @@ import js.html.audio.AudioBuffer;
 				if (isSpriteSound && soundProps != null && soundProps.loop != null && soundProps.loop && start >= 0 && end > -1) {
 					destroy();
 					play(spriteName, soundProps);
-				}
-				else if (_options.loop) {
-					destroy();
-					play();
 				}
 				else if (_options.onend != null) _options.onend(this);
 			}
@@ -167,8 +164,8 @@ import js.html.audio.AudioBuffer;
 	}
 
 	public function loop(val:Bool) {
-		if (_snd == null || !_isLoaded) return;
-		_snd.loop = val;
+		_options.loop = val;
+		if (_snd != null) _snd.loop = val;
 	}
 
 	public function setVolume(val:Float, ?spriteName:String) {

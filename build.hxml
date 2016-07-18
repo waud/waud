@@ -19,6 +19,7 @@ Waud
 WaudSound
 HTML5Sound
 WebAudioAPISound
+WaudBase64Pack
 -dce full
 -js dist/waud.js
 -debug
@@ -32,6 +33,7 @@ Waud
 WaudSound
 HTML5Sound
 WebAudioAPISound
+WaudBase64Pack
 -D closure_overwrite
 -js dist/waud.min.js
 -dce full

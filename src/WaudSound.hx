@@ -1,4 +1,3 @@
-import js.html.SourceElement;
 import js.html.audio.AudioBuffer;
 import js.html.XMLHttpRequestResponseType;
 import js.html.XMLHttpRequest;
@@ -95,7 +94,11 @@ import haxe.Json;
 			_init(url);
 		}
 
-		Waud.sounds.set(url, this);
+		if (~/(^data:audio).*(;base64,)/i.match(url)) {
+			Waud.sounds.set("snd" + Date.now().getTime(), this);
+			url = "";
+		}
+		else Waud.sounds.set(url, this);
 	}
 
 	/**
@@ -107,14 +110,13 @@ import haxe.Json;
 	*/
 	function _loadSpriteJson(jsonUrl:String) {
 		var xobj = new XMLHttpRequest();
-		xobj.overrideMimeType("application/json");
 		xobj.open("GET", jsonUrl, true);
 		xobj.onreadystatechange = function() {
 			if (xobj.readyState == 4 && xobj.status == 200) {
-				_spriteData = Json.parse(xobj.response);
-				var url = _spriteData.src;
-				if (jsonUrl.indexOf("/") > -1) url = jsonUrl.substring(0, jsonUrl.lastIndexOf("/") + 1) + url;
-				_init(url);
+				_spriteData = Json.parse(xobj.responseText);
+				var src = _spriteData.src;
+				if (jsonUrl.indexOf("/") > -1) src = jsonUrl.substring(0, jsonUrl.lastIndexOf("/") + 1) + src;
+				_init(src);
 			}
 		};
 		xobj.send(null);

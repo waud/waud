@@ -19,3 +19,8 @@
 
 -main Sample2
 -js sample/sample2.js
+
+--next
+
+-main Base64
+-js sample/base64.js
