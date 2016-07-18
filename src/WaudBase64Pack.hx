@@ -18,7 +18,7 @@ import js.html.XMLHttpRequest;
 	* @param {IWaudSound> -> Void} [onLoaded] - on load callback.
 	* @param {Void> -> Void} [onError] - on error callback.
 	* @example
-	* 		var base64pack = WaudBase64Pack("assets/bundle.json", _onLoad);
+	* 		var base64pack = new WaudBase64Pack("assets/sounds.json", _onLoad);
 	*
 	* 		function _onLoad(snds:Map<String, IWaudSound>) {
 	* 			snds.get("assets/beep.mp3").play();
