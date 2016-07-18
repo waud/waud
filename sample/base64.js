@@ -162,14 +162,17 @@ var Base64 = function() {
 	this._addButton("Beep",0,40,80,30,function() {
 		_g._beep.play();
 	});
-	this._addButton("Sound 1",80,40,80,30,function() {
-		_g._sound1.play();
+	this._addButton("Bell",80,40,80,30,function() {
+		_g._bell.play();
 	});
-	this._addButton("Sound 2",160,40,80,30,function() {
-		_g._sound2.play();
+	this._addButton("Can",160,40,80,30,function() {
+		_g._canopening.play();
 	});
-	this._addButton("Sound 3",240,40,80,30,function() {
-		_g._sound3.play();
+	this._addButton("Countdown",240,40,80,30,function() {
+		_g._countdown.play();
+	});
+	this._addButton("Funk",320,40,80,30,function() {
+		_g._funk100.play();
 	});
 	Waud.init();
 	Waud.autoMute();
@@ -185,9 +188,10 @@ Base64.__super__ = pixi_plugins_app_Application;
 Base64.prototype = $extend(pixi_plugins_app_Application.prototype,{
 	_onLoad: function(snds) {
 		this._beep = __map_reserved["test/beep.mp3"] != null?snds.getReserved("test/beep.mp3"):snds.h["test/beep.mp3"];
-		this._sound1 = __map_reserved["test/sound1.wav"] != null?snds.getReserved("test/sound1.wav"):snds.h["test/sound1.wav"];
-		this._sound2 = __map_reserved["test/sound2.aac"] != null?snds.getReserved("test/sound2.aac"):snds.h["test/sound2.aac"];
-		this._sound3 = __map_reserved["test/sound3.ogg"] != null?snds.getReserved("test/sound3.ogg"):snds.h["test/sound3.ogg"];
+		this._bell = __map_reserved["test/bell.mp3"] != null?snds.getReserved("test/bell.mp3"):snds.h["test/bell.mp3"];
+		this._canopening = __map_reserved["test/canopening.mp3"] != null?snds.getReserved("test/canopening.mp3"):snds.h["test/canopening.mp3"];
+		this._countdown = __map_reserved["test/countdown.mp3"] != null?snds.getReserved("test/countdown.mp3"):snds.h["test/countdown.mp3"];
+		this._funk100 = __map_reserved["test/funk100.mp3"] != null?snds.getReserved("test/funk100.mp3"):snds.h["test/funk100.mp3"];
 	}
 	,touchUnlock: function() {
 	}

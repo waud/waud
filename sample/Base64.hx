@@ -12,9 +12,10 @@ class Base64 extends Application {
 	var _snd:WaudBase64Pack;
 	var _base64sounds:Text;
 	var _beep:IWaudSound;
-	var _sound1:IWaudSound;
-	var _sound2:IWaudSound;
-	var _sound3:IWaudSound;
+	var _bell:IWaudSound;
+	var _canopening:IWaudSound;
+	var _countdown:IWaudSound;
+	var _funk100:IWaudSound;
 
 	public function new() {
 		super();
@@ -31,9 +32,10 @@ class Base64 extends Application {
 		_base64sounds = new Text("Base64 Sounds: ", { font: "20px Tahoma", fill:"#FFFFFF" });
 		_btnContainer.addChild(_base64sounds);
 		_addButton("Beep", 0, 40, 80, 30, function() { _beep.play(); });
-		_addButton("Sound 1", 80, 40, 80, 30, function() { _sound1.play(); });
-		_addButton("Sound 2", 160, 40, 80, 30, function() { _sound2.play(); });
-		_addButton("Sound 3", 240, 40, 80, 30, function() { _sound3.play(); });
+		_addButton("Bell", 80, 40, 80, 30, function() { _bell.play(); });
+		_addButton("Can", 160, 40, 80, 30, function() { _canopening.play(); });
+		_addButton("Countdown", 240, 40, 80, 30, function() { _countdown.play(); });
+		_addButton("Funk", 320, 40, 80, 30, function() { _funk100.play(); });
 
 		Waud.init();
 		Waud.autoMute();
@@ -45,9 +47,10 @@ class Base64 extends Application {
 
 	function _onLoad(snds:Map<String, IWaudSound>) {
 		_beep = snds.get("test/beep.mp3");
-		_sound1 = snds.get("test/sound1.wav");
-		_sound2 = snds.get("test/sound2.aac");
-		_sound3 = snds.get("test/sound3.ogg");
+		_bell = snds.get("test/bell.mp3");
+		_canopening = snds.get("test/canopening.mp3");
+		_countdown = snds.get("test/countdown.mp3");
+		_funk100 = snds.get("test/funk100.mp3");
 	}
 
 	function touchUnlock() {
