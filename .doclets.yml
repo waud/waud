@@ -1,4 +1,6 @@
-files:
- - src/*.hx
+dir: src
+packageJson: package.json
 articles:
- - Readme: README.md
+ 	- Overview: README.md
+branches:
+ 	- master
