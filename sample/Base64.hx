@@ -13,6 +13,7 @@ class Base64 extends Application {
 	var _base64sounds:Text;
 	var _beep:IWaudSound;
 	var _bell:IWaudSound;
+	var _glass:IWaudSound;
 	var _canopening:IWaudSound;
 	var _countdown:IWaudSound;
 	var _funk100:IWaudSound;
@@ -33,9 +34,10 @@ class Base64 extends Application {
 		_btnContainer.addChild(_base64sounds);
 		_addButton("Beep", 0, 40, 80, 30, function() { _beep.play(); });
 		_addButton("Bell", 80, 40, 80, 30, function() { _bell.play(); });
-		_addButton("Can", 160, 40, 80, 30, function() { _canopening.play(); });
-		_addButton("Countdown", 240, 40, 80, 30, function() { _countdown.play(); });
-		_addButton("Funk", 320, 40, 80, 30, function() { _funk100.play(); });
+		_addButton("Glass", 160, 40, 80, 30, function() { _glass.play(); });
+		_addButton("Can", 240, 40, 80, 30, function() { _canopening.play(); });
+		_addButton("Countdown", 320, 40, 80, 30, function() { _countdown.play(); });
+		_addButton("Funk", 400, 40, 80, 30, function() { _funk100.play(); });
 
 		Waud.init();
 		Waud.autoMute();
@@ -48,6 +50,7 @@ class Base64 extends Application {
 	function _onLoad(snds:Map<String, IWaudSound>) {
 		_beep = snds.get("test/beep.mp3");
 		_bell = snds.get("test/bell.mp3");
+		_glass = snds.get("test/glass.mp3");
 		_canopening = snds.get("test/canopening.mp3");
 		_countdown = snds.get("test/countdown.mp3");
 		_funk100 = snds.get("test/funk100.mp3");

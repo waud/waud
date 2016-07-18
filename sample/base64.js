@@ -165,13 +165,16 @@ var Base64 = function() {
 	this._addButton("Bell",80,40,80,30,function() {
 		_g._bell.play();
 	});
-	this._addButton("Can",160,40,80,30,function() {
+	this._addButton("Glass",160,40,80,30,function() {
+		_g._glass.play();
+	});
+	this._addButton("Can",240,40,80,30,function() {
 		_g._canopening.play();
 	});
-	this._addButton("Countdown",240,40,80,30,function() {
+	this._addButton("Countdown",320,40,80,30,function() {
 		_g._countdown.play();
 	});
-	this._addButton("Funk",320,40,80,30,function() {
+	this._addButton("Funk",400,40,80,30,function() {
 		_g._funk100.play();
 	});
 	Waud.init();
@@ -189,6 +192,7 @@ Base64.prototype = $extend(pixi_plugins_app_Application.prototype,{
 	_onLoad: function(snds) {
 		this._beep = __map_reserved["test/beep.mp3"] != null?snds.getReserved("test/beep.mp3"):snds.h["test/beep.mp3"];
 		this._bell = __map_reserved["test/bell.mp3"] != null?snds.getReserved("test/bell.mp3"):snds.h["test/bell.mp3"];
+		this._glass = __map_reserved["test/glass.mp3"] != null?snds.getReserved("test/glass.mp3"):snds.h["test/glass.mp3"];
 		this._canopening = __map_reserved["test/canopening.mp3"] != null?snds.getReserved("test/canopening.mp3"):snds.h["test/canopening.mp3"];
 		this._countdown = __map_reserved["test/countdown.mp3"] != null?snds.getReserved("test/countdown.mp3"):snds.h["test/countdown.mp3"];
 		this._funk100 = __map_reserved["test/funk100.mp3"] != null?snds.getReserved("test/funk100.mp3"):snds.h["test/funk100.mp3"];
