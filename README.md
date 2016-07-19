@@ -62,7 +62,7 @@ audSprite.play("glass");
 
 Browser & Mobile Device Testing provided by:
 
-![BrowserStack](http://adireddy.github.io/assets/browserstack.png)
+[![BrowserStack](http://adireddy.github.io/assets/browserstack.png)](https://www.browserstack.com)
 
 | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/safari/safari_32x32.png" alt="Safari"> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/chrome/chrome_32x32.png" alt="Chrome"> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/firefox/firefox_32x32.png" alt="Firefox"> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/edge/edge_32x32.png" alt="Edge"> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/opera/opera_32x32.png" alt="Opera"> |
 |:--:|:--:|:--:|:--:|:--:|
