@@ -24,8 +24,8 @@
     "contributors": [
 	"adireddy"
     ],
-    "releasenote": "added support to load base64 JSON with multiple data URI's",
-    "version": "0.6.1",
+    "releasenote": "minor updates",
+    "version": "0.6.2",
     "url": "https://github.com/adireddy/waud",
     "dependencies": {}
 }

@@ -20,7 +20,7 @@ import js.Browser;
 	* @static
 	* @type {String}
 	*/
-	public static var version:String = "0.6.1";
+	public static var version:String = "0.6.2";
 
 	/**
 	* Tells whether to use web audio api or not.

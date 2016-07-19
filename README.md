@@ -32,6 +32,18 @@ Example:
 var snd = new WaudSound("assets/loop.mp3", { autoplay: false, loop: true, volume: 0.5, onload: playBgSound });
 ```
 
+### Base64 Data URI
+
+Use [waudbase64](https://github.com/adireddy/waudbase64) to generate base64 encoded JSON file.
+
+```js
+var base64pack = new WaudBase64Pack("assets/sounds.json", _onLoad);
+
+function _onLoad(snds) {
+  snds.get("assets/beep.mp3").play();
+}
+```
+
 ### Audio Sprite
 
 Use [waudsprite](https://github.com/adireddy/waudsprite) to generate audio sprite.
@@ -49,6 +61,7 @@ Found any bug? Please create a new [issue](https://github.com/adireddy/waud/issu
 
 - [JavaScript](http://adireddy.github.io/demos/waud/js.html)
 - [Haxe](http://adireddy.github.io/demos/waud/)
+- [Base64](http://adireddy.github.io/demos/waud/base64.html)
 
 ### Usage
 
