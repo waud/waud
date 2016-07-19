@@ -71,7 +71,7 @@ import haxe.Json;
 	* 		var snd = new WaudSound("assets/loop.mp3", { webaudio: false });
 	*
 	* 		// Data URI
-	* 		//Note that the data URI used below is a sample string and not a valid sound
+	* 		// Note that the data URI used below is a sample string and not a valid sound
 	* 		var base64Snd = new WaudSound("data:audio/mpeg;base64,//uQxAAAAAAAAAAAAASW5mbwAAAA8AAABEAABwpgADBwsLDxISF");
 	* 		base64Snd.play();
 	*
