@@ -49,7 +49,7 @@ function _onLoad(snds) {
 Waud also supports passing individual data URI to `WaudSound`.
 
 ```js
-var base64Snd = new WaudSound("data:audio/mpeg;base64,//uQxAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAABEAABwpgADBwsLDxISF");
+var base64Snd = new WaudSound("data:audio/mpeg;base64,//uQxAAAAAAAAAAAAASW5mbwAAAA8AAABEAABwpgADBwsLDxISF");
 ```
 
 ### Audio Sprite
