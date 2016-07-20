@@ -987,7 +987,6 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 	,play: function(sprite,soundProps) {
 		var _g = this;
 		this.spriteName = sprite;
-		if(this._isPlaying) this.stop(this.spriteName);
 		if(!this._isLoaded) {
 			console.log("sound not loaded");
 			return -1;
@@ -1198,7 +1197,7 @@ if(Array.prototype.indexOf) HxOverrides.indexOf = function(a,o,i) {
 var __map_reserved = {}
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.5.4";
+Waud.version = "0.6.2";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, loop : false, preload : true, webaudio : true, volume : 1};
 Waud.preferredSampleRate = 44100;
