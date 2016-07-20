@@ -112,7 +112,13 @@ import js.html.AudioElement;
 			trace("sound not loaded");
 			return -1;
 		}
-		if (_isPlaying) stop(spriteName);
+		if (_isPlaying) {
+			if (_options.autostop) stop(spriteName);
+			else {
+				var n = cast(_snd.cloneNode(true), AudioElement);
+				Timer.delay(n.play, 100);
+			}
+		}
 		if (_muted) return -1;
 		if (isSpriteSound && soundProps != null) {
 			_snd.currentTime = _pauseTime == null ? soundProps.start : _pauseTime;
