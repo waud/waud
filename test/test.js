@@ -1181,7 +1181,7 @@ utest_Assert.sameAs = function(expected,value,status,approx) {
 				return false;
 			}
 			if(typeof(expected) == "string" && expected != value) {
-				status.error = "expected '" + Std.string(expected) + "' but it is '" + Std.string(value) + "'";
+				status.error = "expected string '" + Std.string(expected) + "' but it is '" + Std.string(value) + "'";
 				return false;
 			}
 			if((expected instanceof Array) && expected.__enum__ == null) {
@@ -1197,7 +1197,7 @@ utest_Assert.sameAs = function(expected,value,status,approx) {
 						var i = _g2++;
 						if(path == "") status.path = "array[" + i + "]"; else status.path = path + "[" + i + "]";
 						if(!utest_Assert.sameAs(expected[i],value[i],status,approx)) {
-							status.error = "expected " + utest_Assert.q(expected[i]) + " but it is " + utest_Assert.q(value[i]) + (status.path == ""?"":" for field " + status.path);
+							status.error = "expected array element at [" + i + "] to be " + utest_Assert.q(expected[i]) + " but it is " + utest_Assert.q(value[i]) + (status.path == ""?"":" for field " + status.path);
 							return false;
 						}
 					}
@@ -1338,7 +1338,7 @@ utest_Assert.sameAs = function(expected,value,status,approx) {
 			}
 			if(status.recursive || status.path == "") {
 				if(Type.enumIndex(expected) != Type.enumIndex(value)) {
-					status.error = "expected " + utest_Assert.q(Type.enumConstructor(expected)) + " but it is " + utest_Assert.q(Type.enumConstructor(value)) + (status.path == ""?"":" for field " + status.path);
+					status.error = "expected enum constructor " + utest_Assert.q(Type.enumConstructor(expected)) + " but it is " + utest_Assert.q(Type.enumConstructor(value)) + (status.path == ""?"":" for field " + status.path);
 					return false;
 				}
 				var eparams = Type.enumParameters(expected);
@@ -1350,7 +1350,7 @@ utest_Assert.sameAs = function(expected,value,status,approx) {
 					var i4 = _g25++;
 					if(path5 == "") status.path = "enum[" + i4 + "]"; else status.path = path5 + "[" + i4 + "]";
 					if(!utest_Assert.sameAs(eparams[i4],vparams[i4],status,approx)) {
-						status.error = "expected " + utest_Assert.q(expected) + " but it is " + utest_Assert.q(value) + (status.path == ""?"":" for field " + status.path);
+						status.error = "expected enum param " + utest_Assert.q(expected) + " but it is " + utest_Assert.q(value) + (status.path == ""?"":" for field " + status.path) + " with " + status.error;
 						return false;
 					}
 				}
@@ -1697,13 +1697,17 @@ utest_Runner.prototype = {
 	,onTestComplete: null
 	,length: null
 	,globalPattern: null
-	,addCase: function(test,setup,teardown,prefix,pattern) {
+	,addCase: function(test,setup,teardown,prefix,pattern,setupAsync,teardownAsync) {
+		if(teardownAsync == null) teardownAsync = "teardownAsync";
+		if(setupAsync == null) setupAsync = "setupAsync";
 		if(prefix == null) prefix = "test";
 		if(teardown == null) teardown = "teardown";
 		if(setup == null) setup = "setup";
 		if(!Reflect.isObject(test)) throw new js__$Boot_HaxeError("can't add a null object as a test case");
 		if(!this.isMethod(test,setup)) setup = null;
+		if(!this.isMethod(test,setupAsync)) setupAsync = null;
 		if(!this.isMethod(test,teardown)) teardown = null;
+		if(!this.isMethod(test,teardownAsync)) teardownAsync = null;
 		var fields = Type.getInstanceFields(Type.getClass(test));
 		if(this.globalPattern == null && pattern == null) {
 			var _g = 0;
@@ -1712,7 +1716,7 @@ utest_Runner.prototype = {
 				++_g;
 				if(!StringTools.startsWith(field,prefix)) continue;
 				if(!this.isMethod(test,field)) continue;
-				this.addFixture(new utest_TestFixture(test,field,setup,teardown));
+				this.addFixture(new utest_TestFixture(test,field,setup,teardown,setupAsync,teardownAsync));
 			}
 		} else {
 			if(this.globalPattern != null) pattern = this.globalPattern; else pattern = pattern;
@@ -1722,7 +1726,7 @@ utest_Runner.prototype = {
 				++_g1;
 				if(!pattern.match(field1)) continue;
 				if(!this.isMethod(test,field1)) continue;
-				this.addFixture(new utest_TestFixture(test,field1,setup,teardown));
+				this.addFixture(new utest_TestFixture(test,field1,setup,teardown,setupAsync,teardownAsync));
 			}
 		}
 	}
@@ -1765,18 +1769,22 @@ utest_Runner.prototype = {
 	}
 	,__class__: utest_Runner
 };
-var utest_TestFixture = function(target,method,setup,teardown) {
+var utest_TestFixture = function(target,method,setup,teardown,setupAsync,teardownAsync) {
 	this.target = target;
 	this.method = method;
 	this.setup = setup;
+	this.setupAsync = setupAsync;
 	this.teardown = teardown;
+	this.teardownAsync = teardownAsync;
 };
 utest_TestFixture.__name__ = ["utest","TestFixture"];
 utest_TestFixture.prototype = {
 	target: null
 	,method: null
 	,setup: null
+	,setupAsync: null
 	,teardown: null
+	,teardownAsync: null
 	,checkMethod: function(name,arg) {
 		var field = Reflect.field(this.target,name);
 		if(field == null) throw new js__$Boot_HaxeError(arg + " function " + name + " is not a field of target");
@@ -1813,18 +1821,29 @@ utest_TestHandler.prototype = {
 	,execute: function() {
 		try {
 			this.executeMethod(this.fixture.setup);
-			try {
-				this.executeMethod(this.fixture.method);
-			} catch( e ) {
-				haxe_CallStack.lastException = e;
-				if (e instanceof js__$Boot_HaxeError) e = e.val;
-				this.results.add(utest_Assertation.Error(e,utest_TestHandler.exceptionStack()));
-			}
-		} catch( e1 ) {
-			haxe_CallStack.lastException = e1;
-			if (e1 instanceof js__$Boot_HaxeError) e1 = e1.val;
-			this.results.add(utest_Assertation.SetupError(e1,utest_TestHandler.exceptionStack()));
+			this.executeAsyncMethod(this.fixture.setupAsync,(function(f) {
+				return function() {
+					f();
+				};
+			})($bind(this,this.executeAsync)));
+		} catch( e ) {
+			haxe_CallStack.lastException = e;
+			if (e instanceof js__$Boot_HaxeError) e = e.val;
+			this.results.add(utest_Assertation.SetupError(e,utest_TestHandler.exceptionStack()));
+			this.executeFinally();
 		}
+	}
+	,executeAsync: function() {
+		try {
+			this.executeMethod(this.fixture.method);
+		} catch( e ) {
+			haxe_CallStack.lastException = e;
+			if (e instanceof js__$Boot_HaxeError) e = e.val;
+			this.results.add(utest_Assertation.Error(e,utest_TestHandler.exceptionStack()));
+		}
+		this.executeFinally();
+	}
+	,executeFinally: function() {
 		this.onPrecheck.dispatch(this);
 		this.checkTested();
 	}
@@ -1899,6 +1918,14 @@ utest_TestHandler.prototype = {
 		this.bindHandler();
 		Reflect.callMethod(this.fixture.target,Reflect.field(this.fixture.target,name),[]);
 	}
+	,executeAsyncMethod: function(name,done) {
+		if(name == null) {
+			done();
+			return;
+		}
+		this.bindHandler();
+		Reflect.callMethod(this.fixture.target,Reflect.field(this.fixture.target,name),[done]);
+	}
 	,tested: function() {
 		if(this.results.length == 0) this.results.add(utest_Assertation.Warning("no assertions"));
 		this.onTested.dispatch(this);
@@ -1912,11 +1939,19 @@ utest_TestHandler.prototype = {
 	,completed: function() {
 		try {
 			this.executeMethod(this.fixture.teardown);
+			this.executeAsyncMethod(this.fixture.teardownAsync,(function(f) {
+				return function() {
+					f();
+				};
+			})($bind(this,this.completedFinally)));
 		} catch( e ) {
 			haxe_CallStack.lastException = e;
 			if (e instanceof js__$Boot_HaxeError) e = e.val;
 			this.results.add(utest_Assertation.TeardownError(e,utest_TestHandler.exceptionStack(2)));
+			this.completedFinally();
 		}
+	}
+	,completedFinally: function() {
 		this.unbindHandler();
 		this.onComplete.dispatch(this);
 	}
@@ -1932,7 +1967,9 @@ utest_TestResult.ofHandler = function(handler) {
 	r.pack = path.join(".");
 	r.method = handler.fixture.method;
 	r.setup = handler.fixture.setup;
+	r.setupAsync = handler.fixture.setupAsync;
 	r.teardown = handler.fixture.teardown;
+	r.teardownAsync = handler.fixture.teardownAsync;
 	r.assertations = handler.results;
 	return r;
 };
@@ -1941,7 +1978,9 @@ utest_TestResult.prototype = {
 	,cls: null
 	,method: null
 	,setup: null
+	,setupAsync: null
 	,teardown: null
+	,teardownAsync: null
 	,assertations: null
 	,allOk: function() {
 		var _g_head = this.assertations.h;

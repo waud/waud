@@ -1,4 +1,4 @@
-(function (console, $hx_exports) { "use strict";
+(function (console, $hx_exports, $global) { "use strict";
 function $extend(from, fields) {
 	function Inherit() {} Inherit.prototype = from; var proto = new Inherit();
 	for (var name in fields) proto[name] = fields[name];
@@ -68,6 +68,7 @@ AudioManager.prototype = {
 		this.bufferList = null;
 		this.types = null;
 	}
+	,__class__: AudioManager
 };
 var BaseSound = function(sndUrl,options) {
 	this._b64 = new EReg("(^data:audio).*(;base64,)","i");
@@ -87,6 +88,7 @@ var BaseSound = function(sndUrl,options) {
 	this._muted = false;
 	if(options == null) options = { };
 	if(options.autoplay != null) options.autoplay = options.autoplay; else options.autoplay = Waud.defaults.autoplay;
+	if(options.autostop != null) options.autostop = options.autostop; else options.autostop = Waud.defaults.autostop;
 	if(options.webaudio != null) options.webaudio = options.webaudio; else options.webaudio = Waud.defaults.webaudio;
 	if(options.preload != null) options.preload = options.preload; else options.preload = Waud.defaults.preload;
 	if(options.loop != null) options.loop = options.loop; else options.loop = Waud.defaults.loop;
@@ -101,6 +103,7 @@ BaseSound.prototype = {
 	get_duration: function() {
 		return 0;
 	}
+	,__class__: BaseSound
 };
 var Button = function(label,width,height,data,fontSize) {
 	PIXI.Container.call(this);
@@ -181,6 +184,7 @@ Button.prototype = $extend(PIXI.Container.prototype,{
 	,_onTouchStart: function(target) {
 		if(this._enabled) this._redraw(14644225);
 	}
+	,__class__: Button
 });
 var EReg = function(r,opt) {
 	opt = opt.split("u").join("");
@@ -197,9 +201,13 @@ EReg.prototype = {
 	,matched: function(n) {
 		if(this.r.m != null && n >= 0 && n < this.r.m.length) return this.r.m[n]; else throw new js__$Boot_HaxeError("EReg::matched");
 	}
+	,__class__: EReg
 };
 var IWaudSound = function() { };
 IWaudSound.__name__ = true;
+IWaudSound.prototype = {
+	__class__: IWaudSound
+};
 var HTML5Sound = function(url,options,src) {
 	BaseSound.call(this,url,options);
 	this._snd = Waud.dom.createElement("audio");
@@ -293,7 +301,13 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 			console.log("sound not loaded");
 			return -1;
 		}
-		if(this._isPlaying) this.stop(this.spriteName);
+		if(this._isPlaying) {
+			if(this._options.autostop) this.stop(this.spriteName); else {
+				var n;
+				n = js_Boot.__cast(this._snd.cloneNode(true) , HTMLAudioElement);
+				haxe_Timer.delay($bind(n,n.play),100);
+			}
+		}
 		if(this._muted) return -1;
 		if(this.isSpriteSound && soundProps != null) {
 			if(this._pauseTime == null) this._snd.currentTime = soundProps.start; else this._snd.currentTime = this._pauseTime;
@@ -359,6 +373,7 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 		}
 		this._isPlaying = false;
 	}
+	,__class__: HTML5Sound
 });
 var HxOverrides = function() { };
 HxOverrides.__name__ = true;
@@ -459,6 +474,7 @@ pixi_plugins_app_Application.prototype = {
 	,addStats: function() {
 		if(window.Perf != null) new Perf().addInfo(["UNKNOWN","WEBGL","CANVAS"][this.renderer.type] + " - " + this.pixelRatio);
 	}
+	,__class__: pixi_plugins_app_Application
 };
 var Main = function() {
 	this._b64Str = "data:audio/mpeg;base64,//uQxAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAABEAABwpgADBwsLDxISFhoaHiEhJSkpLTAwNDg4PEBDQ0dLS09SUlZaWl5hYWVpaW1wcHR4eHyAg4OHi4uPkpKWmpqeoaGlqamtsLC0uLi8wMPDx8vLz9LS1tra3uHh5enp7fDw9Pj4/P8AAAA5TEFNRTMuOThyAc0AAAAAAAAAABSAJAbZQgAAgAAAcKaU26atAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQxAAAFHBnPDWngAs5omk3P2ACCAzJkzJkzZ0zp8z50y48WDhQQZQsa1mcOmePifn+f3qemucNeZ0eBhYBgDkBSALAEAHIIYQg6EPQ80zTNM00PV7+I8YFYrGR5E183fv7j98ADMxH/gBj/6HgDvgAYe+OHgAAAAAGHh4eHgAAAAAGHh4eHgAAAAAGHh4eHgAAAAAGHh4eHgAAAAAGHh4eHgAAAAAGHh4ePAAAAAEYeHh7wAAAHboGA4HA6HY8GAgDAQAAMGlDADDcwvCsSAC9pI0zjs56MdazyS4BgZAEERANhgPAVYfRyZyGZAmiRgzoAALAEhgXICIgFA2SVrA6OR/VwOKUuQMwKqANU6fEUW4GoFZwGOg1oGbo1IGbI9aSTo+BidJcBk/JoBk/LQBhwHCBjwHaiySn+BiEEyBglC0BhlDIBhnDoBgYCOBhOCf/+BgIAaA8AAGAMAQGAMAwXxBskAAAP/+McILCCw5IoEUCOoXMLm///MSKkVMi8XjEul1IvJarKYAUADgQAFEACgYGeB1GB2iYhg5YdIYe//uSxA0Dy8wtGB38gAFRt6LB/hVISDAGFsjfhlBpEYfDWp6mU5D+4OG9DAkwHgwQMEqMCZAKzAZgFU8dDDXA2s7/7//////6v///3/7c+6q8RkAfCaA+KmG71doIJJQAIwNIVXAAA6YAGAFGAQgChgPgDCf/co7HQAyCj8LCFEpTz9gOMXp//9v//////X////7/////////t6//t5DrdFMdWMTdGQiEVCnMPMg2y3cmYKIAAMwPEVMMADAHDAAgAswCIAXMB9Abj/e1wc5+HgMfRIRIWqffgBBpv//+///////p//9P////0/////+/9v1z8uxS7qpCEWQqSM85kZyjFx1dmoJIQAIwQwVBMAEAHTABQAowCMAYMB8AfT+9GXo54JQEeg4OoXMdgcBxhen//2//////9f/19f/0//+r//////9v/uz59Za22vMmaUXyGKDKy3lMwUOABmJSpoYA4DhgDAGmBEA6YD2BFH8ut6pzkVGPACHB5GlqUCSi6e/9///9X57/3////v9ewP0tUkLrvDRUDpcJyYmxyq1oBP/7ksR6A8qZvRYP8KpBSzWiwf4VSXQAIwUIUlMAKAGzABwAwwCMAeMB6Alz9sHhY5oMTHYCDA6jU0GBwmJF6f//b//////1//X////////////1//o7Our9eiER1GGVzkfBkxBTUUzLjk4LjKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqrLHKrAQ4ABmCuiihgBoA0YAQAGmARAEJgPIFEfnrAgnMxoY6AoQHkaWhQJMVcv1//+///////p/+n+v/////////+b0//o6VT6G3SjnuZEIZYgOOXHLGtAI6AAYuigZgHANmAWAYYEoERgOwFefhJErHL/+5LE7IPI6CkWD3+IAUg0osH+FUnB2Y7AwQHURmgxebrHbP93///+3/1////ur/Jr5RbBaUsBAmFAmcTEFNRTMuOTguMqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq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VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVcscqV9i8phPYlsYBSANGAMACZgFQB+YDmCVHxN8W5xs4GNg6YNASAFl06GARTa///N////////9P3//7+39tq//////T/r61zK07PcmpjsUCnZjqoJBOOWNNDJeYwowSRMAqAGTAGQBIwCsA+MBwBNT2//7ksT/g8qpsxQP8EpJZjeigf4JSIukY4kdTGYeMFANAExGXBQIS+n//y/////////X/7/+3/6+n////6+3/7J2WStqbOiIdQhDhGkqhRkxBTUUzLjk4LjJVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVXLHKlhpASYU+I0GAWgCxgDQAmYBUAgmA2gnh6iveCcJOxjAPmCwIgBYlLa0ttc1//+b////////6f/////7V/////Tze2m1/+9D17pQqCAILMHetfHLGmhlAUYVcIgmAXAC5gDYAkYBSAhGA0Aop5mnpT/+5LE/4PKzbkUD/BKSVW3ooH+CUgf89mXkBhAKgGZzTUsus90//+X////////6//r//+/PX/////r7euz0tqqcElGZmsvMRHCA6MlCTEFNRTMuOTguMlVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVyxypYaQxMK/EFjAMQBQwBoATMAoAQzAYwUo8T/57P1fjLCMwcGQCs6lNqW2ua///N//////7////////p6/////p7//2uVy8yXksdDlMD1QI5wtAzY5Y0z+oJjCzA+kwDAATMAbAEDAJwEQwF4FTO8y///uSxP+DyoG1FA/wSolXNaKB/YlRuD6IEykiMGB0JTOZVZl1nun//y//////+v/6//fft2/32X0/////X/39JatJkW6uRJVUYquDZGE1EDDjExBTUUzLjk4LjJVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVcscrMaS9MJ9DQjAKQAwwBQALMAeAOTATQSo55Hj5O/cDHh0wECSFa1M2p21z///N//////6f/p///71///////9Pf/v1zvZbnfVaqaYGsIcyFTCGxyxtRlQI6IxkwqAswVAowdDowEgExOWe57DtHMxsf/7ksT/g8qdvRQP7EqBZbcigf2JUcAAGl84M1ZnrPbP87////t/81/q//7aPdcmIT64fSgkCxEYBB48DJiCmopmXHJwXGSqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqrLHKzGlATpO7DCsCDBQCzBwOzAQwTQ45vrPMCpAdDAGAB0AgASXrhTN+dtc///zf////////T///3////////T3/+icyWvkm3vZHR2YLCUljljajKpjpyvzCwBzBUCjBsOjAPgTk4YLugMCeAdzAFwB4D/+5LE/4PKeb0WD+xKgRSFosHf7QCAAqczg0F6es9///y/////////X///2r///////6+3/5endp3ZEyzFflI6FSOcUmIKaimZccnBcZVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVyxysy5Up1LRxhaAhgoBJg0HZgHYJ4b6r4wmBJgPBgCQA+CQARKl0qG/O2uf//6f////////T///u////////6e//6aVaUzboY6IS86up5GOolLjljalqxjqyXzCwAzBcCDBkPDANAUE3Q70MOGeTER4G//uSxP+DyfWxFg78SMFEN6LB34kYAqaTcZi9PWe/+3////b//b///2/V7fcl7z4MAsXDCQVTEFNRTMuOTguMlVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVe8ysy5Yp1rFRheARgsBJgsHpgGIKIbVn7Ugfn0BjEIBoQNlFeI83Kp9v//9X//////v/+r///3////////V7///dnUrUrVavZbaVF3RQNud5aiq6jrp9TC4ATBcBjBcPDAKgUc2Dz4yA9n0DEoAEBQyEP/7ksT/g8pNuRYO/EjI/4Wiwd/tALSRhUKx5///9f//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qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr+dsRdXB2C2o0L4OCEABqYAICjGqjfXJ0vQFQigRQ9kDtw/OX+X/7P///931f////ZT+tS4IHDSFDgyGiYuXE0Rf3C3FFNzCuge4WAWAcAPAUAyMANBRTX4fkQ8PswB4RhU9GluxDk/e7t//9f//////b/+5LE/4PH1C0WDv9IAP0FosHf6QD/9///////f////9ft/8pfdfc+6oQ5LuYaxWWVA6YgpqKZlxycFxlVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV/mdiLqaGFahEocAthAA6DADMwBIFANpa9vT3eDCnxAET3YA7cPzl/n//+n//////v/+3v//9f/T/////+nr/8mnRNVZ5iMqK7Mgg2jndQ39wtw4qcwq4JYDAFQMAGgqAYGAMgnpuXfpIf3uYg8FwqaDK//uSxP+DyBwtFg7/SAE5N6LB/QlQ3Ihyfvd///1//////9v/3/////+//////19P+nl2fVlRzHdgT9pXhFMR4NkxBTUUzLjk4LjJVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf5nYh9UhhU4USEAK4cAMiAAvMAeBODfAvHs4h0MLHQoBJpsocuH5y/z///T////////7f/p/////////6ev/s961cnrIhWQx0xs6A5FHIH/uFuMKBnT1cA4VA4FhGFhgEoJqcJr3eHKuZhw4DQNKhlbkf/7ksT/g8nluxYP6EqBOreiwf0JUA5L7Hbv9v///+//0dv//+3/bJFpZhIgPHCADJegUFkxBTUUzLjk4LjJVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX+Z0kbUAMKVC5wUApiQAqMAFZgFQJccah13nQOBiY2DAJOdhjlw/LLfP//9P////////t///////////9P/9v/PVmZSrO1NDoRSCmUPT/cKeMJfnRWJAYTBYEh0KDAMQSs5VfoOOtbzFBoEgaXjD2sQ5L/+5LE/4PJ6b0WD+xKgQYFosHf7QD7Hf/b////v/////+fo7u9xOZMlRU44SCg0TiIwDKYgpqKZlxycFxkqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr+Z0kbS8MJ/DPwEAnjQAiVACcwDQEkOdK5HTtmwxkZAgAl+wxrcPyy3zf//6f/////+//7f/////b2/////T1/t/Xsk3Cp6FdDMNC3VR4X54U7+IJzCzg+QwC4AEHgBYkALjARwUs7uf/kPhfTIiAwEFQk//uQxP+Dya25Fg/sSokKBaLB3+0ALDs4fyL2O7f//X////////7+32/+3/5v/////n/1f1WtUM6dT1R5I7Xe4+NYmRTEFNRTMuOTguMqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq/DOkf8vYYWCIImAWgA5EAKjIBaYCUChHh6fVJ9T0ZKPmBAiEtUjO3/llvm///0//////9//S3//9///9v////09f6eRLOxKubqRWWZ2I6Dq0OSUfnhTv4XvMKwEOjAKgAgoAEhEAVGAognZ5d/qwfu7m//uSxP+DydW5Fg/sSolLtaKB/YlRUDhgoGgEVOzh/JfY7t//9f//////b/9///dfbrvf//t///8/07r21qtKIkq1UdjTFYiEOyuKPtMmIKaimZccnBcZVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVfwzpHbLyGFQiMpgFIAWUABghAJzAVATI9NLv1OAHIxWGzAwCQDqkZ2/8st83//+n//////v/+3/+32////////2/9teZuv1nIYGisWiG1KcWQ5whvzwp30LzmFICRhgEwAYRABYUAJDAWwSs9qPp8OFm//7ksT/g8ptrRQP7EqJWzaigf2JUcxcGjA4DQcVOxB/JfY7t//9f//////b/9/////+qv73////8//SvX2YzKd7GZ6oZ3ZUR2BnnMZgYdMQU1FMy45OC4yVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX8M6R9xAAAGE/iWZgEoAePAAgJAITAXgSI+FzjxOKGoxiGTBAAQBqCMTf+WW+b///J//////7/6dv1//5//X9v////yev/Wl1tdnV6K+R3VTtco4cW4MwtRP54U76CEABMJqE1jAIgBAaAAwIAPGAxgjL/+5LE/4PKgb0UD/BKgV03ooH+CVB9Au6kcdM5jILGCwCgAUHYg/kvsd2//+v//////t/+/t//f//39//////p/88rrvrYtT0vogcyzICPDkxBTUUzLjk4LjJVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV/CvKH3EAAEYSuJ8mAQgCZfgwAEAbMBmBDj7ltZ85MYjGoVAQULtqaMTf+MW+b///J//////7//t///////////9vXu/rpyvTd+xmMqIdnOWVEA7EF/upK30EYAGYSEKMGAPACiA8wAIAYMBrBBT9Fc9Y//uSxP+DyyW9FA/wSoFPtSKB/glR5eXzGwSAQbL4KbsQfyN2P2//+f//////2//f//////3/////f//1yaLnepiJZDMcgfVWQ6GZwiYgpqKZlxycFxkqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqv1XlD7iIACMItFNzAHQBVBQwAUAVMBuA+D+fsfs5sWjHIRAwYL5qaMTf+MZ////k////////+39+vp87dv/0/////b1//S3UzrSxqohghXZGZjGoJxP3Ulb6CMAFMIUFVDAGgBZFMwAgAQMBzA7T/1cAv/7ksT/g8qdvRQP8EqBUTeigf4JUA5+VTHQOAwfL4KbsQfyN4ft//8///////t/+////+3+/v//9P/39P/y1Rpn96g20IpAQo6BGYYHhipiCmopmXHJwXGVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX9Z1IDFAAAwb0TDMARAE0xDABQAkwGQDCPkioZTjRCMZgkHBRHNdDX3/lmf///5P////////t///6//t///6//t//s3+vdG0Zr3QlFK7MUW/7wrwAMgAJg0wmwYAcAJJfmADAAhgM4FyfRbNGHHx+Y0Az/+5LE/4PKsbkUD/BKiVi3ooH+CVAQF0cFdtcfynw////P//////7f/v/v////v/////9/T/Tv+Sl5W0ZVcjqjluhmDhjJiCmopmXHJwXGSqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq/WcxAYwAAGDIid5gBoAqlQYASABmA1AVh9kUlCckHBjUChgURzWo19/6TP///8n////////2/////2//////29fR/yevvTdp7Wq7IlSkQL+8JuABkADMF4FADACABRNMBAChgNoFCfgPFRHKxqY2AQYG//uSxP+DygW7Fg/wSoFJN6LB/glQ0RFrtchinw////P////////83//1Tp///////+/p/+v7s1WmZKsd0dFbEIdioLTEFNRTMuOTguMqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqt6zmIDGAAIwWEUTMAHAF0yAUANmA3ASh+a0EecuFxjkAhwYRHWo1+G6TP///8n////////2///////////+3r/XalNbWahmd3dCFV3uMlBjDN+6k3AA6ABmCjCkRgAgAskuEADhgOIESfsu8zHMxSBjgP/7ksT/g8ntuxYP8EqBRLeiwf4JUHBtERa7XIYleH///7/////////f///////////7+n/ay7rJv7ys1n6vak0wNMQU1FMy45OC4yqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqrersxAY4ABGCWimZgAIAylIJAEZgOQD0fyI4UnNhICjuJBxGtajX4blGf///7f////////b/2////+3////7f//tZdCSqisrK7PYMDQplowkut3JuAB0ADMESFPgAAMIujQBIYDqA3n9ws6RzsPg46Cwf/+5LE/4PKLbsWD/BKgTS3osH+CVDRoWu1yGJXh///+/////////3//+1f///////+/p9Pv7o1L5WsjriHcl1OIRRLAkxBTUUzLjk4LjKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq3q7MQWQAARge4qWCQBlD4mAKzAdgF4/2hdjOeBgIPYsHEg16Nfhukz////b////////7f/////b/////7ev+Sv7aOpfRVdlZruYssrDtrdybgghABTA2BVQGADQ4AAkQBSYDyAon/vqaxz8Ihx4Gg+hY//uSxP+Dyh25Fg/wSoFAt6LB/glQvdrkMSvD///9///////T/9////b/9P/////v6f/fSmr0R0RtTsjQT0hQNZdMQU1FMy45OC4yqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqlmA+wgAAAMCfEswHgCoN7AiAIgMBmANAPhqP7QMEWABALAM4KACgbWJ8GbIuYL///7f///7f//J7dJMvejMkzR1G6AMZxKkAQ5gQAlwKACiCESAITAaQCc+LM1sAYzGjIRBdOBm7uRivr/0////6f////7ksT/g8m9vRYP8EqBQLYiwf4JUf//p/r1ilOOSVhcQmVlSSYgpqKZlxycFxlVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVValnB9hAAAAYDGJegmAKgRAAAGACYDAaABYD46Cr8A4I0BYBnBwAoG9ifBmyLmC///+3//X///////+36qv+3U01qOsqPicZxKkASZgIAmASACggAAQcAUmA1gAp8iI+cJjcmNBQF08Gbu5KK+v/T/////+5LE/4PIibEYC4BZSPOFYwD/8JD//s+r///Z6GT2mwAgVBYRkwUNuHpiCmopmXHJwXGSqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqWpZwfwkGAMiYZUAFQuAAAoAqGgNQ+SYRrJxoUGorBShbQH7ldRv/u//////////3f9iJSQUoDnxYoETYQExdS1HR+CKOiYQ6AKBQADAQBSDgNY+S8C5Gx0RGkmCyiDQ34lFdn/v//////////3/rv1Ja//uSxP+DyMm7GAuAWQEBhWMA//CQSSOYUFD49ixGmIKaimZccnBcZVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVd63cg0sAABgDwmGMACoVAAjAFwAAwGoANPkkFHg0ajRqJgqoi0B+wHEF///7f/////+v/////////////7f/6fptbR6fv5D2HkN63q7BhUABMEVMARgLAwZ2KYDWAOHyFkMoGCNhYBpIgBZQlob8Siuz//7ksT/g8fYKRgIf4SA8IUjAQ/wkP3////7P//s//++r+hVK2C4aE+cA4qbSDiYgpqKZlxycFxkqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqret3INKoABgzJehYBcEkPJjAagC0+OAtEMEaAAxIBqHgBVPJqD9yu43/3f///7f0////+7/ZRT1JRbPBsMiTW9XYKJAAEwIcS2CoAsBAAUwBgALMBrAOj4pzes4yCAw0jQWTxam/ACDU///7//////////+5LE/4PJRbUYD/CqSQMFIwHsfMDT///////////7///ulp+9d6NMzvUTNYVKJiCmopmXHJwXGVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV3rdyCSUAAwoksQQAqBSHlhgNQCSfC0gxGCMAB4QAzDQAqnE1Z+5Xcb/7v/////////91f1IovpvkSxtQDDooby3coYKIAAzDdVSMAEBwwizgVMB9AZD/y1VUwUEAaBQD6JAESJKn34lF1n/v///q/ZV+//uSxP+Dx8gpGA9j5gEztaMB/hVI3p9n//31fveoVrsjS6ljxGBRAGkxBTUUzLjk4LjJVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVd6uzUEkIARh9KkmAEA6YpRxsGA+AOp/qC+4YJ8AQgYB+EgCFC5jr9yu4ds/3f//1/t/+v7av/+6vSM3C6MJ2uWWE5ETm1gAjlutMwUQAAZgi4p4YAOAOGACABZgEQA2YD6BAH9htI5zsTAI8hweSBY9Av/7ksT/g8f4KRgPY+YBGAUiwez8wACDTdf//v//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VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVxyxpn1EYAEYRgKYmARAD5gCoAkYBaAcGA/AhJ/HWSsc6MJj0LAIQl8mSycGBFfT//7f/////+v/69////3/X0/////+X9OlK2826IRwQJ1BbLFBnYkmWNalfYRAAZhIookYBKAOGALACZgFgB2YD6CJH//uSxP+Dyim7Fg/wqkFbt6KB/hVI5n6F5zMyGOgyYPABfFg0mBAIptf//v//////6f/p//9ff//62//7//v5v0+9/3n1maRzi0zuzDoLTFMQU1FMy45OC4yVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVccsaZ9RGAAGEtCeJgEwA6YAuAJGAWgHRgPAI6faVr5HKjWY5DRg4Al8mCyIKBCX0//+X////////6//t6f//+n////6+X/RLsv5HR2Icsj+hVQGUx4IEXyxypX2EQACYTeJnGAUgDRgDAAmYBUAemA6gv/7ksT/g8q9oRQP8EpJWbcigf4JSUh82u9GchNxjYNmDQEgBZdOhgEU2v//zf/////+n/6f///p3/+v/r///f33+vrpW50ZSGWrWKSTKlihChlTEFNRTMuOTguMlVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV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hiEIVP/7ksT/g8pRuRYO/EjBPrXiwd+VESJ6t2j8/RX+f//6f////////T///39f//////6e//9++RakRNCOfBvRxYk7nExBTUUzLjk4LjJVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVXneWpCtY7CakDC6YKgMYKh4YBEClmpifZh2PphUAWCp7N1iE5R3n/9f///+v//6f//r3fQWMKkKqYPBpoDA4sFG9529Il6nY62AoXjBQBTBIPTAHQUw0gP8tA5f4DAIQHhA4kXxDyuWj7f//6v////////+5LE/4PKAbUWDv6ICTw2IsH9CVH/q/////+3/////1e//9tuzpJ9dSNVCzO1B0jJlExBTUUzLjk4LjJVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV53l+Qr2OyEtBwwmCoCGCIeGALAppnin7wbr+BUAiDqHNhiE5R3n/9f//+75f/7v7//+vd3tF6FvcoXLCWDANhoCoUb7zt6RL9OzToCBiMFADMDg7MARBTjL7/7UwCsB+BgBCKgAyirZIbA4YPb///T////uSxP+DyBwrFg7/SAE4tyLB39EB//////5Pr//f+3/6/////p7/99GrVEW17ctR9ke7sVDqNImIKaim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5g6oy5nj/zhGmDKZQzR4c26Sq7/+Y7noZAJOapI6ZmFLUpcKH//zDouTQxIzSxRwKBpjkYcMzElhmY///zQZQTDkcDEUEzIAwzEUoDKsepLS1Lv////+YagEYVkEZYlkZVlkIQqM//uSxP+ALp4bKln6gAUJtWPHPdACayWMuze1W3clV2g////8w6GEwGGwzhTAxcMczCHEgEYxMMUz0OczIMWtu5r/x1d//////AAamMQ+mSRVmAYCGAwgmORMmDokGH4FGCgemDosGNYtVdXauruOt6////////MQQ2MBQ6MXxsMdyGZIYPiQY3kYYIBiNB4YWigYMCaYqB+YPAWYFB6YtC/qtu5W3cy3r//HX/////////5jANZUAUwuE0xqIUwJBwwBA0w8F8wVEAxFChVMQU1FMy45OC4yVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVUxBTUUzLjk4LjJVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/7ksRqA8AAAaQcAAAgAAA0gAAABFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVU=";
@@ -587,7 +603,16 @@ var Main = function() {
 	this._addButton("HTML5 Audio",320,450,120,30,function() {
 		_g._b64SndHTML5.play();
 	});
-	this._addButton("DESTROY",200,500,180,30,function() {
+	label = new PIXI.Text("No AutoStop: ",{ font : "26px Tahoma", fill : "#FFFFFF"});
+	this._btnContainer.addChild(label);
+	label.position.y = 500;
+	this._addButton("Web Audio",200,500,120,30,function() {
+		_g._autoStopSndWebAudio.play();
+	});
+	this._addButton("HTML5 Audio",320,500,120,30,function() {
+		_g._autoStopSndHTML5.play();
+	});
+	this._addButton("DESTROY",200,550,180,30,function() {
 		Waud.destroy();
 	});
 	this._ua = new PIXI.Text(window.navigator.userAgent,{ font : "12px Tahoma", fill : "#FFFFFF"});
@@ -625,6 +650,8 @@ var Main = function() {
 	this._countdown = new WaudSound("assets/countdown.mp3",{ webaudio : true});
 	this._b64SndWebAudio = new WaudSound(this._b64Str);
 	this._b64SndHTML5 = new WaudSound(this._b64Str,{ webaudio : false});
+	this._autoStopSndWebAudio = new WaudSound("assets/funk100.mp3",{ autostop : false});
+	this._autoStopSndHTML5 = new WaudSound("assets/funk100.mp3",{ webaudio : false, autostop : false});
 	this._resize();
 };
 Main.__name__ = true;
@@ -675,6 +702,7 @@ Main.prototype = $extend(pixi_plugins_app_Application.prototype,{
 	,_resize: function() {
 		this._btnContainer.position.set((window.innerWidth - this._btnContainer.width) / 2,(window.innerHeight - this._btnContainer.height) / 2);
 	}
+	,__class__: Main
 });
 Math.__name__ = true;
 var Perf = $hx_exports.Perf = function(pos,offset) {
@@ -808,6 +836,7 @@ Perf.prototype = {
 		this.info.style.zIndex = "998";
 		this.info.innerHTML = val;
 	}
+	,__class__: Perf
 };
 var Reflect = function() { };
 Reflect.__name__ = true;
@@ -1063,6 +1092,7 @@ WaudFocusManager.prototype = {
 			window.onpagehide = null;
 		}
 	}
+	,__class__: WaudFocusManager
 };
 var WaudSound = $hx_exports.WaudSound = function(url,options) {
 	if(Waud.audioManager == null) {
@@ -1329,6 +1359,7 @@ WaudSound.prototype = {
 	,_spriteOnEnd: function(snd) {
 		if(this._spriteSoundEndCallbacks.get(snd.spriteName) != null) this._spriteSoundEndCallbacks.get(snd.spriteName)(snd);
 	}
+	,__class__: WaudSound
 };
 var WaudUtils = $hx_exports.WaudUtils = function() { };
 WaudUtils.__name__ = true;
@@ -1464,7 +1495,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 	,play: function(sprite,soundProps) {
 		var _g = this;
 		this.spriteName = sprite;
-		if(this._isPlaying) this.stop(this.spriteName);
+		if(this._isPlaying && this._options.autostop) this.stop(this.spriteName);
 		if(!this._isLoaded) {
 			console.log("sound not loaded");
 			return -1;
@@ -1584,6 +1615,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		this._gainNodes = [];
 		this._isPlaying = false;
 	}
+	,__class__: WebAudioAPISound
 });
 var haxe_IMap = function() { };
 haxe_IMap.__name__ = true;
@@ -1610,6 +1642,7 @@ haxe_Timer.prototype = {
 	}
 	,run: function() {
 	}
+	,__class__: haxe_Timer
 };
 var haxe_ds__$StringMap_StringMapIterator = function(map,keys) {
 	this.map = map;
@@ -1625,6 +1658,7 @@ haxe_ds__$StringMap_StringMapIterator.prototype = {
 	,next: function() {
 		return this.map.get(this.keys[this.index++]);
 	}
+	,__class__: haxe_ds__$StringMap_StringMapIterator
 };
 var haxe_ds_StringMap = function() {
 	this.h = { };
@@ -1661,6 +1695,7 @@ haxe_ds_StringMap.prototype = {
 	,iterator: function() {
 		return new haxe_ds__$StringMap_StringMapIterator(this,this.arrayKeys());
 	}
+	,__class__: haxe_ds_StringMap
 };
 var js__$Boot_HaxeError = function(val) {
 	Error.call(this);
@@ -1671,9 +1706,19 @@ var js__$Boot_HaxeError = function(val) {
 js__$Boot_HaxeError.__name__ = true;
 js__$Boot_HaxeError.__super__ = Error;
 js__$Boot_HaxeError.prototype = $extend(Error.prototype,{
+	__class__: js__$Boot_HaxeError
 });
 var js_Boot = function() { };
 js_Boot.__name__ = true;
+js_Boot.getClass = function(o) {
+	if((o instanceof Array) && o.__enum__ == null) return Array; else {
+		var cl = o.__class__;
+		if(cl != null) return cl;
+		var name = js_Boot.__nativeClassName(o);
+		if(name != null) return js_Boot.__resolveNativeClass(name);
+		return null;
+	}
+};
 js_Boot.__string_rec = function(o,s) {
 	if(o == null) return "null";
 	if(s.length >= 5) return "<...>";
@@ -1742,6 +1787,64 @@ js_Boot.__string_rec = function(o,s) {
 		return String(o);
 	}
 };
+js_Boot.__interfLoop = function(cc,cl) {
+	if(cc == null) return false;
+	if(cc == cl) return true;
+	var intf = cc.__interfaces__;
+	if(intf != null) {
+		var _g1 = 0;
+		var _g = intf.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			var i1 = intf[i];
+			if(i1 == cl || js_Boot.__interfLoop(i1,cl)) return true;
+		}
+	}
+	return js_Boot.__interfLoop(cc.__super__,cl);
+};
+js_Boot.__instanceof = function(o,cl) {
+	if(cl == null) return false;
+	switch(cl) {
+	case Int:
+		return (o|0) === o;
+	case Float:
+		return typeof(o) == "number";
+	case Bool:
+		return typeof(o) == "boolean";
+	case String:
+		return typeof(o) == "string";
+	case Array:
+		return (o instanceof Array) && o.__enum__ == null;
+	case Dynamic:
+		return true;
+	default:
+		if(o != null) {
+			if(typeof(cl) == "function") {
+				if(o instanceof cl) return true;
+				if(js_Boot.__interfLoop(js_Boot.getClass(o),cl)) return true;
+			} else if(typeof(cl) == "object" && js_Boot.__isNativeObj(cl)) {
+				if(o instanceof cl) return true;
+			}
+		} else return false;
+		if(cl == Class && o.__name__ != null) return true;
+		if(cl == Enum && o.__ename__ != null) return true;
+		return o.__enum__ == cl;
+	}
+};
+js_Boot.__cast = function(o,t) {
+	if(js_Boot.__instanceof(o,t)) return o; else throw new js__$Boot_HaxeError("Cannot cast " + Std.string(o) + " to " + Std.string(t));
+};
+js_Boot.__nativeClassName = function(o) {
+	var name = js_Boot.__toStr.call(o).slice(8,-1);
+	if(name == "Object" || name == "Function" || name == "Math" || name == "JSON") return null;
+	return name;
+};
+js_Boot.__isNativeObj = function(o) {
+	return js_Boot.__nativeClassName(o) != null;
+};
+js_Boot.__resolveNativeClass = function(name) {
+	return $global[name];
+};
 var msignal_Signal = function(valueClasses) {
 	if(valueClasses == null) valueClasses = [];
 	this.valueClasses = valueClasses;
@@ -1799,6 +1902,7 @@ msignal_Signal.prototype = {
 	,get_numListeners: function() {
 		return this.slots.get_length();
 	}
+	,__class__: msignal_Signal
 };
 var msignal_Signal0 = function() {
 	msignal_Signal.call(this);
@@ -1818,6 +1922,7 @@ msignal_Signal0.prototype = $extend(msignal_Signal.prototype,{
 		if(once == null) once = false;
 		return new msignal_Slot0(this,listener,once,priority);
 	}
+	,__class__: msignal_Signal0
 });
 var msignal_Signal1 = function(type) {
 	msignal_Signal.call(this,[type]);
@@ -1837,6 +1942,7 @@ msignal_Signal1.prototype = $extend(msignal_Signal.prototype,{
 		if(once == null) once = false;
 		return new msignal_Slot1(this,listener,once,priority);
 	}
+	,__class__: msignal_Signal1
 });
 var msignal_Signal2 = function(type1,type2) {
 	msignal_Signal.call(this,[type1,type2]);
@@ -1856,6 +1962,7 @@ msignal_Signal2.prototype = $extend(msignal_Signal.prototype,{
 		if(once == null) once = false;
 		return new msignal_Slot2(this,listener,once,priority);
 	}
+	,__class__: msignal_Signal2
 });
 var msignal_Slot = function(signal,listener,once,priority) {
 	if(priority == null) priority = 0;
@@ -1875,6 +1982,7 @@ msignal_Slot.prototype = {
 		if(value == null) throw new js__$Boot_HaxeError("listener cannot be null");
 		return this.listener = value;
 	}
+	,__class__: msignal_Slot
 };
 var msignal_Slot0 = function(signal,listener,once,priority) {
 	if(priority == null) priority = 0;
@@ -1889,6 +1997,7 @@ msignal_Slot0.prototype = $extend(msignal_Slot.prototype,{
 		if(this.once) this.remove();
 		this.listener();
 	}
+	,__class__: msignal_Slot0
 });
 var msignal_Slot1 = function(signal,listener,once,priority) {
 	if(priority == null) priority = 0;
@@ -1904,6 +2013,7 @@ msignal_Slot1.prototype = $extend(msignal_Slot.prototype,{
 		if(this.param != null) value1 = this.param;
 		this.listener(value1);
 	}
+	,__class__: msignal_Slot1
 });
 var msignal_Slot2 = function(signal,listener,once,priority) {
 	if(priority == null) priority = 0;
@@ -1920,6 +2030,7 @@ msignal_Slot2.prototype = $extend(msignal_Slot.prototype,{
 		if(this.param2 != null) value2 = this.param2;
 		this.listener(value1,value2);
 	}
+	,__class__: msignal_Slot2
 });
 var msignal_SlotList = function(head,tail) {
 	this.nonEmpty = false;
@@ -1991,16 +2102,26 @@ msignal_SlotList.prototype = {
 		}
 		return null;
 	}
+	,__class__: msignal_SlotList
 };
 var $_, $fid = 0;
 function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id__ = $fid++; var f; if( o.hx__closures__ == null ) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__]; if( f == null ) { f = function(){ return f.method.apply(f.scope, arguments); }; f.scope = o; f.method = m; o.hx__closures__[m.__id__] = f; } return f; }
 if(Array.prototype.indexOf) HxOverrides.indexOf = function(a,o,i) {
 	return Array.prototype.indexOf.call(a,o,i);
 };
+String.prototype.__class__ = String;
 String.__name__ = true;
 Array.__name__ = true;
+Date.prototype.__class__ = Date;
 Date.__name__ = ["Date"];
+var Int = { __name__ : ["Int"]};
 var Dynamic = { __name__ : ["Dynamic"]};
+var Float = Number;
+Float.__name__ = ["Float"];
+var Bool = Boolean;
+Bool.__ename__ = ["Bool"];
+var Class = { __name__ : ["Class"]};
+var Enum = { };
 var __map_reserved = {}
 msignal_SlotList.NIL = new msignal_SlotList(null,null);
 Perf.MEASUREMENT_INTERVAL = 1000;
@@ -2018,9 +2139,9 @@ Perf.INFO_TXT_CLR = "#000000";
 Perf.DELAY_TIME = 4000;
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.5.4";
+Waud.version = "0.6.2";
 Waud.useWebAudio = true;
-Waud.defaults = { autoplay : false, loop : false, preload : true, webaudio : true, volume : 1};
+Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1};
 Waud.preferredSampleRate = 44100;
 Waud.isMuted = false;
 WaudFocusManager.FOCUS_STATE = "focus";
@@ -2031,7 +2152,8 @@ WaudFocusManager.PAGE_SHOW = "pageshow";
 WaudFocusManager.PAGE_HIDE = "pagehide";
 WaudFocusManager.WINDOW = "window";
 WaudFocusManager.DOCUMENT = "document";
+js_Boot.__toStr = {}.toString;
 Main.main();
-})(typeof console != "undefined" ? console : {log:function(){}}, typeof window != "undefined" ? window : exports);
+})(typeof console != "undefined" ? console : {log:function(){}}, typeof window != "undefined" ? window : exports, typeof window != "undefined" ? window : typeof global != "undefined" ? global : typeof self != "undefined" ? self : this);
 
 //# sourceMappingURL=sample.js.map

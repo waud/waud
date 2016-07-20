@@ -1,4 +1,4 @@
-(function (console, $hx_exports) { "use strict";
+(function (console, $hx_exports, $global) { "use strict";
 function $extend(from, fields) {
 	function Inherit() {} Inherit.prototype = from; var proto = new Inherit();
 	for (var name in fields) proto[name] = fields[name];
@@ -68,6 +68,7 @@ AudioManager.prototype = {
 		this.bufferList = null;
 		this.types = null;
 	}
+	,__class__: AudioManager
 };
 var pixi_plugins_app_Application = function() {
 	this._animationFrameId = null;
@@ -145,6 +146,7 @@ pixi_plugins_app_Application.prototype = {
 		}
 		this._animationFrameId = window.requestAnimationFrame($bind(this,this._onRequestAnimationFrame));
 	}
+	,__class__: pixi_plugins_app_Application
 };
 var Base64 = function() {
 	var _g = this;
@@ -209,6 +211,7 @@ Base64.prototype = $extend(pixi_plugins_app_Application.prototype,{
 	,_resize: function() {
 		this._btnContainer.position.set((window.innerWidth - this._btnContainer.width) / 2,(window.innerHeight - this._btnContainer.height) / 2);
 	}
+	,__class__: Base64
 });
 var BaseSound = function(sndUrl,options) {
 	this._b64 = new EReg("(^data:audio).*(;base64,)","i");
@@ -228,6 +231,7 @@ var BaseSound = function(sndUrl,options) {
 	this._muted = false;
 	if(options == null) options = { };
 	if(options.autoplay != null) options.autoplay = options.autoplay; else options.autoplay = Waud.defaults.autoplay;
+	if(options.autostop != null) options.autostop = options.autostop; else options.autostop = Waud.defaults.autostop;
 	if(options.webaudio != null) options.webaudio = options.webaudio; else options.webaudio = Waud.defaults.webaudio;
 	if(options.preload != null) options.preload = options.preload; else options.preload = Waud.defaults.preload;
 	if(options.loop != null) options.loop = options.loop; else options.loop = Waud.defaults.loop;
@@ -242,6 +246,7 @@ BaseSound.prototype = {
 	get_duration: function() {
 		return 0;
 	}
+	,__class__: BaseSound
 };
 var Button = function(label,width,height,data,fontSize) {
 	PIXI.Container.call(this);
@@ -322,6 +327,7 @@ Button.prototype = $extend(PIXI.Container.prototype,{
 	,_onTouchStart: function(target) {
 		if(this._enabled) this._redraw(14644225);
 	}
+	,__class__: Button
 });
 var EReg = function(r,opt) {
 	opt = opt.split("u").join("");
@@ -338,9 +344,13 @@ EReg.prototype = {
 	,matched: function(n) {
 		if(this.r.m != null && n >= 0 && n < this.r.m.length) return this.r.m[n]; else throw new js__$Boot_HaxeError("EReg::matched");
 	}
+	,__class__: EReg
 };
 var IWaudSound = function() { };
 IWaudSound.__name__ = true;
+IWaudSound.prototype = {
+	__class__: IWaudSound
+};
 var HTML5Sound = function(url,options,src) {
 	BaseSound.call(this,url,options);
 	this._snd = Waud.dom.createElement("audio");
@@ -434,7 +444,13 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 			console.log("sound not loaded");
 			return -1;
 		}
-		if(this._isPlaying) this.stop(this.spriteName);
+		if(this._isPlaying) {
+			if(this._options.autostop) this.stop(this.spriteName); else {
+				var n;
+				n = js_Boot.__cast(this._snd.cloneNode(true) , HTMLAudioElement);
+				haxe_Timer.delay($bind(n,n.play),100);
+			}
+		}
 		if(this._muted) return -1;
 		if(this.isSpriteSound && soundProps != null) {
 			if(this._pauseTime == null) this._snd.currentTime = soundProps.start; else this._snd.currentTime = this._pauseTime;
@@ -500,6 +516,7 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 		}
 		this._isPlaying = false;
 	}
+	,__class__: HTML5Sound
 });
 var HxOverrides = function() { };
 HxOverrides.__name__ = true;
@@ -551,6 +568,9 @@ Reflect.compareMethods = function(f1,f2) {
 };
 var Std = function() { };
 Std.__name__ = true;
+Std.string = function(s) {
+	return js_Boot.__string_rec(s,"");
+};
 Std.parseInt = function(x) {
 	var v = parseInt(x,10);
 	if(v == 0 && (HxOverrides.cca(x,1) == 120 || HxOverrides.cca(x,1) == 88)) v = parseInt(x);
@@ -760,6 +780,7 @@ WaudBase64Pack.prototype = {
 			}
 		}});
 	}
+	,__class__: WaudBase64Pack
 };
 var WaudFocusManager = $hx_exports.WaudFocusManager = function() {
 	var _g = this;
@@ -831,6 +852,7 @@ WaudFocusManager.prototype = {
 			window.onpagehide = null;
 		}
 	}
+	,__class__: WaudFocusManager
 };
 var WaudSound = $hx_exports.WaudSound = function(url,options) {
 	if(Waud.audioManager == null) {
@@ -1097,6 +1119,7 @@ WaudSound.prototype = {
 	,_spriteOnEnd: function(snd) {
 		if(this._spriteSoundEndCallbacks.get(snd.spriteName) != null) this._spriteSoundEndCallbacks.get(snd.spriteName)(snd);
 	}
+	,__class__: WaudSound
 };
 var WaudUtils = $hx_exports.WaudUtils = function() { };
 WaudUtils.__name__ = true;
@@ -1232,7 +1255,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 	,play: function(sprite,soundProps) {
 		var _g = this;
 		this.spriteName = sprite;
-		if(this._isPlaying) this.stop(this.spriteName);
+		if(this._isPlaying && this._options.autostop) this.stop(this.spriteName);
 		if(!this._isLoaded) {
 			console.log("sound not loaded");
 			return -1;
@@ -1352,6 +1375,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		this._gainNodes = [];
 		this._isPlaying = false;
 	}
+	,__class__: WebAudioAPISound
 });
 var haxe_IMap = function() { };
 haxe_IMap.__name__ = true;
@@ -1378,6 +1402,7 @@ haxe_Timer.prototype = {
 	}
 	,run: function() {
 	}
+	,__class__: haxe_Timer
 };
 var haxe_ds__$StringMap_StringMapIterator = function(map,keys) {
 	this.map = map;
@@ -1393,6 +1418,7 @@ haxe_ds__$StringMap_StringMapIterator.prototype = {
 	,next: function() {
 		return this.map.get(this.keys[this.index++]);
 	}
+	,__class__: haxe_ds__$StringMap_StringMapIterator
 };
 var haxe_ds_StringMap = function() {
 	this.h = { };
@@ -1429,6 +1455,7 @@ haxe_ds_StringMap.prototype = {
 	,iterator: function() {
 		return new haxe_ds__$StringMap_StringMapIterator(this,this.arrayKeys());
 	}
+	,__class__: haxe_ds_StringMap
 };
 var js__$Boot_HaxeError = function(val) {
 	Error.call(this);
@@ -1439,7 +1466,145 @@ var js__$Boot_HaxeError = function(val) {
 js__$Boot_HaxeError.__name__ = true;
 js__$Boot_HaxeError.__super__ = Error;
 js__$Boot_HaxeError.prototype = $extend(Error.prototype,{
+	__class__: js__$Boot_HaxeError
 });
+var js_Boot = function() { };
+js_Boot.__name__ = true;
+js_Boot.getClass = function(o) {
+	if((o instanceof Array) && o.__enum__ == null) return Array; else {
+		var cl = o.__class__;
+		if(cl != null) return cl;
+		var name = js_Boot.__nativeClassName(o);
+		if(name != null) return js_Boot.__resolveNativeClass(name);
+		return null;
+	}
+};
+js_Boot.__string_rec = function(o,s) {
+	if(o == null) return "null";
+	if(s.length >= 5) return "<...>";
+	var t = typeof(o);
+	if(t == "function" && (o.__name__ || o.__ename__)) t = "object";
+	switch(t) {
+	case "object":
+		if(o instanceof Array) {
+			if(o.__enum__) {
+				if(o.length == 2) return o[0];
+				var str2 = o[0] + "(";
+				s += "\t";
+				var _g1 = 2;
+				var _g = o.length;
+				while(_g1 < _g) {
+					var i1 = _g1++;
+					if(i1 != 2) str2 += "," + js_Boot.__string_rec(o[i1],s); else str2 += js_Boot.__string_rec(o[i1],s);
+				}
+				return str2 + ")";
+			}
+			var l = o.length;
+			var i;
+			var str1 = "[";
+			s += "\t";
+			var _g2 = 0;
+			while(_g2 < l) {
+				var i2 = _g2++;
+				str1 += (i2 > 0?",":"") + js_Boot.__string_rec(o[i2],s);
+			}
+			str1 += "]";
+			return str1;
+		}
+		var tostr;
+		try {
+			tostr = o.toString;
+		} catch( e ) {
+			if (e instanceof js__$Boot_HaxeError) e = e.val;
+			return "???";
+		}
+		if(tostr != null && tostr != Object.toString && typeof(tostr) == "function") {
+			var s2 = o.toString();
+			if(s2 != "[object Object]") return s2;
+		}
+		var k = null;
+		var str = "{\n";
+		s += "\t";
+		var hasp = o.hasOwnProperty != null;
+		for( var k in o ) {
+		if(hasp && !o.hasOwnProperty(k)) {
+			continue;
+		}
+		if(k == "prototype" || k == "__class__" || k == "__super__" || k == "__interfaces__" || k == "__properties__") {
+			continue;
+		}
+		if(str.length != 2) str += ", \n";
+		str += s + k + " : " + js_Boot.__string_rec(o[k],s);
+		}
+		s = s.substring(1);
+		str += "\n" + s + "}";
+		return str;
+	case "function":
+		return "<function>";
+	case "string":
+		return o;
+	default:
+		return String(o);
+	}
+};
+js_Boot.__interfLoop = function(cc,cl) {
+	if(cc == null) return false;
+	if(cc == cl) return true;
+	var intf = cc.__interfaces__;
+	if(intf != null) {
+		var _g1 = 0;
+		var _g = intf.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			var i1 = intf[i];
+			if(i1 == cl || js_Boot.__interfLoop(i1,cl)) return true;
+		}
+	}
+	return js_Boot.__interfLoop(cc.__super__,cl);
+};
+js_Boot.__instanceof = function(o,cl) {
+	if(cl == null) return false;
+	switch(cl) {
+	case Int:
+		return (o|0) === o;
+	case Float:
+		return typeof(o) == "number";
+	case Bool:
+		return typeof(o) == "boolean";
+	case String:
+		return typeof(o) == "string";
+	case Array:
+		return (o instanceof Array) && o.__enum__ == null;
+	case Dynamic:
+		return true;
+	default:
+		if(o != null) {
+			if(typeof(cl) == "function") {
+				if(o instanceof cl) return true;
+				if(js_Boot.__interfLoop(js_Boot.getClass(o),cl)) return true;
+			} else if(typeof(cl) == "object" && js_Boot.__isNativeObj(cl)) {
+				if(o instanceof cl) return true;
+			}
+		} else return false;
+		if(cl == Class && o.__name__ != null) return true;
+		if(cl == Enum && o.__ename__ != null) return true;
+		return o.__enum__ == cl;
+	}
+};
+js_Boot.__cast = function(o,t) {
+	if(js_Boot.__instanceof(o,t)) return o; else throw new js__$Boot_HaxeError("Cannot cast " + Std.string(o) + " to " + Std.string(t));
+};
+js_Boot.__nativeClassName = function(o) {
+	var name = js_Boot.__toStr.call(o).slice(8,-1);
+	if(name == "Object" || name == "Function" || name == "Math" || name == "JSON") return null;
+	return name;
+};
+js_Boot.__isNativeObj = function(o) {
+	return js_Boot.__nativeClassName(o) != null;
+};
+js_Boot.__resolveNativeClass = function(name) {
+	return $global[name];
+};
 var msignal_Signal = function(valueClasses) {
 	if(valueClasses == null) valueClasses = [];
 	this.valueClasses = valueClasses;
@@ -1497,6 +1662,7 @@ msignal_Signal.prototype = {
 	,get_numListeners: function() {
 		return this.slots.get_length();
 	}
+	,__class__: msignal_Signal
 };
 var msignal_Signal0 = function() {
 	msignal_Signal.call(this);
@@ -1516,6 +1682,7 @@ msignal_Signal0.prototype = $extend(msignal_Signal.prototype,{
 		if(once == null) once = false;
 		return new msignal_Slot0(this,listener,once,priority);
 	}
+	,__class__: msignal_Signal0
 });
 var msignal_Signal1 = function(type) {
 	msignal_Signal.call(this,[type]);
@@ -1535,6 +1702,7 @@ msignal_Signal1.prototype = $extend(msignal_Signal.prototype,{
 		if(once == null) once = false;
 		return new msignal_Slot1(this,listener,once,priority);
 	}
+	,__class__: msignal_Signal1
 });
 var msignal_Signal2 = function(type1,type2) {
 	msignal_Signal.call(this,[type1,type2]);
@@ -1554,6 +1722,7 @@ msignal_Signal2.prototype = $extend(msignal_Signal.prototype,{
 		if(once == null) once = false;
 		return new msignal_Slot2(this,listener,once,priority);
 	}
+	,__class__: msignal_Signal2
 });
 var msignal_Slot = function(signal,listener,once,priority) {
 	if(priority == null) priority = 0;
@@ -1573,6 +1742,7 @@ msignal_Slot.prototype = {
 		if(value == null) throw new js__$Boot_HaxeError("listener cannot be null");
 		return this.listener = value;
 	}
+	,__class__: msignal_Slot
 };
 var msignal_Slot0 = function(signal,listener,once,priority) {
 	if(priority == null) priority = 0;
@@ -1587,6 +1757,7 @@ msignal_Slot0.prototype = $extend(msignal_Slot.prototype,{
 		if(this.once) this.remove();
 		this.listener();
 	}
+	,__class__: msignal_Slot0
 });
 var msignal_Slot1 = function(signal,listener,once,priority) {
 	if(priority == null) priority = 0;
@@ -1602,6 +1773,7 @@ msignal_Slot1.prototype = $extend(msignal_Slot.prototype,{
 		if(this.param != null) value1 = this.param;
 		this.listener(value1);
 	}
+	,__class__: msignal_Slot1
 });
 var msignal_Slot2 = function(signal,listener,once,priority) {
 	if(priority == null) priority = 0;
@@ -1618,6 +1790,7 @@ msignal_Slot2.prototype = $extend(msignal_Slot.prototype,{
 		if(this.param2 != null) value2 = this.param2;
 		this.listener(value1,value2);
 	}
+	,__class__: msignal_Slot2
 });
 var msignal_SlotList = function(head,tail) {
 	this.nonEmpty = false;
@@ -1689,23 +1862,33 @@ msignal_SlotList.prototype = {
 		}
 		return null;
 	}
+	,__class__: msignal_SlotList
 };
 var $_, $fid = 0;
 function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id__ = $fid++; var f; if( o.hx__closures__ == null ) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__]; if( f == null ) { f = function(){ return f.method.apply(f.scope, arguments); }; f.scope = o; f.method = m; o.hx__closures__[m.__id__] = f; } return f; }
 if(Array.prototype.indexOf) HxOverrides.indexOf = function(a,o,i) {
 	return Array.prototype.indexOf.call(a,o,i);
 };
+String.prototype.__class__ = String;
 String.__name__ = true;
 Array.__name__ = true;
+Date.prototype.__class__ = Date;
 Date.__name__ = ["Date"];
+var Int = { __name__ : ["Int"]};
 var Dynamic = { __name__ : ["Dynamic"]};
+var Float = Number;
+Float.__name__ = ["Float"];
+var Bool = Boolean;
+Bool.__ename__ = ["Bool"];
+var Class = { __name__ : ["Class"]};
+var Enum = { };
 var __map_reserved = {}
 msignal_SlotList.NIL = new msignal_SlotList(null,null);
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.5.4";
+Waud.version = "0.6.2";
 Waud.useWebAudio = true;
-Waud.defaults = { autoplay : false, loop : false, preload : true, webaudio : true, volume : 1};
+Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1};
 Waud.preferredSampleRate = 44100;
 Waud.isMuted = false;
 WaudFocusManager.FOCUS_STATE = "focus";
@@ -1716,7 +1899,8 @@ WaudFocusManager.PAGE_SHOW = "pageshow";
 WaudFocusManager.PAGE_HIDE = "pagehide";
 WaudFocusManager.WINDOW = "window";
 WaudFocusManager.DOCUMENT = "document";
+js_Boot.__toStr = {}.toString;
 Base64.main();
-})(typeof console != "undefined" ? console : {log:function(){}}, typeof window != "undefined" ? window : exports);
+})(typeof console != "undefined" ? console : {log:function(){}}, typeof window != "undefined" ? window : exports, typeof window != "undefined" ? window : typeof global != "undefined" ? global : typeof self != "undefined" ? self : this);
 
 //# sourceMappingURL=base64.js.map
