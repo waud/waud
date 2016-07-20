@@ -2,7 +2,7 @@
 Web Audio Library with HTML5 audio fallback.
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
-[![haxelib](https://img.shields.io/github/release/adireddy/waud.svg)](http://lib.haxe.org/p/waud/)
+[![haxelib](https://badge.fury.io/gh/adireddy%2Fwaud.svg)](http://lib.haxe.org/p/waud/)
 [![npm version](https://badge.fury.io/js/waud.js.svg)](https://badge.fury.io/js/waud.js)
 [![Build Status](https://travis-ci.org/adireddy/waud.svg?branch=dev)](https://travis-ci.org/adireddy/waud)
 [![Code Climate](https://codeclimate.com/github/adireddy/waud/badges/gpa.svg)](https://codeclimate.com/github/adireddy/waud)
