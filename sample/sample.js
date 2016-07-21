@@ -103,6 +103,9 @@ BaseSound.prototype = {
 	get_duration: function() {
 		return 0;
 	}
+	,isReady: function() {
+		return this._isLoaded;
+	}
 	,__class__: BaseSound
 };
 var Button = function(label,width,height,data,fontSize) {
@@ -1208,6 +1211,16 @@ WaudSound.prototype = {
 		this._snd.load(callback);
 		return this;
 	}
+	,isReady: function() {
+		if(this.isSpriteSound) {
+			var $it0 = this._spriteSounds.iterator();
+			while( $it0.hasNext() ) {
+				var snd = $it0.next();
+				return snd.isReady();
+			}
+		}
+		return this._snd.isReady();
+	}
 	,play: function(spriteName,soundProps) {
 		if(this.isSpriteSound) {
 			if(spriteName != null) {
@@ -2139,7 +2152,7 @@ Perf.INFO_TXT_CLR = "#000000";
 Perf.DELAY_TIME = 4000;
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.6.2";
+Waud.version = "0.6.3";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1};
 Waud.preferredSampleRate = 44100;

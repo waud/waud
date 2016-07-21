@@ -175,7 +175,6 @@ class Main extends Application {
 
 	function _onLoad(snd:IWaudSound) {
 		//trace(snd.url);
-		//trace(snd.duration);
 	}
 
 	function touchUnlock() {
