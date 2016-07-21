@@ -24,8 +24,8 @@
     "contributors": [
 	"adireddy"
     ],
-    "releasenote": "added new autostop option",
-    "version": "0.6.3",
+    "releasenote": "added isReady() method",
+    "version": "0.6.4",
     "url": "https://github.com/adireddy/waud",
     "dependencies": {}
 }

@@ -1,6 +1,6 @@
 {
     "name": "waud.js",
-    "version": "0.6.3",
+    "version": "0.6.4",
     "description": "Web Audio Library",
     "main": "./dist/waud.js",
     "scripts": {
