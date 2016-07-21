@@ -24,5 +24,6 @@ interface IWaudSound {
 	function setVolume(val:Float, ?spriteName:String):Void;
 	function getVolume(?spriteName:String):Float;
 	function isPlaying(?spriteName:String):Bool;
+	function isReady():Bool;
 	function destroy():Void;
 }

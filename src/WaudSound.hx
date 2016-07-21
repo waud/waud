@@ -257,6 +257,21 @@ import haxe.Json;
 	}
 
 	/**
+	* Function to check if the sound is ready to be played.
+	*
+	* @method isReady
+	* @return {Bool} true or false
+	* @example
+	*     snd.isReady();
+	*/
+	public function isReady():Bool {
+		if (isSpriteSound) {
+			for (snd in _spriteSounds) return snd.isReady();
+		}
+		return _snd.isReady();
+	}
+
+	/**
 	* Function to play the sound with optional sprite name when using audio sprite.
 	*
 	* @method play

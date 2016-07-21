@@ -45,4 +45,8 @@
 	function get_duration():Float {
 		return 0;
 	}
+
+	public function isReady():Bool {
+		return _isLoaded;
+	}
 }
