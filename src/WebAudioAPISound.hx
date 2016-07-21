@@ -108,13 +108,12 @@ import js.html.audio.AudioBuffer;
 
 	public function play(?sprite:String, ?soundProps:AudioSpriteSoundProperties):Int {
 		spriteName = sprite;
-		if (_isPlaying) stop(spriteName);
+		if (_isPlaying && _options.autostop) stop(spriteName);
 		if (!_isLoaded) {
 			trace("sound not loaded");
 			return -1;
 		}
 
-		//if (_muted) return -1;
 		var start:Float = 0;
 		var end:Float = -1;
 		if (isSpriteSound && soundProps != null) {

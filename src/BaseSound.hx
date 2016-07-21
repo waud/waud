@@ -30,6 +30,7 @@
 		if (options == null) options = {};
 
 		options.autoplay = (options.autoplay != null) ? options.autoplay : Waud.defaults.autoplay;
+		options.autostop = (options.autostop != null) ? options.autostop : Waud.defaults.autostop;
 		options.webaudio = (options.webaudio != null) ? options.webaudio : Waud.defaults.webaudio;
 		options.preload = (options.preload != null) ? options.preload : Waud.defaults.preload;
 		options.loop = (options.loop != null) ? options.loop : Waud.defaults.loop;
@@ -43,5 +44,9 @@
 
 	function get_duration():Float {
 		return 0;
+	}
+
+	public function isReady():Bool {
+		return _isLoaded;
 	}
 }

@@ -13,6 +13,14 @@ typedef WaudSoundOptions = {
 	@:optional var autoplay:Bool;
 
 	/**
+	* Auto stop sound when `play` method is called on the sound when it's already playing
+	* @property autostop
+	* @type {Bool}
+	* @default true
+	*/
+	@:optional var autostop:Bool;
+
+	/**
 	* Loop sound.
 	* @property loop
 	* @type {Bool}

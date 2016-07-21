@@ -10,7 +10,7 @@ import js.html.XMLHttpRequest;
 	var _loadCount:Int;
 
 	/**
-	* Class to load multiple Base64 packed sounds in JSON.
+	* Class to load multiple base64 packed sounds from JSON.
 	*
 	* @class WaudBase64Pack
 	* @constructor

@@ -70,6 +70,11 @@ import haxe.Json;
 	* 		// Force HTML5 Audio
 	* 		var snd = new WaudSound("assets/loop.mp3", { webaudio: false });
 	*
+	* 		// Data URI
+	* 		// Note that the data URI used below is a sample string and not a valid sound
+	* 		var base64Snd = new WaudSound("data:audio/mpeg;base64,//uQxAAAAAAAAAAAAASW5mbwAAAA8AAABEAABwpgADBwsLDxISF");
+	* 		base64Snd.play();
+	*
 	* 		// Audio Sprite
 	* 		var audSprite = new WaudSound("assets/sprite.json");
 	* 		audSprite.play("glass");
@@ -249,6 +254,21 @@ import haxe.Json;
 		if (_snd == null || isSpriteSound) return null;
 		_snd.load(callback);
 		return this;
+	}
+
+	/**
+	* Function to check if the sound is ready to be played.
+	*
+	* @method isReady
+	* @return {Bool} true or false
+	* @example
+	*     snd.isReady();
+	*/
+	public function isReady():Bool {
+		if (isSpriteSound) {
+			for (snd in _spriteSounds) return snd.isReady();
+		}
+		return _snd.isReady();
 	}
 
 	/**

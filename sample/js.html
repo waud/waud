@@ -39,24 +39,29 @@
     <br />
     <br />
     <div id="ua" class="mui--text-title">MP3</div>
-    <button class="mui-btn mui-btn--small mui-btn--raised mui-btn--primary" onclick="playGlassSound('mp3');">Glass</button>
-    <button class="mui-btn mui-btn--small mui-btn--raised mui-btn--danger" onclick="playBellSound('mp3');">Bell</button>
-    <button class="mui-btn mui-btn--small mui-btn--raised mui-btn--accent" onclick="playCanSound('mp3');">Can</button>
+    <button class="mui-btn mui-btn--small mui-btn--raised mui-btn--primary" onmousedown="playGlassSound('mp3');">Glass</button>
+    <button class="mui-btn mui-btn--small mui-btn--raised mui-btn--danger" onmousedown="playBellSound('mp3');">Bell</button>
+    <button class="mui-btn mui-btn--small mui-btn--raised mui-btn--accent" onmousedown="playCanSound('mp3');">Can</button>
     <br />
     <div id="ua" class="mui--text-title">AAC</div>
-    <button class="mui-btn mui-btn--small mui-btn--raised mui-btn--primary" onclick="playGlassSound('aac');">Glass</button>
-    <button class="mui-btn mui-btn--small mui-btn--raised mui-btn--danger" onclick="playBellSound('aac');">Bell</button>
-    <button class="mui-btn mui-btn--small mui-btn--raised mui-btn--accent" onclick="playCanSound('aac');">Can</button>
+    <button class="mui-btn mui-btn--small mui-btn--raised mui-btn--primary" onmousedown="playGlassSound('aac');">Glass</button>
+    <button class="mui-btn mui-btn--small mui-btn--raised mui-btn--danger" onmousedown="playBellSound('aac');">Bell</button>
+    <button class="mui-btn mui-btn--small mui-btn--raised mui-btn--accent" onmousedown="playCanSound('aac');">Can</button>
     <br />
     <div id="ua" class="mui--text-title">OGG</div>
-    <button class="mui-btn mui-btn--small mui-btn--raised mui-btn--primary" onclick="playGlassSound('ogg');">Glass</button>
-    <button class="mui-btn mui-btn--small mui-btn--raised mui-btn--danger" onclick="playBellSound('ogg');">Bell</button>
-    <button class="mui-btn mui-btn--small mui-btn--raised mui-btn--accent" onclick="playCanSound('ogg');">Can</button>
+    <button class="mui-btn mui-btn--small mui-btn--raised mui-btn--primary" onmousedown="playGlassSound('ogg');">Glass</button>
+    <button class="mui-btn mui-btn--small mui-btn--raised mui-btn--danger" onmousedown="playBellSound('ogg');">Bell</button>
+    <button class="mui-btn mui-btn--small mui-btn--raised mui-btn--accent" onmousedown="playCanSound('ogg');">Can</button>
     <br />
     <div id="ua" class="mui--text-title">SPRITE</div>
     <button class="mui-btn mui-btn--small mui-btn--raised mui-btn--primary" onclick="playGlassSound('sprite');">Glass</button>
     <button class="mui-btn mui-btn--small mui-btn--raised mui-btn--danger" onclick="playBellSound('sprite');">Bell</button>
     <button class="mui-btn mui-btn--small mui-btn--raised mui-btn--accent" onclick="playCanSound('sprite');">Can</button>
+    <br />
+    <div id="ua" class="mui--text-title">BASE 64</div>
+    <button class="mui-btn mui-btn--small mui-btn--raised mui-btn--primary" onclick="playBase64Sound('test/beep.mp3');">Beep</button>
+    <button class="mui-btn mui-btn--small mui-btn--raised mui-btn--danger" onclick="playBase64Sound('test/countdown.mp3');">Countdown</button>
+    <button class="mui-btn mui-btn--small mui-btn--raised mui-btn--accent" onclick="playBase64Sound('test/funk100.mp3');">Funk</button>
     <br />
     <br />
     <div id="ua" class="mui--text-title">CONTROLS</div>
@@ -86,6 +91,9 @@
 
     var _audSprite;
 
+    var _base64snds;
+    var _base64pack;
+
     function init() {
         Waud.init();
         Waud.autoMute();
@@ -114,6 +122,16 @@
         _canOGG = new WaudSound("assets/canopening.ogg");
 
         _audSprite = new WaudSound("assets/sprite.json");
+
+        _base64pack = new WaudBase64Pack("assets/sounds.json", _onLoad);
+    }
+
+    function _onLoad(snds) {
+        _base64snds = snds;
+    }
+
+    function playBase64Sound(id) {
+        _base64snds.get(id).play();
     }
 
     function playGlassSound(type) {

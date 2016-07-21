@@ -20,7 +20,7 @@ import js.Browser;
 	* @static
 	* @type {String}
 	*/
-	public static var version:String = "0.6.2";
+	public static var version:String = "0.6.3";
 
 	/**
 	* Tells whether to use web audio api or not.
@@ -74,6 +74,7 @@ import js.Browser;
 	*/
 	public static var defaults:WaudSoundOptions = {
 		autoplay: false,
+		autostop: true,
 		loop: false,
 		preload: true,
 		webaudio: true,
