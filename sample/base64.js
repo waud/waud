@@ -183,6 +183,7 @@ var Base64 = function() {
 	Waud.autoMute();
 	Waud.enableTouchUnlock($bind(this,this.touchUnlock));
 	this._snd = new WaudBase64Pack("assets/sounds.json",$bind(this,this._onLoad));
+	this._bsnd = new WaudBase64Pack("assets/bsounds.json",$bind(this,this._onBLoad));
 	this._resize();
 };
 Base64.__name__ = true;
@@ -198,6 +199,9 @@ Base64.prototype = $extend(pixi_plugins_app_Application.prototype,{
 		this._canopening = __map_reserved["test/canopening.mp3"] != null?snds.getReserved("test/canopening.mp3"):snds.h["test/canopening.mp3"];
 		this._countdown = __map_reserved["test/countdown.mp3"] != null?snds.getReserved("test/countdown.mp3"):snds.h["test/countdown.mp3"];
 		this._funk100 = __map_reserved["test/funk100.mp3"] != null?snds.getReserved("test/funk100.mp3"):snds.h["test/funk100.mp3"];
+	}
+	,_onBLoad: function(snds) {
+		(__map_reserved["test/audio/ballCalls/1.mp3"] != null?snds.getReserved("test/audio/ballCalls/1.mp3"):snds.h["test/audio/ballCalls/1.mp3"]).play();
 	}
 	,touchUnlock: function() {
 	}
@@ -1899,7 +1903,7 @@ var __map_reserved = {}
 msignal_SlotList.NIL = new msignal_SlotList(null,null);
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.6.3";
+Waud.version = "0.6.4";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1};
 Waud.preferredSampleRate = 44100;
