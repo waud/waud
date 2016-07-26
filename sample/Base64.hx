@@ -12,6 +12,7 @@ class Base64 extends Application {
 	var _snd:WaudBase64Pack;
 	var _bsnd:WaudBase64Pack;
 	var _base64sounds:Text;
+	var _progress:Text;
 	var _beep:IWaudSound;
 	var _bell:IWaudSound;
 	var _glass:IWaudSound;
@@ -40,13 +41,25 @@ class Base64 extends Application {
 		_addButton("Countdown", 320, 40, 80, 30, function() { _countdown.play(); });
 		_addButton("Funk", 400, 40, 80, 30, function() { _funk100.play(); });
 
+		_progress = new Text("", { font: "20px Tahoma", fill:"#FFFFFF" });
+		stage.addChild(_progress);
+
 		Waud.init();
 		Waud.autoMute();
 		Waud.enableTouchUnlock(touchUnlock);
-		_snd = new WaudBase64Pack("assets/sounds.json", _onLoad);
-		_bsnd = new WaudBase64Pack("assets/bsounds.json", _onBLoad);
+		_snd = new WaudBase64Pack("assets/sounds.json", _onLoad, _onProgress);
+		_bsnd = new WaudBase64Pack("assets/bsounds.json", _onBLoad, _onBProgress);
 
 		_resize();
+	}
+
+	function _onProgress(val:Float) {
+		_progress.text = "Progress: " + Math.floor(val) + "%";
+		trace("assets/sounds.json: " + val);
+	}
+
+	function _onBProgress(val:Float) {
+		trace("assets/bsounds.json: " + val);
 	}
 
 	function _onLoad(snds:Map<String, IWaudSound>) {

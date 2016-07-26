@@ -179,11 +179,13 @@ var Base64 = function() {
 	this._addButton("Funk",400,40,80,30,function() {
 		_g._funk100.play();
 	});
+	this._progress = new PIXI.Text("",{ font : "20px Tahoma", fill : "#FFFFFF"});
+	this.stage.addChild(this._progress);
 	Waud.init();
 	Waud.autoMute();
 	Waud.enableTouchUnlock($bind(this,this.touchUnlock));
-	this._snd = new WaudBase64Pack("assets/sounds.json",$bind(this,this._onLoad));
-	this._bsnd = new WaudBase64Pack("assets/bsounds.json",$bind(this,this._onBLoad));
+	this._snd = new WaudBase64Pack("assets/sounds.json",$bind(this,this._onLoad),$bind(this,this._onProgress));
+	this._bsnd = new WaudBase64Pack("assets/bsounds.json",$bind(this,this._onBLoad),$bind(this,this._onBProgress));
 	this._resize();
 };
 Base64.__name__ = true;
@@ -192,7 +194,14 @@ Base64.main = function() {
 };
 Base64.__super__ = pixi_plugins_app_Application;
 Base64.prototype = $extend(pixi_plugins_app_Application.prototype,{
-	_onLoad: function(snds) {
+	_onProgress: function(val) {
+		this._progress.text = "Progress: " + Math.floor(val) + "%";
+		console.log("assets/sounds.json: " + val);
+	}
+	,_onBProgress: function(val) {
+		console.log("assets/bsounds.json: " + val);
+	}
+	,_onLoad: function(snds) {
 		this._beep = __map_reserved["test/beep.mp3"] != null?snds.getReserved("test/beep.mp3"):snds.h["test/beep.mp3"];
 		this._bell = __map_reserved["test/bell.mp3"] != null?snds.getReserved("test/bell.mp3"):snds.h["test/bell.mp3"];
 		this._glass = __map_reserved["test/glass.mp3"] != null?snds.getReserved("test/glass.mp3"):snds.h["test/glass.mp3"];
@@ -201,7 +210,6 @@ Base64.prototype = $extend(pixi_plugins_app_Application.prototype,{
 		this._funk100 = __map_reserved["test/funk100.mp3"] != null?snds.getReserved("test/funk100.mp3"):snds.h["test/funk100.mp3"];
 	}
 	,_onBLoad: function(snds) {
-		(__map_reserved["test/audio/ballCalls/1.mp3"] != null?snds.getReserved("test/audio/ballCalls/1.mp3"):snds.h["test/audio/ballCalls/1.mp3"]).play();
 	}
 	,touchUnlock: function() {
 	}
@@ -736,15 +744,17 @@ Waud.destroy = function() {
 		Waud._focusManager.focus = null;
 	}
 };
-var WaudBase64Pack = $hx_exports.WaudBase64Pack = function(url,onLoaded,onError) {
+var WaudBase64Pack = $hx_exports.WaudBase64Pack = function(url,onLoaded,onProgress,onError) {
 	if(Waud.audioManager == null) {
 		console.log("initialise Waud using Waud.init() before loading sounds");
 		return;
 	}
 	if(url.indexOf(".json") > 0) {
+		this.progress = 0;
 		this._soundCount = 0;
 		this._loadCount = 0;
 		this._onLoaded = onLoaded;
+		this._onProgress = onProgress;
 		this._onError = onError;
 		this._sounds = new haxe_ds_StringMap();
 		this._loadBase64Json(url);
@@ -753,19 +763,22 @@ var WaudBase64Pack = $hx_exports.WaudBase64Pack = function(url,onLoaded,onError)
 WaudBase64Pack.__name__ = true;
 WaudBase64Pack.prototype = {
 	_loadBase64Json: function(base64Url) {
-		var _g2 = this;
+		var _g = this;
 		var xobj = new XMLHttpRequest();
 		xobj.open("GET",base64Url,true);
+		if(this._onProgress != null) xobj.onprogress = function(e) {
+			if(e.loaded != null && e.total != null) _g._onProgress(e.loaded / e.total * 100);
+		};
 		xobj.onreadystatechange = function() {
 			if(xobj.readyState == 4 && xobj.status == 200) {
 				var res = JSON.parse(xobj.responseText);
-				var _g = 0;
-				var _g1 = Reflect.fields(res);
-				while(_g < _g1.length) {
-					var n = _g1[_g];
-					++_g;
-					_g2._soundCount++;
-					_g2._createSound(n,Reflect.field(res,n));
+				var _g1 = 0;
+				var _g11 = Reflect.fields(res);
+				while(_g1 < _g11.length) {
+					var n = _g11[_g1];
+					++_g1;
+					_g._soundCount++;
+					_g._createSound(n,Reflect.field(res,n));
 				}
 			}
 		};
