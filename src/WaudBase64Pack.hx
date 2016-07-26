@@ -19,12 +19,21 @@ import js.html.XMLHttpRequest;
 	* @constructor
 	* @param {String} url - Base64 packed JSON file.
 	* @param {IWaudSound> -> Void} [onLoaded] - on load callback.
+	* @param {Float -> Void} [onProgress] - on progress callback.
 	* @param {Void> -> Void} [onError] - on error callback.
 	* @example
-	* 		var base64pack = new WaudBase64Pack("assets/sounds.json", _onLoad);
+	* 		var base64pack = new WaudBase64Pack("assets/sounds.json", _onLoad, _onProgress, _onError);
 	*
 	* 		function _onLoad(snds:Map<String, IWaudSound>) {
 	* 			snds.get("assets/beep.mp3").play();
+	* 		}
+	*
+	* 		function _onProgress(val:Float) {
+	* 			trace("loaded %: " + val);
+	* 		}
+	*
+	* 		function _onError() {
+	* 			trace("error loading base64 json file");
 	* 		}
 	*/
 	public function new(url:String, ?onLoaded:Map<String, IWaudSound> -> Void, ?onProgress:Float -> Void, ?onError:Void -> Void) {
