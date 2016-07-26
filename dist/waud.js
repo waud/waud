@@ -500,15 +500,17 @@ Waud.destroy = function() {
 		Waud._focusManager.focus = null;
 	}
 };
-var WaudBase64Pack = $hx_exports.WaudBase64Pack = function(url,onLoaded,onError) {
+var WaudBase64Pack = $hx_exports.WaudBase64Pack = function(url,onLoaded,onProgress,onError) {
 	if(Waud.audioManager == null) {
 		console.log("initialise Waud using Waud.init() before loading sounds");
 		return;
 	}
 	if(url.indexOf(".json") > 0) {
+		this.progress = 0;
 		this._soundCount = 0;
 		this._loadCount = 0;
 		this._onLoaded = onLoaded;
+		this._onProgress = onProgress;
 		this._onError = onError;
 		this._sounds = new haxe_ds_StringMap();
 		this._loadBase64Json(url);
@@ -517,19 +519,22 @@ var WaudBase64Pack = $hx_exports.WaudBase64Pack = function(url,onLoaded,onError)
 WaudBase64Pack.__name__ = true;
 WaudBase64Pack.prototype = {
 	_loadBase64Json: function(base64Url) {
-		var _g2 = this;
+		var _g = this;
 		var xobj = new XMLHttpRequest();
 		xobj.open("GET",base64Url,true);
+		if(this._onProgress != null) xobj.onprogress = function(e) {
+			if(e.loaded != null && e.total != null) _g._onProgress(e.loaded / e.total * 100);
+		};
 		xobj.onreadystatechange = function() {
 			if(xobj.readyState == 4 && xobj.status == 200) {
 				var res = JSON.parse(xobj.responseText);
-				var _g = 0;
-				var _g1 = Reflect.fields(res);
-				while(_g < _g1.length) {
-					var n = _g1[_g];
-					++_g;
-					_g2._soundCount++;
-					_g2._createSound(n,Reflect.field(res,n));
+				var _g1 = 0;
+				var _g11 = Reflect.fields(res);
+				while(_g1 < _g11.length) {
+					var n = _g11[_g1];
+					++_g1;
+					_g._soundCount++;
+					_g._createSound(n,Reflect.field(res,n));
 				}
 			}
 		};
@@ -1407,7 +1412,7 @@ var Enum = { };
 var __map_reserved = {}
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.6.3";
+Waud.version = "0.6.4";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1};
 Waud.preferredSampleRate = 44100;
