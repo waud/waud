@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Waud Base 64 Example</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+
+    <style>
+        button:focus, input:focus, textarea:focus {
+            outline: none;
+        }
+    </style>
+
+    <script src="waud.min.js"></script>
+</head>
+<body>
+<div id="wrap">
+    <div class="container">
+        <div class="page-header">
+            <h3>Waud Base 64 Example</h3>
+        </div>
+        <div class="row-fluid" align="center">
+            <div class="span12">
+                <label id="progress"></label>
+            </div>
+            <div class="span12">
+                <div class="btn-group">
+                    <button class="btn-danger" onmousedown="_playSound('beep')">Beep</button>
+                    <button class="btn-primary" onmousedown="_playSound('bell')">Bell</button>
+                    <button class="btn-success" onmousedown="_playSound('glass')">Glass</button>
+                    <button class="btn-warning" onmousedown="_playSound('canopening')">Can</button>
+                    <button class="btn-info" onmousedown="_playSound('countdown')">Countdown</button>
+                    <button class="btn-inverse" onmousedown="_playSound('funk100')">Funk</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="push"></div>
+</div>
+
+<div id="footer">
+    <div class="container">
+        <p class="muted credit"></p>
+    </div>
+</div>
+
+<script>
+    var _snd;
+    var _snds;
+
+    Waud.init();
+    Waud.autoMute();
+    Waud.enableTouchUnlock(touchUnlock);
+    _snd = new WaudBase64Pack("assets/sounds.json", _onLoad, _onProgress);
+
+    function touchUnlock() {}
+
+    function _onProgress(val) {
+        document.getElementById("progress").innerText = "Progress: " + Math.floor(val) + "%";
+        console.log("assets/sounds.json: " + val);
+    }
+
+    function _onLoad(snds) {
+        _snds = snds;
+    }
+
+    function _playSound(snd) {
+        _snds.get("test/" + snd + ".mp3").play();
+    }
+</script>
+
+<script src="http://code.jquery.com/jquery.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+</body>
+</html>
