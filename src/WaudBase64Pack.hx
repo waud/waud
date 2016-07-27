@@ -68,14 +68,14 @@ import js.html.XMLHttpRequest;
 		var xobj = new XMLHttpRequest();
 		xobj.open("GET", base64Url, true);
 
-		if (_onProgress != null) {
+		if (_onProgress != null && xobj.onprogress != null) {
 			xobj.onprogress = function(e:Dynamic) {
 				var meta = m.match(xobj.responseText);
 				if (meta && _totalSize == 0) {
 					var metaInfo = Json.parse("{" + m.matched(0) + "}");
 					_totalSize = metaInfo.meta[1];
 				}
-				var progress = e.lengthComputable ? (e.loaded / e.total) * 100 : (e.loaded / _totalSize) * 100;
+				progress = e.lengthComputable ? (e.loaded / e.total) * 100 : (e.loaded / _totalSize) * 100;
 				if (progress > 100) progress = 100;
 				 _onProgress(progress);
 			};
@@ -120,6 +120,10 @@ import js.html.XMLHttpRequest;
 		_loadCount++;
 		if (_loadCount == _soundCount) {
 			if (_onLoaded != null) _onLoaded(_sounds);
+			if (progress == 0 && _onProgress != null) {
+				progress = 100;
+				_onProgress(progress);
+			}
 			return true;
 		}
 		return false;
