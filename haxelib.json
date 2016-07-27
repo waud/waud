@@ -24,8 +24,8 @@
     "contributors": [
 	"adireddy"
     ],
-    "releasenote": "added onProgress callback to WaudBase64Pack class",
-    "version": "0.6.5",
+    "releasenote": "onProgress callback updates",
+    "version": "0.6.6",
     "url": "https://github.com/adireddy/waud",
     "dependencies": {}
 }

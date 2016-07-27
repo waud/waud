@@ -185,7 +185,6 @@ var Base64 = function() {
 	Waud.autoMute();
 	Waud.enableTouchUnlock($bind(this,this.touchUnlock));
 	this._snd = new WaudBase64Pack("assets/sounds.json",$bind(this,this._onLoad),$bind(this,this._onProgress));
-	this._bsnd = new WaudBase64Pack("assets/bsounds.json",$bind(this,this._onBLoad),$bind(this,this._onBProgress));
 	this._resize();
 };
 Base64.__name__ = true;
@@ -198,9 +197,6 @@ Base64.prototype = $extend(pixi_plugins_app_Application.prototype,{
 		this._progress.text = "Progress: " + Math.floor(val) + "%";
 		console.log("assets/sounds.json: " + val);
 	}
-	,_onBProgress: function(val) {
-		console.log("assets/bsounds.json: " + val);
-	}
 	,_onLoad: function(snds) {
 		this._beep = __map_reserved["test/beep.mp3"] != null?snds.getReserved("test/beep.mp3"):snds.h["test/beep.mp3"];
 		this._bell = __map_reserved["test/bell.mp3"] != null?snds.getReserved("test/bell.mp3"):snds.h["test/bell.mp3"];
@@ -208,8 +204,6 @@ Base64.prototype = $extend(pixi_plugins_app_Application.prototype,{
 		this._canopening = __map_reserved["test/canopening.mp3"] != null?snds.getReserved("test/canopening.mp3"):snds.h["test/canopening.mp3"];
 		this._countdown = __map_reserved["test/countdown.mp3"] != null?snds.getReserved("test/countdown.mp3"):snds.h["test/countdown.mp3"];
 		this._funk100 = __map_reserved["test/funk100.mp3"] != null?snds.getReserved("test/funk100.mp3"):snds.h["test/funk100.mp3"];
-	}
-	,_onBLoad: function(snds) {
 	}
 	,touchUnlock: function() {
 	}
@@ -751,6 +745,7 @@ var WaudBase64Pack = $hx_exports.WaudBase64Pack = function(url,onLoaded,onProgre
 	}
 	if(url.indexOf(".json") > 0) {
 		this.progress = 0;
+		this._totalSize = 0;
 		this._soundCount = 0;
 		this._loadCount = 0;
 		this._onLoaded = onLoaded;
@@ -764,10 +759,19 @@ WaudBase64Pack.__name__ = true;
 WaudBase64Pack.prototype = {
 	_loadBase64Json: function(base64Url) {
 		var _g = this;
+		var m = new EReg("\"meta\":.[0-9]*,[0-9]*.","i");
 		var xobj = new XMLHttpRequest();
 		xobj.open("GET",base64Url,true);
 		if(this._onProgress != null) xobj.onprogress = function(e) {
-			if(e.loaded != null && e.total != null) _g._onProgress(e.loaded / e.total * 100);
+			var meta = m.match(xobj.responseText);
+			if(meta && _g._totalSize == 0) {
+				var metaInfo = JSON.parse("{" + m.matched(0) + "}");
+				_g._totalSize = metaInfo.meta[1];
+			}
+			var progress;
+			if(e.lengthComputable) progress = e.loaded / e.total * 100; else progress = e.loaded / _g._totalSize * 100;
+			if(progress > 100) progress = 100;
+			_g._onProgress(progress);
 		};
 		xobj.onreadystatechange = function() {
 			if(xobj.readyState == 4 && xobj.status == 200) {
@@ -777,6 +781,7 @@ WaudBase64Pack.prototype = {
 				while(_g1 < _g11.length) {
 					var n = _g11[_g1];
 					++_g1;
+					if(n == "meta") continue;
 					_g._soundCount++;
 					_g._createSound(n,Reflect.field(res,n));
 				}
@@ -787,18 +792,21 @@ WaudBase64Pack.prototype = {
 	,_createSound: function(id,dataURI) {
 		var _g = this;
 		var snd = new WaudSound(dataURI,{ onload : function(s) {
-			_g._loadCount++;
 			_g._sounds.set(id,s);
 			Waud.sounds.set(id,s);
-			if(_g._loadCount == _g._soundCount && _g._onLoaded != null) _g._onLoaded(_g._sounds);
+			_g._checkProgress();
 		}, onerror : function(s1) {
-			_g._loadCount++;
 			_g._sounds.set(id,null);
-			if(_g._loadCount == _g._soundCount && _g._onLoaded != null) {
-				_g._onLoaded(_g._sounds);
-				if(_g._onError != null) _g._onError();
-			}
+			if(_g._checkProgress() && _g._onError != null) _g._onError();
 		}});
+	}
+	,_checkProgress: function() {
+		this._loadCount++;
+		if(this._loadCount == this._soundCount) {
+			if(this._onLoaded != null) this._onLoaded(this._sounds);
+			return true;
+		}
+		return false;
 	}
 	,__class__: WaudBase64Pack
 };
@@ -1916,7 +1924,7 @@ var __map_reserved = {}
 msignal_SlotList.NIL = new msignal_SlotList(null,null);
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.6.4";
+Waud.version = "0.6.6";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1};
 Waud.preferredSampleRate = 44100;
