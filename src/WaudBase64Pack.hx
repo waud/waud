@@ -11,6 +11,7 @@ import js.html.XMLHttpRequest;
 	var _onProgress:Float -> Void;
 	var _soundCount:Int;
 	var _loadCount:Int;
+	var _totalSize:Float;
 
 	/**
 	* Class to load multiple base64 packed sounds from JSON.
@@ -44,6 +45,7 @@ import js.html.XMLHttpRequest;
 
 		if (url.indexOf(".json") > 0) {
 			progress = 0;
+			_totalSize = 0;
 			_soundCount = 0;
 			_loadCount = 0;
 			_onLoaded = onLoaded;
@@ -62,12 +64,20 @@ import js.html.XMLHttpRequest;
 	* @param {String} url - Base64 JSON path.
 	*/
 	function _loadBase64Json(base64Url:String) {
+		var m:EReg = ~/"meta":.[0-9]*,[0-9]*./i;
 		var xobj = new XMLHttpRequest();
 		xobj.open("GET", base64Url, true);
 
 		if (_onProgress != null) {
 			xobj.onprogress = function(e:Dynamic) {
-				if (e.loaded != null && e.total != null) _onProgress((e.loaded / e.total) * 100);
+				var meta = m.match(xobj.responseText);
+				if (meta && _totalSize == 0) {
+					var metaInfo = Json.parse("{" + m.matched(0) + "}");
+					_totalSize = metaInfo.meta[1];
+				}
+				var progress = e.lengthComputable ? (e.loaded / e.total) * 100 : (e.loaded / _totalSize) * 100;
+				if (progress > 100) progress = 100;
+				 _onProgress(progress);
 			};
 		}
 
@@ -75,6 +85,7 @@ import js.html.XMLHttpRequest;
 			if (xobj.readyState == 4 && xobj.status == 200) {
 				var res = Json.parse(xobj.responseText);
 				for (n in Reflect.fields(res)) {
+					if (n == "meta") continue;
 					_soundCount++;
 					_createSound(n, Reflect.field(res, n));
 				}
@@ -94,19 +105,23 @@ import js.html.XMLHttpRequest;
 	function _createSound(id:String, dataURI:String) {
 		var snd = new WaudSound(dataURI, {
 			onload:function(s:IWaudSound) {
-				_loadCount++;
 				_sounds.set(id, s);
 				Waud.sounds.set(id, s);
-				if (_loadCount == _soundCount && _onLoaded != null) _onLoaded(_sounds);
+				_checkProgress();
 			},
 			onerror:function(s:IWaudSound) {
-				_loadCount++;
 				_sounds.set(id, null);
-				if (_loadCount == _soundCount && _onLoaded != null) {
-					_onLoaded(_sounds);
-					if (_onError != null) _onError();
-				}
+				if (_checkProgress() && _onError != null) _onError();
 			}
 		});
+	}
+
+	function _checkProgress():Bool {
+		_loadCount++;
+		if (_loadCount == _soundCount) {
+			if (_onLoaded != null) _onLoaded(_sounds);
+			return true;
+		}
+		return false;
 	}
 }
