@@ -24,8 +24,8 @@
     "contributors": [
 	"adireddy"
     ],
-    "releasenote": "added onProgress callback to WaudBase64Pack class",
-    "version": "0.6.5",
+    "releasenote": "fixed onProgress callback on IE 9",
+    "version": "0.6.7",
     "url": "https://github.com/adireddy/waud",
     "dependencies": {}
 }
