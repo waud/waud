@@ -762,16 +762,15 @@ WaudBase64Pack.prototype = {
 		var m = new EReg("\"meta\":.[0-9]*,[0-9]*.","i");
 		var xobj = new XMLHttpRequest();
 		xobj.open("GET",base64Url,true);
-		if(this._onProgress != null) xobj.onprogress = function(e) {
+		if(this._onProgress != null && xobj.onprogress != null) xobj.onprogress = function(e) {
 			var meta = m.match(xobj.responseText);
 			if(meta && _g._totalSize == 0) {
 				var metaInfo = JSON.parse("{" + m.matched(0) + "}");
 				_g._totalSize = metaInfo.meta[1];
 			}
-			var progress;
-			if(e.lengthComputable) progress = e.loaded / e.total * 100; else progress = e.loaded / _g._totalSize * 100;
-			if(progress > 100) progress = 100;
-			_g._onProgress(progress);
+			if(e.lengthComputable) _g.progress = e.loaded / e.total * 100; else _g.progress = e.loaded / _g._totalSize * 100;
+			if(_g.progress > 100) _g.progress = 100;
+			_g._onProgress(_g.progress);
 		};
 		xobj.onreadystatechange = function() {
 			if(xobj.readyState == 4 && xobj.status == 200) {
@@ -804,6 +803,10 @@ WaudBase64Pack.prototype = {
 		this._loadCount++;
 		if(this._loadCount == this._soundCount) {
 			if(this._onLoaded != null) this._onLoaded(this._sounds);
+			if(this.progress == 0 && this._onProgress != null) {
+				this.progress = 100;
+				this._onProgress(this.progress);
+			}
 			return true;
 		}
 		return false;
@@ -1924,7 +1927,7 @@ var __map_reserved = {}
 msignal_SlotList.NIL = new msignal_SlotList(null,null);
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.6.6";
+Waud.version = "0.6.7";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1};
 Waud.preferredSampleRate = 44100;
