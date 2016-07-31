@@ -1,4 +1,4 @@
-# ![waud logo](https://raw.githubusercontent.com/adireddy/waud/dev/logo.png)
+# ![waud logo](http://adireddy.github.io/waud/images/logo/logo.png)
 Web Audio Library with HTML5 audio fallback.
 
 [![npm version](https://badge.fury.io/js/waud.js.svg)](https://badge.fury.io/js/waud.js)
