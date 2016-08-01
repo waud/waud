@@ -6,11 +6,9 @@ Web Audio Library with HTML5 audio fallback.
 [![Code Climate](https://codeclimate.com/github/adireddy/waud/badges/gpa.svg)](https://codeclimate.com/github/adireddy/waud)
 [![Issue Count](https://codeclimate.com/github/adireddy/waud/badges/issue_count.svg)](https://codeclimate.com/github/adireddy/waud/issues)
 
-[![NPM](https://nodei.co/npm/waud.js.png?downloads=true&downloadRank=true)](https://www.npmjs.com/package/waud.js/)
-
 ### Installation
 
-`npm install waud.js`
+[![NPM](https://nodei.co/npm/waud.js.png?downloads=true&downloadRank=true)](https://www.npmjs.com/package/waud.js/)
 
 For haxe users:
 
