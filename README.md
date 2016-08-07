@@ -14,7 +14,7 @@ For haxe users:
 
 `haxelib install waud`
 
-### [API Documentation](http://adireddy.github.io/docs/waud/)
+### [API Documentation](http://waud.github.io/docs/)
 
 ### Example
 
@@ -65,13 +65,13 @@ Browser & Mobile Device Testing provided by:
 
 ### Issues
 
-Found any bug? Please create a new [issue](https://github.com/adireddy/waud/issues/new).
+Found any bug? Please create a new [issue](https://github.com/waud/waud/issues/new).
 
 ### Demo
 
-- [JavaScript](http://adireddy.github.io/demos/waud/js.html)
-- [Haxe](http://adireddy.github.io/demos/waud/)
-- [Base64](http://adireddy.github.io/demos/waud/base64.html)
+- [JavaScript](http://waud.github.io/sample/js.html)
+- [Haxe](http://waud.github.io/sample/)
+- [Base64](http://waud.github.io/sample/base64.html)
 
 ### Usage
 
@@ -105,7 +105,7 @@ function playBgSound(snd) {
 ### Tips
 
 - It is recommended to use same **sample rate** for all the audio files. Playing different **sample rate** files can cause issues on some devices.
-- By default, **Waud** uses **44100** sample rate. If your audio files have a different sample rate then specify it using [**`Waud.preferredSampleRate`**](http://adireddy.github.io/docs/waud/classes/Waud.html#property_preferredSampleRate) property.
+- By default, **Waud** uses **44100** sample rate. If your audio files have a different sample rate then specify it using [**`Waud.preferredSampleRate`**](http://waud.github.io/docs/classes/Waud.html#property_preferredSampleRate) property.
 
 ### Licensing Information
 
