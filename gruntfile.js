@@ -35,7 +35,7 @@ module.exports = function (grunt) {
                 command: "mkdir npm-publish || true && cp -r src dist package.json LICENSE README.md ./npm-publish/ && npm publish ./npm-publish/ && rm -r npm-publish"
             },
             samples: {
-                command: "cp ./dist/waud.min.js sample/ && cp -r ./sample/ ../adireddy.github.io/demos/waud/"
+                command: "cp ./dist/waud.min.js sample/ && cp -r ./sample/ ../waud.github.io/sample/"
             }
         },
 
