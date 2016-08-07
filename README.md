@@ -1,10 +1,10 @@
-# <img class="logo" width="280" height="60" src="http://adireddy.github.io/waud/images/logo/logo.png" alt="Waud"/>
+# <img class="logo" width="280" height="60" src="http://waud.github.io/images/logo/logo.png" alt="Waud"/>
 Web Audio Library with HTML5 audio fallback.
 
 [![npm version](https://badge.fury.io/js/waud.js.svg)](https://badge.fury.io/js/waud.js)
-[![Build Status](https://travis-ci.org/adireddy/waud.svg?branch=dev)](https://travis-ci.org/adireddy/waud)
-[![Code Climate](https://codeclimate.com/github/adireddy/waud/badges/gpa.svg)](https://codeclimate.com/github/adireddy/waud)
-[![Issue Count](https://codeclimate.com/github/adireddy/waud/badges/issue_count.svg)](https://codeclimate.com/github/adireddy/waud/issues)
+[![Build Status](https://travis-ci.org/waud/waud.svg?branch=dev)](https://travis-ci.org/waud/waud)
+[![Code Climate](https://codeclimate.com/github/waud/waud/badges/gpa.svg)](https://codeclimate.com/github/waud/waud)
+[![Issue Count](https://codeclimate.com/github/waud/waud/badges/issue_count.svg)](https://codeclimate.com/github/waud/waud/issues)
 
 ### Installation
 
@@ -46,7 +46,7 @@ var base64Snd = new WaudSound("data:audio/mpeg;base64,//uQxAAAAAAAAAAAAASW5mbwAA
 
 ### Audio Sprite
 
-Use [waudsprite](https://github.com/adireddy/waudsprite) to generate audio sprite.
+Use [waudsprite](https://github.com/waud/waudsprite) to generate audio sprite.
 
 ```js
 var audSprite = new WaudSound("assets/sprite.json");
