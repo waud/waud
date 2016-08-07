@@ -27,7 +27,7 @@ var snd = new WaudSound("assets/loop.mp3", { autoplay: false, loop: true, volume
 
 Waud supports base64 decoding across all browsers including IE 9 and I recommend using this solution instead of audio sprite.
 
-Use [waudbase64](https://github.com/adireddy/waudbase64) to generate base64 encoded JSON file.
+Use [waudbase64](https://github.com/waud/waudbase64) to generate base64 encoded JSON file.
 
 ```js
 var base64pack = new WaudBase64Pack("assets/sounds.json", _onLoad);
