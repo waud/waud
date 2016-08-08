@@ -24,8 +24,8 @@
     "contributors": [
 	"adireddy"
     ],
-    "releasenote": "doc updates",
-    "version": "0.6.8",
+    "releasenote": "added another base64 JSON format support",
+    "version": "0.6.9",
     "url": "https://github.com/waud/waud",
     "dependencies": {}
 }

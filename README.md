@@ -1,4 +1,4 @@
-# <img class="logo" width="280" height="60" src="http://waud.github.io/images/logo/logo.png" alt="Waud"/>
+# <a href="http://waudjs.com" target="_blank"><img class="logo" width="280" height="60" src="http://waud.github.io/images/logo/logo.png" alt="Waud"/></a>
 Web Audio Library with HTML5 audio fallback.
 
 [![npm version](https://badge.fury.io/js/waud.js.svg)](https://badge.fury.io/js/waud.js)
