@@ -782,7 +782,7 @@ WaudBase64Pack.prototype = {
 					++_g1;
 					if(n == "meta") continue;
 					_g._soundCount++;
-					_g._createSound(n,Reflect.field(res,n));
+					if((res instanceof Array) && res.__enum__ == null) _g._createSound(Reflect.field(res,n).name,"data:" + Std.string(Reflect.field(res,n).mime) + ";base64," + Std.string(Reflect.field(res,n).data)); else _g._createSound(n,Reflect.field(res,n));
 				}
 			}
 		};
