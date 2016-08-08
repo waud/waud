@@ -87,7 +87,8 @@ import js.html.XMLHttpRequest;
 				for (n in Reflect.fields(res)) {
 					if (n == "meta") continue;
 					_soundCount++;
-					_createSound(n, Reflect.field(res, n));
+					if (Std.is(res, Array)) _createSound(Reflect.field(res, n).name, "data:" + Reflect.field(res, n).mime + ";base64," + Reflect.field(res, n).data);
+					else _createSound(n, Reflect.field(res, n));
 				}
 			}
 		};
