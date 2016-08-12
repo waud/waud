@@ -1,2 +1,2 @@
 $ cat .gitattributes
-*.js linguist-vendored=false
+*.js linguist-language=Haxe
