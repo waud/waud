@@ -1,8 +1,8 @@
 # <a href="http://waudjs.com"><img class="logo" width="280" height="60" src="http://waud.github.io/images/logo/logo.png" alt="Waud"/></a>
 Web Audio Library with HTML5 audio fallback.
 
-[![npm version](https://badge.fury.io/js/waud.js.svg)](https://badge.fury.io/js/waud.js)
 [![Build Status](https://travis-ci.org/waud/waud.svg?branch=dev)](https://travis-ci.org/waud/waud)
+[![npm version](https://badge.fury.io/js/waud.js.svg)](https://badge.fury.io/js/waud.js)
 [![Code Climate](https://codeclimate.com/github/waud/waud/badges/gpa.svg)](https://codeclimate.com/github/waud/waud)
 [![Issue Count](https://codeclimate.com/github/waud/waud/badges/issue_count.svg)](https://codeclimate.com/github/waud/waud/issues)
 
