@@ -4,8 +4,9 @@ import js.html.AudioElement;
 
 @:keep class HTML5Sound extends BaseSound implements IWaudSound {
 
+	public var source:SourceElement;
+
 	var _snd:AudioElement;
-	var _src:SourceElement;
 	var _tmr:Timer;
 	var _pauseTime:Float;
 
@@ -64,13 +65,13 @@ import js.html.AudioElement;
 	}
 
 	function _addSource(url:String):SourceElement {
-		_src = Waud.dom.createSourceElement();
-		_src.src = url;
+		source = Waud.dom.createSourceElement();
+		source.src = url;
 
-		if (Waud.audioManager.types.get(_getExt(url)) != null) _src.type = Waud.audioManager.types.get(_getExt(url));
-		_snd.appendChild(_src);
+		if (Waud.audioManager.types.get(_getExt(url)) != null) source.type = Waud.audioManager.types.get(_getExt(url));
+		_snd.appendChild(source);
 
-		return _src;
+		return source;
 	}
 
 	function _getExt(filename:String):String {
@@ -194,8 +195,8 @@ import js.html.AudioElement;
 	public function destroy() {
 		if (_snd != null) {
 			_snd.pause();
-			_snd.removeChild(_src);
-			_src = null;
+			_snd.removeChild(source);
+			source = null;
 			_snd = null;
 		}
 		_isPlaying = false;

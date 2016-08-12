@@ -256,8 +256,8 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 		return this.duration;
 	}
 	,_addSource: function(url) {
-		this._src = Waud.dom.createElement("source");
-		this._src.src = url;
+		this.source = Waud.dom.createElement("source");
+		this.source.src = url;
 		if((function($this) {
 			var $r;
 			var key = $this._getExt(url);
@@ -265,10 +265,10 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 			return $r;
 		}(this)) != null) {
 			var key1 = this._getExt(url);
-			this._src.type = Waud.audioManager.types.get(key1);
+			this.source.type = Waud.audioManager.types.get(key1);
 		}
-		this._snd.appendChild(this._src);
-		return this._src;
+		this._snd.appendChild(this.source);
+		return this.source;
 	}
 	,_getExt: function(filename) {
 		return filename.split(".").pop();
@@ -370,8 +370,8 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 	,destroy: function() {
 		if(this._snd != null) {
 			this._snd.pause();
-			this._snd.removeChild(this._src);
-			this._src = null;
+			this._snd.removeChild(this.source);
+			this.source = null;
 			this._snd = null;
 		}
 		this._isPlaying = false;
@@ -1218,16 +1218,16 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		}
 		var buffer = this._manager.bufferList.get(this.url);
 		if(buffer != null) {
-			this._snd = this._makeSource(buffer);
+			this.source = this._makeSource(buffer);
 			if(start >= 0 && end > -1) {
-				if(Reflect.field(this._snd,"start") != null) this._snd.start(0,start,end); else this._snd.noteGrainOn(0,start,end);
+				if(Reflect.field(this.source,"start") != null) this.source.start(0,start,end); else this._snd.noteGrainOn(0,start,end);
 			} else {
-				if(Reflect.field(this._snd,"start") != null) this._snd.start(0,this._pauseTime,this._snd.buffer.duration); else this._snd.noteGrainOn(0,this._pauseTime,this._snd.buffer.duration);
-				this._snd.loop = this._options.loop;
+				if(Reflect.field(this.source,"start") != null) this.source.start(0,this._pauseTime,this.source.buffer.duration); else this._snd.noteGrainOn(0,this._pauseTime,this.source.buffer.duration);
+				this.source.loop = this._options.loop;
 			}
 			this._playStartTime = this._manager.audioContext.currentTime;
 			this._isPlaying = true;
-			this._snd.onended = function() {
+			this.source.onended = function() {
 				_g._pauseTime = 0;
 				_g._isPlaying = false;
 				if(_g.isSpriteSound && soundProps != null && soundProps.loop != null && soundProps.loop && start >= 0 && end > -1) {
@@ -1236,7 +1236,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 				} else if(_g._options.onend != null) _g._options.onend(_g);
 			};
 		}
-		return HxOverrides.indexOf(this._srcNodes,this._snd,0);
+		return HxOverrides.indexOf(this._srcNodes,this.source,0);
 	}
 	,togglePlay: function(spriteName) {
 		if(this._isPlaying) this.pause(); else this.play();
@@ -1246,7 +1246,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 	}
 	,loop: function(val) {
 		this._options.loop = val;
-		if(this._snd != null) this._snd.loop = val;
+		if(this.source != null) this.source.loop = val;
 	}
 	,setVolume: function(val,spriteName) {
 		this._options.volume = val;
@@ -1266,11 +1266,11 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 	}
 	,stop: function(spriteName) {
 		this._pauseTime = 0;
-		if(this._snd == null || !this._isLoaded || !this._isPlaying) return;
+		if(this.source == null || !this._isLoaded || !this._isPlaying) return;
 		this.destroy();
 	}
 	,pause: function(spriteName) {
-		if(this._snd == null || !this._isLoaded || !this._isPlaying) return;
+		if(this.source == null || !this._isLoaded || !this._isPlaying) return;
 		this.destroy();
 		this._pauseTime += this._manager.audioContext.currentTime - this._playStartTime;
 	}
@@ -1283,7 +1283,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		} else this._pauseTime = time;
 	}
 	,getTime: function() {
-		if(this._snd == null || !this._isLoaded || !this._isPlaying) return 0;
+		if(this.source == null || !this._isLoaded || !this._isPlaying) return 0;
 		return this._manager.audioContext.currentTime - this._playStartTime + this._pauseTime;
 	}
 	,onEnd: function(callback,spriteName) {
