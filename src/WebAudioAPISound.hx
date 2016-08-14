@@ -86,20 +86,20 @@ import js.html.audio.AudioBuffer;
 	}
 
 	function _makeSource(buffer:AudioBuffer):AudioBufferSourceNode {
-		var source:AudioBufferSourceNode = _manager.audioContext.createBufferSource();
-		source.buffer = buffer;
+		var bufferSource:AudioBufferSourceNode = _manager.audioContext.createBufferSource();
+		bufferSource.buffer = buffer;
 		if (untyped __js__("this._manager.audioContext").createGain != null) _gainNode = _manager.audioContext.createGain();
 		else _gainNode = untyped __js__("this._manager.audioContext").createGainNode();
 
-		source.connect(_gainNode);
+		bufferSource.connect(_gainNode);
 		_gainNode.connect(_manager.audioContext.destination);
-		_srcNodes.push(source);
+		_srcNodes.push(bufferSource);
 		_gainNodes.push(_gainNode);
 
 		if (_muted) _gainNode.gain.value = 0;
 		else _gainNode.gain.value = _options.volume;
 
-		return source;
+		return bufferSource;
 	}
 
 	override function get_duration():Float {

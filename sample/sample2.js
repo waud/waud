@@ -1187,15 +1187,15 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		if(this._options.autoplay) this.play();
 	}
 	,_makeSource: function(buffer) {
-		var source = this._manager.audioContext.createBufferSource();
-		source.buffer = buffer;
+		var bufferSource = this._manager.audioContext.createBufferSource();
+		bufferSource.buffer = buffer;
 		if(this._manager.audioContext.createGain != null) this._gainNode = this._manager.audioContext.createGain(); else this._gainNode = this._manager.audioContext.createGainNode();
-		source.connect(this._gainNode);
+		bufferSource.connect(this._gainNode);
 		this._gainNode.connect(this._manager.audioContext.destination);
-		this._srcNodes.push(source);
+		this._srcNodes.push(bufferSource);
 		this._gainNodes.push(this._gainNode);
 		if(this._muted) this._gainNode.gain.value = 0; else this._gainNode.gain.value = this._options.volume;
-		return source;
+		return bufferSource;
 	}
 	,get_duration: function() {
 		if(!this._isLoaded) return 0;
