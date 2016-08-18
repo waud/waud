@@ -761,7 +761,7 @@ WaudBase64Pack.prototype = {
 		var m = new EReg("\"meta\":.[0-9]*,[0-9]*.","i");
 		var xobj = new XMLHttpRequest();
 		xobj.open("GET",base64Url,true);
-		if(this._onProgress != null && xobj.onprogress != null) xobj.onprogress = function(e) {
+		if(this._onProgress != null) xobj.onprogress = function(e) {
 			var meta = m.match(xobj.responseText);
 			if(meta && _g._totalSize == 0) {
 				var metaInfo = JSON.parse("{" + m.matched(0) + "}");
@@ -1926,7 +1926,7 @@ var __map_reserved = {}
 msignal_SlotList.NIL = new msignal_SlotList(null,null);
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.6.7";
+Waud.version = "0.7.0";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1};
 Waud.preferredSampleRate = 44100;
