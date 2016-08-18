@@ -1,6 +1,6 @@
 {
     "name": "waud.js",
-    "version": "0.6.7",
+    "version": "0.7.0",
     "description": "Web Audio Library",
     "main": "./dist/waud.js",
     "scripts": {
@@ -8,10 +8,10 @@
     },
     "repository": {
 	"type": "git",
-	"url": "https://github.com/adireddy/waud"
+	"url": "https://github.com/waud/waud"
     },
     "bugs": {
-	"url": "https://github.com/adireddy/waud/issues"
+	"url": "https://github.com/waud/waud/issues"
     },
     "keywords": [
 	"web audio",

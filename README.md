@@ -1,23 +1,29 @@
-# ![waud logo](https://raw.githubusercontent.com/adireddy/waud/dev/logo.png)
+# <a href="http://waudjs.com"><img class="logo" width="280" height="60" src="http://waud.github.io/images/logo/logo.png" alt="Waud"/></a>
 Web Audio Library with HTML5 audio fallback.
 
+[![Build Status](https://travis-ci.org/waud/waud.svg?branch=dev)](https://travis-ci.org/waud/waud)
 [![npm version](https://badge.fury.io/js/waud.js.svg)](https://badge.fury.io/js/waud.js)
-[![Build Status](https://travis-ci.org/adireddy/waud.svg?branch=dev)](https://travis-ci.org/adireddy/waud)
-[![Code Climate](https://codeclimate.com/github/adireddy/waud/badges/gpa.svg)](https://codeclimate.com/github/adireddy/waud)
-[![Issue Count](https://codeclimate.com/github/adireddy/waud/badges/issue_count.svg)](https://codeclimate.com/github/adireddy/waud/issues)
+[![Code Climate](https://codeclimate.com/github/waud/waud/badges/gpa.svg)](https://codeclimate.com/github/waud/waud)
+[![Issue Count](https://codeclimate.com/github/waud/waud/badges/issue_count.svg)](https://codeclimate.com/github/waud/waud/issues)
 
-- It is recommended to use same **sample rate** for all the audio files. Playing different **sample rate** files can cause issues on some devices.
-- By default, **Waud** uses **44100** sample rate. If your audio files have a different sample rate then specify it using [**`Waud.preferredSampleRate`**](http://adireddy.github.io/docs/waud/classes/Waud.html#property_preferredSampleRate) property.
+### Features
+
+- Base64 Pack
+- Audio Sprites
+- iOS Audio Unlock
+- Auto Mute
+- Simple API
+- Zero Dependencies
 
 ### Installation
 
-`npm install waud.js`
+[![NPM](https://nodei.co/npm/waud.js.png?downloads=true&downloadRank=true)](https://www.npmjs.com/package/waud.js/)
 
 For haxe users:
 
 `haxelib install waud`
 
-### [API Documentation](http://adireddy.github.io/docs/waud/)
+### [API Documentation](http://waud.github.io/docs/)
 
 ### Example
 
@@ -28,9 +34,9 @@ var snd = new WaudSound("assets/loop.mp3", { autoplay: false, loop: true, volume
 
 ### Base64 Data URI
 
-Waud supports base64 decoding across all browsers including IE 9 and I recommend using this solution instead of audio sprite.
+Waud supports base64 decoding across all browsers including IE 9 and I recommend using this over audio sprites.
 
-Use [waudbase64](https://github.com/adireddy/waudbase64) to generate base64 encoded JSON file.
+Use [waudbase64](https://github.com/waud/waudbase64) to generate base64 encoded JSON file.
 
 ```js
 var base64pack = new WaudBase64Pack("assets/sounds.json", _onLoad);
@@ -49,32 +55,34 @@ var base64Snd = new WaudSound("data:audio/mpeg;base64,//uQxAAAAAAAAAAAAASW5mbwAA
 
 ### Audio Sprite
 
-Use [waudsprite](https://github.com/adireddy/waudsprite) to generate audio sprite.
+Use [waudsprite](https://github.com/waud/waudsprite) to generate audio sprite.
 
 ```js
 var audSprite = new WaudSound("assets/sprite.json");
 audSprite.play("glass");
 ```
 
-### Support
+### Browser Support
 
-Browser & Mobile Device Testing provided by:
+Tested on all major browsers.
+
+| <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/safari/safari_32x32.png" alt="Safari"> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/chrome/chrome_32x32.png" alt="Chrome"> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/firefox/firefox_32x32.png" alt="Firefox"> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/edge/edge_32x32.png" alt="Edge"> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/internet-explorer/internet-explorer_32x32.png" alt="IE"> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/opera/opera_32x32.png" alt="Opera"> |
+|:--:|:--:|:--:|:--:|:--:|:--:|
+| Latest ✓ | Latest ✓ | Latest ✓ | Latest ✓ | 9-11 ✓ | Latest ✓ |
+
+Browser & Device Testing provided by:
 
 [![BrowserStack](http://adireddy.github.io/assets/browserstack.png)](https://www.browserstack.com)
 
-| <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/safari/safari_32x32.png" alt="Safari"> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/chrome/chrome_32x32.png" alt="Chrome"> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/firefox/firefox_32x32.png" alt="Firefox"> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/edge/edge_32x32.png" alt="Edge"> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/opera/opera_32x32.png" alt="Opera"> |
-|:--:|:--:|:--:|:--:|:--:|
-| Latest ✓ | Latest ✓ | Latest ✓ | Latest ✓ | Latest ✓ |
-
 ### Issues
 
-Found any bug? Please create a new [issue](https://github.com/adireddy/waud/issues/new).
+Found any bug? Please create a new [issue](https://github.com/waud/waud/issues/new).
 
 ### Demo
 
-- [JavaScript](http://adireddy.github.io/demos/waud/js.html)
-- [Haxe](http://adireddy.github.io/demos/waud/)
-- [Base64](http://adireddy.github.io/demos/waud/base64.html)
+- [JavaScript](http://waud.github.io/sample/js.html)
+- [Haxe](http://waud.github.io/sample/)
+- [Base64](http://waud.github.io/sample/base64.html)
 
 ### Usage
 
@@ -104,6 +112,11 @@ function playBgSound(snd) {
 	if (!snd.isPlaying()) snd.play();
 }
 ```
+
+### Tips
+
+- It is recommended to use same **sample rate** for all the audio files. Playing different **sample rate** files can cause issues on some devices.
+- By default, **Waud** uses **44100** sample rate. If your audio files have a different sample rate then specify it using [**`Waud.preferredSampleRate`**](http://waud.github.io/docs/classes/Waud.html#property_preferredSampleRate) property.
 
 ### Licensing Information
 

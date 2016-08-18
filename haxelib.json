@@ -24,8 +24,8 @@
     "contributors": [
 	"adireddy"
     ],
-    "releasenote": "fixed onProgress callback on IE 9",
-    "version": "0.6.7",
-    "url": "https://github.com/adireddy/waud",
+    "releasenote": "base64 progress event bug fix",
+    "version": "0.7.0",
+    "url": "https://github.com/waud/waud",
     "dependencies": {}
 }

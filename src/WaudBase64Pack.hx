@@ -68,7 +68,7 @@ import js.html.XMLHttpRequest;
 		var xobj = new XMLHttpRequest();
 		xobj.open("GET", base64Url, true);
 
-		if (_onProgress != null && xobj.onprogress != null) {
+		if (_onProgress != null) {
 			xobj.onprogress = function(e:Dynamic) {
 				var meta = m.match(xobj.responseText);
 				if (meta && _totalSize == 0) {
@@ -87,7 +87,8 @@ import js.html.XMLHttpRequest;
 				for (n in Reflect.fields(res)) {
 					if (n == "meta") continue;
 					_soundCount++;
-					_createSound(n, Reflect.field(res, n));
+					if (Std.is(res, Array)) _createSound(Reflect.field(res, n).name, "data:" + Reflect.field(res, n).mime + ";base64," + Reflect.field(res, n).data);
+					else _createSound(n, Reflect.field(res, n));
 				}
 			}
 		};

@@ -9,10 +9,11 @@ import js.html.audio.AudioBuffer;
 
 @:keep class WebAudioAPISound extends BaseSound implements IWaudSound {
 
+	public var source:AudioBufferSourceNode;
+
 	var _srcNodes:Array<AudioBufferSourceNode>;
 	var _gainNodes:Array<Dynamic>;
 	var _manager:AudioManager;
-	var _snd:AudioBufferSourceNode;
 	var _gainNode:GainNode;
 	var _playStartTime:Float;
 	var _pauseTime:Float;
@@ -85,20 +86,20 @@ import js.html.audio.AudioBuffer;
 	}
 
 	function _makeSource(buffer:AudioBuffer):AudioBufferSourceNode {
-		var source:AudioBufferSourceNode = _manager.audioContext.createBufferSource();
-		source.buffer = buffer;
+		var bufferSource:AudioBufferSourceNode = _manager.audioContext.createBufferSource();
+		bufferSource.buffer = buffer;
 		if (untyped __js__("this._manager.audioContext").createGain != null) _gainNode = _manager.audioContext.createGain();
 		else _gainNode = untyped __js__("this._manager.audioContext").createGainNode();
 
-		source.connect(_gainNode);
+		bufferSource.connect(_gainNode);
 		_gainNode.connect(_manager.audioContext.destination);
-		_srcNodes.push(source);
+		_srcNodes.push(bufferSource);
 		_gainNodes.push(_gainNode);
 
 		if (_muted) _gainNode.gain.value = 0;
 		else _gainNode.gain.value = _options.volume;
 
-		return source;
+		return bufferSource;
 	}
 
 	override function get_duration():Float {
@@ -123,23 +124,23 @@ import js.html.audio.AudioBuffer;
 		}
 		var buffer = _manager.bufferList.get(url);
 		if (buffer != null) {
-			_snd = _makeSource(buffer);
+			source = _makeSource(buffer);
 
 			if (start >= 0 && end > -1) {
-				if (Reflect.field(_snd, "start") != null) _snd.start(0, start, end);
+				if (Reflect.field(source, "start") != null) source.start(0, start, end);
 				else {
 					untyped __js__("this._snd").noteGrainOn(0, start, end);
 				}
 			}
 			else {
-				if (Reflect.field(_snd, "start") != null) _snd.start(0, _pauseTime, _snd.buffer.duration);
-				else untyped __js__("this._snd").noteGrainOn(0, _pauseTime, _snd.buffer.duration);
-				_snd.loop = _options.loop;
+				if (Reflect.field(source, "start") != null) source.start(0, _pauseTime, source.buffer.duration);
+				else untyped __js__("this._snd").noteGrainOn(0, _pauseTime, source.buffer.duration);
+				source.loop = _options.loop;
 			}
 
 			_playStartTime = _manager.audioContext.currentTime;
 			_isPlaying = true;
-			_snd.onended = function() {
+			source.onended = function() {
 				_pauseTime = 0;
 				_isPlaying = false;
 				if (isSpriteSound && soundProps != null && soundProps.loop != null && soundProps.loop && start >= 0 && end > -1) {
@@ -150,7 +151,7 @@ import js.html.audio.AudioBuffer;
 			}
 		}
 
-		return _srcNodes.indexOf(_snd);
+		return _srcNodes.indexOf(source);
 	}
 
 	public function togglePlay(?spriteName:String) {
@@ -164,7 +165,7 @@ import js.html.audio.AudioBuffer;
 
 	public function loop(val:Bool) {
 		_options.loop = val;
-		if (_snd != null) _snd.loop = val;
+		if (source != null) source.loop = val;
 	}
 
 	public function setVolume(val:Float, ?spriteName:String) {
@@ -190,12 +191,12 @@ import js.html.audio.AudioBuffer;
 
 	public function stop(?spriteName:String) {
 		_pauseTime = 0;
-		if (_snd == null || !_isLoaded || !_isPlaying) return;
+		if (source == null || !_isLoaded || !_isPlaying) return;
 		destroy();
 	}
 
 	public function pause(?spriteName:String) {
-		if (_snd == null || !_isLoaded || !_isPlaying) return;
+		if (source == null || !_isLoaded || !_isPlaying) return;
 		destroy();
 		_pauseTime += _manager.audioContext.currentTime - _playStartTime;
 	}
@@ -212,7 +213,7 @@ import js.html.audio.AudioBuffer;
 	}
 
 	public function getTime():Float {
-		if (_snd == null || !_isLoaded || !_isPlaying) return 0;
+		if (source == null || !_isLoaded || !_isPlaying) return 0;
 		return _manager.audioContext.currentTime - _playStartTime + _pauseTime;
 	}
 
