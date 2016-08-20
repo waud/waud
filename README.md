@@ -40,9 +40,7 @@ Waud supports base64 decoding across all browsers including IE 9 and I recommend
 
 Use [waudbase64](https://github.com/waud/waudbase64) to generate base64 encoded JSON file.
 
-```
-npm install -g waudbase64
-```
+`npm install -g waudbase64`
 
 ```js
 var base64pack = new WaudBase64Pack("assets/sounds.json", _onLoad);
@@ -63,9 +61,7 @@ var base64Snd = new WaudSound("data:audio/mpeg;base64,//uQxAAAAAAAAAAAAASW5mbwAA
 
 Use [waudsprite](https://github.com/waud/waudsprite) to generate audio sprite.
 
-```
-npm install -g waudsprite
-```
+`npm install -g waudsprite`
 
 ```js
 var audSprite = new WaudSound("assets/sprite.json");
