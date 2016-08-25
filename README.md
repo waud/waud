@@ -78,7 +78,7 @@ Tested on all major browsers.
 
 Browser & Device Testing provided by:
 
-[![BrowserStack](http://adireddy.github.io/assets/browserstack.png)](https://www.browserstack.com)
+[![BrowserStack](http://waud.github.io/images/browserstack.png)](https://www.browserstack.com)
 
 ### Issues
 
