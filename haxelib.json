@@ -24,8 +24,8 @@
     "contributors": [
 	"adireddy"
     ],
-    "releasenote": "base64 progress event bug fix",
-    "version": "0.7.0",
+    "releasenote": "added loaded size parameter to base64 progress event",
+    "version": "0.7.1",
     "url": "https://github.com/waud/waud",
     "dependencies": {}
 }

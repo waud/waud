@@ -6,6 +6,8 @@ Web Audio Library with HTML5 audio fallback.
 [![Code Climate](https://codeclimate.com/github/waud/waud/badges/gpa.svg)](https://codeclimate.com/github/waud/waud)
 [![Issue Count](https://codeclimate.com/github/waud/waud/badges/issue_count.svg)](https://codeclimate.com/github/waud/waud/issues)
 
+Waud is a simple and powerful web audio library that allows you to go beyond HTML5's `<audio>` tag and easily take advantage of [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API). It abstracts Web Audio API making it consistent and reliable across multiple platforms and browsers. It also falls back to HTML5 Audio on non-modern browsers where Web Audio API is not supported.
+
 ### Features
 
 - Base64 Pack
@@ -38,6 +40,8 @@ Waud supports base64 decoding across all browsers including IE 9 and I recommend
 
 Use [waudbase64](https://github.com/waud/waudbase64) to generate base64 encoded JSON file.
 
+`npm install -g waudbase64`
+
 ```js
 var base64pack = new WaudBase64Pack("assets/sounds.json", _onLoad);
 
@@ -57,6 +61,8 @@ var base64Snd = new WaudSound("data:audio/mpeg;base64,//uQxAAAAAAAAAAAAASW5mbwAA
 
 Use [waudsprite](https://github.com/waud/waudsprite) to generate audio sprite.
 
+`npm install -g waudsprite`
+
 ```js
 var audSprite = new WaudSound("assets/sprite.json");
 audSprite.play("glass");
@@ -72,7 +78,7 @@ Tested on all major browsers.
 
 Browser & Device Testing provided by:
 
-[![BrowserStack](http://adireddy.github.io/assets/browserstack.png)](https://www.browserstack.com)
+[![BrowserStack](http://waud.github.io/images/browserstack.png)](https://www.browserstack.com)
 
 ### Issues
 
