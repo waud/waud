@@ -51,7 +51,7 @@ class Base64 extends Application {
 	}
 
 	function _onProgress(val:Float, loaded:Float) {
-		_progress.text = "Progress: " + Math.floor(val) + "%";
+		_progress.text = "Progress: " + Math.floor(val * 100) + "%";
 	}
 
 	function _onLoad(snds:Map<String, IWaudSound>) {

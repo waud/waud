@@ -30,7 +30,7 @@ import js.html.XMLHttpRequest;
 	* 		}
 	*
 	* 		function _onProgress(val:Float, loaded:Float) {
-	* 			trace("loaded %: " + val);
+	* 			trace("loaded %: " + (val * 100));
 	* 		}
 	*
 	* 		function _onError() {
@@ -75,8 +75,8 @@ import js.html.XMLHttpRequest;
 					var metaInfo = Json.parse("{" + m.matched(0) + "}");
 					_totalSize = metaInfo.meta[1];
 				}
-				progress = e.lengthComputable ? (e.loaded / e.total) * 100 : (e.loaded / _totalSize) * 100;
-				if (progress > 100) progress = 100;
+				progress = e.lengthComputable ? e.loaded / e.total : e.loaded / _totalSize;
+				if (progress > 1) progress = 1;
 				_onProgress(progress, e.loaded);
 			};
 		}
@@ -122,7 +122,7 @@ import js.html.XMLHttpRequest;
 		if (_loadCount == _soundCount) {
 			if (_onLoaded != null) _onLoaded(_sounds);
 			if (progress == 0 && _onProgress != null) {
-				progress = 100;
+				progress = 1;
 				_onProgress(progress, _totalSize);
 			}
 			return true;

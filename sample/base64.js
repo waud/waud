@@ -194,7 +194,7 @@ Base64.main = function() {
 Base64.__super__ = pixi_plugins_app_Application;
 Base64.prototype = $extend(pixi_plugins_app_Application.prototype,{
 	_onProgress: function(val,loaded) {
-		this._progress.text = "Progress: " + Math.floor(val) + "%";
+		this._progress.text = "Progress: " + Math.floor(val * 100) + "%";
 	}
 	,_onLoad: function(snds) {
 		this._beep = __map_reserved["test/beep.mp3"] != null?snds.getReserved("test/beep.mp3"):snds.h["test/beep.mp3"];
@@ -767,8 +767,8 @@ WaudBase64Pack.prototype = {
 				var metaInfo = JSON.parse("{" + m.matched(0) + "}");
 				_g._totalSize = metaInfo.meta[1];
 			}
-			if(e.lengthComputable) _g.progress = e.loaded / e.total * 100; else _g.progress = e.loaded / _g._totalSize * 100;
-			if(_g.progress > 100) _g.progress = 100;
+			if(e.lengthComputable) _g.progress = e.loaded / e.total; else _g.progress = e.loaded / _g._totalSize;
+			if(_g.progress > 1) _g.progress = 1;
 			_g._onProgress(_g.progress,e.loaded);
 		};
 		xobj.onreadystatechange = function() {
@@ -803,7 +803,7 @@ WaudBase64Pack.prototype = {
 		if(this._loadCount == this._soundCount) {
 			if(this._onLoaded != null) this._onLoaded(this._sounds);
 			if(this.progress == 0 && this._onProgress != null) {
-				this.progress = 100;
+				this.progress = 1;
 				this._onProgress(this.progress,this._totalSize);
 			}
 			return true;
@@ -1926,7 +1926,7 @@ var __map_reserved = {}
 msignal_SlotList.NIL = new msignal_SlotList(null,null);
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.7.1";
+Waud.version = "0.7.2";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1};
 Waud.preferredSampleRate = 44100;
