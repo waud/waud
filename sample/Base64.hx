@@ -46,12 +46,11 @@ class Base64 extends Application {
 		Waud.autoMute();
 		Waud.enableTouchUnlock(touchUnlock);
 		_snd = new WaudBase64Pack("assets/sounds.json", _onLoad, _onProgress);
-		//_snd = new WaudBase64Pack("assets/canvas.base64.json", _onLoad, _onProgress);
 
 		_resize();
 	}
 
-	function _onProgress(val:Float) {
+	function _onProgress(val:Float, loaded:Float) {
 		_progress.text = "Progress: " + Math.floor(val) + "%";
 	}
 
@@ -62,8 +61,6 @@ class Base64 extends Application {
 		_canopening = snds.get("test/canopening.mp3");
 		_countdown = snds.get("test/countdown.mp3");
 		_funk100 = snds.get("test/funk100.mp3");
-
-		//snds.get("audio/Base_Game_PercLayer_01.m4a").play();
 	}
 
 	function touchUnlock() {
