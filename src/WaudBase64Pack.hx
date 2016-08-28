@@ -8,7 +8,7 @@ import js.html.XMLHttpRequest;
 	var _sounds:Map<String, IWaudSound>;
 	var _onLoaded:Map<String, IWaudSound> -> Void;
 	var _onError:Void -> Void;
-	var _onProgress:Float -> Void;
+	var _onProgress:Float -> Float -> Void;
 	var _soundCount:Int;
 	var _loadCount:Int;
 	var _totalSize:Float;
@@ -29,7 +29,7 @@ import js.html.XMLHttpRequest;
 	* 			snds.get("assets/beep.mp3").play();
 	* 		}
 	*
-	* 		function _onProgress(val:Float) {
+	* 		function _onProgress(val:Float, loaded:Float) {
 	* 			trace("loaded %: " + val);
 	* 		}
 	*
@@ -37,7 +37,7 @@ import js.html.XMLHttpRequest;
 	* 			trace("error loading base64 json file");
 	* 		}
 	*/
-	public function new(url:String, ?onLoaded:Map<String, IWaudSound> -> Void, ?onProgress:Float -> Void, ?onError:Void -> Void) {
+	public function new(url:String, ?onLoaded:Map<String, IWaudSound> -> Void, ?onProgress:Float -> Float -> Void, ?onError:Void -> Void) {
 		if (Waud.audioManager == null) {
 			trace("initialise Waud using Waud.init() before loading sounds");
 			return;
@@ -77,7 +77,7 @@ import js.html.XMLHttpRequest;
 				}
 				progress = e.lengthComputable ? (e.loaded / e.total) * 100 : (e.loaded / _totalSize) * 100;
 				if (progress > 100) progress = 100;
-				 _onProgress(progress);
+				_onProgress(progress, e.loaded);
 			};
 		}
 
@@ -123,7 +123,7 @@ import js.html.XMLHttpRequest;
 			if (_onLoaded != null) _onLoaded(_sounds);
 			if (progress == 0 && _onProgress != null) {
 				progress = 100;
-				_onProgress(progress);
+				_onProgress(progress, _totalSize);
 			}
 			return true;
 		}
