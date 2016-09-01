@@ -363,11 +363,8 @@ import haxe.Json;
 			else {
 				for (snd in _spriteSounds) snd.stop();
 			}
-			return;
 		}
-
-		if (_snd == null) return;
-		_snd.stop();
+		else if (_snd != null) _snd.stop();
 	}
 
 	/**
@@ -383,11 +380,8 @@ import haxe.Json;
 			else {
 				for (snd in _spriteSounds) snd.pause();
 			}
-			return;
 		}
-
-		if (_snd == null) return;
-		_snd.pause();
+		else if (_snd != null) _snd.pause();
 	}
 
 	/**
@@ -430,7 +424,7 @@ import haxe.Json;
 	*/
 	public function onEnd(callback:IWaudSound -> Void, ?spriteName:String):IWaudSound {
 		if (isSpriteSound) {
-			if (spriteName != null) _spriteSoundEndCallbacks[spriteName] = callback;
+			if (spriteName != null) _spriteSoundEndCallbacks.set(spriteName, callback);
 			return this;
 		}
 

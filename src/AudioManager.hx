@@ -72,15 +72,7 @@ class AudioManager {
 	* @method checkWebAudioAPISupport
 	*/
 	public function checkWebAudioAPISupport():Bool {
-		if (Reflect.field(Browser.window, "AudioContext") != null) {
-			AudioContextClass = Reflect.field(Browser.window, "AudioContext");
-			return true;
-		}
-		else if (Reflect.field(Browser.window, "webkitAudioContext") != null) {
-			AudioContextClass = Reflect.field(Browser.window, "webkitAudioContext");
-			return true;
-		}
-		return false;
+		return (Reflect.field(Browser.window, "AudioContext") != null || Reflect.field(Browser.window, "webkitAudioContext") != null);
 	}
 
 	/**
@@ -128,7 +120,12 @@ class AudioManager {
 	public function createAudioContext():AudioContext {
 		if (audioContext == null) {
 			try {
-				if (AudioContextClass != null) audioContext = cast Type.createInstance(AudioContextClass, []);
+				if (Reflect.field(Browser.window, "AudioContext") != null) {
+					audioContext = untyped __js__("new AudioContext()");
+				}
+				else if (Reflect.field(Browser.window, "webkitAudioContext") != null) {
+					audioContext = untyped __js__("new webkitAudioContext()");
+				}
 			}
 			catch (e:Dynamic) {
 				audioContext = null;
