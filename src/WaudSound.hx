@@ -427,10 +427,11 @@ import haxe.Json;
 			if (spriteName != null) _spriteSoundEndCallbacks.set(spriteName, callback);
 			return this;
 		}
-
-		if (_snd == null) return null;
-		_snd.onEnd(callback);
-		return this;
+		else if (_snd != null) {
+			_snd.onEnd(callback);
+			return this;
+		}
+		return null;
 	}
 
 	/**
@@ -473,12 +474,11 @@ import haxe.Json;
 	public function destroy() {
 		if (isSpriteSound) {
 			for (snd in _spriteSounds) snd.destroy();
-			return;
 		}
-
-		if (_snd == null) return;
-		_snd.destroy();
-		_snd = null;
+		else if (_snd != null) {
+			_snd.destroy();
+			_snd = null;
+		}
 	}
 
 	function _loadSpriteSound(?url:String) {
@@ -500,7 +500,6 @@ import haxe.Json;
 
 	function _decodeSuccess(buffer:AudioBuffer) {
 		if (buffer == null) {
-			trace("empty buffer: " + url);
 			_onSpriteSoundError();
 			return;
 		}
