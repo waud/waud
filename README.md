@@ -25,7 +25,7 @@ For haxe users:
 
 `haxelib install waud`
 
-### [API Documentation](http://waud.github.io/docs/)
+### [API Documentation](http://waud.github.io/api/)
 
 ### Example
 
