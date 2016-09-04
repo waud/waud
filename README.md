@@ -12,8 +12,8 @@ Waud is a simple and powerful web audio library that allows you to go beyond HTM
 
 - Base64 Pack
 - Audio Sprites
-- iOS Audio Unlock <sup>1</sup>
-- Auto Mute <sup>2</sup>
+- iOS Audio Unlock<sup>1</sup>
+- Auto Mute<sup>2</sup>
 - Simple API
 - Zero Dependencies
 
