@@ -16,7 +16,7 @@
             <tr class="mui--appbar-height">
                 <td class="mui--text-title"><img src="http://waud.github.io/images/logo/logo.png" width="210" height="45"/></td>
                 <td align="right">
-                    <a href="https://github.com/adireddy/waud" target="_blank">
+                    <a href="https://github.com/waud/waud" target="_blank">
                         <button class="mui-btn mui-btn--small mui-btn--raised">GitHub</button>
                     </a>
                     <a href="https://www.npmjs.com/package/waud.js" target="_blank">
@@ -34,7 +34,7 @@
     <div class="mui--appbar-height"></div>
     <br />
     <br />
-    <div class="mui--text-caption"></div>
+    <div id="ua" class="mui--text-caption"></div>
     <br />
     <br />
     <div class="mui--text-title">MP3</div>
@@ -108,21 +108,21 @@
             "autoplay": false, "loop": true, "volume": 1, "onload": playBgSound
         });
 
-        _glassMP3 = new WaudSound("/sample/assets/glass.mp3");
-        _bellMP3 = new WaudSound("/sample/assets/bell.mp3");
-        _canMP3 = new WaudSound("/sample/assets/canopening.mp3");
+        _glassMP3 = new WaudSound("assets/glass.mp3");
+        _bellMP3 = new WaudSound("assets/bell.mp3");
+        _canMP3 = new WaudSound("assets/canopening.mp3");
 
-        _glassAAC = new WaudSound("/sample/assets/glass.aac");
-        _bellAAC = new WaudSound("/sample/assets/bell.aac");
-        _canAAC = new WaudSound("/sample/assets/canopening.aac");
+        _glassAAC = new WaudSound("assets/glass.aac");
+        _bellAAC = new WaudSound("assets/bell.aac");
+        _canAAC = new WaudSound("assets/canopening.aac");
 
-        _glassOGG = new WaudSound("/sample/assets/glass.ogg");
-        _bellOGG = new WaudSound("/sample/assets/bell.ogg");
-        _canOGG = new WaudSound("/sample/assets/canopening.ogg");
+        _glassOGG = new WaudSound("assets/glass.ogg");
+        _bellOGG = new WaudSound("assets/bell.ogg");
+        _canOGG = new WaudSound("assets/canopening.ogg");
 
-        _audSprite = new WaudSound("/sample/assets/sprite.json");
+        _audSprite = new WaudSound("assets/sprite.json");
 
-        _base64pack = new WaudBase64Pack("/sample/assets/sounds.json", _onLoad);
+        _base64pack = new WaudBase64Pack("assets/sounds.json", _onLoad);
     }
 
     function _onLoad(snds) {
