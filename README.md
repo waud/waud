@@ -23,11 +23,21 @@ Waud is a simple and powerful web audio library that allows you to go beyond HTM
 
 ### Installation
 
+Available via npm, cdn and haxelib (for haxe users).
+
+- NPM: [https://www.npmjs.com/package/waud.js](https://www.npmjs.com/package/waud.js)
+- CDN: [https://cdnjs.com/libraries/waud.js](https://cdnjs.com/libraries/waud.js)
+- Haxelib: [http://lib.haxe.org/p/waud](http://lib.haxe.org/p/waud)
+
 [![NPM](https://nodei.co/npm/waud.js.png?downloads=true&downloadRank=true)](https://www.npmjs.com/package/waud.js/)
 
-For haxe users:
+```js
+<script src="https://cdnjs.cloudflare.com/ajax/libs/waud.js/x.x.x/waud.min.js"></script>
+```
 
-`haxelib install waud`
+`
+haxelib install waud
+`
 
 ### [API Documentation](http://waud.github.io/api/)
 
