@@ -100,13 +100,16 @@ Found any bug? Please create a new [issue](https://github.com/waud/waud/issues/n
 // Initialize Waud. Make sure to call this before loading sounds.
 Waud.init();
 
-// To play a blank sound and automatically unlock audio on iOS devices. The parameter is a callback function that can be used to start playing sounds like background music.
+// To play a blank sound and automatically unlock audio on iOS devices.
+// The parameter is a callback function that can be used to start playing sounds like background music.
 Waud.enableTouchUnlock(touchUnlock);
 
-// Use if you want to mute audio when the window is not in focus like switching tabs, minimising window, etc in desktop and pressing home button, getting a call, etc on devices.
+// Use if you want to mute audio when the window is not in focus like switching tabs, minimising window, 
+// etc in desktop and pressing home button, getting a call, etc on devices.
 Waud.autoMute();
 
-// Load and play looping background sound with autoPlay and loop set to true. Note that this will not play automatically in iOS devices without touching the screen.
+// Load and play looping background sound with autoPlay and loop set to true.
+// Note that this will not play automatically in iOS devices without touching the screen.
 var bgSnd = new WaudSound("loop.mp3", {
     "autoplay": true,
     "loop":true
