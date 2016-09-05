@@ -35,9 +35,9 @@ Available via npm, cdn and haxelib (for haxe users).
 <script src="https://cdnjs.cloudflare.com/ajax/libs/waud.js/x.x.x/waud.min.js"></script>
 ```
 
-`
+```
 haxelib install waud
-`
+```
 
 ### [API Documentation](http://waud.github.io/api/)
 
