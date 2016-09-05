@@ -31,14 +31,6 @@ Available via npm, cdn and haxelib (for haxe users).
 
 [![NPM](https://nodei.co/npm/waud.js.png?downloads=true&downloadRank=true)](https://www.npmjs.com/package/waud.js/)
 
-```js
-<script src="https://cdnjs.cloudflare.com/ajax/libs/waud.js/x.x.x/waud.min.js"></script>
-```
-
-```
-haxelib install waud
-```
-
 ### [API Documentation](http://waud.github.io/api/)
 
 ### Example
