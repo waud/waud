@@ -18,6 +18,7 @@
 	"web audio api",
 	"haxe",
 	"javascript",
+	"js",
 	"audio",
 	"web",
 	"sounds",
@@ -27,7 +28,9 @@
 	"waud",
 	"audiosprite",
 	"sprite",
-	"audio sprite"
+	"audio sprite",
+	"base64",
+	"dataURI"
     ],
     "author": {
 	"name": "Adi Reddy Mora",
