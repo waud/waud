@@ -1,7 +1,6 @@
 -cp src
 -cp sample
 -lib pixijs
--lib msignal
 
 -dce full
 -debug
