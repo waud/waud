@@ -17,14 +17,7 @@ var AudioManager = function() {
 AudioManager.__name__ = true;
 AudioManager.prototype = {
 	checkWebAudioAPISupport: function() {
-		if(Reflect.field(window,"AudioContext") != null) {
-			AudioManager.AudioContextClass = Reflect.field(window,"AudioContext");
-			return true;
-		} else if(Reflect.field(window,"webkitAudioContext") != null) {
-			AudioManager.AudioContextClass = Reflect.field(window,"webkitAudioContext");
-			return true;
-		}
-		return false;
+		return Reflect.field(window,"AudioContext") != null || Reflect.field(window,"webkitAudioContext") != null;
 	}
 	,unlockAudio: function() {
 		if(this.audioContext != null) {
@@ -55,7 +48,7 @@ AudioManager.prototype = {
 	}
 	,createAudioContext: function() {
 		if(this.audioContext == null) try {
-			if(AudioManager.AudioContextClass != null) this.audioContext = Type.createInstance(AudioManager.AudioContextClass,[]);
+			if(Reflect.field(window,"AudioContext") != null) this.audioContext = new AudioContext(); else if(Reflect.field(window,"webkitAudioContext") != null) this.audioContext = new webkitAudioContext();
 		} catch( e ) {
 			if (e instanceof js__$Boot_HaxeError) e = e.val;
 			this.audioContext = null;
@@ -873,34 +866,6 @@ Std.parseInt = function(x) {
 	if(isNaN(v)) return null;
 	return v;
 };
-var Type = function() { };
-Type.__name__ = true;
-Type.createInstance = function(cl,args) {
-	var _g = args.length;
-	switch(_g) {
-	case 0:
-		return new cl();
-	case 1:
-		return new cl(args[0]);
-	case 2:
-		return new cl(args[0],args[1]);
-	case 3:
-		return new cl(args[0],args[1],args[2]);
-	case 4:
-		return new cl(args[0],args[1],args[2],args[3]);
-	case 5:
-		return new cl(args[0],args[1],args[2],args[3],args[4]);
-	case 6:
-		return new cl(args[0],args[1],args[2],args[3],args[4],args[5]);
-	case 7:
-		return new cl(args[0],args[1],args[2],args[3],args[4],args[5],args[6]);
-	case 8:
-		return new cl(args[0],args[1],args[2],args[3],args[4],args[5],args[6],args[7]);
-	default:
-		throw new js__$Boot_HaxeError("Too many arguments");
-	}
-	return null;
-};
 var Waud = $hx_exports.Waud = function() { };
 Waud.__name__ = true;
 Waud.init = function(d) {
@@ -1005,6 +970,9 @@ Waud.isAACSupported = function() {
 Waud.isM4ASupported = function() {
 	var canPlay = Waud.__audioElement.canPlayType("audio/x-m4a;");
 	return Waud.isHTML5AudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe");
+};
+Waud.get_sampleRate = function() {
+	if(Waud.audioContext != null) return Waud.audioContext.sampleRate; else return 0;
 };
 Waud.destroy = function() {
 	if(Waud.sounds != null) {
@@ -1273,10 +1241,7 @@ WaudSound.prototype = {
 					snd.stop();
 				}
 			}
-			return;
-		}
-		if(this._snd == null) return;
-		this._snd.stop();
+		} else if(this._snd != null) this._snd.stop();
 	}
 	,pause: function(spriteName) {
 		if(this.isSpriteSound) {
@@ -1287,10 +1252,7 @@ WaudSound.prototype = {
 					snd.pause();
 				}
 			}
-			return;
-		}
-		if(this._snd == null) return;
-		this._snd.pause();
+		} else if(this._snd != null) this._snd.pause();
 	}
 	,setTime: function(time) {
 		if(this._snd == null || this.isSpriteSound) return;
@@ -1302,15 +1264,13 @@ WaudSound.prototype = {
 	}
 	,onEnd: function(callback,spriteName) {
 		if(this.isSpriteSound) {
-			if(spriteName != null) {
-				this._spriteSoundEndCallbacks.set(spriteName,callback);
-				callback;
-			}
+			if(spriteName != null) this._spriteSoundEndCallbacks.set(spriteName,callback);
+			return this;
+		} else if(this._snd != null) {
+			this._snd.onEnd(callback);
 			return this;
 		}
-		if(this._snd == null) return null;
-		this._snd.onEnd(callback);
-		return this;
+		return null;
 	}
 	,onLoad: function(callback) {
 		if(this._snd == null || this.isSpriteSound) return null;
@@ -1329,11 +1289,10 @@ WaudSound.prototype = {
 				var snd = $it0.next();
 				snd.destroy();
 			}
-			return;
+		} else if(this._snd != null) {
+			this._snd.destroy();
+			this._snd = null;
 		}
-		if(this._snd == null) return;
-		this._snd.destroy();
-		this._snd = null;
 	}
 	,_loadSpriteSound: function(url) {
 		var request = new XMLHttpRequest();
@@ -1351,7 +1310,6 @@ WaudSound.prototype = {
 	}
 	,_decodeSuccess: function(buffer) {
 		if(buffer == null) {
-			console.log("empty buffer: " + this.url);
 			this._onSpriteSoundError();
 			return;
 		}
@@ -2152,7 +2110,7 @@ Perf.INFO_TXT_CLR = "#000000";
 Perf.DELAY_TIME = 4000;
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.7.1";
+Waud.version = "0.7.3";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1};
 Waud.preferredSampleRate = 44100;

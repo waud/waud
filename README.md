@@ -12,18 +12,24 @@ Waud is a simple and powerful web audio library that allows you to go beyond HTM
 
 - Base64 Pack
 - Audio Sprites
-- iOS Audio Unlock
-- Auto Mute
+- iOS Audio Unlock<sup>1</sup>
+- Auto Mute<sup>2</sup>
 - Simple API
 - Zero Dependencies
 
+<sup>1</sup> Automatically unlocks audio on iOS devices on first touch.
+
+<sup>2</sup> Automatically mutes audio when the window is not in focus (switching tab, minimising window, etc).
+
 ### Installation
 
+Available via npm, cdn and haxelib (for haxe users).
+
+- NPM: [https://www.npmjs.com/package/waud.js](https://www.npmjs.com/package/waud.js)
+- CDN: [https://cdnjs.com/libraries/waud.js](https://cdnjs.com/libraries/waud.js)
+- Haxelib: [http://lib.haxe.org/p/waud](http://lib.haxe.org/p/waud)
+
 [![NPM](https://nodei.co/npm/waud.js.png?downloads=true&downloadRank=true)](https://www.npmjs.com/package/waud.js/)
-
-For haxe users:
-
-`haxelib install waud`
 
 ### [API Documentation](http://waud.github.io/api/)
 
@@ -93,29 +99,27 @@ Found any bug? Please create a new [issue](https://github.com/waud/waud/issues/n
 ### Usage
 
 ```js
+// Initialize Waud. Make sure to call this before loading sounds.
 Waud.init();
+
+// To play a blank sound and automatically unlock audio on iOS devices.
+// The parameter is a callback function that can be used to start playing sounds like background music.
 Waud.enableTouchUnlock(touchUnlock);
+
+// Use if you want to mute audio when the window is not in focus like switching tabs, minimising window, 
+// etc in desktop and pressing home button, getting a call, etc on devices.
 Waud.autoMute();
 
-var bgSnd = new WaudSound("assets/loop.mp3", {
-	"autoplay": false, "loop":true, "volume": 0.5, "onload": playBgSound
+// Load and play looping background sound with autoPlay and loop set to true.
+// Note that this will not play automatically in iOS devices without touching the screen.
+var bgSnd = new WaudSound("loop.mp3", {
+    "autoplay": true,
+    "loop":true
 });
 
-var snd2 = new WaudSound("assets/sound1.wav", {
-	"autoplay": false,
-	"loop":true,
-	"onload": function (snd) { snd.play(); },
-	"onend": function (snd) { console.log("ended"); },
-	"onerror": function (snd) { console.log("error"); }
-});
-
-//Touch unlock event for iOS devices
+//Touch unlock callback for iOS devices to start playing bgSnd it it's not already playing
 function touchUnlock() {
-	if (!bgSnd.isPlaying()) bgSnd.play();
-}
-
-function playBgSound(snd) {
-	if (!snd.isPlaying()) snd.play();
+    if (!bgSnd.isPlaying()) bgSnd.play();
 }
 ```
 

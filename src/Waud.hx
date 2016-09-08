@@ -20,7 +20,7 @@ import js.Browser;
 	* @static
 	* @type {String}
 	*/
-	public static var version:String = "0.7.1";
+	public static var version:String = "0.7.3";
 
 	/**
 	* Tells whether to use web audio api or not.
@@ -126,6 +126,15 @@ import js.Browser;
 	* @readOnly
 	*/
 	public static var audioContext:AudioContext;
+
+	/**
+	* Audio Context sample rate.
+	*
+	* @property sampleRate
+	* @static
+	* @type {Float}
+	*/
+	public static var sampleRate(get, null):Float;
 
 	/**
 	* Document dom element used for appending sounds and touch events.
@@ -391,6 +400,17 @@ import js.Browser;
 	public static function isM4ASupported():Bool {
 		var canPlay = __audioElement.canPlayType('audio/x-m4a;');
 		return (isHTML5AudioSupported && canPlay != null && (canPlay == PROBABLY || canPlay == MAYBE));
+	}
+
+	/**
+	* Function to get current sample rate of audio context.
+	*
+	* @private
+	* @static
+	* @method get_sampleRate
+	*/
+	static function get_sampleRate():Float {
+		return audioContext != null ? audioContext.sampleRate : 0;
 	}
 
 	/**

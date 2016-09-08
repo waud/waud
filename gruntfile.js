@@ -55,7 +55,7 @@ module.exports = function (grunt) {
                     selleck: "true",
                     extension: ".hx",
                     paths: "./src",
-                    outdir: "../waud.github.io/docs/",
+                    outdir: "../waud.github.io/api/",
                     themedir: "../waud.github.io/yui/"
             }
         }
