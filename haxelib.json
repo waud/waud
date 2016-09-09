@@ -25,8 +25,8 @@
     "contributors": [
 	"adireddy"
     ],
-    "releasenote": "minor tweaks & optimisations",
-    "version": "0.7.3",
+    "releasenote": "changed duration property to getDuration method",
+    "version": "0.7.4",
     "url": "https://github.com/waud/waud",
     "dependencies": {}
 }

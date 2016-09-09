@@ -58,10 +58,10 @@ import js.html.AudioElement;
 		return this;
 	}
 
-	override function get_duration():Float {
+	public function getDuration():Float {
 		if (!_isLoaded) return 0;
-		duration = _snd.duration;
-		return duration;
+		_duration = _snd.duration;
+		return _duration;
 	}
 
 	function _addSource(url:String):SourceElement {

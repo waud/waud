@@ -2,13 +2,13 @@
 
 	public var isSpriteSound:Bool;
 	public var url:String;
-	public var duration(get, null):Float;
 	public var spriteName:String;
 
 	var _options:WaudSoundOptions;
 	var _isLoaded:Bool;
 	var _isPlaying:Bool;
 	var _muted:Bool;
+	var _duration:Float;
 	var _b64:EReg;
 
 	public function new(sndUrl:String, ?options:WaudSoundOptions = null) {
@@ -21,12 +21,13 @@
 			trace("initialise Waud using Waud.init() before loading sounds");
 			return;
 		}
-		duration = 0;
+
 		isSpriteSound = false;
 		url = sndUrl;
 		_isLoaded = false;
 		_isPlaying = false;
 		_muted = false;
+		_duration = 0;
 		if (options == null) options = {};
 
 		options.autoplay = (options.autoplay != null) ? options.autoplay : Waud.defaults.autoplay;
@@ -40,10 +41,6 @@
 		options.onerror = (options.onerror != null) ? options.onerror : Waud.defaults.onerror;
 
 		_options = options;
-	}
-
-	function get_duration():Float {
-		return 0;
 	}
 
 	public function isReady():Bool {
