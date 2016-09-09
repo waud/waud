@@ -27,7 +27,7 @@ import js.html.audio.AudioBuffer;
 		_gainNodes = [];
 		_currentSoundProps = null;
 		_isLoaded = loaded;
-		duration = d;
+		_duration = d;
 		_manager = Waud.audioManager;
 
 		if (_b64.match(url)) {
@@ -80,7 +80,7 @@ import js.html.audio.AudioBuffer;
 		}
 		_manager.bufferList.set(url, buffer);
 		_isLoaded = true;
-		duration = buffer.duration;
+		_duration = buffer.duration;
 		if (_options.onload != null) _options.onload(this);
 		if (_options.autoplay) play();
 	}
@@ -102,9 +102,9 @@ import js.html.audio.AudioBuffer;
 		return bufferSource;
 	}
 
-	override function get_duration():Float {
+	public function getDuration():Float {
 		if (!_isLoaded) return 0;
-		return duration;
+		return _duration;
 	}
 
 	public function play(?sprite:String, ?soundProps:AudioSpriteSoundProperties):Int {
@@ -202,7 +202,7 @@ import js.html.audio.AudioBuffer;
 	}
 
 	public function setTime(time:Float) {
-		if (!_isLoaded || time > duration) return;
+		if (!_isLoaded || time > _duration) return;
 
 		if (_isPlaying) {
 			stop();

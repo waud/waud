@@ -17,17 +17,6 @@ import haxe.Json;
 	public var isSpriteSound:Bool;
 
 	/**
-	* Duration of the sound.
-	*
-	* @property duration
-	* @type {Float}
-	* @readOnly
-	* @example
- 	*     snd.duration;
-	*/
-	public var duration(get, null):Float;
-
-	/**
 	* Sound url.
 	*
 	* @property url
@@ -157,10 +146,18 @@ import haxe.Json;
 		}
 	}
 
-	function get_duration():Float {
+	/**
+	* Function to get sound duration.
+	*
+	* @method getDuration
+	* @return {Float} sound duration
+	* @example
+ 	*     snd.getDuration();
+	*/
+	public function getDuration():Float {
 		if (isSpriteSound) return _spriteDuration;
 		if (_snd == null) return 0;
-		return _snd.duration;
+		return _snd.getDuration();
 	}
 
 	/**

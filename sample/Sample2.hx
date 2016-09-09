@@ -46,7 +46,7 @@ class Sample2 extends Application {
 	}
 
 	function _onLoad(snd:IWaudSound) {
-		_duration.text = "Duration: " + snd.duration;
+		_duration.text = "Duration: " + snd.getDuration();
 	}
 
 	function touchUnlock() {

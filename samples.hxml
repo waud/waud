@@ -1,5 +1,11 @@
+-cmd haxelib newrepo
+-cmd haxelib install msignal
+
+--next
+
 -cp src
 -cp sample
+-lib msignal
 -lib pixijs
 
 -dce full
