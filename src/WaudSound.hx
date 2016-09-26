@@ -348,6 +348,21 @@ import haxe.Json;
 	}
 
 	/**
+	* Function to automatically stop the sound if it's already playing or play the sound in a different channel.
+	*
+	* By default, sound will automatically stop if play is called on the sound that is already playing.
+	*
+	* @method autoStop
+	* @param {Bool} val
+	* @example
+	*     snd.autoStop(false);
+	*/
+	public function autoStop(val:Bool) {
+		if (_snd == null) return;
+		_snd.autoStop(val);
+	}
+
+	/**
 	* Function to stop sound.
 	*
 	* @method stop

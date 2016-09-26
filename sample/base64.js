@@ -195,6 +195,7 @@ Base64.prototype = $extend(pixi_plugins_app_Application.prototype,{
 		this._glass = __map_reserved["test/glass.mp3"] != null?snds.getReserved("test/glass.mp3"):snds.h["test/glass.mp3"];
 		this._canopening = __map_reserved["test/canopening.mp3"] != null?snds.getReserved("test/canopening.mp3"):snds.h["test/canopening.mp3"];
 		this._countdown = __map_reserved["test/countdown.mp3"] != null?snds.getReserved("test/countdown.mp3"):snds.h["test/countdown.mp3"];
+		this._countdown.autoStop(false);
 		this._funk100 = __map_reserved["test/funk100.mp3"] != null?snds.getReserved("test/funk100.mp3"):snds.h["test/funk100.mp3"];
 	}
 	,touchUnlock: function() {
@@ -470,6 +471,9 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 	,loop: function(val) {
 		if(!this._isLoaded || this._snd == null) return;
 		this._snd.loop = val;
+	}
+	,autoStop: function(val) {
+		this._options.autostop = val;
 	}
 	,stop: function(spriteName) {
 		if(!this._isLoaded || this._snd == null) return;
@@ -1016,6 +1020,10 @@ WaudSound.prototype = {
 		if(this._snd == null || this.isSpriteSound) return;
 		this._snd.loop(val);
 	}
+	,autoStop: function(val) {
+		if(this._snd == null) return;
+		this._snd.autoStop(val);
+	}
 	,stop: function(spriteName) {
 		if(this.isSpriteSound) {
 			if(spriteName != null && this._spriteSounds.get(spriteName) != null) this._spriteSounds.get(spriteName).stop(); else {
@@ -1309,6 +1317,9 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 	}
 	,toggleMute: function(spriteName) {
 		this.mute(!this._muted);
+	}
+	,autoStop: function(val) {
+		this._options.autostop = val;
 	}
 	,stop: function(spriteName) {
 		this._pauseTime = 0;
@@ -1881,7 +1892,7 @@ var __map_reserved = {}
 msignal_SlotList.NIL = new msignal_SlotList(null,null);
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.7.4";
+Waud.version = "0.7.5";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1};
 Waud.preferredSampleRate = 44100;

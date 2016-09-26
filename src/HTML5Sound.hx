@@ -151,6 +151,10 @@ import js.html.AudioElement;
 		_snd.loop = val;
 	}
 
+	public function autoStop(val:Bool) {
+		_options.autostop = val;
+	}
+
 	public function stop(?spriteName:String) {
 		if (!_isLoaded || _snd == null) return;
 		_snd.currentTime = 0;

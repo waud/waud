@@ -189,6 +189,10 @@ import js.html.audio.AudioBuffer;
 		mute(!_muted);
 	}
 
+	public function autoStop(val:Bool) {
+		_options.autostop = val;
+	}
+
 	public function stop(?spriteName:String) {
 		_pauseTime = 0;
 		if (source == null || !_isLoaded || !_isPlaying) return;
