@@ -3,6 +3,7 @@
 	public var isSpriteSound:Bool;
 	public var url:String;
 	public var spriteName:String;
+	public var rate:Float;
 
 	var _options:WaudSoundOptions;
 	var _isLoaded:Bool;
@@ -28,6 +29,7 @@
 		_isPlaying = false;
 		_muted = false;
 		_duration = 0;
+		rate = 1;
 		if (options == null) options = {};
 
 		options.autoplay = (options.autoplay != null) ? options.autoplay : Waud.defaults.autoplay;

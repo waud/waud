@@ -24,6 +24,7 @@ import js.html.AudioElement;
 			_snd.autoplay = _options.autoplay;
 			_snd.loop = _options.loop;
 			_snd.volume = _options.volume;
+			_snd.playbackRate = rate;
 
 			if (callback != null) _options.onload = callback;
 
@@ -169,6 +170,11 @@ import js.html.AudioElement;
 		_pauseTime = _snd.currentTime;
 		_isPlaying = false;
 		if (_tmr != null) _tmr.stop();
+	}
+
+	public function playbackRate(?val:Float = 1, ?spriteName:String):Float {
+		_snd.playbackRate = val;
+		return rate = val;
 	}
 
 	public function setTime(time:Float) {

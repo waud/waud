@@ -180,6 +180,16 @@ import js.Browser;
 	static var __audioElement:AudioElement;
 
 	/**
+	* Global playback rate.
+	*
+	* @property _playbackRate
+	* @static
+	* @private
+	* @type {Float}
+	*/
+	public static var _playbackRate:Float = 1;
+
+	/**
 	* Focus Manager reference used for `autoMute` functionality.
 	*
 	* @property _focusManager
@@ -271,6 +281,23 @@ import js.Browser;
 	public static function mute(?val:Bool = true) {
 		isMuted = val;
 		if (sounds != null) for (sound in sounds) sound.mute(val);
+	}
+
+	/**
+	* Helper function to set plauback rate of all the sounds.
+	*
+	* @static
+	* @method mute
+	* @param {Float} [val]
+	* @return {Float} current playback rate.
+	* @example
+	*     Waud.playbackRate();
+ 	*     Waud.playbackRate(1.25);
+	*/
+	public static function playbackRate(?val:Float):Float {
+		if (val == null) return _playbackRate;
+		else if (sounds != null) for (sound in sounds) sound.playbackRate(val);
+		return _playbackRate = val;
 	}
 
 	/**
@@ -432,6 +459,7 @@ import js.Browser;
 			_focusManager.clearEvents();
 			_focusManager.blur = null;
 			_focusManager.focus = null;
+			_focusManager = null;
 		}
 	}
 }
