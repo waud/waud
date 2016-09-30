@@ -20,7 +20,7 @@ import js.Browser;
 	* @static
 	* @type {String}
 	*/
-	public static var version:String = "0.7.6";
+	public static var version:String = "0.7.7";
 
 	/**
 	* Tells whether to use web audio api or not.
@@ -284,10 +284,10 @@ import js.Browser;
 	}
 
 	/**
-	* Helper function to set plauback rate of all the sounds.
+	* Helper function to set playback rate of all the sounds.
 	*
 	* @static
-	* @method mute
+	* @method playbackRate
 	* @param {Float} [val]
 	* @return {Float} current playback rate.
 	* @example

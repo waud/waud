@@ -411,28 +411,21 @@ import haxe.Json;
 	/**
 	* Function to set playback rate.
 	*
-	* @method setTime
+	* @method playbackRate
 	* @param {Float} [val] - playback rate.
 	* @return {Float} current playback rate.
 	* @example
 	*     snd.playbackRate(1.25);
 	*/
 	public function playbackRate(?val:Float, ?spriteName:String):Float {
-		if (rate != null) rate = val;
-		if (isSpriteSound) {
-			if (spriteName != null && _spriteSounds[spriteName] != null) {
-				if (rate == null) return _spriteSounds[spriteName].rate;
-				else return _spriteSounds[spriteName].playbackRate(rate);
+		if (val != null) {
+			if (isSpriteSound) {
+				if (spriteName != null && _spriteSounds[spriteName] != null) _spriteSounds[spriteName].playbackRate(val);
+				else for (snd in _spriteSounds) snd.playbackRate(val);
 			}
-			else {
-				if (rate == null) for (snd in _spriteSounds) return snd.rate;
-				else for (snd in _spriteSounds) snd.playbackRate(rate);
-				return rate;
-			}
-		}
-		else if (_snd != null) {
-			if (rate == null) return _snd.rate;
-			else return _snd.playbackRate(rate);
+			else if (_snd != null) _snd.playbackRate(val);
+
+			return rate = val;
 		}
 		return rate;
 	}
