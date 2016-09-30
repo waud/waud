@@ -79,6 +79,7 @@ var BaseSound = function(sndUrl,options) {
 	this._isPlaying = false;
 	this._muted = false;
 	this._duration = 0;
+	this.rate = 1;
 	if(options == null) options = { };
 	if(options.autoplay != null) options.autoplay = options.autoplay; else options.autoplay = Waud.defaults.autoplay;
 	if(options.autostop != null) options.autostop = options.autostop; else options.autostop = Waud.defaults.autostop;
@@ -218,6 +219,7 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 			this._snd.autoplay = this._options.autoplay;
 			this._snd.loop = this._options.loop;
 			this._snd.volume = this._options.volume;
+			this._snd.playbackRate = this.rate;
 			if(callback != null) this._options.onload = callback;
 			if(this._options.preload) this._snd.preload = "auto"; else this._snd.preload = "metadata";
 			if(this._options.onload != null) {
@@ -323,6 +325,9 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 		if(!this._isLoaded || this._snd == null) return;
 		this._snd.loop = val;
 	}
+	,autoStop: function(val) {
+		this._options.autostop = val;
+	}
 	,stop: function(spriteName) {
 		if(!this._isLoaded || this._snd == null) return;
 		this._snd.currentTime = 0;
@@ -336,6 +341,11 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 		this._pauseTime = this._snd.currentTime;
 		this._isPlaying = false;
 		if(this._tmr != null) this._tmr.stop();
+	}
+	,playbackRate: function(val,spriteName) {
+		if(val == null) val = 1;
+		this._snd.playbackRate = val;
+		return this.rate = val;
 	}
 	,setTime: function(time) {
 		if(!this._isLoaded || this._snd == null || time > this._snd.duration) return;
@@ -611,6 +621,16 @@ Waud.mute = function(val) {
 		}
 	}
 };
+Waud.playbackRate = function(val) {
+	if(val == null) return Waud._playbackRate; else if(Waud.sounds != null) {
+		var $it0 = Waud.sounds.iterator();
+		while( $it0.hasNext() ) {
+			var sound = $it0.next();
+			sound.playbackRate(val);
+		}
+	}
+	return Waud._playbackRate = val;
+};
 Waud.stop = function() {
 	if(Waud.sounds != null) {
 		var $it0 = Waud.sounds.iterator();
@@ -684,6 +704,7 @@ Waud.destroy = function() {
 		Waud._focusManager.clearEvents();
 		Waud._focusManager.blur = null;
 		Waud._focusManager.focus = null;
+		Waud._focusManager = null;
 	}
 };
 var WaudFocusManager = $hx_exports.WaudFocusManager = function() {
@@ -763,6 +784,7 @@ var WaudSound = $hx_exports.WaudSound = function(url,options) {
 		console.log("initialise Waud using Waud.init() before loading sounds");
 		return;
 	}
+	this.rate = 1;
 	this._options = options;
 	if(url.indexOf(".json") > 0) {
 		this.isSpriteSound = true;
@@ -925,6 +947,10 @@ WaudSound.prototype = {
 		if(this._snd == null || this.isSpriteSound) return;
 		this._snd.loop(val);
 	}
+	,autoStop: function(val) {
+		if(this._snd == null) return;
+		this._snd.autoStop(val);
+	}
 	,stop: function(spriteName) {
 		if(this.isSpriteSound) {
 			if(spriteName != null && this._spriteSounds.get(spriteName) != null) this._spriteSounds.get(spriteName).stop(); else {
@@ -946,6 +972,32 @@ WaudSound.prototype = {
 				}
 			}
 		} else if(this._snd != null) this._snd.pause();
+	}
+	,playbackRate: function(val,spriteName) {
+		if(this.rate != null) this.rate = val;
+		if(this.isSpriteSound) {
+			if(spriteName != null && this._spriteSounds.get(spriteName) != null) {
+				if(this.rate == null) return this._spriteSounds.get(spriteName).rate; else return this._spriteSounds.get(spriteName).playbackRate(this.rate);
+			} else {
+				if(this.rate == null) {
+					var $it0 = this._spriteSounds.iterator();
+					while( $it0.hasNext() ) {
+						var snd = $it0.next();
+						return snd.rate;
+					}
+				} else {
+					var $it1 = this._spriteSounds.iterator();
+					while( $it1.hasNext() ) {
+						var snd1 = $it1.next();
+						snd1.playbackRate(this.rate);
+					}
+				}
+				return this.rate;
+			}
+		} else if(this._snd != null) {
+			if(this.rate == null) return this._snd.rate; else return this._snd.playbackRate(this.rate);
+		}
+		return this.rate;
 	}
 	,setTime: function(time) {
 		if(this._snd == null || this.isSpriteSound) return;
@@ -1146,6 +1198,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		bufferSource.buffer = buffer;
 		if(this._manager.audioContext.createGain != null) this._gainNode = this._manager.audioContext.createGain(); else this._gainNode = this._manager.audioContext.createGainNode();
 		bufferSource.connect(this._gainNode);
+		bufferSource.playbackRate.value = this.rate;
 		this._gainNode.connect(this._manager.audioContext.destination);
 		this._srcNodes.push(bufferSource);
 		this._gainNodes.push(this._gainNode);
@@ -1219,6 +1272,9 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 	,toggleMute: function(spriteName) {
 		this.mute(!this._muted);
 	}
+	,autoStop: function(val) {
+		this._options.autostop = val;
+	}
 	,stop: function(spriteName) {
 		this._pauseTime = 0;
 		if(this.source == null || !this._isLoaded || !this._isPlaying) return;
@@ -1228,6 +1284,17 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		if(this.source == null || !this._isLoaded || !this._isPlaying) return;
 		this.destroy();
 		this._pauseTime += this._manager.audioContext.currentTime - this._playStartTime;
+	}
+	,playbackRate: function(val,spriteName) {
+		if(val == null) val = 1;
+		var _g = 0;
+		var _g1 = this._srcNodes;
+		while(_g < _g1.length) {
+			var src = _g1[_g];
+			++_g;
+			src.playbackRate.value = val;
+		}
+		return this.rate = val;
 	}
 	,setTime: function(time) {
 		if(!this._isLoaded || time > this._duration) return;
@@ -1790,11 +1857,12 @@ var __map_reserved = {}
 msignal_SlotList.NIL = new msignal_SlotList(null,null);
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.7.4";
+Waud.version = "0.7.5";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1};
 Waud.preferredSampleRate = 44100;
 Waud.isMuted = false;
+Waud._playbackRate = 1;
 WaudFocusManager.FOCUS_STATE = "focus";
 WaudFocusManager.BLUR_STATE = "blur";
 WaudFocusManager.ON_FOCUS = "onfocus";

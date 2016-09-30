@@ -21,10 +21,10 @@
             <h3>Waud Base 64 Example</h3>
         </div>
         <div class="row-fluid" align="center">
-            <div class="span12">
+            <div>
                 <label id="progress"></label>
             </div>
-            <div class="span12">
+            <div>
                 <div class="btn-group">
                     <button class="btn-danger" onmousedown="_playSound('beep')">Beep</button>
                     <button class="btn-primary" onmousedown="_playSound('bell')">Bell</button>
@@ -58,7 +58,7 @@
     function touchUnlock() {}
 
     function _onProgress(val) {
-        document.getElementById("progress").innerText = "Progress: " + Math.floor(val) + "%";
+        document.getElementById("progress").innerText = "Progress: " + Math.floor(val * 100) + "%";
         console.log("assets/sounds.json: " + val);
     }
 

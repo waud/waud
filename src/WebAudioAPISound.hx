@@ -92,6 +92,7 @@ import js.html.audio.AudioBuffer;
 		else _gainNode = untyped __js__("this._manager.audioContext").createGainNode();
 
 		bufferSource.connect(_gainNode);
+		bufferSource.playbackRate.value = rate;
 		_gainNode.connect(_manager.audioContext.destination);
 		_srcNodes.push(bufferSource);
 		_gainNodes.push(_gainNode);
@@ -189,6 +190,10 @@ import js.html.audio.AudioBuffer;
 		mute(!_muted);
 	}
 
+	public function autoStop(val:Bool) {
+		_options.autostop = val;
+	}
+
 	public function stop(?spriteName:String) {
 		_pauseTime = 0;
 		if (source == null || !_isLoaded || !_isPlaying) return;
@@ -199,6 +204,13 @@ import js.html.audio.AudioBuffer;
 		if (source == null || !_isLoaded || !_isPlaying) return;
 		destroy();
 		_pauseTime += _manager.audioContext.currentTime - _playStartTime;
+	}
+
+	public function playbackRate(?val:Float = 1, ?spriteName:String):Float {
+		for (src in _srcNodes) {
+			src.playbackRate.value = val;
+		}
+		return rate = val;
 	}
 
 	public function setTime(time:Float) {

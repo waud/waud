@@ -60,6 +60,7 @@ class Base64 extends Application {
 		_glass = snds.get("test/glass.mp3");
 		_canopening = snds.get("test/canopening.mp3");
 		_countdown = snds.get("test/countdown.mp3");
+		_countdown.autoStop(false);
 		_funk100 = snds.get("test/funk100.mp3");
 	}
 
