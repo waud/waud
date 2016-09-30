@@ -1,3 +1,4 @@
+import IWaudSound;
 import js.Browser;
 import pixi.core.Pixi;
 import pixi.core.text.Text;
@@ -17,6 +18,9 @@ class Base64 extends Application {
 	var _canopening:IWaudSound;
 	var _countdown:IWaudSound;
 	var _funk100:IWaudSound;
+
+	var _globalRateLabel:Text;
+	var _countdownRateLabel:Text;
 
 	public function new() {
 		super();
@@ -38,6 +42,26 @@ class Base64 extends Application {
 		_addButton("Can", 240, 40, 80, 30, function() { _canopening.play(); });
 		_addButton("Countdown", 320, 40, 80, 30, function() { _countdown.play(); });
 		_addButton("Funk", 400, 40, 80, 30, function() { _funk100.play(); });
+
+		_globalRateLabel = new Text("Global Playback Rate: ", { font: "20px Tahoma", fill:"#FFFFFF" });
+		_btnContainer.addChild(_globalRateLabel);
+		_globalRateLabel.position.y = 90;
+		_addButton("0.25", 0, 130, 80, 30, function() { setGlobalRate(0.25); });
+		_addButton("0.5", 80, 130, 80, 30, function() { setGlobalRate(0.5); });
+		_addButton("1", 160, 130, 80, 30, function() { setGlobalRate(1); });
+		_addButton("1.5", 240, 130, 80, 30, function() { setGlobalRate(1.5); });
+		_addButton("2", 320, 130, 80, 30, function() { setGlobalRate(2); });
+		_addButton("4", 400, 130, 80, 30, function() { setGlobalRate(4); });
+
+		_countdownRateLabel = new Text("Countdown Playback Rate: ", { font: "20px Tahoma", fill:"#FFFFFF" });
+		_btnContainer.addChild(_countdownRateLabel);
+		_countdownRateLabel.position.y = 180;
+		_addButton("0.25", 0, 220, 80, 30, function() { setSoundRate(_countdown, 0.25); });
+		_addButton("0.5", 80, 220, 80, 30, function() { setSoundRate(_countdown, 0.5); });
+		_addButton("1", 160, 220, 80, 30, function() { setSoundRate(_countdown, 1); });
+		_addButton("1.5", 240, 220, 80, 30, function() { setSoundRate(_countdown, 1.5); });
+		_addButton("2", 320, 220, 80, 30, function() { setSoundRate(_countdown, 2); });
+		_addButton("4", 400, 220, 80, 30, function() { setSoundRate(_countdown, 4); });
 
 		_progress = new Text("", { font: "20px Tahoma", fill:"#FFFFFF" });
 		stage.addChild(_progress);
@@ -82,6 +106,16 @@ class Base64 extends Application {
 
     function _pause() {
 		Waud.pause();
+	}
+
+	function setGlobalRate(rate:Float) {
+		Waud.playbackRate(rate);
+		_globalRateLabel.text = "Global Playback Rate: " + Waud.playbackRate();
+	}
+
+	function setSoundRate(sound:IWaudSound, rate:Float) {
+		sound.playbackRate(rate);
+		_countdownRateLabel.text = "Countdown Playback Rate: " + sound.playbackRate();
 	}
 
 	function _addButton(label:String, x:Float, y:Float, width:Float, height:Float, callback:Dynamic) {

@@ -172,6 +172,48 @@ var Base64 = function() {
 	this._addButton("Funk",400,40,80,30,function() {
 		_g._funk100.play();
 	});
+	this._globalRateLabel = new PIXI.Text("Global Playback Rate: ",{ font : "20px Tahoma", fill : "#FFFFFF"});
+	this._btnContainer.addChild(this._globalRateLabel);
+	this._globalRateLabel.position.y = 90;
+	this._addButton("0.25",0,130,80,30,function() {
+		_g.setGlobalRate(0.25);
+	});
+	this._addButton("0.5",80,130,80,30,function() {
+		_g.setGlobalRate(0.5);
+	});
+	this._addButton("1",160,130,80,30,function() {
+		_g.setGlobalRate(1);
+	});
+	this._addButton("1.5",240,130,80,30,function() {
+		_g.setGlobalRate(1.5);
+	});
+	this._addButton("2",320,130,80,30,function() {
+		_g.setGlobalRate(2);
+	});
+	this._addButton("4",400,130,80,30,function() {
+		_g.setGlobalRate(4);
+	});
+	this._countdownRateLabel = new PIXI.Text("Countdown Playback Rate: ",{ font : "20px Tahoma", fill : "#FFFFFF"});
+	this._btnContainer.addChild(this._countdownRateLabel);
+	this._countdownRateLabel.position.y = 180;
+	this._addButton("0.25",0,220,80,30,function() {
+		_g.setSoundRate(_g._countdown,0.25);
+	});
+	this._addButton("0.5",80,220,80,30,function() {
+		_g.setSoundRate(_g._countdown,0.5);
+	});
+	this._addButton("1",160,220,80,30,function() {
+		_g.setSoundRate(_g._countdown,1);
+	});
+	this._addButton("1.5",240,220,80,30,function() {
+		_g.setSoundRate(_g._countdown,1.5);
+	});
+	this._addButton("2",320,220,80,30,function() {
+		_g.setSoundRate(_g._countdown,2);
+	});
+	this._addButton("4",400,220,80,30,function() {
+		_g.setSoundRate(_g._countdown,4);
+	});
 	this._progress = new PIXI.Text("",{ font : "20px Tahoma", fill : "#FFFFFF"});
 	this.stage.addChild(this._progress);
 	Waud.init();
@@ -199,6 +241,14 @@ Base64.prototype = $extend(pixi_plugins_app_Application.prototype,{
 		this._funk100 = __map_reserved["test/funk100.mp3"] != null?snds.getReserved("test/funk100.mp3"):snds.h["test/funk100.mp3"];
 	}
 	,touchUnlock: function() {
+	}
+	,setGlobalRate: function(rate) {
+		Waud.playbackRate(rate);
+		this._globalRateLabel.text = "Global Playback Rate: " + Waud.playbackRate();
+	}
+	,setSoundRate: function(sound,rate) {
+		sound.playbackRate(rate);
+		this._countdownRateLabel.text = "Countdown Playback Rate: " + sound.playbackRate();
 	}
 	,_addButton: function(label,x,y,width,height,callback) {
 		var btn = new Button(label,width,height);
@@ -492,7 +542,7 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 		if(this._tmr != null) this._tmr.stop();
 	}
 	,playbackRate: function(val,spriteName) {
-		if(val == null) val = 1;
+		if(val == null) return this.rate;
 		this._snd.playbackRate = val;
 		return this.rate = val;
 	}
@@ -1066,28 +1116,17 @@ WaudSound.prototype = {
 		} else if(this._snd != null) this._snd.pause();
 	}
 	,playbackRate: function(val,spriteName) {
-		if(this.rate != null) this.rate = val;
-		if(this.isSpriteSound) {
-			if(spriteName != null && this._spriteSounds.get(spriteName) != null) {
-				if(this.rate == null) return this._spriteSounds.get(spriteName).rate; else return this._spriteSounds.get(spriteName).playbackRate(this.rate);
-			} else {
-				if(this.rate == null) {
+		if(val != null) {
+			if(this.isSpriteSound) {
+				if(spriteName != null && this._spriteSounds.get(spriteName) != null) this._spriteSounds.get(spriteName).playbackRate(val); else {
 					var $it0 = this._spriteSounds.iterator();
 					while( $it0.hasNext() ) {
 						var snd = $it0.next();
-						return snd.rate;
-					}
-				} else {
-					var $it1 = this._spriteSounds.iterator();
-					while( $it1.hasNext() ) {
-						var snd1 = $it1.next();
-						snd1.playbackRate(this.rate);
+						snd.playbackRate(val);
 					}
 				}
-				return this.rate;
-			}
-		} else if(this._snd != null) {
-			if(this.rate == null) return this._snd.rate; else return this._snd.playbackRate(this.rate);
+			} else if(this._snd != null) this._snd.playbackRate(val);
+			return this.rate = val;
 		}
 		return this.rate;
 	}
@@ -1378,7 +1417,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		this._pauseTime += this._manager.audioContext.currentTime - this._playStartTime;
 	}
 	,playbackRate: function(val,spriteName) {
-		if(val == null) val = 1;
+		if(val == null) return this.rate;
 		var _g = 0;
 		var _g1 = this._srcNodes;
 		while(_g < _g1.length) {
@@ -1949,7 +1988,7 @@ var __map_reserved = {}
 msignal_SlotList.NIL = new msignal_SlotList(null,null);
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.7.6";
+Waud.version = "0.7.7";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1};
 Waud.preferredSampleRate = 44100;

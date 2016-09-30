@@ -25,8 +25,8 @@
     "contributors": [
 	"adireddy"
     ],
-    "releasenote": "added plaubackRate method",
-    "version": "0.7.6",
+    "releasenote": "bug fixes related to playbackRate method",
+    "version": "0.7.7",
     "url": "https://github.com/waud/waud",
     "dependencies": {}
 }

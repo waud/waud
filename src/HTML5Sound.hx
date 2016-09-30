@@ -172,7 +172,8 @@ import js.html.AudioElement;
 		if (_tmr != null) _tmr.stop();
 	}
 
-	public function playbackRate(?val:Float = 1, ?spriteName:String):Float {
+	public function playbackRate(?val:Float, ?spriteName:String):Float {
+		if (val == null) return rate;
 		_snd.playbackRate = val;
 		return rate = val;
 	}

@@ -343,7 +343,7 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 		if(this._tmr != null) this._tmr.stop();
 	}
 	,playbackRate: function(val,spriteName) {
-		if(val == null) val = 1;
+		if(val == null) return this.rate;
 		this._snd.playbackRate = val;
 		return this.rate = val;
 	}
@@ -1293,28 +1293,17 @@ WaudSound.prototype = {
 		} else if(this._snd != null) this._snd.pause();
 	}
 	,playbackRate: function(val,spriteName) {
-		if(this.rate != null) this.rate = val;
-		if(this.isSpriteSound) {
-			if(spriteName != null && this._spriteSounds.get(spriteName) != null) {
-				if(this.rate == null) return this._spriteSounds.get(spriteName).rate; else return this._spriteSounds.get(spriteName).playbackRate(this.rate);
-			} else {
-				if(this.rate == null) {
+		if(val != null) {
+			if(this.isSpriteSound) {
+				if(spriteName != null && this._spriteSounds.get(spriteName) != null) this._spriteSounds.get(spriteName).playbackRate(val); else {
 					var $it0 = this._spriteSounds.iterator();
 					while( $it0.hasNext() ) {
 						var snd = $it0.next();
-						return snd.rate;
-					}
-				} else {
-					var $it1 = this._spriteSounds.iterator();
-					while( $it1.hasNext() ) {
-						var snd1 = $it1.next();
-						snd1.playbackRate(this.rate);
+						snd.playbackRate(val);
 					}
 				}
-				return this.rate;
-			}
-		} else if(this._snd != null) {
-			if(this.rate == null) return this._snd.rate; else return this._snd.playbackRate(this.rate);
+			} else if(this._snd != null) this._snd.playbackRate(val);
+			return this.rate = val;
 		}
 		return this.rate;
 	}
@@ -1605,7 +1594,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		this._pauseTime += this._manager.audioContext.currentTime - this._playStartTime;
 	}
 	,playbackRate: function(val,spriteName) {
-		if(val == null) val = 1;
+		if(val == null) return this.rate;
 		var _g = 0;
 		var _g1 = this._srcNodes;
 		while(_g < _g1.length) {
@@ -2189,7 +2178,7 @@ Perf.INFO_TXT_CLR = "#000000";
 Perf.DELAY_TIME = 4000;
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.7.6";
+Waud.version = "0.7.7";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1};
 Waud.preferredSampleRate = 44100;

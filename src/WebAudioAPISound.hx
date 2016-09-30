@@ -206,7 +206,8 @@ import js.html.audio.AudioBuffer;
 		_pauseTime += _manager.audioContext.currentTime - _playStartTime;
 	}
 
-	public function playbackRate(?val:Float = 1, ?spriteName:String):Float {
+	public function playbackRate(?val:Float, ?spriteName:String):Float {
+		if (val == null) return rate;
 		for (src in _srcNodes) {
 			src.playbackRate.value = val;
 		}
