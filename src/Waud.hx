@@ -284,10 +284,10 @@ import js.Browser;
 	}
 
 	/**
-	* Helper function to set plauback rate of all the sounds.
+	* Helper function to set playback rate of all the sounds.
 	*
 	* @static
-	* @method mute
+	* @method playbackRate
 	* @param {Float} [val]
 	* @return {Float} current playback rate.
 	* @example

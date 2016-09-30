@@ -411,7 +411,7 @@ import haxe.Json;
 	/**
 	* Function to set playback rate.
 	*
-	* @method setTime
+	* @method playbackRate
 	* @param {Float} [val] - playback rate.
 	* @return {Float} current playback rate.
 	* @example
