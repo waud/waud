@@ -126,7 +126,15 @@ class Main extends Application {
 		_addButton("Web Audio", 200, 500, 120, 30, function() { _autoStopSndWebAudio.play(); });
 		_addButton("HTML5 Audio", 320, 500, 120, 30, function() { _autoStopSndHTML5.play(); });
 
-		_addButton("DESTROY", 200, 550, 180, 30, function() { Waud.destroy(); });
+		label = new Text("Playback Rate: ", { font: "26px Tahoma", fill:"#FFFFFF" });
+		_btnContainer.addChild(label);
+		label.position.y = 550;
+		_addButton("1.25", 200, 550, 60, 30, function() { Waud.playbackRate(1.25); });
+		_addButton("0.5", 260, 550, 60, 30, function() { Waud.playbackRate(0.5); });
+		_addButton("4.0", 320, 550, 60, 30, function() { Waud.playbackRate(4.0); });
+		_addButton("5.0", 380, 550, 60, 30, function() { Waud.playbackRate(5.0); });
+
+		_addButton("DESTROY", 200, 600, 180, 30, function() { Waud.destroy(); });
 
 		_ua = new Text(Browser.navigator.userAgent, { font: "12px Tahoma", fill:"#FFFFFF" });
 		stage.addChild(_ua);
@@ -167,8 +175,8 @@ class Main extends Application {
 		_b64SndWebAudio = new WaudSound(_b64Str);
 		_b64SndHTML5 = new WaudSound(_b64Str, {webaudio: false});
 
-		_autoStopSndWebAudio = new WaudSound("assets/funk100.mp3", {autostop: false});
-		_autoStopSndHTML5 = new WaudSound("assets/funk100.mp3", {webaudio: false, autostop: false});
+		_autoStopSndWebAudio = new WaudSound("assets/funk100.mp3?1", {autostop: false});
+		_autoStopSndHTML5 = new WaudSound("assets/funk100.mp3?2", {webaudio: false, autostop: false});
 
 		_resize();
 	}
