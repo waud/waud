@@ -131,8 +131,8 @@ class Main extends Application {
 		label.position.y = 550;
 		_addButton("1.25", 200, 550, 60, 30, function() { Waud.playbackRate(1.25); });
 		_addButton("0.5", 260, 550, 60, 30, function() { Waud.playbackRate(0.5); });
-		_addButton("4.0", 320, 550, 60, 30, function() { Waud.playbackRate(4.0); });
-		_addButton("5.0", 380, 550, 60, 30, function() { Waud.playbackRate(5.0); });
+		_addButton("2.0", 320, 550, 60, 30, function() { Waud.playbackRate(2.0); });
+		_addButton("4.0", 380, 550, 60, 30, function() { Waud.playbackRate(4.0); });
 
 		_addButton("DESTROY", 200, 600, 180, 30, function() { Waud.destroy(); });
 
