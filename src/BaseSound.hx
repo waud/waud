@@ -29,7 +29,6 @@
 		_isPlaying = false;
 		_muted = false;
 		_duration = 0;
-		rate = 1;
 		if (options == null) options = {};
 
 		options.autoplay = (options.autoplay != null) ? options.autoplay : Waud.defaults.autoplay;
@@ -38,9 +37,12 @@
 		options.preload = (options.preload != null) ? options.preload : Waud.defaults.preload;
 		options.loop = (options.loop != null) ? options.loop : Waud.defaults.loop;
 		options.volume = (options.volume != null && options.volume >= 0 && options.volume <= 1) ? options.volume : Waud.defaults.volume;
+		options.playbackRate = (options.playbackRate != null && options.playbackRate >= 0 && options.playbackRate <= 4) ? options.playbackRate : Waud.defaults.playbackRate;
 		options.onload = (options.onload != null) ? options.onload : Waud.defaults.onload;
 		options.onend = (options.onend != null) ? options.onend : Waud.defaults.onend;
 		options.onerror = (options.onerror != null) ? options.onerror : Waud.defaults.onerror;
+
+		rate = options.playbackRate;
 
 		_options = options;
 	}

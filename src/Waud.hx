@@ -20,7 +20,7 @@ import js.Browser;
 	* @static
 	* @type {String}
 	*/
-	public static var version:String = "0.7.7";
+	public static var version:String = "0.7.8";
 
 	/**
 	* Tells whether to use web audio api or not.
@@ -78,7 +78,8 @@ import js.Browser;
 		loop: false,
 		preload: true,
 		webaudio: true,
-		volume: 1
+		volume: 1,
+		playbackRate: 1
 	};
 
 	/**
