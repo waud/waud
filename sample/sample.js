@@ -624,11 +624,11 @@ var Main = function() {
 	this._addButton("0.5",260,550,60,30,function() {
 		Waud.playbackRate(0.5);
 	});
-	this._addButton("4.0",320,550,60,30,function() {
-		Waud.playbackRate(4.0);
+	this._addButton("2.0",320,550,60,30,function() {
+		Waud.playbackRate(2.0);
 	});
-	this._addButton("5.0",380,550,60,30,function() {
-		Waud.playbackRate(5.0);
+	this._addButton("4.0",380,550,60,30,function() {
+		Waud.playbackRate(4.0);
 	});
 	this._addButton("DESTROY",200,600,180,30,function() {
 		Waud.destroy();
@@ -2189,7 +2189,7 @@ Perf.INFO_TXT_CLR = "#000000";
 Perf.DELAY_TIME = 4000;
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.7.5";
+Waud.version = "0.7.6";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1};
 Waud.preferredSampleRate = 44100;
