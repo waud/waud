@@ -118,12 +118,6 @@
 	    "type": "HiddenField"
 	},
 	{
-	    "type": "InnerAssignment",
-	    "props": {
-		"severity": "WARNING"
-	    }
-	},
-	{
 	    "props": {
 		"allowMarkerInterfaces": true,
 		"allowProperties": true
