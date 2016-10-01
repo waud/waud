@@ -123,7 +123,7 @@ import js.html.audio.AudioBuffer;
 			start = soundProps.start + _pauseTime;
 			end = soundProps.duration;
 		}
-		var buffer = _manager.bufferList.get(url);
+		var buffer = (_manager.bufferList != null) ? _manager.bufferList.get(url) : null;
 		if (buffer != null) {
 			source = _makeSource(buffer);
 

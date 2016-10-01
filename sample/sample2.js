@@ -1214,7 +1214,8 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 			start = soundProps.start + this._pauseTime;
 			end = soundProps.duration;
 		}
-		var buffer = this._manager.bufferList.get(this.url);
+		var buffer;
+		if(this._manager.bufferList != null) buffer = this._manager.bufferList.get(this.url); else buffer = null;
 		if(buffer != null) {
 			this.source = this._makeSource(buffer);
 			if(start >= 0 && end > -1) {
