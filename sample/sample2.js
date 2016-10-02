@@ -79,19 +79,8 @@ var BaseSound = function(sndUrl,options) {
 	this._isPlaying = false;
 	this._muted = false;
 	this._duration = 0;
-	if(options == null) options = { };
-	if(options.autoplay != null) options.autoplay = options.autoplay; else options.autoplay = Waud.defaults.autoplay;
-	if(options.autostop != null) options.autostop = options.autostop; else options.autostop = Waud.defaults.autostop;
-	if(options.webaudio != null) options.webaudio = options.webaudio; else options.webaudio = Waud.defaults.webaudio;
-	if(options.preload != null) options.preload = options.preload; else options.preload = Waud.defaults.preload;
-	if(options.loop != null) options.loop = options.loop; else options.loop = Waud.defaults.loop;
-	if(options.volume != null && options.volume >= 0 && options.volume <= 1) options.volume = options.volume; else options.volume = Waud.defaults.volume;
-	if(options.playbackRate != null && options.playbackRate >= 0 && options.playbackRate <= 4) options.playbackRate = options.playbackRate; else options.playbackRate = Waud.defaults.playbackRate;
-	if(options.onload != null) options.onload = options.onload; else options.onload = Waud.defaults.onload;
-	if(options.onend != null) options.onend = options.onend; else options.onend = Waud.defaults.onend;
-	if(options.onerror != null) options.onerror = options.onerror; else options.onerror = Waud.defaults.onerror;
-	this.rate = options.playbackRate;
-	this._options = options;
+	this._options = WaudUtils.setDefaultOptions(options);
+	this.rate = this._options.playbackRate;
 };
 BaseSound.__name__ = true;
 BaseSound.prototype = {
@@ -1117,6 +1106,20 @@ WaudUtils.getiOSVersion = function(ua) {
 		matched = _g;
 	}
 	return matched;
+};
+WaudUtils.setDefaultOptions = function(options) {
+	if(options == null) options = { };
+	if(options.autoplay != null) options.autoplay = options.autoplay; else options.autoplay = Waud.defaults.autoplay;
+	if(options.autostop != null) options.autostop = options.autostop; else options.autostop = Waud.defaults.autostop;
+	if(options.webaudio != null) options.webaudio = options.webaudio; else options.webaudio = Waud.defaults.webaudio;
+	if(options.preload != null) options.preload = options.preload; else options.preload = Waud.defaults.preload;
+	if(options.loop != null) options.loop = options.loop; else options.loop = Waud.defaults.loop;
+	if(options.onload != null) options.onload = options.onload; else options.onload = Waud.defaults.onload;
+	if(options.onend != null) options.onend = options.onend; else options.onend = Waud.defaults.onend;
+	if(options.onerror != null) options.onerror = options.onerror; else options.onerror = Waud.defaults.onerror;
+	if(options.volume == null || options.volume < 0 || options.volume > 1) options.volume = Waud.defaults.volume;
+	if(options.playbackRate == null || options.playbackRate <= 0 || options.playbackRate >= 4) options.playbackRate = Waud.defaults.playbackRate;
+	return options;
 };
 var WebAudioAPISound = function(url,options,loaded,d) {
 	if(d == null) d = 0;

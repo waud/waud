@@ -138,4 +138,28 @@ import js.Browser;
 		}
 		return matched;
 	}
+
+	/**
+	* Function to set default audio options.
+	*
+	* @static
+	* @method setDefaultOptions
+	* @return {WaudSoundOptions}
+	* @example
+	*     Waud.setDefaultOptions(options);
+	*/
+	public static function setDefaultOptions(options:WaudSoundOptions):WaudSoundOptions {
+		if (options == null) options = {};
+		options.autoplay = (options.autoplay != null) ? options.autoplay : Waud.defaults.autoplay;
+		options.autostop = (options.autostop != null) ? options.autostop : Waud.defaults.autostop;
+		options.webaudio = (options.webaudio != null) ? options.webaudio : Waud.defaults.webaudio;
+		options.preload = (options.preload != null) ? options.preload : Waud.defaults.preload;
+		options.loop = (options.loop != null) ? options.loop : Waud.defaults.loop;
+		options.onload = (options.onload != null) ? options.onload : Waud.defaults.onload;
+		options.onend = (options.onend != null) ? options.onend : Waud.defaults.onend;
+		options.onerror = (options.onerror != null) ? options.onerror : Waud.defaults.onerror;
+		if (options.volume == null || options.volume < 0 || options.volume > 1) options.volume = Waud.defaults.volume;
+		if (options.playbackRate == null || options.playbackRate <= 0 || options.playbackRate >= 4) options.playbackRate = Waud.defaults.playbackRate;
+		return options;
+	}
 }
