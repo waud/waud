@@ -1,3 +1,4 @@
+import WaudUtils;
 @:keep class BaseSound {
 
 	public var isSpriteSound:Bool;
@@ -29,20 +30,9 @@
 		_isPlaying = false;
 		_muted = false;
 		_duration = 0;
-		rate = 1;
-		if (options == null) options = {};
+		_options = WaudUtils.setDefaultOptions(options);
 
-		options.autoplay = (options.autoplay != null) ? options.autoplay : Waud.defaults.autoplay;
-		options.autostop = (options.autostop != null) ? options.autostop : Waud.defaults.autostop;
-		options.webaudio = (options.webaudio != null) ? options.webaudio : Waud.defaults.webaudio;
-		options.preload = (options.preload != null) ? options.preload : Waud.defaults.preload;
-		options.loop = (options.loop != null) ? options.loop : Waud.defaults.loop;
-		options.volume = (options.volume != null && options.volume >= 0 && options.volume <= 1) ? options.volume : Waud.defaults.volume;
-		options.onload = (options.onload != null) ? options.onload : Waud.defaults.onload;
-		options.onend = (options.onend != null) ? options.onend : Waud.defaults.onend;
-		options.onerror = (options.onerror != null) ? options.onerror : Waud.defaults.onerror;
-
-		_options = options;
+		rate = _options.playbackRate;
 	}
 
 	public function isReady():Bool {

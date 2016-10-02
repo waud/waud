@@ -1,3 +1,4 @@
+import WaudUtils;
 import haxe.Json;
 import js.html.XMLHttpRequest;
 
@@ -5,7 +6,10 @@ import js.html.XMLHttpRequest;
 
 	public var progress:Float;
 
+	public var options:WaudSoundOptions;
+
 	var _sounds:Map<String, IWaudSound>;
+	var _options:WaudSoundOptions;
 	var _onLoaded:Map<String, IWaudSound> -> Void;
 	var _onError:Void -> Void;
 	var _onProgress:Float -> Float -> Void;
@@ -19,6 +23,7 @@ import js.html.XMLHttpRequest;
 	* @class WaudBase64Pack
 	* @constructor
 	* @param {String} url - Base64 packed JSON file.
+	* @param {WaudSoundOptions} [options] - Sound options.
 	* @param {IWaudSound> -> Void} [onLoaded] - on load callback.
 	* @param {Float -> Void} [onProgress] - on progress callback.
 	* @param {Void> -> Void} [onError] - on error callback.
@@ -37,7 +42,7 @@ import js.html.XMLHttpRequest;
 	* 			trace("error loading base64 json file");
 	* 		}
 	*/
-	public function new(url:String, ?onLoaded:Map<String, IWaudSound> -> Void, ?onProgress:Float -> Float -> Void, ?onError:Void -> Void) {
+	public function new(url:String, ?options:WaudSoundOptions = null, ?onLoaded:Map<String, IWaudSound> -> Void, ?onProgress:Float -> Float -> Void, ?onError:Void -> Void) {
 		if (Waud.audioManager == null) {
 			trace("initialise Waud using Waud.init() before loading sounds");
 			return;
@@ -45,6 +50,7 @@ import js.html.XMLHttpRequest;
 
 		if (url.indexOf(".json") > 0) {
 			progress = 0;
+			_options = WaudUtils.setDefaultOptions(options);
 			_totalSize = 0;
 			_soundCount = 0;
 			_loadCount = 0;
@@ -108,12 +114,22 @@ import js.html.XMLHttpRequest;
 			onload:function(s:IWaudSound) {
 				_sounds.set(id, s);
 				Waud.sounds.set(id, s);
+				if (_options.onload != null) _options.onload(s);
 				_checkProgress();
 			},
 			onerror:function(s:IWaudSound) {
 				_sounds.set(id, null);
+				if (_options.onerror != null) _options.onerror(s);
 				if (_checkProgress() && _onError != null) _onError();
-			}
+			},
+			autoplay:_options.autoplay,
+			autostop:_options.autostop,
+			loop:_options.loop,
+			onend:_options.onend,
+			playbackRate:_options.playbackRate,
+			preload:_options.preload,
+			volume:_options.volume,
+			webaudio:_options.webaudio
 		});
 	}
 

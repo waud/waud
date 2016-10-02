@@ -37,6 +37,14 @@ typedef WaudSoundOptions = {
 	@:optional var volume:Float;
 
 	/**
+	* Playback rate between 0 and 4.
+	* @property playbackRate
+	* @type {Float}
+	* @default 1
+	*/
+	@:optional var playbackRate:Float;
+
+	/**
 	* Callback function when the sound is loaded with sound instance as parameter.
 	* @property onload
 	* @type {Function}
