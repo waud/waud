@@ -476,7 +476,7 @@ Waud.destroy = function() {
 		Waud._focusManager = null;
 	}
 };
-var WaudBase64Pack = $hx_exports.WaudBase64Pack = function(url,options,onLoaded,onProgress,onError) {
+var WaudBase64Pack = $hx_exports.WaudBase64Pack = function(url,onLoaded,onProgress,onError,options) {
 	if(Waud.audioManager == null) {
 		console.log("initialise Waud using Waud.init() before loading sounds");
 		return;
@@ -1448,7 +1448,7 @@ var Enum = { };
 var __map_reserved = {}
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.7.8";
+Waud.version = "0.7.9";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1, playbackRate : 1};
 Waud.preferredSampleRate = 44100;
