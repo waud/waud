@@ -219,7 +219,7 @@ var Base64 = function() {
 	Waud.init();
 	Waud.autoMute();
 	Waud.enableTouchUnlock($bind(this,this.touchUnlock));
-	this._snd = new WaudBase64Pack("assets/sounds.json",null,$bind(this,this._onLoad),$bind(this,this._onProgress));
+	this._snd = new WaudBase64Pack("assets/sounds.json",$bind(this,this._onLoad),$bind(this,this._onProgress));
 	this._resize();
 };
 Base64.__name__ = true;
@@ -764,7 +764,7 @@ Waud.destroy = function() {
 		Waud._focusManager = null;
 	}
 };
-var WaudBase64Pack = $hx_exports.WaudBase64Pack = function(url,options,onLoaded,onProgress,onError) {
+var WaudBase64Pack = $hx_exports.WaudBase64Pack = function(url,onLoaded,onProgress,onError,options) {
 	if(Waud.audioManager == null) {
 		console.log("initialise Waud using Waud.init() before loading sounds");
 		return;
@@ -1996,7 +1996,7 @@ var __map_reserved = {}
 msignal_SlotList.NIL = new msignal_SlotList(null,null);
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.7.8";
+Waud.version = "0.7.9";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1, playbackRate : 1};
 Waud.preferredSampleRate = 44100;
