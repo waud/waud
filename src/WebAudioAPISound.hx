@@ -127,15 +127,9 @@ import js.html.audio.AudioBuffer;
 		if (buffer != null) {
 			source = _makeSource(buffer);
 
-			if (start >= 0 && end > -1) {
-				if (Reflect.field(source, "start") != null) source.start(0, start, end);
-				else {
-					untyped __js__("this._snd").noteGrainOn(0, start, end);
-				}
-			}
+			if (start >= 0 && end > -1) _start(0, start, end)
 			else {
-				if (Reflect.field(source, "start") != null) source.start(0, _pauseTime, source.buffer.duration);
-				else untyped __js__("this._snd").noteGrainOn(0, _pauseTime, source.buffer.duration);
+				_start(0, _pauseTime, source.buffer.duration);
 				source.loop = _options.loop;
 			}
 
@@ -153,6 +147,18 @@ import js.html.audio.AudioBuffer;
 		}
 
 		return _srcNodes.indexOf(source);
+	}
+
+	function _start(when:Float, offset:Float, duration:Float) {
+		if (Reflect.field(source, "start") != null) {
+			source.start(when, offset, duration);
+		}
+		else if (Reflect.field(source, "noteGrainOn") != null) {
+			Reflect.callMethod(source, Reflect.field(source, "noteGrainOn"), [when, offset, duration]);
+		}
+		else if (Reflect.field(source, "noteOn") != null) {
+			Reflect.callMethod(source, Reflect.field(source, "noteOn"), [when, offset, duration]);
+		}
 	}
 
 	public function togglePlay(?spriteName:String) {
@@ -249,10 +255,7 @@ import js.html.audio.AudioBuffer;
 		for (src in _srcNodes) {
 			if (Reflect.field(src, "stop") != null) src.stop(0);
 			else if (Reflect.field(src, "noteOff") != null) {
-				try {
-					untyped __js__("this.src").noteOff(0);
-				}
-				catch (e:Dynamic) {}
+				Reflect.callMethod(src, Reflect.field(src, "noteOff"), [0]);
 			}
 			src.disconnect();
 			src = null;
