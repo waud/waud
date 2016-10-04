@@ -398,6 +398,9 @@ Reflect.field = function(o,field) {
 		return null;
 	}
 };
+Reflect.callMethod = function(o,func,args) {
+	return func.apply(o,args);
+};
 Reflect.isFunction = function(f) {
 	return typeof(f) == "function" && !(f.__name__ || f.__ename__);
 };
@@ -1221,10 +1224,8 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		if(this._manager.bufferList != null) buffer = this._manager.bufferList.get(this.url); else buffer = null;
 		if(buffer != null) {
 			this.source = this._makeSource(buffer);
-			if(start >= 0 && end > -1) {
-				if(Reflect.field(this.source,"start") != null) this.source.start(0,start,end); else this._snd.noteGrainOn(0,start,end);
-			} else {
-				if(Reflect.field(this.source,"start") != null) this.source.start(0,this._pauseTime,this.source.buffer.duration); else this._snd.noteGrainOn(0,this._pauseTime,this.source.buffer.duration);
+			if(start >= 0 && end > -1) this._start(0,start,end); else {
+				this._start(0,this._pauseTime,this.source.buffer.duration);
 				this.source.loop = this._options.loop;
 			}
 			this._playStartTime = this._manager.audioContext.currentTime;
@@ -1239,6 +1240,9 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 			};
 		}
 		return HxOverrides.indexOf(this._srcNodes,this.source,0);
+	}
+	,_start: function(when,offset,duration) {
+		if(Reflect.field(this.source,"start") != null) this.source.start(when,offset,duration); else if(Reflect.field(this.source,"noteGrainOn") != null) Reflect.callMethod(this.source,Reflect.field(this.source,"noteGrainOn"),[when,offset,duration]); else if(Reflect.field(this.source,"noteOn") != null) Reflect.callMethod(this.source,Reflect.field(this.source,"noteOn"),[when,offset,duration]);
 	}
 	,togglePlay: function(spriteName) {
 		if(this._isPlaying) this.pause(); else this.play();
@@ -1320,11 +1324,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		while(_g < _g1.length) {
 			var src = _g1[_g];
 			++_g;
-			if(Reflect.field(src,"stop") != null) src.stop(0); else if(Reflect.field(src,"noteOff") != null) try {
-				this.src.noteOff(0);
-			} catch( e ) {
-				if (e instanceof js__$Boot_HaxeError) e = e.val;
-			}
+			if(Reflect.field(src,"stop") != null) src.stop(0); else if(Reflect.field(src,"noteOff") != null) Reflect.callMethod(src,Reflect.field(src,"noteOff"),[0]);
 			src.disconnect();
 			src = null;
 		}
@@ -1851,7 +1851,7 @@ var __map_reserved = {}
 msignal_SlotList.NIL = new msignal_SlotList(null,null);
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.7.9";
+Waud.version = "0.8.0";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1, playbackRate : 1};
 Waud.preferredSampleRate = 44100;
