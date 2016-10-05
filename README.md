@@ -3,6 +3,7 @@ Web Audio Library with HTML5 audio fallback.
 
 [![Build Status](https://travis-ci.org/waud/waud.svg?branch=dev)](https://travis-ci.org/waud/waud)
 [![npm version](https://badge.fury.io/js/waud.js.svg)](https://badge.fury.io/js/waud.js)
+[![Dependencies](https://img.shields.io/badge/dependencies-none-green.svg)
 [![Code Climate](https://codeclimate.com/github/waud/waud/badges/gpa.svg)](https://codeclimate.com/github/waud/waud)
 [![Issue Count](https://codeclimate.com/github/waud/waud/badges/issue_count.svg)](https://codeclimate.com/github/waud/waud/issues)
 
