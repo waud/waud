@@ -1,4 +1,3 @@
-import WaudUtils;
 @:keep class BaseSound {
 
 	public var isSpriteSound:Bool;
