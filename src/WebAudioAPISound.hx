@@ -88,12 +88,13 @@ import js.html.audio.AudioBuffer;
 	function _makeSource(buffer:AudioBuffer):AudioBufferSourceNode {
 		var bufferSource:AudioBufferSourceNode = _manager.audioContext.createBufferSource();
 		bufferSource.buffer = buffer;
-		if (untyped __js__("this._manager.audioContext").createGain != null) _gainNode = _manager.audioContext.createGain();
-		else _gainNode = untyped __js__("this._manager.audioContext").createGainNode();
+
+		_gainNode = _manager.createGain();
 
 		bufferSource.connect(_gainNode);
 		bufferSource.playbackRate.value = rate;
 		_gainNode.connect(_manager.audioContext.destination);
+		_manager.gainNode.connect(_manager.audioContext.destination);
 		_srcNodes.push(bufferSource);
 		_gainNodes.push(_gainNode);
 

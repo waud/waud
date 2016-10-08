@@ -49,11 +49,15 @@ AudioManager.prototype = {
 	,createAudioContext: function() {
 		if(this.audioContext == null) try {
 			if(Reflect.field(window,"AudioContext") != null) this.audioContext = new AudioContext(); else if(Reflect.field(window,"webkitAudioContext") != null) this.audioContext = new webkitAudioContext();
+			this.gainNode = this.createGain();
 		} catch( e ) {
 			if (e instanceof js__$Boot_HaxeError) e = e.val;
 			this.audioContext = null;
 		}
 		return this.audioContext;
+	}
+	,createGain: function() {
+		if(($_=this.audioContext,$bind($_,$_.createGain)) != null) return this.audioContext.createGain(); else return Reflect.callMethod(this.audioContext,Reflect.field(this.audioContext,"createGainNode"),[]);
 	}
 	,destroy: function() {
 		if(this.audioContext != null && (this.audioContext.close != null && this.audioContext.close != "")) this.audioContext.close();
@@ -1192,10 +1196,11 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 	,_makeSource: function(buffer) {
 		var bufferSource = this._manager.audioContext.createBufferSource();
 		bufferSource.buffer = buffer;
-		if(this._manager.audioContext.createGain != null) this._gainNode = this._manager.audioContext.createGain(); else this._gainNode = this._manager.audioContext.createGainNode();
+		this._gainNode = this._manager.createGain();
 		bufferSource.connect(this._gainNode);
 		bufferSource.playbackRate.value = this.rate;
 		this._gainNode.connect(this._manager.audioContext.destination);
+		this._manager.gainNode.connect(this._manager.audioContext.destination);
 		this._srcNodes.push(bufferSource);
 		this._gainNodes.push(this._gainNode);
 		if(this._muted) this._gainNode.gain.value = 0; else this._gainNode.gain.value = this._options.volume;

@@ -1,3 +1,4 @@
+import js.html.audio.GainNode;
 import js.html.AudioElement;
 import js.html.SourceElement;
 import js.html.audio.AudioBufferSourceNode;
@@ -23,6 +24,15 @@ class AudioManager {
 	* @type {AudioContext}
 	*/
 	public var audioContext(default, null):AudioContext;
+
+	/**
+	* Master Gain Node
+	*
+	* @property gainNode
+	* @protected
+	* @type {GainNode}
+	*/
+	public var gainNode(default, null):GainNode;
 
 	/**
 	* Audio buffer list.
@@ -126,12 +136,18 @@ class AudioManager {
 				else if (Reflect.field(Browser.window, "webkitAudioContext") != null) {
 					audioContext = untyped __js__("new webkitAudioContext()");
 				}
+				gainNode = createGain();
 			}
 			catch (e:Dynamic) {
 				audioContext = null;
 			}
 		}
 		return audioContext;
+	}
+
+	public function createGain():GainNode {
+		if (audioContext.createGain != null) return audioContext.createGain();
+		else return Reflect.callMethod(audioContext, Reflect.field(audioContext, "createGainNode"), []);
 	}
 
 	/**
