@@ -93,8 +93,9 @@ import js.html.audio.AudioBuffer;
 
 		bufferSource.connect(_gainNode);
 		bufferSource.playbackRate.value = rate;
-		_gainNode.connect(_manager.audioContext.destination);
-		_manager.gainNode.connect(_manager.audioContext.destination);
+		_gainNode.connect(_manager.masterGainNode);
+		_manager.masterGainNode.connect(_manager.audioContext.destination);
+
 		_srcNodes.push(bufferSource);
 		_gainNodes.push(_gainNode);
 

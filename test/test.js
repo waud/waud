@@ -19,7 +19,7 @@ AudioManager.__name__ = ["AudioManager"];
 AudioManager.prototype = {
 	types: null
 	,audioContext: null
-	,gainNode: null
+	,masterGainNode: null
 	,bufferList: null
 	,checkWebAudioAPISupport: function() {
 		return Reflect.field(window,"AudioContext") != null || Reflect.field(window,"webkitAudioContext") != null;
@@ -54,7 +54,7 @@ AudioManager.prototype = {
 	,createAudioContext: function() {
 		if(this.audioContext == null) try {
 			if(Reflect.field(window,"AudioContext") != null) this.audioContext = new AudioContext(); else if(Reflect.field(window,"webkitAudioContext") != null) this.audioContext = new webkitAudioContext();
-			this.gainNode = this.createGain();
+			this.masterGainNode = this.createGain();
 		} catch( e ) {
 			haxe_CallStack.lastException = e;
 			if (e instanceof js__$Boot_HaxeError) e = e.val;

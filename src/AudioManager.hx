@@ -32,7 +32,7 @@ class AudioManager {
 	* @protected
 	* @type {GainNode}
 	*/
-	public var gainNode(default, null):GainNode;
+	public var masterGainNode(default, null):GainNode;
 
 	/**
 	* Audio buffer list.
@@ -136,7 +136,7 @@ class AudioManager {
 				else if (Reflect.field(Browser.window, "webkitAudioContext") != null) {
 					audioContext = untyped __js__("new webkitAudioContext()");
 				}
-				gainNode = createGain();
+				masterGainNode = createGain();
 			}
 			catch (e:Dynamic) {
 				audioContext = null;
