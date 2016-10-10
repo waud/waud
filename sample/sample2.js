@@ -578,30 +578,17 @@ Waud.init = function(d) {
 		Waud.isHTML5AudioSupported = Reflect.field(window,"Audio") != null;
 		if(Waud.isWebAudioSupported) Waud.audioContext = Waud.audioManager.createAudioContext();
 		Waud.sounds = new haxe_ds_StringMap();
+		Waud._volume = 1;
 	}
 };
 Waud.autoMute = function() {
-	var blur = function() {
-		if(Waud.sounds != null) {
-			var $it0 = Waud.sounds.iterator();
-			while( $it0.hasNext() ) {
-				var sound = $it0.next();
-				sound.mute(true);
-			}
-		}
-	};
-	var focus = function() {
-		if(!Waud.isMuted && Waud.sounds != null) {
-			var $it1 = Waud.sounds.iterator();
-			while( $it1.hasNext() ) {
-				var sound1 = $it1.next();
-				sound1.mute(false);
-			}
-		}
-	};
 	Waud._focusManager = new WaudFocusManager();
-	Waud._focusManager.focus = focus;
-	Waud._focusManager.blur = blur;
+	Waud._focusManager.focus = function() {
+		Waud.mute(false);
+	};
+	Waud._focusManager.blur = function() {
+		Waud.mute(true);
+	};
 };
 Waud.enableTouchUnlock = function(callback) {
 	Waud.__touchUnlockCallback = callback;
@@ -681,7 +668,7 @@ Waud.isM4ASupported = function() {
 	var canPlay = Waud.__audioElement.canPlayType("audio/x-m4a;");
 	return Waud.isHTML5AudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe");
 };
-Waud.get_sampleRate = function() {
+Waud.getSampleRate = function() {
 	if(Waud.audioContext != null) return Waud.audioContext.sampleRate; else return 0;
 };
 Waud.destroy = function() {
@@ -703,6 +690,23 @@ Waud.destroy = function() {
 		Waud._focusManager.focus = null;
 		Waud._focusManager = null;
 	}
+};
+Waud.prototype = {
+	setVolume: function(val) {
+		if(val < 0 || val > 1) return;
+		Waud._volume = val;
+		if(Waud.sounds != null) {
+			var $it0 = Waud.sounds.iterator();
+			while( $it0.hasNext() ) {
+				var sound = $it0.next();
+				sound.setVolume(val);
+			}
+		}
+	}
+	,getVolume: function() {
+		return Waud._volume;
+	}
+	,__class__: Waud
 };
 var WaudFocusManager = $hx_exports.WaudFocusManager = function() {
 	var _g = this;

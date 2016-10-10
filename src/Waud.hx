@@ -129,15 +129,6 @@ import js.Browser;
 	public static var audioContext:AudioContext;
 
 	/**
-	* Audio Context sample rate.
-	*
-	* @property sampleRate
-	* @static
-	* @type {Float}
-	*/
-	public static var sampleRate(get, null):Float;
-
-	/**
 	* Document dom element used for appending sounds and touch events.
 	*
 	* @property dom
@@ -202,6 +193,17 @@ import js.Browser;
 	static var _focusManager:WaudFocusManager;
 
 	/**
+	* Current global volume.
+	*
+	* @property _volume
+	* @static
+	* @private
+	* @type {Float}
+	* @readOnly
+	*/
+	static var _volume:Float;
+
+	/**
 	* To initialise the library, make sure you call this first.
 	*
 	* You can also pass an optional parent DOM element to it where all the HTML5 sounds will be appended
@@ -225,6 +227,7 @@ import js.Browser;
 			if (isWebAudioSupported) audioContext = Waud.audioManager.createAudioContext();
 
 			sounds = new Map();
+			_volume = 1;
 		}
 	}
 
@@ -239,17 +242,9 @@ import js.Browser;
  	*     Waud.autoMute();
 	*/
 	public static function autoMute() {
-		var blur = function() {
-			if (sounds != null) for (sound in sounds) sound.mute(true);
-		};
-
-		var focus = function() {
-			if (!isMuted && sounds != null) for (sound in sounds) sound.mute(false);
-		};
-
 		_focusManager = new WaudFocusManager();
-		_focusManager.focus = focus;
-		_focusManager.blur = blur;
+		_focusManager.focus = function() mute(false);
+		_focusManager.blur = function() mute(true);
 	}
 
 	/**
@@ -266,6 +261,32 @@ import js.Browser;
 	public static function enableTouchUnlock(?callback:Void -> Void) {
 		__touchUnlockCallback = callback;
 		dom.ontouchend = Waud.audioManager.unlockAudio;
+	}
+
+	/**
+	* Function to set global volume.
+	*
+	* @method setVolume
+	* @param {Float} val - Should be between 0 and 1.
+	* @example
+	*     Waud.setVolume(0.5);
+	*/
+	public function setVolume(val:Float) {
+		if (val < 0 || val > 1) return;
+		_volume = val;
+		if (sounds != null) for (sound in sounds) sound.setVolume(val);
+	}
+
+	/**
+	* Function to get global volume.
+	*
+	* @method getVolume
+	* @return {Float} between 0 and 1
+	* @example
+	*     Waud.getVolume();
+	*/
+	public function getVolume():Float {
+		return _volume;
 	}
 
 	/**
@@ -433,11 +454,13 @@ import js.Browser;
 	/**
 	* Function to get current sample rate of audio context.
 	*
-	* @private
 	* @static
-	* @method get_sampleRate
+	* @method getSampleRate
+	* @return {Float} sample rate
+	* @example
+	*     Waud.getSampleRate();
 	*/
-	static function get_sampleRate():Float {
+	public static function getSampleRate():Float {
 		return audioContext != null ? audioContext.sampleRate : 0;
 	}
 
