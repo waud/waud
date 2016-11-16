@@ -25,8 +25,8 @@
     "contributors": [
 	"adireddy"
     ],
-    "releasenote": "bug fix #20",
-    "version": "0.8.0",
+    "releasenote": "added global getVolume and setVolume methods",
+    "version": "0.8.1",
     "url": "https://github.com/waud/waud",
     "dependencies": {}
 }
