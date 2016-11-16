@@ -266,6 +266,7 @@ import js.Browser;
 	/**
 	* Function to set global volume.
 	*
+	* @static
 	* @method setVolume
 	* @param {Float} val - Should be between 0 and 1.
 	* @example
@@ -280,6 +281,7 @@ import js.Browser;
 	/**
 	* Function to get global volume.
 	*
+	* @static
 	* @method getVolume
 	* @return {Float} between 0 and 1
 	* @example
