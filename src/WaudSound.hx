@@ -1,3 +1,4 @@
+import js.Browser;
 import js.html.audio.AudioBuffer;
 import js.html.XMLHttpRequestResponseType;
 import js.html.XMLHttpRequest;
@@ -181,13 +182,16 @@ import haxe.Json;
 	*     snd.setVolume(0.5);
 	*/
 	public function setVolume(val:Float, ?spriteName:String) {
-		if (isSpriteSound) {
-			if (spriteName != null && _spriteSounds[spriteName] != null) _spriteSounds[spriteName].setVolume(val);
-			return;
-		}
+		if (Std.is(val, Int) || Std.is(val, Float)) {
+			if (isSpriteSound) {
+				if (spriteName != null && _spriteSounds[spriteName] != null) _spriteSounds[spriteName].setVolume(val);
+				return;
+			}
 
-		if (_snd == null) return;
-		_snd.setVolume(val);
+			if (_snd == null) return;
+			_snd.setVolume(val);
+		}
+		else Browser.console.warn("Volume should be a number between 0 and 1. Received: " + val);
 	}
 
 	/**

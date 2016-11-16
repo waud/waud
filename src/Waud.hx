@@ -273,9 +273,11 @@ import js.Browser;
 	*     Waud.setVolume(0.5);
 	*/
 	public static function setVolume(val:Float) {
-		if (val < 0 || val > 1) return;
-		_volume = val;
-		if (sounds != null) for (sound in sounds) sound.setVolume(val);
+		if ((Std.is(val, Int) || Std.is(val, Float)) && val >= 0 && val <= 1) {
+			_volume = val;
+			if (sounds != null) for (sound in sounds) sound.setVolume(val);
+		}
+		else Browser.console.warn("Volume should be a number between 0 and 1. Received: " + val);
 	}
 
 	/**
