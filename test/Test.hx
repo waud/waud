@@ -6,6 +6,7 @@ class Test {
 
 	public function new() {
 		var runner = new Runner();
+		runner.addCase(new TestWaud());
 		runner.addCase(new TestWaudUtils());
 
 		Report.create(runner);
