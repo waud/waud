@@ -661,6 +661,21 @@ Waud.enableTouchUnlock = function(callback) {
 	Waud.__touchUnlockCallback = callback;
 	Waud.dom.ontouchend = ($_=Waud.audioManager,$bind($_,$_.unlockAudio));
 };
+Waud.setVolume = function(val) {
+	if((((val | 0) === val) || typeof(val) == "number") && val >= 0 && val <= 1) {
+		Waud._volume = val;
+		if(Waud.sounds != null) {
+			var $it0 = Waud.sounds.iterator();
+			while( $it0.hasNext() ) {
+				var sound = $it0.next();
+				sound.setVolume(val);
+			}
+		}
+	} else window.console.warn("Volume should be a number between 0 and 1. Received: " + val);
+};
+Waud.getVolume = function() {
+	return Waud._volume;
+};
 Waud.mute = function(val) {
 	if(val == null) val = true;
 	Waud.isMuted = val;
@@ -757,23 +772,6 @@ Waud.destroy = function() {
 		Waud._focusManager.focus = null;
 		Waud._focusManager = null;
 	}
-};
-Waud.prototype = {
-	setVolume: function(val) {
-		if(val < 0 || val > 1) return;
-		Waud._volume = val;
-		if(Waud.sounds != null) {
-			var $it0 = Waud.sounds.iterator();
-			while( $it0.hasNext() ) {
-				var sound = $it0.next();
-				sound.setVolume(val);
-			}
-		}
-	}
-	,getVolume: function() {
-		return Waud._volume;
-	}
-	,__class__: Waud
 };
 var WaudBase64Pack = $hx_exports.WaudBase64Pack = function(url,onLoaded,onProgress,onError,options) {
 	if(Waud.audioManager == null) {
@@ -992,12 +990,14 @@ WaudSound.prototype = {
 		return this._snd.getDuration();
 	}
 	,setVolume: function(val,spriteName) {
-		if(this.isSpriteSound) {
-			if(spriteName != null && this._spriteSounds.get(spriteName) != null) this._spriteSounds.get(spriteName).setVolume(val);
-			return;
-		}
-		if(this._snd == null) return;
-		this._snd.setVolume(val);
+		if(((val | 0) === val) || typeof(val) == "number") {
+			if(this.isSpriteSound) {
+				if(spriteName != null && this._spriteSounds.get(spriteName) != null) this._spriteSounds.get(spriteName).setVolume(val);
+				return;
+			}
+			if(this._snd == null) return;
+			this._snd.setVolume(val);
+		} else window.console.warn("Volume should be a number between 0 and 1. Received: " + val);
 	}
 	,getVolume: function(spriteName) {
 		if(this.isSpriteSound) {
@@ -2005,7 +2005,7 @@ var __map_reserved = {}
 msignal_SlotList.NIL = new msignal_SlotList(null,null);
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.8.0";
+Waud.version = "0.8.1";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1, playbackRate : 1};
 Waud.preferredSampleRate = 44100;

@@ -25,7 +25,7 @@
     "contributors": [
 	"adireddy"
     ],
-    "releasenote": "added global getVolume and setVolume methods",
+    "releasenote": "added global getVolume and setVolume methods & more validations",
     "version": "0.8.1",
     "url": "https://github.com/waud/waud",
     "dependencies": {}
