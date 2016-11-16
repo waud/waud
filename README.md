@@ -123,7 +123,7 @@ function touchUnlock() {
 }
 ```
 
-### Tips
+### Sample Rate
 
 - It is recommended to use same **sample rate** for all the audio files. Playing different **sample rate** files can cause issues on some devices.
 - By default, **Waud** uses **44100** sample rate. If your audio files have a different sample rate then specify it using [**`Waud.preferredSampleRate`**](http://waud.github.io/docs/classes/Waud.html#property_preferredSampleRate) property.

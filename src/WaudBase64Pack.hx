@@ -1,4 +1,3 @@
-import WaudUtils;
 import haxe.Json;
 import js.html.XMLHttpRequest;
 
@@ -42,7 +41,11 @@ import js.html.XMLHttpRequest;
 	* 			trace("error loading base64 json file");
 	* 		}
 	*/
-	public function new(url:String, ?onLoaded:Map<String, IWaudSound> -> Void, ?onProgress:Float -> Float -> Void, ?onError:Void -> Void, ?options:WaudSoundOptions = null) {
+	public function new(url:String,
+						?onLoaded:Map<String, IWaudSound> -> Void,
+						?onProgress:Float -> Float -> Void,
+						?onError:Void -> Void,
+						?options:WaudSoundOptions = null) {
 		if (Waud.audioManager == null) {
 			trace("initialise Waud using Waud.init() before loading sounds");
 			return;

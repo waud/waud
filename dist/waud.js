@@ -49,11 +49,15 @@ AudioManager.prototype = {
 	,createAudioContext: function() {
 		if(this.audioContext == null) try {
 			if(Reflect.field(window,"AudioContext") != null) this.audioContext = new AudioContext(); else if(Reflect.field(window,"webkitAudioContext") != null) this.audioContext = new webkitAudioContext();
+			this.masterGainNode = this.createGain();
 		} catch( e ) {
 			if (e instanceof js__$Boot_HaxeError) e = e.val;
 			this.audioContext = null;
 		}
 		return this.audioContext;
+	}
+	,createGain: function() {
+		if(($_=this.audioContext,$bind($_,$_.createGain)) != null) return this.audioContext.createGain(); else return Reflect.callMethod(this.audioContext,Reflect.field(this.audioContext,"createGainNode"),[]);
 	}
 	,destroy: function() {
 		if(this.audioContext != null && (this.audioContext.close != null && this.audioContext.close != "")) this.audioContext.close();
@@ -353,34 +357,36 @@ Waud.init = function(d) {
 		Waud.isHTML5AudioSupported = Reflect.field(window,"Audio") != null;
 		if(Waud.isWebAudioSupported) Waud.audioContext = Waud.audioManager.createAudioContext();
 		Waud.sounds = new haxe_ds_StringMap();
+		Waud._volume = 1;
 	}
 };
 Waud.autoMute = function() {
-	var blur = function() {
-		if(Waud.sounds != null) {
-			var $it0 = Waud.sounds.iterator();
-			while( $it0.hasNext() ) {
-				var sound = $it0.next();
-				sound.mute(true);
-			}
-		}
-	};
-	var focus = function() {
-		if(!Waud.isMuted && Waud.sounds != null) {
-			var $it1 = Waud.sounds.iterator();
-			while( $it1.hasNext() ) {
-				var sound1 = $it1.next();
-				sound1.mute(false);
-			}
-		}
-	};
 	Waud._focusManager = new WaudFocusManager();
-	Waud._focusManager.focus = focus;
-	Waud._focusManager.blur = blur;
+	Waud._focusManager.focus = function() {
+		Waud.mute(false);
+	};
+	Waud._focusManager.blur = function() {
+		Waud.mute(true);
+	};
 };
 Waud.enableTouchUnlock = function(callback) {
 	Waud.__touchUnlockCallback = callback;
 	Waud.dom.ontouchend = ($_=Waud.audioManager,$bind($_,$_.unlockAudio));
+};
+Waud.setVolume = function(val) {
+	if((((val | 0) === val) || typeof(val) == "number") && val >= 0 && val <= 1) {
+		Waud._volume = val;
+		if(Waud.sounds != null) {
+			var $it0 = Waud.sounds.iterator();
+			while( $it0.hasNext() ) {
+				var sound = $it0.next();
+				sound.setVolume(val);
+			}
+		}
+	} else window.console.warn("Volume should be a number between 0 and 1. Received: " + val);
+};
+Waud.getVolume = function() {
+	return Waud._volume;
 };
 Waud.mute = function(val) {
 	if(val == null) val = true;
@@ -456,7 +462,7 @@ Waud.isM4ASupported = function() {
 	var canPlay = Waud.__audioElement.canPlayType("audio/x-m4a;");
 	return Waud.isHTML5AudioSupported && canPlay != null && (canPlay == "probably" || canPlay == "maybe");
 };
-Waud.get_sampleRate = function() {
+Waud.getSampleRate = function() {
 	if(Waud.audioContext != null) return Waud.audioContext.sampleRate; else return 0;
 };
 Waud.destroy = function() {
@@ -696,12 +702,14 @@ WaudSound.prototype = {
 		return this._snd.getDuration();
 	}
 	,setVolume: function(val,spriteName) {
-		if(this.isSpriteSound) {
-			if(spriteName != null && this._spriteSounds.get(spriteName) != null) this._spriteSounds.get(spriteName).setVolume(val);
-			return;
-		}
-		if(this._snd == null) return;
-		this._snd.setVolume(val);
+		if(((val | 0) === val) || typeof(val) == "number") {
+			if(this.isSpriteSound) {
+				if(spriteName != null && this._spriteSounds.get(spriteName) != null) this._spriteSounds.get(spriteName).setVolume(val);
+				return;
+			}
+			if(this._snd == null) return;
+			this._snd.setVolume(val);
+		} else window.console.warn("Volume should be a number between 0 and 1. Received: " + val);
 	}
 	,getVolume: function(spriteName) {
 		if(this.isSpriteSound) {
@@ -1049,10 +1057,11 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 	,_makeSource: function(buffer) {
 		var bufferSource = this._manager.audioContext.createBufferSource();
 		bufferSource.buffer = buffer;
-		if(this._manager.audioContext.createGain != null) this._gainNode = this._manager.audioContext.createGain(); else this._gainNode = this._manager.audioContext.createGainNode();
+		this._gainNode = this._manager.createGain();
 		bufferSource.connect(this._gainNode);
 		bufferSource.playbackRate.value = this.rate;
-		this._gainNode.connect(this._manager.audioContext.destination);
+		this._gainNode.connect(this._manager.masterGainNode);
+		this._manager.masterGainNode.connect(this._manager.audioContext.destination);
 		this._srcNodes.push(bufferSource);
 		this._gainNodes.push(this._gainNode);
 		if(this._muted) this._gainNode.gain.value = 0; else this._gainNode.gain.value = this._options.volume;
@@ -1448,7 +1457,7 @@ var Enum = { };
 var __map_reserved = {}
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.8.0";
+Waud.version = "0.8.1";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1, playbackRate : 1};
 Waud.preferredSampleRate = 44100;
