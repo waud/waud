@@ -11,10 +11,12 @@ import js.html.XMLHttpRequest;
 	var _options:WaudSoundOptions;
 	var _onLoaded:Map<String, IWaudSound> -> Void;
 	var _onError:Void -> Void;
-	var _onProgress:Float -> Float -> Void;
+	var _onProgress:Float -> Void;
 	var _soundCount:Int;
 	var _loadCount:Int;
 	var _totalSize:Float;
+	var _soundsToLoad:Map<String, String>;
+	var _soundIds:Array<String>;
 
 	/**
 	* Class to load multiple base64 packed sounds from JSON.
@@ -43,7 +45,7 @@ import js.html.XMLHttpRequest;
 	*/
 	public function new(url:String,
 						?onLoaded:Map<String, IWaudSound> -> Void,
-						?onProgress:Float -> Float -> Void,
+						?onProgress:Float -> Void,
 						?onError:Void -> Void,
 						?options:WaudSoundOptions = null) {
 		if (Waud.audioManager == null) {
@@ -77,28 +79,24 @@ import js.html.XMLHttpRequest;
 		var xobj = new XMLHttpRequest();
 		xobj.open("GET", base64Url, true);
 
-		if (_onProgress != null) {
-			xobj.onprogress = function(e:Dynamic) {
-				var meta = m.match(xobj.responseText);
-				if (meta && _totalSize == 0) {
-					var metaInfo = Json.parse("{" + m.matched(0) + "}");
-					_totalSize = metaInfo.meta[1];
-				}
-				progress = e.lengthComputable ? e.loaded / e.total : e.loaded / _totalSize;
-				if (progress > 1) progress = 1;
-				_onProgress(progress, e.loaded);
-			};
-		}
-
 		xobj.onreadystatechange = function() {
 			if (xobj.readyState == 4 && xobj.status == 200) {
 				var res = Json.parse(xobj.responseText);
+				_soundsToLoad = new Map();
+				_soundIds = [];
 				for (n in Reflect.fields(res)) {
 					if (n == "meta") continue;
-					_soundCount++;
-					if (Std.is(res, Array)) _createSound(Reflect.field(res, n).name, "data:" + Reflect.field(res, n).mime + ";base64," + Reflect.field(res, n).data);
-					else _createSound(n, Reflect.field(res, n));
+					if (Std.is(res, Array)) {
+						_soundIds.push(Reflect.field(res, n).name);
+						_soundsToLoad.set(Reflect.field(res, n).name, "data:" + Reflect.field(res, n).mime + ";base64," + Reflect.field(res, n).data);
+					}
+					else {
+						_soundIds.push(n);
+						_soundsToLoad.set(n, Reflect.field(res, n));
+					}
 				}
+				_soundCount = _soundIds.length;
+				_createSound(_soundIds.shift());
 			}
 		};
 		xobj.send(null);
@@ -110,10 +108,9 @@ import js.html.XMLHttpRequest;
 	* @private
 	* @method _createSound
 	* @param {String} id - sound id.
-	* @param {String} dataURI - sound data uri.
 	*/
-	function _createSound(id:String, dataURI:String) {
-		var snd = new WaudSound(dataURI, {
+	function _createSound(id:String) {
+		var snd = new WaudSound(_soundsToLoad.get(id), {
 			onload:function(s:IWaudSound) {
 				_sounds.set(id, s);
 				Waud.sounds.set(id, s);
@@ -138,14 +135,13 @@ import js.html.XMLHttpRequest;
 
 	function _checkProgress():Bool {
 		_loadCount++;
+		if (_onProgress != null) _onProgress(_loadCount / _soundCount);
 		if (_loadCount == _soundCount) {
+			_soundsToLoad = null;
 			if (_onLoaded != null) _onLoaded(_sounds);
-			if (progress == 0 && _onProgress != null) {
-				progress = 1;
-				_onProgress(progress, _totalSize);
-			}
 			return true;
 		}
+		else _createSound(_soundIds.shift());
 		return false;
 	}
 }

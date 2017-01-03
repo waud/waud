@@ -179,7 +179,7 @@ import js.html.audio.AudioBuffer;
 
 	public function setVolume(val:Float, ?spriteName:String) {
 		_options.volume = val;
-		if (_gainNode == null || !_isLoaded) return;
+		if (_gainNode == null || !_isLoaded || _muted) return;
 		_gainNode.gain.value = _options.volume;
 	}
 

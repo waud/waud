@@ -1581,7 +1581,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 	}
 	,setVolume: function(val,spriteName) {
 		this._options.volume = val;
-		if(this._gainNode == null || !this._isLoaded) return;
+		if(this._gainNode == null || !this._isLoaded || this._muted) return;
 		this._gainNode.gain.value = this._options.volume;
 	}
 	,getVolume: function(spriteName) {
@@ -2189,7 +2189,7 @@ Perf.INFO_TXT_CLR = "#000000";
 Perf.DELAY_TIME = 4000;
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.8.1";
+Waud.version = "0.9.0";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1, playbackRate : 1};
 Waud.preferredSampleRate = 44100;
