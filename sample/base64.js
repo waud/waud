@@ -232,10 +232,11 @@ Base64.main = function() {
 };
 Base64.__super__ = pixi_plugins_app_Application;
 Base64.prototype = $extend(pixi_plugins_app_Application.prototype,{
-	_onProgress: function(val,loaded) {
+	_onProgress: function(val) {
 		this._progress.text = "Progress: " + Math.floor(val * 100) + "%";
 	}
 	,_onLoad: function(snds) {
+		console.log("ALL LOADED");
 		this._beep = __map_reserved["test/beep.mp3"] != null?snds.getReserved("test/beep.mp3"):snds.h["test/beep.mp3"];
 		this._bell = __map_reserved["test/bell.mp3"] != null?snds.getReserved("test/bell.mp3"):snds.h["test/bell.mp3"];
 		this._glass = __map_reserved["test/glass.mp3"] != null?snds.getReserved("test/glass.mp3"):snds.h["test/glass.mp3"];
@@ -798,35 +799,37 @@ WaudBase64Pack.prototype = {
 		var m = new EReg("\"meta\":.[0-9]*,[0-9]*.","i");
 		var xobj = new XMLHttpRequest();
 		xobj.open("GET",base64Url,true);
-		if(this._onProgress != null) xobj.onprogress = function(e) {
-			var meta = m.match(xobj.responseText);
-			if(meta && _g._totalSize == 0) {
-				var metaInfo = JSON.parse("{" + m.matched(0) + "}");
-				_g._totalSize = metaInfo.meta[1];
-			}
-			if(e.lengthComputable) _g.progress = e.loaded / e.total; else _g.progress = e.loaded / _g._totalSize;
-			if(_g.progress > 1) _g.progress = 1;
-			_g._onProgress(_g.progress,e.loaded);
-		};
 		xobj.onreadystatechange = function() {
 			if(xobj.readyState == 4 && xobj.status == 200) {
 				var res = JSON.parse(xobj.responseText);
+				_g._soundsToLoad = new haxe_ds_StringMap();
+				_g._soundIds = [];
 				var _g1 = 0;
-				var _g11 = Reflect.fields(res);
-				while(_g1 < _g11.length) {
-					var n = _g11[_g1];
+				var _g2 = Reflect.fields(res);
+				while(_g1 < _g2.length) {
+					var n = _g2[_g1];
 					++_g1;
 					if(n == "meta") continue;
-					_g._soundCount++;
-					if((res instanceof Array) && res.__enum__ == null) _g._createSound(Reflect.field(res,n).name,"data:" + Std.string(Reflect.field(res,n).mime) + ";base64," + Std.string(Reflect.field(res,n).data)); else _g._createSound(n,Reflect.field(res,n));
+					if((res instanceof Array) && res.__enum__ == null) {
+						_g._soundIds.push(Reflect.field(res,n).name);
+						var key = Reflect.field(res,n).name;
+						var value = "data:" + Std.string(Reflect.field(res,n).mime) + ";base64," + Std.string(Reflect.field(res,n).data);
+						_g._soundsToLoad.set(key,value);
+					} else {
+						_g._soundIds.push(n);
+						var value1 = Reflect.field(res,n);
+						_g._soundsToLoad.set(n,value1);
+					}
 				}
+				_g._soundCount = _g._soundIds.length;
+				_g._createSound(_g._soundIds.shift());
 			}
 		};
 		xobj.send(null);
 	}
-	,_createSound: function(id,dataURI) {
+	,_createSound: function(id) {
 		var _g = this;
-		var snd = new WaudSound(dataURI,{ onload : function(s) {
+		var snd = new WaudSound(this._soundsToLoad.get(id),{ onload : function(s) {
 			_g._sounds.set(id,s);
 			Waud.sounds.set(id,s);
 			if(_g._options.onload != null) _g._options.onload(s);
@@ -839,14 +842,12 @@ WaudBase64Pack.prototype = {
 	}
 	,_checkProgress: function() {
 		this._loadCount++;
+		if(this._onProgress != null) this._onProgress(this._loadCount / this._soundCount);
 		if(this._loadCount == this._soundCount) {
+			this._soundsToLoad = null;
 			if(this._onLoaded != null) this._onLoaded(this._sounds);
-			if(this.progress == 0 && this._onProgress != null) {
-				this.progress = 1;
-				this._onProgress(this.progress,this._totalSize);
-			}
 			return true;
-		}
+		} else this._createSound(this._soundIds.shift());
 		return false;
 	}
 	,__class__: WaudBase64Pack
@@ -2005,7 +2006,7 @@ var __map_reserved = {}
 msignal_SlotList.NIL = new msignal_SlotList(null,null);
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.8.2";
+Waud.version = "0.9.0";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1, playbackRate : 1};
 Waud.preferredSampleRate = 44100;

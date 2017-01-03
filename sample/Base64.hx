@@ -74,11 +74,12 @@ class Base64 extends Application {
 		_resize();
 	}
 
-	function _onProgress(val:Float, loaded:Float) {
+	function _onProgress(val:Float) {
 		_progress.text = "Progress: " + Math.floor(val * 100) + "%";
 	}
 
 	function _onLoad(snds:Map<String, IWaudSound>) {
+		trace("ALL LOADED");
 		_beep = snds.get("test/beep.mp3");
 		_bell = snds.get("test/bell.mp3");
 		_glass = snds.get("test/glass.mp3");
