@@ -20,7 +20,7 @@ import js.Browser;
 	* @static
 	* @type {String}
 	*/
-	public static var version:String = "0.9.1";
+	public static var version:String = "0.9.2";
 
 	/**
 	* Tells whether to use web audio api or not.
@@ -228,7 +228,30 @@ import js.Browser;
 
 			sounds = new Map();
 			_volume = 1;
+
+			_sayHello();
 		}
+	}
+
+	static inline function _sayHello() {
+		if(Browser.navigator.userAgent.toLowerCase().indexOf("chrome") > 1) {
+			var e = [
+				"\n %c %c %c WAUD%c.%cJS%c v" + version + " %c  %c http://www.waudjs.com %c %c %c 📢 \n\n",
+				"background: #32BEA6; padding:5px 0;",
+				"background: #32BEA6; padding:5px 0;",
+				"color: #E70000; background: #29162B; padding:5px 0;",
+				"color: #F3B607; background: #29162B; padding:5px 0;",
+				"color: #32BEA6; background: #29162B; padding:5px 0;",
+				"color: #999999; background: #29162B; padding:5px 0;",
+				"background: #32BEA6; padding:5px 0;",
+				"background: #B8FCEF; padding:5px 0;",
+				"background: #32BEA6; padding:5px 0;",
+				"color: #E70000; background: #32BEA6; padding:5px 0;",
+				"color: #FF2424; background: #FFFFFF; padding:5px 0;"
+			];
+			untyped __js__("window.console.log").apply(Browser.window.console, e);
+		}
+		else Browser.window.console.log("WAUD.JS v" + version + " - http://www.waudjs.com");
 	}
 
 	/**
