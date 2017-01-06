@@ -506,7 +506,14 @@ Waud.init = function(d) {
 		if(Waud.isWebAudioSupported) Waud.audioContext = Waud.audioManager.createAudioContext();
 		Waud.sounds = new haxe_ds_StringMap();
 		Waud._volume = 1;
+		Waud._sayHello();
 	}
+};
+Waud._sayHello = function() {
+	if(window.navigator.userAgent.toLowerCase().indexOf("chrome") > 1) {
+		var e = ["\n %c %c %c WAUD%c.%cJS%c v" + Waud.version + " %c  %c http://www.waudjs.com %c %c %c 📢 \n\n","background: #32BEA6; padding:5px 0;","background: #32BEA6; padding:5px 0;","color: #E70000; background: #29162B; padding:5px 0;","color: #F3B607; background: #29162B; padding:5px 0;","color: #32BEA6; background: #29162B; padding:5px 0;","color: #999999; background: #29162B; padding:5px 0;","background: #32BEA6; padding:5px 0;","background: #B8FCEF; padding:5px 0;","background: #32BEA6; padding:5px 0;","color: #E70000; background: #32BEA6; padding:5px 0;","color: #FF2424; background: #FFFFFF; padding:5px 0;"];
+		window.console.log.apply(window.console,e);
+	} else window.console.log("WAUD.JS v" + Waud.version + " - http://www.waudjs.com");
 };
 Waud.autoMute = function() {
 	Waud._focusManager = new WaudFocusManager();
@@ -3481,7 +3488,7 @@ var Uint8Array = $global.Uint8Array || js_html_compat_Uint8Array._new;
 AudioManager.AUDIO_CONTEXT = "this.audioContext";
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.9.1";
+Waud.version = "0.9.2";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1, playbackRate : 1};
 Waud.preferredSampleRate = 44100;
