@@ -485,11 +485,13 @@ Waud.destroy = function() {
 		Waud._focusManager = null;
 	}
 };
-var WaudBase64Pack = $hx_exports.WaudBase64Pack = function(url,onLoaded,onProgress,onError,options) {
+var WaudBase64Pack = $hx_exports.WaudBase64Pack = function(url,onLoaded,onProgress,onError,options,sequentialLoad) {
+	if(sequentialLoad == null) sequentialLoad = false;
 	if(Waud.audioManager == null) {
 		console.log("initialise Waud using Waud.init() before loading sounds");
 		return;
 	}
+	this._sequentialLoad = sequentialLoad;
 	if(url.indexOf(".json") > 0) {
 		this.progress = 0;
 		this._options = WaudUtils.setDefaultOptions(options);
@@ -533,7 +535,7 @@ WaudBase64Pack.prototype = {
 					}
 				}
 				_g._soundCount = _g._soundIds.length;
-				_g._createSound(_g._soundIds.shift());
+				if(!_g._sequentialLoad) while(_g._soundIds.length > 0) _g._createSound(_g._soundIds.shift()); else _g._createSound(_g._soundIds.shift());
 			}
 		};
 		xobj.send(null);
@@ -558,7 +560,7 @@ WaudBase64Pack.prototype = {
 			this._soundsToLoad = null;
 			if(this._onLoaded != null) this._onLoaded(this._sounds);
 			return true;
-		} else this._createSound(this._soundIds.shift());
+		} else if(this._sequentialLoad) this._createSound(this._soundIds.shift());
 		return false;
 	}
 	,__class__: WaudBase64Pack
@@ -1457,7 +1459,7 @@ var Enum = { };
 var __map_reserved = {}
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.9.0";
+Waud.version = "0.9.1";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1, playbackRate : 1};
 Waud.preferredSampleRate = 44100;

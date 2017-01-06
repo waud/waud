@@ -17,6 +17,7 @@ import js.html.XMLHttpRequest;
 	var _totalSize:Float;
 	var _soundsToLoad:Map<String, String>;
 	var _soundIds:Array<String>;
+	var _sequentialLoad:Bool;
 
 	/**
 	* Class to load multiple base64 packed sounds from JSON.
@@ -27,7 +28,9 @@ import js.html.XMLHttpRequest;
 	* @param {WaudSoundOptions} [options] - Sound options.
 	* @param {IWaudSound> -> Void} [onLoaded] - on load callback.
 	* @param {Float -> Void} [onProgress] - on progress callback.
-	* @param {Void> -> Void} [onError] - on error callback.
+	* @param {Void -> Void} [onError] - on error callback.
+	* @param {WaudSoundOptions} [options] - Sound options.
+	* @param {Bool} [sequentialLoad] - To create and decode sounds sequentially instead of concurrently.
 	* @example
 	* 		var base64pack = new WaudBase64Pack("assets/sounds.json", _onLoad, _onProgress, _onError);
 	*
@@ -47,12 +50,14 @@ import js.html.XMLHttpRequest;
 						?onLoaded:Map<String, IWaudSound> -> Void,
 						?onProgress:Float -> Void,
 						?onError:Void -> Void,
-						?options:WaudSoundOptions = null) {
+						?options:WaudSoundOptions = null,
+						?sequentialLoad:Bool = false) {
 		if (Waud.audioManager == null) {
 			trace("initialise Waud using Waud.init() before loading sounds");
 			return;
 		}
 
+		_sequentialLoad = sequentialLoad;
 		if (url.indexOf(".json") > 0) {
 			progress = 0;
 			_options = WaudUtils.setDefaultOptions(options);
@@ -96,7 +101,11 @@ import js.html.XMLHttpRequest;
 					}
 				}
 				_soundCount = _soundIds.length;
-				_createSound(_soundIds.shift());
+
+				if (!_sequentialLoad) {
+					while (_soundIds.length > 0) _createSound(_soundIds.shift());
+				}
+				else _createSound(_soundIds.shift());
 			}
 		};
 		xobj.send(null);
@@ -141,7 +150,7 @@ import js.html.XMLHttpRequest;
 			if (_onLoaded != null) _onLoaded(_sounds);
 			return true;
 		}
-		else _createSound(_soundIds.shift());
+		else if (_sequentialLoad) _createSound(_soundIds.shift());
 		return false;
 	}
 }
