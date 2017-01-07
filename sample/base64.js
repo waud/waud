@@ -815,6 +815,7 @@ WaudBase64Pack.prototype = {
 				_g._totalSize = metaInfo.meta[1];
 			}
 			if(e.lengthComputable) _g.progress = e.loaded / e.total; else _g.progress = e.loaded / _g._totalSize;
+			if(_g.progress > 1) _g.progress = 1;
 			_g._onProgress(0.8 * _g.progress);
 		};
 		xobj.onreadystatechange = function() {
@@ -2024,7 +2025,7 @@ var __map_reserved = {}
 msignal_SlotList.NIL = new msignal_SlotList(null,null);
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.9.3";
+Waud.version = "0.9.4";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1, playbackRate : 1};
 Waud.preferredSampleRate = 44100;

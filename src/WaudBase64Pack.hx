@@ -92,6 +92,7 @@ import js.html.XMLHttpRequest;
 					_totalSize = metaInfo.meta[1];
 				}
 				progress = e.lengthComputable ? e.loaded / e.total : e.loaded / _totalSize;
+				if (progress > 1) progress = 1;
 				_onProgress((80 / 100) * progress);
 			};
 		}
