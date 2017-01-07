@@ -84,6 +84,18 @@ import js.html.XMLHttpRequest;
 		var xobj = new XMLHttpRequest();
 		xobj.open("GET", base64Url, true);
 
+		if (_onProgress != null) {
+			xobj.onprogress = function(e:Dynamic) {
+				var meta = m.match(xobj.responseText);
+				if (meta && _totalSize == 0) {
+					var metaInfo = Json.parse("{" + m.matched(0) + "}");
+					_totalSize = metaInfo.meta[1];
+				}
+				progress = e.lengthComputable ? e.loaded / e.total : e.loaded / _totalSize;
+				_onProgress((80 / 100) * progress);
+			};
+		}
+
 		xobj.onreadystatechange = function() {
 			if (xobj.readyState == 4 && xobj.status == 200) {
 				var res = Json.parse(xobj.responseText);
@@ -144,7 +156,7 @@ import js.html.XMLHttpRequest;
 
 	function _checkProgress():Bool {
 		_loadCount++;
-		if (_onProgress != null) _onProgress(_loadCount / _soundCount);
+		if (_onProgress != null) _onProgress(0.8 + (20 / 100) * (_loadCount / _soundCount));
 		if (_loadCount == _soundCount) {
 			_soundsToLoad = null;
 			if (_onLoaded != null) _onLoaded(_sounds);

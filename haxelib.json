@@ -25,8 +25,8 @@
     "contributors": [
 	"adireddy"
     ],
-    "releasenote": "Added optional parameter to WaudBase64Pack to create and decode sounds sequentially instead of concurrently.",
-    "version": "0.9.2",
+    "releasenote": "bug fixes",
+    "version": "0.9.3",
     "url": "https://github.com/waud/waud",
     "dependencies": {}
 }
