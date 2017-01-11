@@ -12,24 +12,6 @@ module.exports = function (grunt) {
             }
         },
 
-        uglify: {
-            options: {
-                compress: {
-                    drop_console: true
-                },
-                banner: "/*!" +
-                        "\n * <%= pkg.name %> - v<%= pkg.version %>" +
-                        "\n * Compiled on <%= grunt.template.today('dd-mm-yyyy hh:mm:ss') %>" +
-                        "\n * <%= pkg.name %> is licensed under the MIT License." +
-                        "\n * Copyright (c) 2015-2016 <%= pkg.author.name %>\n*/\n"
-            },
-            target: {
-                files: {
-                    "dist/waud.min.js": ["dist/waud.min.js"]
-                }
-            }
-        },
-
         shell: {
             npm: {
                 command: "mkdir npm-publish || true && cp -r src dist package.json LICENSE README.md ./npm-publish/ && npm publish ./npm-publish/ && rm -r npm-publish"
