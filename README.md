@@ -78,7 +78,7 @@ audSprite.play("glass");
 
 Tested on all major browsers.
 
-| <img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/39.1.1/safari/safari_32x32.png" alt="Safari"> | <img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/39.1.1/chrome/chrome_32x32.png" alt="Chrome"> | <img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/39.1.1/firefox/firefox_32x32.png" alt="Firefox"> | <img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/39.1.1/edge/edge_32x32.png" alt="Edge"> | <img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/39.1.1/internet-explorer/internet-explorer_32x32.png" alt="IE"> | <img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/39.1.1/opera/opera_32x32.png" alt="Opera"> |
+| <img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/39.1.1/safari/safari_32x32.png" alt="Safari"> | <img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/39.1.1/chrome/chrome_32x32.png" alt="Chrome"> | <img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/39.1.1/firefox/firefox_32x32.png" alt="Firefox"> | <img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/39.1.1/edge/edge_32x32.png" alt="Edge"> | <img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/39.1.1/archive/internet-explorer_9-11/internet-explorer_9-11_32x32.png" alt="IE"> | <img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/39.1.1/opera/opera_32x32.png" alt="Opera"> |
 |:--:|:--:|:--:|:--:|:--:|:--:|
 | Latest ✓ | Latest ✓ | Latest ✓ | Latest ✓ | 9-11 ✓ | Latest ✓ |
 
