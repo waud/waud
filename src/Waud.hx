@@ -234,7 +234,7 @@ import js.Browser;
 	}
 
 	static inline function _sayHello() {
-		if(Browser.navigator.userAgent.toLowerCase().indexOf("chrome") > 1) {
+		if (Browser.navigator.userAgent.toLowerCase().indexOf("chrome") > 1) {
 			var e = [
 				"\n %c %c %c WAUD%c.%cJS%c v" + version + " %c  %c http://www.waudjs.com %c %c %c 📢 \n\n",
 				"background: #32BEA6; padding:5px 0;",

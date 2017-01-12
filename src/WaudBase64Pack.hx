@@ -3,6 +3,8 @@ import js.html.XMLHttpRequest;
 
 @:expose @:keep class WaudBase64Pack {
 
+	static inline var JSON_PER:Float = 0.8;
+
 	public var progress:Float;
 
 	public var options:WaudSoundOptions;
@@ -93,7 +95,7 @@ import js.html.XMLHttpRequest;
 				}
 				progress = e.lengthComputable ? e.loaded / e.total : e.loaded / _totalSize;
 				if (progress > 1) progress = 1;
-				_onProgress((80 / 100) * progress);
+				_onProgress(JSON_PER * progress);
 			};
 		}
 
@@ -157,7 +159,7 @@ import js.html.XMLHttpRequest;
 
 	function _checkProgress():Bool {
 		_loadCount++;
-		if (_onProgress != null) _onProgress(0.8 + (20 / 100) * (_loadCount / _soundCount));
+		if (_onProgress != null) _onProgress(JSON_PER + (1 - JSON_PER) * (_loadCount / _soundCount));
 		if (_loadCount == _soundCount) {
 			_soundsToLoad = null;
 			if (_onLoaded != null) _onLoaded(_sounds);
