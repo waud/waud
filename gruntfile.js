@@ -4,6 +4,9 @@ module.exports = function (grunt) {
         pkg: grunt.file.readJSON("package.json"),
 
         haxe: {
+            test: {
+                hxml: "test.hxml"
+            },
             project: {
                 hxml: "build.hxml"
             },

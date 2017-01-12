@@ -1,6 +1,5 @@
 import utest.Runner;
 import utest.ui.Report;
-import utest.TestResult;
 
 class Test {
 
@@ -8,6 +7,7 @@ class Test {
 		var runner = new Runner();
 		runner.addCase(new TestWaud());
 		runner.addCase(new TestWaudUtils());
+		runner.addCase(new TestWaudBase64Pack());
 
 		Report.create(runner);
 		runner.run();
