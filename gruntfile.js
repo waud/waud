@@ -21,6 +21,11 @@ module.exports = function (grunt) {
             },
             samples: {
                 command: "cp ./dist/waud.min.js sample/ && cp -r ./sample/ ../waud.github.io/sample/"
+            },
+            test: {
+                command: "mkdir ../waud.github.io/test || true && cp ./test/index.html ../waud.github.io/test/ &&" +
+                "cp ./test/test.js ../waud.github.io/test/ &&" +
+                "cp -r ./test/testAssets/ ../waud.github.io/test/testAssets/"
             }
         },
 

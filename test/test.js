@@ -587,6 +587,7 @@ var TestWaudBase64Pack = function() {
 TestWaudBase64Pack.__name__ = ["TestWaudBase64Pack"];
 TestWaudBase64Pack.prototype = {
 	b64: null
+	,sounds: null
 	,setup: function() {
 		Waud.init();
 	}
@@ -595,12 +596,13 @@ TestWaudBase64Pack.prototype = {
 		var loadBase64PackComplete = utest_Assert.createAsync(null,5000);
 		var t = new Date().getTime();
 		this.b64 = new WaudBase64Pack("testAssets/sounds.json",function(snds) {
-			utest_Assert.isTrue(__map_reserved["sounds/80s-Music.mp3"] != null?snds.existsReserved("sounds/80s-Music.mp3"):snds.h.hasOwnProperty("sounds/80s-Music.mp3"),null,{ fileName : "TestWaudBase64Pack.hx", lineNumber : 19, className : "TestWaudBase64Pack", methodName : "testLoading"});
-			utest_Assert.equals(_g.b64._soundCount,_g.b64._loadCount,null,{ fileName : "TestWaudBase64Pack.hx", lineNumber : 20, className : "TestWaudBase64Pack", methodName : "testLoading"});
-			haxe_Log.trace("Asynchornous Loading: " + (new Date().getTime() - t),{ fileName : "TestWaudBase64Pack.hx", lineNumber : 21, className : "TestWaudBase64Pack", methodName : "testLoading"});
+			utest_Assert.isTrue(__map_reserved["sounds/80s-Music.mp3"] != null?snds.existsReserved("sounds/80s-Music.mp3"):snds.h.hasOwnProperty("sounds/80s-Music.mp3"),null,{ fileName : "TestWaudBase64Pack.hx", lineNumber : 20, className : "TestWaudBase64Pack", methodName : "testLoading"});
+			utest_Assert.equals(_g.b64._soundCount,_g.b64._loadCount,null,{ fileName : "TestWaudBase64Pack.hx", lineNumber : 21, className : "TestWaudBase64Pack", methodName : "testLoading"});
+			haxe_Log.trace("Asynchornous Loading Time: " + (new Date().getTime() - t),{ fileName : "TestWaudBase64Pack.hx", lineNumber : 22, className : "TestWaudBase64Pack", methodName : "testLoading"});
+			_g.sounds = snds;
 			loadBase64PackComplete();
 		},function(val) {
-			utest_Assert.isTrue(val >= 0 && val <= 1,null,{ fileName : "TestWaudBase64Pack.hx", lineNumber : 25, className : "TestWaudBase64Pack", methodName : "testLoading"});
+			utest_Assert.isTrue(val >= 0 && val <= 1,null,{ fileName : "TestWaudBase64Pack.hx", lineNumber : 27, className : "TestWaudBase64Pack", methodName : "testLoading"});
 		});
 	}
 	,testSequentialLoading: function() {
@@ -608,16 +610,32 @@ TestWaudBase64Pack.prototype = {
 		var loadBase64PackComplete = utest_Assert.createAsync(null,5000);
 		var t = new Date().getTime();
 		this.b64 = new WaudBase64Pack("testAssets/sounds.json",function(snds) {
-			utest_Assert.isTrue(__map_reserved["sounds/80s-Music.mp3"] != null?snds.existsReserved("sounds/80s-Music.mp3"):snds.h.hasOwnProperty("sounds/80s-Music.mp3"),null,{ fileName : "TestWaudBase64Pack.hx", lineNumber : 34, className : "TestWaudBase64Pack", methodName : "testSequentialLoading"});
-			utest_Assert.equals(_g.b64._soundCount,_g.b64._loadCount,null,{ fileName : "TestWaudBase64Pack.hx", lineNumber : 35, className : "TestWaudBase64Pack", methodName : "testSequentialLoading"});
-			haxe_Log.trace("Sequential Loading: " + (new Date().getTime() - t),{ fileName : "TestWaudBase64Pack.hx", lineNumber : 36, className : "TestWaudBase64Pack", methodName : "testSequentialLoading"});
+			utest_Assert.isTrue(__map_reserved["sounds/80s-Music.mp3"] != null?snds.existsReserved("sounds/80s-Music.mp3"):snds.h.hasOwnProperty("sounds/80s-Music.mp3"),null,{ fileName : "TestWaudBase64Pack.hx", lineNumber : 36, className : "TestWaudBase64Pack", methodName : "testSequentialLoading"});
+			utest_Assert.equals(_g.b64._soundCount,_g.b64._loadCount,null,{ fileName : "TestWaudBase64Pack.hx", lineNumber : 37, className : "TestWaudBase64Pack", methodName : "testSequentialLoading"});
+			haxe_Log.trace("Sequential Loading Time: " + (new Date().getTime() - t),{ fileName : "TestWaudBase64Pack.hx", lineNumber : 38, className : "TestWaudBase64Pack", methodName : "testSequentialLoading"});
 			loadBase64PackComplete();
 		},function(val) {
-			utest_Assert.isTrue(val >= 0 && val <= 1,null,{ fileName : "TestWaudBase64Pack.hx", lineNumber : 40, className : "TestWaudBase64Pack", methodName : "testSequentialLoading"});
+			utest_Assert.isTrue(val >= 0 && val <= 1,null,{ fileName : "TestWaudBase64Pack.hx", lineNumber : 42, className : "TestWaudBase64Pack", methodName : "testSequentialLoading"});
 		},null,null,true);
 	}
-	,teardown: function() {
-		this.b64 = null;
+	,testPlay: function() {
+		utest_Assert.notNull(this.sounds,null,{ fileName : "TestWaudBase64Pack.hx", lineNumber : 47, className : "TestWaudBase64Pack", methodName : "testPlay"});
+		var snd = this.sounds.get("sounds/80s-Music.mp3");
+		utest_Assert.isTrue(snd.getTime() == 0,null,{ fileName : "TestWaudBase64Pack.hx", lineNumber : 50, className : "TestWaudBase64Pack", methodName : "testPlay"});
+		utest_Assert.isTrue(snd.getDuration() > 0,null,{ fileName : "TestWaudBase64Pack.hx", lineNumber : 51, className : "TestWaudBase64Pack", methodName : "testPlay"});
+		snd.play();
+		haxe_Timer.delay(function() {
+			snd.pause();
+		},3000);
+		haxe_Timer.delay(function() {
+			snd.setTime(snd.getDuration() - 5);
+			snd.play();
+		},4000);
+		var playbackComplete = utest_Assert.createAsync(null,10000);
+		snd.onEnd(function(snd1) {
+			utest_Assert.isTrue(snd1.getTime() == 0,null,{ fileName : "TestWaudBase64Pack.hx", lineNumber : 66, className : "TestWaudBase64Pack", methodName : "testPlay"});
+			playbackComplete();
+		});
 	}
 	,__class__: TestWaudBase64Pack
 };
