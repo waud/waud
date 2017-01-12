@@ -114,7 +114,7 @@ Waud.autoMute();
 // Note that this will not play automatically in iOS devices without touching the screen.
 var bgSnd = new WaudSound("loop.mp3", {
     "autoplay": true,
-    "loop":true
+    "loop": true
 });
 
 //Touch unlock callback for iOS devices to start playing bgSnd it it's not already playing
