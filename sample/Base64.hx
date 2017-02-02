@@ -80,13 +80,13 @@ class Base64 extends Application {
 
 	function _onLoad(snds:Map<String, IWaudSound>) {
 		trace("ALL LOADED");
-		_beep = snds.get("test/beep.mp3");
-		_bell = snds.get("test/bell.mp3");
-		_glass = snds.get("test/glass.mp3");
-		_canopening = snds.get("test/canopening.mp3");
-		_countdown = snds.get("test/countdown.mp3");
+		_beep = snds["test/beep.mp3"];
+		_bell = snds["test/bell.mp3"];
+		_glass = snds["test/glass.mp3"];
+		_canopening = snds["test/canopening.mp3"];
+		_countdown = snds["test/countdown.mp3"];
 		_countdown.autoStop(false);
-		_funk100 = snds.get("test/funk100.mp3");
+		_funk100 = snds["test/funk100.mp3"];
 	}
 
 	function touchUnlock() {

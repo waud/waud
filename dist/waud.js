@@ -362,10 +362,12 @@ Waud.init = function(d) {
 	}
 };
 Waud._sayHello = function() {
+	var support;
+	if(Waud.isWebAudioSupported) support = "Web Audio"; else support = "HTML5 Audio";
 	if(window.navigator.userAgent.toLowerCase().indexOf("chrome") > 1) {
-		var e = ["\n %c %c %c WAUD%c.%cJS%c v" + Waud.version + " %c  %c http://www.waudjs.com %c %c %c 📢 \n\n","background: #32BEA6; padding:5px 0;","background: #32BEA6; padding:5px 0;","color: #E70000; background: #29162B; padding:5px 0;","color: #F3B607; background: #29162B; padding:5px 0;","color: #32BEA6; background: #29162B; padding:5px 0;","color: #999999; background: #29162B; padding:5px 0;","background: #32BEA6; padding:5px 0;","background: #B8FCEF; padding:5px 0;","background: #32BEA6; padding:5px 0;","color: #E70000; background: #32BEA6; padding:5px 0;","color: #FF2424; background: #FFFFFF; padding:5px 0;"];
+		var e = ["\n %c %c %c WAUD%c.%cJS%c v" + Waud.version + " - " + support + " %c  %c http://www.waudjs.com %c %c %c 📢 \n\n","background: #32BEA6; padding:5px 0;","background: #32BEA6; padding:5px 0;","color: #E70000; background: #29162B; padding:5px 0;","color: #F3B607; background: #29162B; padding:5px 0;","color: #32BEA6; background: #29162B; padding:5px 0;","color: #999999; background: #29162B; padding:5px 0;","background: #32BEA6; padding:5px 0;","background: #B8FCEF; padding:5px 0;","background: #32BEA6; padding:5px 0;","color: #E70000; background: #32BEA6; padding:5px 0;","color: #FF2424; background: #FFFFFF; padding:5px 0;"];
 		window.console.log.apply(window.console,e);
-	} else window.console.log("WAUD.JS v" + Waud.version + " - http://www.waudjs.com");
+	} else window.console.log("WAUD.JS v" + Waud.version + " - " + support + " - http://www.waudjs.com");
 };
 Waud.autoMute = function() {
 	Waud._focusManager = new WaudFocusManager();
@@ -572,7 +574,7 @@ WaudBase64Pack.prototype = {
 	}
 	,_checkProgress: function() {
 		this._loadCount++;
-		if(this._onProgress != null) this._onProgress(0.8 + 0.2 * (this._loadCount / this._soundCount));
+		if(this._onProgress != null) this._onProgress(0.8 + 0.199999999999999956 * (this._loadCount / this._soundCount));
 		if(this._loadCount == this._soundCount) {
 			this._soundsToLoad = null;
 			if(this._onLoaded != null) this._onLoaded(this._sounds);
@@ -1482,6 +1484,7 @@ Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : tru
 Waud.preferredSampleRate = 44100;
 Waud.isMuted = false;
 Waud._playbackRate = 1;
+WaudBase64Pack.JSON_PER = 0.8;
 WaudFocusManager.FOCUS_STATE = "focus";
 WaudFocusManager.BLUR_STATE = "blur";
 WaudFocusManager.ON_FOCUS = "onfocus";

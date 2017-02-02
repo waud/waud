@@ -234,9 +234,10 @@ import js.Browser;
 	}
 
 	static inline function _sayHello() {
+		var support = isWebAudioSupported ? "Web Audio" : "HTML5 Audio";
 		if (Browser.navigator.userAgent.toLowerCase().indexOf("chrome") > 1) {
 			var e = [
-				"\n %c %c %c WAUD%c.%cJS%c v" + version + " %c  %c http://www.waudjs.com %c %c %c 📢 \n\n",
+				"\n %c %c %c WAUD%c.%cJS%c v" + version + " - " + support + " %c  %c http://www.waudjs.com %c %c %c 📢 \n\n",
 				"background: #32BEA6; padding:5px 0;",
 				"background: #32BEA6; padding:5px 0;",
 				"color: #E70000; background: #29162B; padding:5px 0;",
@@ -251,7 +252,7 @@ import js.Browser;
 			];
 			untyped __js__("window.console.log").apply(Browser.window.console, e);
 		}
-		else Browser.window.console.log("WAUD.JS v" + version + " - http://www.waudjs.com");
+		else Browser.window.console.log("WAUD.JS v" + version + " - " + support + " - http://www.waudjs.com");
 	}
 
 	/**
