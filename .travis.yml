@@ -8,4 +8,5 @@ haxe:
   - "3.2.1"
 
 hxml:
+  - test.hxml
   - build.hxml

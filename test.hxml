@@ -1,0 +1,5 @@
+-cp test
+-cp src
+-lib utest
+-main Test
+-js test/test.js
