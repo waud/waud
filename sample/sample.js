@@ -563,7 +563,13 @@ var Main = function() {
 	this._addButton("Can",380,300,60,30,function() {
 		_g._audSprite.play("canopening");
 	});
-	this._addButton("Play All",440,300,60,30,$bind(this,this.playAllTheThings));
+	this._addButton("Countdown",440,300,80,30,function() {
+		_g._audSprite.play("countdown");
+	});
+	this._addButton("Pause Countdown",520,300,120,30,function() {
+		_g._audSprite.pause("countdown");
+	});
+	this._addButton("Play All",640,300,60,30,$bind(this,this.playAllTheThings));
 	label = new PIXI.Text("Test 1: ",{ font : "26px Tahoma", fill : "#FFFFFF"});
 	this._btnContainer.addChild(label);
 	label.position.y = 350;
@@ -1244,10 +1250,7 @@ WaudSound.prototype = {
 					}
 				}
 				if(soundProps == null) return null;
-				if(this._spriteSounds.get(spriteName) != null) {
-					this._spriteSounds.get(spriteName).stop();
-					return this._spriteSounds.get(spriteName).play(spriteName,soundProps);
-				}
+				if(this._spriteSounds.get(spriteName) != null) return this._spriteSounds.get(spriteName).play(spriteName,soundProps);
 			} else return null;
 		}
 		if(this._snd == null) return null;
@@ -2198,7 +2201,7 @@ Perf.INFO_TXT_CLR = "#000000";
 Perf.DELAY_TIME = 4000;
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.9.6";
+Waud.version = "0.9.7";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1, playbackRate : 1};
 Waud.preferredSampleRate = 44100;

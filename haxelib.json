@@ -25,8 +25,8 @@
     "contributors": [
 	"adireddy"
     ],
-    "releasenote": "minor update",
-    "version": "0.9.6",
+    "releasenote": "audio sprite pause/play bug fix",
+    "version": "0.9.7",
     "url": "https://github.com/waud/waud",
     "dependencies": {}
 }
