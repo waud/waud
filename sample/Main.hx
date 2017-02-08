@@ -97,7 +97,9 @@ class Main extends Application {
 		_addButton("Glass", 200, 300, 60, 30, function() { _audSprite.play("glass"); });
 		_addButton("Bell (loop)", 260, 300, 120, 30, function() { _audSprite.play("bell"); });
 		_addButton("Can", 380, 300, 60, 30, function() { _audSprite.play("canopening"); });
-		_addButton("Play All", 440, 300, 60, 30, playAllTheThings);
+		_addButton("Countdown", 440, 300, 80, 30, function() { _audSprite.play("countdown"); });
+		_addButton("Pause Countdown", 520, 300, 120, 30, function() { _audSprite.pause("countdown"); });
+		_addButton("Play All", 640, 300, 60, 30, playAllTheThings);
 
 		label = new Text("Test 1: ", { font: "26px Tahoma", fill:"#FFFFFF" });
 		_btnContainer.addChild(label);

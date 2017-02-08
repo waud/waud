@@ -305,7 +305,6 @@ import haxe.Json;
 				}
 				if (soundProps == null) return null;
 				if (_spriteSounds[spriteName] != null) {
-					_spriteSounds[spriteName].stop();
 					return _spriteSounds[spriteName].play(spriteName, soundProps);
 				}
 			}
@@ -319,6 +318,7 @@ import haxe.Json;
 	* Function to automatically pause or play the sound.
 	*
 	* @method togglePlay
+	* @param {String} [spriteName] - Sprite name to toggle play.
 	* @example
 	*     snd.togglePlay();
 	*/
@@ -336,6 +336,7 @@ import haxe.Json;
 	* Function to check if the sound is playing or not.
 	*
 	* @method isPlaying
+	* @param {String} [spriteName] - Sprite name
 	* @return {Bool} true or false
 	* @example
 	*     snd.isPlaying();
@@ -382,6 +383,7 @@ import haxe.Json;
 	* Function to stop sound.
 	*
 	* @method stop
+	* @param {String} [spriteName] - Sprite name
 	* @example
 	*     snd.stop();
 	*/
@@ -399,6 +401,7 @@ import haxe.Json;
 	* Function to pause sound.
 	*
 	* @method pause
+	* @param {String} [spriteName] - Sprite name to pause.
 	* @example
 	*     snd.pause();
 	*/

@@ -928,10 +928,7 @@ WaudSound.prototype = {
 					}
 				}
 				if(soundProps == null) return null;
-				if(this._spriteSounds.get(spriteName) != null) {
-					this._spriteSounds.get(spriteName).stop();
-					return this._spriteSounds.get(spriteName).play(spriteName,soundProps);
-				}
+				if(this._spriteSounds.get(spriteName) != null) return this._spriteSounds.get(spriteName).play(spriteName,soundProps);
 			} else return null;
 		}
 		if(this._snd == null) return null;
@@ -1869,7 +1866,7 @@ var __map_reserved = {}
 msignal_SlotList.NIL = new msignal_SlotList(null,null);
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.9.6";
+Waud.version = "0.9.7";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1, playbackRate : 1};
 Waud.preferredSampleRate = 44100;
