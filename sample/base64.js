@@ -850,7 +850,7 @@ WaudBase64Pack.prototype = {
 	}
 	,_createSound: function(id) {
 		var _g = this;
-		var snd = new WaudSound(this._soundsToLoad.get(id),{ onload : function(s) {
+		new WaudSound(this._soundsToLoad.get(id),{ onload : function(s) {
 			_g._sounds.set(id,s);
 			Waud.sounds.set(id,s);
 			if(_g._options.onload != null) _g._options.onload(s);
