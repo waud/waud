@@ -5,7 +5,7 @@ git:
     depth: 1
 
 haxe:
-  - "3.2.1"
+  - "3.4.0"
 
 hxml:
   - test.hxml
