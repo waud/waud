@@ -546,6 +546,9 @@
 		]
 	    },
 	    "type": "WhitespaceAround"
+	},
+	{
+	    "type": "UnusedLocalVar"
 	}
     ],
     "exclude": {
