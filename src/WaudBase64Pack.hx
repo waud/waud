@@ -134,7 +134,7 @@ import js.html.XMLHttpRequest;
 	* @param {String} id - sound id.
 	*/
 	function _createSound(id:String) {
-		var snd = new WaudSound(_soundsToLoad.get(id), {
+		new WaudSound(_soundsToLoad.get(id), {
 			onload:function(s:IWaudSound) {
 				_sounds.set(id, s);
 				Waud.sounds.set(id, s);
