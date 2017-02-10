@@ -30,5 +30,7 @@ WaudBase64Pack
 -dce full
 --no-traces
 
-#--next
+--next
+-cmd haxelib run checkstyle -s src
+
 #-cmd waudsprite --loop loop --autoplay loop  -o sample/assets/sprite -e m4a sample/assets/*.mp3
