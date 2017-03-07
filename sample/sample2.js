@@ -687,6 +687,7 @@ Sample2.main = function() {
 Sample2.__super__ = pixi_plugins_app_Application;
 Sample2.prototype = $extend(pixi_plugins_app_Application.prototype,{
 	_onLoad: function(snd) {
+		console.log("loaded");
 		var tmp = snd.getDuration();
 		this._duration.text = "Duration: " + tmp;
 	}
@@ -1082,6 +1083,7 @@ WaudSound.prototype = {
 		xobj.send(null);
 	}
 	,_init: function(soundUrl) {
+		var _gthis = this;
 		this.url = soundUrl;
 		if(Waud.isWebAudioSupported && Waud.useWebAudio && (this._options == null || this._options.webaudio == null || this._options.webaudio)) {
 			if(this.isSpriteSound) {
@@ -1091,14 +1093,33 @@ WaudSound.prototype = {
 			}
 		} else if(Waud.isHTML5AudioSupported) {
 			if(this._spriteData != null && this._spriteData.sprite != null) {
+				var loadCount = 0;
+				var onLoad = this._options != null && this._options.onload != null ? this._options.onload : null;
+				var onLoadSpriteSound = function(snd) {
+					loadCount += 1;
+					if(loadCount == _gthis._spriteData.sprite.length && onLoad != null) {
+						onLoad(snd);
+					}
+				};
+				var onErrorSpriteSound = function(snd1) {
+					loadCount += 1;
+					if(loadCount == _gthis._spriteData.sprite.length && onLoad != null) {
+						onLoad(snd1);
+					}
+				};
+				if(this._options == null) {
+					this._options = { };
+				}
+				this._options.onload = onLoadSpriteSound;
+				this._options.onerror = onErrorSpriteSound;
 				var _g = 0;
 				var _g1 = this._spriteData.sprite;
 				while(_g < _g1.length) {
-					var snd = _g1[_g];
+					var snd2 = _g1[_g];
 					++_g;
 					var sound = new HTML5Sound(this.url,this._options);
 					sound.isSpriteSound = true;
-					var key = snd.name;
+					var key = snd2.name;
 					var _this = this._spriteSounds;
 					if(__map_reserved[key] != null) {
 						_this.setReserved(key,sound);
@@ -2694,7 +2715,7 @@ var Uint8Array = $global.Uint8Array || js_html_compat_Uint8Array._new;
 msignal_SlotList.NIL = new msignal_SlotList(null,null);
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.9.7";
+Waud.version = "0.9.8";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1, playbackRate : 1};
 Waud.preferredSampleRate = 44100;

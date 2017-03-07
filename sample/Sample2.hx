@@ -46,6 +46,7 @@ class Sample2 extends Application {
 	}
 
 	function _onLoad(snd:IWaudSound) {
+		trace("loaded");
 		_duration.text = "Duration: " + snd.getDuration();
 	}
 

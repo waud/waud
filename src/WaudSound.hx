@@ -145,6 +145,22 @@ import haxe.Json;
 		}
 		else if (Waud.isHTML5AudioSupported) {
 			if (_spriteData != null && _spriteData.sprite != null) {
+				var loadCount = 0;
+				var onLoad = (_options != null && _options.onload != null) ? _options.onload : null;
+
+				var onLoadSpriteSound = function(snd:IWaudSound) {
+					loadCount++;
+					if (loadCount == _spriteData.sprite.length && onLoad != null) onLoad(snd);
+				};
+
+				var onErrorSpriteSound = function(snd:IWaudSound) {
+					loadCount++;
+					if (loadCount == _spriteData.sprite.length && onLoad != null) onLoad(snd);
+				};
+
+				if (_options == null) _options = {};
+				_options.onload = onLoadSpriteSound;
+				_options.onerror = onErrorSpriteSound;
 				for (snd in _spriteData.sprite) {
 					var sound = new HTML5Sound(url, _options);
 					sound.isSpriteSound = true;

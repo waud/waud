@@ -167,7 +167,8 @@ class Main extends Application {
 		_ua.text += "\nWeb Audio API: " + Waud.isWebAudioSupported;
 		_ua.text += "\nHTML5 Audio: " + Waud.isHTML5AudioSupported;
 
-		_audSprite = new WaudSound("assets/sprite.json", {webaudio: true});
+		_audSprite = new WaudSound("assets/sprite.json");
+		_audSprite.onLoad(_onAudioSpriteLoaded);
 		_audSprite.onEnd(function(snd:IWaudSound) {trace("Glass finished.");}, "glass");
 		_audSprite.onEnd(function(snd:IWaudSound) {trace("Bell finished.");}, "bell");
 		_audSprite.onEnd(function(snd:IWaudSound) {trace("Canopening finished.");}, "canopening");
@@ -185,6 +186,10 @@ class Main extends Application {
 
 	function _onLoad(snd:IWaudSound) {
 		//trace(snd.url);
+	}
+
+	function _onAudioSpriteLoaded(snd:IWaudSound) {
+		trace("audio sprite loaded");
 	}
 
 	function touchUnlock() {

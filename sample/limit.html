@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<title>audio limit test (IE)</title>
+
+	<style>
+		html,body { margin: 0; padding: 0; width: 100%; height: 100%; }
+	</style>
+
+</head>
+<body>
+<label id="count"></label>
+<script type="text/javascript">
+    var readyCount = 0;
+    var countElement = document.getElementById("count");
+    function readyTest() {
+        var a0 = document.createElement("audio");
+        a0.oncanplaythrough = function () {
+            readyCount++;
+            countElement.innerHTML = readyCount;
+            readyTest();
+        }
+        a0.src = "assets/beep.mp3";
+        a0.load();
+    }
+    readyTest();
+</script>
+</body>
+</html>
