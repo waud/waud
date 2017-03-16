@@ -102,7 +102,7 @@ Found any bug? Please create a new [issue](https://github.com/waud/waud/issues/n
 // Initialize Waud. Make sure to call this before loading sounds.
 Waud.init();
 
-// To play a blank sound and automatically unlock audio on iOS devices.
+// To automatically unlock audio on iOS devices by playing a blank sound.
 // The parameter is a callback function that can be used to start playing sounds like background music.
 Waud.enableTouchUnlock(touchUnlock);
 
