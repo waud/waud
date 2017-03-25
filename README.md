@@ -77,6 +77,14 @@ var audSprite = new WaudSound("assets/sprite.json");
 audSprite.play("glass");
 ```
 
+### Live Audio Stream
+
+Waud supports live audio streams, but make sure to disable web audio as live streams can only be played through HTML5 Audio.
+
+```js
+var snd = new WaudSound("http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio1_mf_p", { autoplay:true, webaudio:false });
+````
+
 ### Browser Support
 
 Tested on all major browsers.
