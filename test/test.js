@@ -271,6 +271,7 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 				};
 			}
 			this._snd.onplaying = function() {
+				_gthis._isLoaded = true;
 				_gthis._isPlaying = true;
 			};
 			this._snd.onended = function() {
@@ -348,7 +349,7 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 		var _gthis = this;
 		this.spriteName = sprite;
 		if(!this._isLoaded || this._snd == null) {
-			haxe_Log.trace("sound not loaded",{ fileName : "HTML5Sound.hx", lineNumber : 114, className : "HTML5Sound", methodName : "play"});
+			haxe_Log.trace("sound not loaded",{ fileName : "HTML5Sound.hx", lineNumber : 115, className : "HTML5Sound", methodName : "play"});
 			return -1;
 		}
 		if(this._isPlaying) {
@@ -2139,7 +2140,6 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 	,_pauseTime: null
 	,_currentSoundProps: null
 	,load: function(callback) {
-		haxe_Log.trace("AFSAFF",{ fileName : "WebAudioAPISound.hx", lineNumber : 41, className : "WebAudioAPISound", methodName : "load"});
 		if(!this._isLoaded) {
 			var request = new XMLHttpRequest();
 			request.open("GET",this.url,true);
@@ -2178,7 +2178,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 	}
 	,_decodeSuccess: function(buffer) {
 		if(buffer == null) {
-			haxe_Log.trace("empty buffer: " + this.url,{ fileName : "WebAudioAPISound.hx", lineNumber : 78, className : "WebAudioAPISound", methodName : "_decodeSuccess"});
+			haxe_Log.trace("empty buffer: " + this.url,{ fileName : "WebAudioAPISound.hx", lineNumber : 77, className : "WebAudioAPISound", methodName : "_decodeSuccess"});
 			this._error();
 			return;
 		}
@@ -2228,7 +2228,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 			this.stop(this.spriteName);
 		}
 		if(!this._isLoaded) {
-			haxe_Log.trace("sound not loaded",{ fileName : "WebAudioAPISound.hx", lineNumber : 118, className : "WebAudioAPISound", methodName : "play"});
+			haxe_Log.trace("sound not loaded",{ fileName : "WebAudioAPISound.hx", lineNumber : 117, className : "WebAudioAPISound", methodName : "play"});
 			return -1;
 		}
 		var start = 0;
@@ -5608,7 +5608,7 @@ var Uint8Array = $global.Uint8Array || js_html_compat_Uint8Array._new;
 AudioManager.AUDIO_CONTEXT = "this.audioContext";
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.9.8";
+Waud.version = "0.9.9";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1, playbackRate : 1};
 Waud.preferredSampleRate = 44100;

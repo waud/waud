@@ -360,8 +360,6 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 		return this._options.volume;
 	}
 	,mute: function(val,spriteName) {
-		console.log("fsfgassaasg");
-		console.log(this._isPlaying);
 		if(!this._isLoaded) {
 			return;
 		}
@@ -3097,7 +3095,7 @@ Perf.INFO_TXT_CLR = "#000000";
 Perf.DELAY_TIME = 4000;
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.9.8";
+Waud.version = "0.9.9";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1, playbackRate : 1};
 Waud.preferredSampleRate = 44100;

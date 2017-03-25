@@ -211,6 +211,7 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 				};
 			}
 			this._snd.onplaying = function() {
+				_gthis._isLoaded = true;
 				_gthis._isPlaying = true;
 			};
 			this._snd.onended = function() {
@@ -271,8 +272,6 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 			return;
 		}
 		this._snd.muted = val;
-		this._snd.volume = val ? 0 : this._options.volume;
-		console.log("fsfgassaasg");
 		if(WaudUtils.isiOS()) {
 			if(val && this.isPlaying()) {
 				this._muted = true;
@@ -488,7 +487,6 @@ Waud._sayHello = function() {
 	}
 };
 Waud.autoMute = function() {
-	console.log("auto mute");
 	Waud._focusManager = new WaudFocusManager();
 	Waud._focusManager.focus = function() {
 		Waud.mute(false);
@@ -524,7 +522,6 @@ Waud.mute = function(val) {
 		val = true;
 	}
 	Waud.isMuted = val;
-	console.log(Waud.sounds.toString());
 	if(Waud.sounds != null) {
 		var _this = Waud.sounds;
 		var sound = new haxe_ds__$StringMap_StringMapIterator(_this,_this.arrayKeys());
@@ -1892,25 +1889,6 @@ haxe_ds_StringMap.prototype = {
 		}
 		return out;
 	}
-	,toString: function() {
-		var s_b = "";
-		s_b += "{";
-		var keys = this.arrayKeys();
-		var _g1 = 0;
-		var _g = keys.length;
-		while(_g1 < _g) {
-			var i = _g1++;
-			var k = keys[i];
-			s_b += k == null ? "null" : "" + k;
-			s_b += " => ";
-			s_b += Std.string(Std.string(__map_reserved[k] != null ? this.getReserved(k) : this.h[k]));
-			if(i < keys.length - 1) {
-				s_b += ", ";
-			}
-		}
-		s_b += "}";
-		return s_b;
-	}
 	,__class__: haxe_ds_StringMap
 };
 var js__$Boot_HaxeError = function(val) {
@@ -2256,7 +2234,7 @@ if(ArrayBuffer.prototype.slice == null) {
 var Uint8Array = $global.Uint8Array || js_html_compat_Uint8Array._new;
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.9.8";
+Waud.version = "0.9.9";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1, playbackRate : 1};
 Waud.preferredSampleRate = 44100;
