@@ -39,6 +39,7 @@ import js.html.AudioElement;
 			}
 
 			_snd.onplaying = function() {
+				_isLoaded = true;
 				_isPlaying = true;
 			}
 

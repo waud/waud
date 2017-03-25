@@ -22,6 +22,11 @@
 
 --next
 
+-main Radio
+-js sample/radio.js
+
+--next
+
 -main Sample2
 -js sample/sample2.js
 

@@ -1,3 +1,8 @@
+-cmd haxelib newrepo
+-cmd haxelib install utest
+
+--next
+
 -cp test
 -cp src
 -lib utest

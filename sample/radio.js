@@ -413,6 +413,18 @@ HxOverrides.cca = function(s,index) {
 	return x;
 };
 Math.__name__ = true;
+var Radio = function() {
+	Waud.init();
+	Waud.autoMute();
+	var rad1 = new WaudSound("http://ice1.somafm.com/groovesalad-128-mp3",{ autoplay : true, webaudio : false});
+};
+Radio.__name__ = true;
+Radio.main = function() {
+	new Radio();
+};
+Radio.prototype = {
+	__class__: Radio
+};
 var Reflect = function() { };
 Reflect.__name__ = true;
 Reflect.field = function(o,field) {
@@ -421,18 +433,6 @@ Reflect.field = function(o,field) {
 	} catch( e ) {
 		return null;
 	}
-};
-Reflect.fields = function(o) {
-	var a = [];
-	if(o != null) {
-		var hasOwnProperty = Object.prototype.hasOwnProperty;
-		for( var f in o ) {
-		if(f != "__id__" && f != "hx__closures__" && hasOwnProperty.call(o,f)) {
-			a.push(f);
-		}
-		}
-	}
-	return a;
 };
 var Std = function() { };
 Std.__name__ = true;
@@ -672,152 +672,6 @@ Waud.destroy = function() {
 		Waud._focusManager.focus = null;
 		Waud._focusManager = null;
 	}
-};
-var WaudBase64Pack = $hx_exports["WaudBase64Pack"] = function(url,onLoaded,onProgress,onError,options,sequentialLoad) {
-	if(sequentialLoad == null) {
-		sequentialLoad = false;
-	}
-	if(Waud.audioManager == null) {
-		console.log("initialise Waud using Waud.init() before loading sounds");
-		return;
-	}
-	this._sequentialLoad = sequentialLoad;
-	if(url.indexOf(".json") > 0) {
-		this.progress = 0;
-		this._options = WaudUtils.setDefaultOptions(options);
-		this._totalSize = 0;
-		this._soundCount = 0;
-		this._loadCount = 0;
-		this._onLoaded = onLoaded;
-		this._onProgress = onProgress;
-		this._onError = onError;
-		this._sounds = new haxe_ds_StringMap();
-		this._loadBase64Json(url);
-	}
-};
-WaudBase64Pack.__name__ = true;
-WaudBase64Pack.prototype = {
-	_loadBase64Json: function(base64Url) {
-		var _gthis = this;
-		var m = new EReg("\"meta\":.[0-9]*,[0-9]*.","i");
-		var xobj = new XMLHttpRequest();
-		xobj.open("GET",base64Url,true);
-		if(this._onProgress != null) {
-			xobj.onprogress = function(e) {
-				var meta = m.match(xobj.responseText);
-				if(meta && _gthis._totalSize == 0) {
-					var metaInfo = JSON.parse("{" + m.matched(0) + "}");
-					_gthis._totalSize = metaInfo.meta[1];
-				}
-				_gthis.progress = e.lengthComputable ? e.loaded / e.total : e.loaded / _gthis._totalSize;
-				if(_gthis.progress > 1) {
-					_gthis.progress = 1;
-				}
-				_gthis._onProgress(0.8 * _gthis.progress);
-			};
-		}
-		xobj.onreadystatechange = function() {
-			if(xobj.readyState == 4 && xobj.status == 200) {
-				var res = JSON.parse(xobj.responseText);
-				_gthis._soundsToLoad = new haxe_ds_StringMap();
-				_gthis._soundIds = [];
-				var _g = 0;
-				var _g1 = Reflect.fields(res);
-				while(_g < _g1.length) {
-					var n = _g1[_g];
-					++_g;
-					if(n == "meta") {
-						continue;
-					}
-					if((res instanceof Array) && res.__enum__ == null) {
-						_gthis._soundIds.push(Reflect.field(res,n).name);
-						var this1 = _gthis._soundsToLoad;
-						var key = Reflect.field(res,n).name;
-						var value = "data:" + Std.string(Reflect.field(res,n).mime) + ";base64," + Std.string(Reflect.field(res,n).data);
-						var _this = this1;
-						if(__map_reserved[key] != null) {
-							_this.setReserved(key,value);
-						} else {
-							_this.h[key] = value;
-						}
-					} else {
-						_gthis._soundIds.push(n);
-						var this2 = _gthis._soundsToLoad;
-						var value1 = Reflect.field(res,n);
-						var _this1 = this2;
-						if(__map_reserved[n] != null) {
-							_this1.setReserved(n,value1);
-						} else {
-							_this1.h[n] = value1;
-						}
-					}
-				}
-				_gthis._soundCount = _gthis._soundIds.length;
-				if(!_gthis._sequentialLoad) {
-					while(_gthis._soundIds.length > 0) {
-						var tmp = _gthis._soundIds.shift();
-						_gthis._createSound(tmp);
-					}
-				} else {
-					var tmp1 = _gthis._soundIds.shift();
-					_gthis._createSound(tmp1);
-				}
-			}
-		};
-		xobj.send(null);
-	}
-	,_createSound: function(id) {
-		var _gthis = this;
-		var _this = this._soundsToLoad;
-		new WaudSound(__map_reserved[id] != null ? _this.getReserved(id) : _this.h[id],{ onload : function(s) {
-			var _this1 = _gthis._sounds;
-			if(__map_reserved[id] != null) {
-				_this1.setReserved(id,s);
-			} else {
-				_this1.h[id] = s;
-			}
-			var _this2 = Waud.sounds;
-			if(__map_reserved[id] != null) {
-				_this2.setReserved(id,s);
-			} else {
-				_this2.h[id] = s;
-			}
-			if(_gthis._options.onload != null) {
-				_gthis._options.onload(s);
-			}
-			_gthis._checkProgress();
-		}, onerror : function(s1) {
-			var _this3 = _gthis._sounds;
-			if(__map_reserved[id] != null) {
-				_this3.setReserved(id,null);
-			} else {
-				_this3.h[id] = null;
-			}
-			if(_gthis._options.onerror != null) {
-				_gthis._options.onerror(s1);
-			}
-			if(_gthis._checkProgress() && _gthis._onError != null) {
-				_gthis._onError();
-			}
-		}, autoplay : this._options.autoplay, autostop : this._options.autostop, loop : this._options.loop, onend : this._options.onend, playbackRate : this._options.playbackRate, preload : this._options.preload, volume : this._options.volume, webaudio : this._options.webaudio});
-	}
-	,_checkProgress: function() {
-		this._loadCount++;
-		if(this._onProgress != null) {
-			this._onProgress(0.8 + 0.199999999999999956 * (this._loadCount / this._soundCount));
-		}
-		if(this._loadCount == this._soundCount) {
-			this._soundsToLoad = null;
-			if(this._onLoaded != null) {
-				this._onLoaded(this._sounds);
-			}
-			return true;
-		} else if(this._sequentialLoad) {
-			this._createSound(this._soundIds.shift());
-		}
-		return false;
-	}
-	,__class__: WaudBase64Pack
 };
 var WaudFocusManager = $hx_exports["WaudFocusManager"] = function() {
 	var _gthis = this;
@@ -2240,7 +2094,6 @@ Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : tru
 Waud.preferredSampleRate = 44100;
 Waud.isMuted = false;
 Waud._playbackRate = 1;
-WaudBase64Pack.JSON_PER = 0.8;
 WaudFocusManager.FOCUS_STATE = "focus";
 WaudFocusManager.BLUR_STATE = "blur";
 WaudFocusManager.ON_FOCUS = "onfocus";
@@ -2251,6 +2104,7 @@ WaudFocusManager.WINDOW = "window";
 WaudFocusManager.DOCUMENT = "document";
 js_Boot.__toStr = ({ }).toString;
 js_html_compat_Uint8Array.BYTES_PER_ELEMENT = 1;
+Radio.main();
 })(typeof exports != "undefined" ? exports : typeof window != "undefined" ? window : typeof self != "undefined" ? self : this, typeof window != "undefined" ? window : typeof global != "undefined" ? global : typeof self != "undefined" ? self : this);
 
-//# sourceMappingURL=waud.js.map
+//# sourceMappingURL=radio.js.map

@@ -21,6 +21,9 @@ Waud is a simple and powerful web audio library that allows you to go beyond HTM
 
 <sup>2</sup> Automatically mutes audio when the window is not in focus (switching tab, minimising window, etc).
 
+<a href="https://www.patreon.com/user?u=5392234"><img id="patreon" class="patreon"
+             src="http://waud.github.io/images/patreon.png" alt="support me on patreon" /></a>
+
 ### Installation
 
 Available via npm, cdn and haxelib (for haxe users).
@@ -74,6 +77,14 @@ var audSprite = new WaudSound("assets/sprite.json");
 audSprite.play("glass");
 ```
 
+### Live Audio Stream
+
+Waud supports live audio streams, but make sure to disable web audio as live streams can only be played through HTML5 Audio.
+
+```js
+var snd = new WaudSound("http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio1_mf_p", { autoplay:true, webaudio:false });
+````
+
 ### Browser Support
 
 Tested on all major browsers.
@@ -102,7 +113,7 @@ Found any bug? Please create a new [issue](https://github.com/waud/waud/issues/n
 // Initialize Waud. Make sure to call this before loading sounds.
 Waud.init();
 
-// To play a blank sound and automatically unlock audio on iOS devices.
+// To automatically unlock audio on iOS devices by playing a blank sound.
 // The parameter is a callback function that can be used to start playing sounds like background music.
 Waud.enableTouchUnlock(touchUnlock);
 
@@ -126,7 +137,7 @@ function touchUnlock() {
 ### Sample Rate
 
 - It is recommended to use same **sample rate** for all the audio files. Playing different **sample rate** files can cause issues on some devices.
-- By default, **Waud** uses **44100** sample rate. If your audio files have a different sample rate then specify it using [**`Waud.preferredSampleRate`**](http://waud.github.io/docs/classes/Waud.html#property_preferredSampleRate) property.
+- By default, **Waud** uses **44100** sample rate. If your audio files have a different sample rate then specify it using [**`Waud.preferredSampleRate`**](http://waud.github.io/api/classes/Waud.html#property_preferredSampleRate) property.
 
 ### Licensing Information
 
