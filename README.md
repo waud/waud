@@ -21,9 +21,6 @@ Waud is a simple and powerful web audio library that allows you to go beyond HTM
 
 <sup>2</sup> Automatically mutes audio when the window is not in focus (switching tab, minimising window, etc).
 
-<a href="https://www.patreon.com/user?u=5392234"><img id="patreon" class="patreon"
-             src="http://waud.github.io/images/patreon.png" alt="support me on patreon" /></a>
-
 ### Installation
 
 Available via npm, cdn and haxelib (for haxe users).
