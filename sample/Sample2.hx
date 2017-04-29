@@ -37,7 +37,6 @@ class Sample2 extends Application {
 		_addButton("setTime(10)", 400, 100, 80, 30, function() { _snd.setTime(10); });
 
 		Waud.init();
-		Waud.autoMute();
 		Waud.enableTouchUnlock(touchUnlock);
 		Waud.defaults.onload = _onLoad;
 		_snd = new WaudSound("assets/countdown.mp3", { loop:false, autoplay: false, volume: 1, onload: _onLoad });
