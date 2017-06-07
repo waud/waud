@@ -99,28 +99,40 @@ import js.html.XMLHttpRequest;
 			};
 		}
 
-		xobj.onreadystatechange = function() {
-			if (xobj.readyState == 4 && xobj.status == 200) {
-				var res = Json.parse(xobj.responseText);
-				_soundsToLoad = new Map();
-				_soundIds = [];
-				for (n in Reflect.fields(res)) {
-					if (n == "meta") continue;
-					if (Std.is(res, Array)) {
-						_soundIds.push(Reflect.field(res, n).name);
-						_soundsToLoad.set(Reflect.field(res, n).name, "data:" + Reflect.field(res, n).mime + ";base64," + Reflect.field(res, n).data);
-					}
-					else {
-						_soundIds.push(n);
-						_soundsToLoad.set(n, Reflect.field(res, n));
-					}
-				}
-				_soundCount = _soundIds.length;
+		if (_onError != null) {
+			xobj.onerror = function(e:Dynamic) {
+				_onError();
+			};
+		}
 
-				if (!_sequentialLoad) {
-					while (_soundIds.length > 0) _createSound(_soundIds.shift());
+		xobj.onreadystatechange = function() {
+			if (xobj.readyState == 4) {
+				switch (xobj.status) {
+					case 200:
+						var res = Json.parse(xobj.responseText);
+						_soundsToLoad = new Map();
+						_soundIds = [];
+						for (n in Reflect.fields(res)) {
+							if (n == "meta") continue;
+							if (Std.is(res, Array)) {
+								_soundIds.push(Reflect.field(res, n).name);
+								_soundsToLoad.set(Reflect.field(res, n).name, "data:" + Reflect.field(res, n).mime + ";base64," + Reflect.field(res, n).data);
+							}
+							else {
+								_soundIds.push(n);
+								_soundsToLoad.set(n, Reflect.field(res, n));
+							}
+						}
+						_soundCount = _soundIds.length;
+
+						if (!_sequentialLoad) {
+							while (_soundIds.length > 0) _createSound(_soundIds.shift());
+						}
+						else _createSound(_soundIds.shift());
+
+					case 404:
+						_onError();
 				}
-				else _createSound(_soundIds.shift());
 			}
 		};
 		xobj.send(null);
