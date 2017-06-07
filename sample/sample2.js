@@ -675,7 +675,6 @@ var Sample2 = function() {
 		_gthis._snd.setTime(10);
 	});
 	Waud.init();
-	Waud.autoMute();
 	Waud.enableTouchUnlock($bind(this,this.touchUnlock));
 	Waud.defaults.onload = $bind(this,this._onLoad);
 	this._snd = new WaudSound("assets/countdown.mp3",{ loop : false, autoplay : false, volume : 1, onload : $bind(this,this._onLoad)});

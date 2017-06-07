@@ -21,9 +21,6 @@ Waud is a simple and powerful web audio library that allows you to go beyond HTM
 
 <sup>2</sup> Automatically mutes audio when the window is not in focus (switching tab, minimising window, etc).
 
-<a href="https://www.patreon.com/user?u=5392234"><img id="patreon" class="patreon"
-             src="http://waud.github.io/images/patreon.png" alt="support me on patreon" /></a>
-
 ### Installation
 
 Available via npm, cdn and haxelib (for haxe users).
@@ -79,10 +76,12 @@ audSprite.play("glass");
 
 ### Live Audio Stream
 
+[Waud Radio](http://www.waudjs.com/radio)
+
 Waud supports live audio streams, but make sure to disable web audio as live streams can only be played through HTML5 Audio.
 
 ```js
-var snd = new WaudSound("http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio1_mf_p", { autoplay:true, webaudio:false });
+var snd = new WaudSound("http://ice-sov.musicradio.com/SmoothUKMP3", { autoplay:true, webaudio:false });
 ````
 
 ### Browser Support
