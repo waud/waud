@@ -1777,7 +1777,9 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 			this._playStartTime = this._manager.audioContext.currentTime;
 			this._isPlaying = true;
 			this.source.onended = function() {
-				_gthis._pauseTime = 0;
+				if(_gthis._isPlaying) {
+					_gthis._pauseTime = 0;
+				}
 				_gthis._isPlaying = false;
 				if(_gthis.isSpriteSound && soundProps != null && soundProps.loop != null && soundProps.loop && start >= 0 && end > -1) {
 					_gthis.destroy();
@@ -1856,6 +1858,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		}
 		this.destroy();
 		this._pauseTime += this._manager.audioContext.currentTime - this._playStartTime;
+		console.log("pause: " + this._pauseTime);
 	}
 	,playbackRate: function(val,spriteName) {
 		if(val == null) {

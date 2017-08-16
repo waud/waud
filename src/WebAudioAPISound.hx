@@ -138,7 +138,7 @@ import js.html.audio.AudioBuffer;
 			_playStartTime = _manager.audioContext.currentTime;
 			_isPlaying = true;
 			source.onended = function() {
-				_pauseTime = 0;
+				if (_isPlaying) _pauseTime = 0;
 				_isPlaying = false;
 				if (isSpriteSound && soundProps != null && soundProps.loop != null && soundProps.loop && start >= 0 && end > -1) {
 					destroy();
@@ -212,6 +212,7 @@ import js.html.audio.AudioBuffer;
 		if (source == null || !_isLoaded || !_isPlaying) return;
 		destroy();
 		_pauseTime += _manager.audioContext.currentTime - _playStartTime;
+		trace("pause: " + _pauseTime);
 	}
 
 	public function playbackRate(?val:Float, ?spriteName:String):Float {
