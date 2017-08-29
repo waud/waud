@@ -1137,6 +1137,38 @@ Waud.pause = function() {
 		}
 	}
 };
+Waud.playSequence = function(snds,onComplete,onSoundComplete) {
+	if(snds == null || snds.length == 0) {
+		return;
+	}
+	var _g = 0;
+	while(_g < snds.length) {
+		var snd = snds[_g];
+		++_g;
+		var _this = Waud.sounds;
+		if((__map_reserved[snd] != null ? _this.getReserved(snd) : _this.h[snd]) == null) {
+			haxe_Log.trace("Unable to find \"" + snd + "\" to play sequence",{ fileName : "Waud.hx", lineNumber : 394, className : "Waud", methodName : "playSequence"});
+			return;
+		}
+	}
+	var playSound = function() {
+		if(snds.length > 0) {
+			var sndStr = snds.shift();
+			var _this1 = Waud.sounds;
+			var sndToPlay = __map_reserved[sndStr] != null ? _this1.getReserved(sndStr) : _this1.h[sndStr];
+			sndToPlay.play();
+			sndToPlay.onEnd(function(snd1) {
+				if(onSoundComplete != null) {
+					onSoundComplete(sndStr);
+				}
+				playSound();
+			});
+		} else if(onComplete != null) {
+			onComplete();
+		}
+	};
+	playSound();
+};
 Waud.getFormatSupportString = function() {
 	var support = "OGG: " + Waud.__audioElement.canPlayType("audio/ogg; codecs=\"vorbis\"");
 	support += ", WAV: " + Waud.__audioElement.canPlayType("audio/wav; codecs=\"1\"");
@@ -1302,51 +1334,49 @@ WaudBase64Pack.prototype = {
 				_gthis._onProgress(0.8 * _gthis.progress);
 			};
 		}
+		if(this._onError != null) {
+			xobj.onerror = function(e1) {
+				_gthis._onError();
+			};
+		}
 		xobj.onreadystatechange = function() {
-			if(xobj.readyState == 4 && xobj.status == 200) {
-				var res = JSON.parse(xobj.responseText);
-				_gthis._soundsToLoad = new haxe_ds_StringMap();
-				_gthis._soundIds = [];
-				var _g = 0;
-				var _g1 = Reflect.fields(res);
-				while(_g < _g1.length) {
-					var n = _g1[_g];
-					++_g;
-					if(n == "meta") {
-						continue;
-					}
-					if((res instanceof Array) && res.__enum__ == null) {
-						_gthis._soundIds.push(Reflect.field(res,n).name);
-						var this1 = _gthis._soundsToLoad;
-						var key = Reflect.field(res,n).name;
-						var value = "data:" + Std.string(Reflect.field(res,n).mime) + ";base64," + Std.string(Reflect.field(res,n).data);
-						var _this = this1;
-						if(__map_reserved[key] != null) {
-							_this.setReserved(key,value);
+			if(xobj.readyState == 4) {
+				var _g = xobj.status;
+				switch(_g) {
+				case 200:
+					var res = JSON.parse(xobj.responseText);
+					_gthis._soundsToLoad = new haxe_ds_StringMap();
+					_gthis._soundIds = [];
+					var _g1 = 0;
+					var _g11 = Reflect.fields(res);
+					while(_g1 < _g11.length) {
+						var n = _g11[_g1];
+						++_g1;
+						if(n == "meta") {
+							continue;
+						}
+						if((res instanceof Array) && res.__enum__ == null) {
+							_gthis._soundIds.push(Reflect.field(res,n).name);
+							_gthis._soundsToLoad.set(Reflect.field(res,n).name,"data:" + Std.string(Reflect.field(res,n).mime) + ";base64," + Std.string(Reflect.field(res,n).data));
 						} else {
-							_this.h[key] = value;
+							_gthis._soundIds.push(n);
+							_gthis._soundsToLoad.set(n,Reflect.field(res,n));
+						}
+					}
+					_gthis._soundCount = _gthis._soundIds.length;
+					if(!_gthis._sequentialLoad) {
+						while(_gthis._soundIds.length > 0) {
+							var tmp = _gthis._soundIds.shift();
+							_gthis._createSound(tmp);
 						}
 					} else {
-						_gthis._soundIds.push(n);
-						var this2 = _gthis._soundsToLoad;
-						var value1 = Reflect.field(res,n);
-						var _this1 = this2;
-						if(__map_reserved[n] != null) {
-							_this1.setReserved(n,value1);
-						} else {
-							_this1.h[n] = value1;
-						}
+						var tmp1 = _gthis._soundIds.shift();
+						_gthis._createSound(tmp1);
 					}
-				}
-				_gthis._soundCount = _gthis._soundIds.length;
-				if(!_gthis._sequentialLoad) {
-					while(_gthis._soundIds.length > 0) {
-						var tmp = _gthis._soundIds.shift();
-						_gthis._createSound(tmp);
-					}
-				} else {
-					var tmp1 = _gthis._soundIds.shift();
-					_gthis._createSound(tmp1);
+					break;
+				case 404:
+					_gthis._onError();
+					break;
 				}
 			}
 		};
@@ -2261,7 +2291,9 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 			this._playStartTime = this._manager.audioContext.currentTime;
 			this._isPlaying = true;
 			this.source.onended = function() {
-				_gthis._pauseTime = 0;
+				if(_gthis._isPlaying) {
+					_gthis._pauseTime = 0;
+				}
 				_gthis._isPlaying = false;
 				if(_gthis.isSpriteSound && soundProps != null && soundProps.loop != null && soundProps.loop && start >= 0 && end > -1) {
 					_gthis.destroy();
@@ -2340,6 +2372,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		}
 		this.destroy();
 		this._pauseTime += this._manager.audioContext.currentTime - this._playStartTime;
+		haxe_Log.trace("pause: " + this._pauseTime,{ fileName : "WebAudioAPISound.hx", lineNumber : 215, className : "WebAudioAPISound", methodName : "pause"});
 	}
 	,playbackRate: function(val,spriteName) {
 		if(val == null) {
@@ -2551,6 +2584,7 @@ var haxe_IMap = function() { };
 haxe_IMap.__name__ = ["haxe","IMap"];
 haxe_IMap.prototype = {
 	get: null
+	,set: null
 	,keys: null
 	,__class__: haxe_IMap
 };
@@ -2621,6 +2655,13 @@ haxe_ds_StringMap.__interfaces__ = [haxe_IMap];
 haxe_ds_StringMap.prototype = {
 	h: null
 	,rh: null
+	,set: function(key,value) {
+		if(__map_reserved[key] != null) {
+			this.setReserved(key,value);
+		} else {
+			this.h[key] = value;
+		}
+	}
 	,get: function(key) {
 		if(__map_reserved[key] != null) {
 			return this.getReserved(key);
@@ -5608,7 +5649,7 @@ var Uint8Array = $global.Uint8Array || js_html_compat_Uint8Array._new;
 AudioManager.AUDIO_CONTEXT = "this.audioContext";
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.9.9";
+Waud.version = "0.9.12";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1, playbackRate : 1};
 Waud.preferredSampleRate = 44100;

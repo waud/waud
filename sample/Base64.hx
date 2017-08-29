@@ -1,4 +1,3 @@
-import IWaudSound;
 import js.Browser;
 import pixi.core.Pixi;
 import pixi.core.text.Text;
@@ -62,6 +61,14 @@ class Base64 extends Application {
 		_addButton("1.5", 240, 220, 80, 30, function() { setSoundRate(_countdown, 1.5); });
 		_addButton("2", 320, 220, 80, 30, function() { setSoundRate(_countdown, 2); });
 		_addButton("4", 400, 220, 80, 30, function() { setSoundRate(_countdown, 4); });
+
+		_addButton("Play Sequence (beep, bell, glass)", 0, 280, 480, 30, function() {
+			Waud.playSequence([
+				"test/beep.mp3",
+				"test/bell.mp3",
+				"test/glass.mp3"
+			], function() { trace("complete"); }, function(str) { trace(str); } );
+		});
 
 		_progress = new Text("", { font: "20px Tahoma", fill:"#FFFFFF" });
 		stage.addChild(_progress);

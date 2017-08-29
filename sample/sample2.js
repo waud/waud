@@ -835,6 +835,38 @@ Waud.pause = function() {
 		}
 	}
 };
+Waud.playSequence = function(snds,onComplete,onSoundComplete) {
+	if(snds == null || snds.length == 0) {
+		return;
+	}
+	var _g = 0;
+	while(_g < snds.length) {
+		var snd = snds[_g];
+		++_g;
+		var _this = Waud.sounds;
+		if((__map_reserved[snd] != null ? _this.getReserved(snd) : _this.h[snd]) == null) {
+			console.log("Unable to find \"" + snd + "\" to play sequence");
+			return;
+		}
+	}
+	var playSound = function() {
+		if(snds.length > 0) {
+			var sndStr = snds.shift();
+			var _this1 = Waud.sounds;
+			var sndToPlay = __map_reserved[sndStr] != null ? _this1.getReserved(sndStr) : _this1.h[sndStr];
+			sndToPlay.play();
+			sndToPlay.onEnd(function(snd1) {
+				if(onSoundComplete != null) {
+					onSoundComplete(sndStr);
+				}
+				playSound();
+			});
+		} else if(onComplete != null) {
+			onComplete();
+		}
+	};
+	playSound();
+};
 Waud.getFormatSupportString = function() {
 	var support = "OGG: " + Waud.__audioElement.canPlayType("audio/ogg; codecs=\"vorbis\"");
 	support += ", WAV: " + Waud.__audioElement.canPlayType("audio/wav; codecs=\"1\"");
@@ -2718,7 +2750,7 @@ var Uint8Array = $global.Uint8Array || js_html_compat_Uint8Array._new;
 msignal_SlotList.NIL = new msignal_SlotList(null,null);
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.9.9";
+Waud.version = "0.9.12";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1, playbackRate : 1};
 Waud.preferredSampleRate = 44100;
