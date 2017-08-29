@@ -20,7 +20,7 @@ import js.Browser;
 	* @static
 	* @type {String}
 	*/
-	public static var version:String = "0.9.9";
+	public static var version:String = "0.9.12";
 
 	/**
 	* Tells whether to use web audio api or not.
@@ -372,6 +372,46 @@ import js.Browser;
 	*/
 	public static function pause() {
 		if (sounds != null) for (sound in sounds) sound.pause();
+	}
+
+	/**
+	* Helper function to play sounds sequentially. This function assumes sounds are already initialised and loaded.
+	*
+	* @static
+	* @method playSequence
+	* @param {Array<String>} snds - Array of sounds to play sequentially
+	* @param {Function} [onComplete] - Optional callback that triggers after playing all sounds in the sequence.
+	* @param {Function} [onSoundComplete] - Optional callback that triggers after playing each sounds in the sequence.
+	* @example
+	*     Waud.playSequence(["snd1", "snd2", "snd3"]);
+	*     Waud.playSequence(["snd1", "snd2", "snd3"], onComplete);
+	*     Waud.playSequence(["snd1", "snd2", "snd3"], onComplete, onSoundComplete);
+	*/
+	public static function playSequence(snds:Array<String>, ?onComplete:Void -> Void, ?onSoundComplete:String -> Void) {
+		if (snds == null || snds.length == 0) return;
+		for (snd in snds) {
+			if (sounds.get(snd) == null) {
+				trace("Unable to find \"" + snd + "\" to play sequence");
+				return;
+			}
+		}
+
+		var playSound:Void -> Void;
+		playSound = function() {
+			if (snds.length > 0) {
+				var sndStr = snds.shift();
+				var sndToPlay:IWaudSound = sounds.get(sndStr);
+				sndToPlay.play();
+				sndToPlay.onEnd(function(snd:IWaudSound) {
+					if (onSoundComplete != null) onSoundComplete(sndStr);
+					playSound();
+				});
+			}
+			else {
+				if (onComplete != null) onComplete();
+			}
+		}
+		playSound();
 	}
 
 	/**
