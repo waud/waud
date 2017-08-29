@@ -396,7 +396,7 @@ import js.Browser;
 			}
 		}
 
-		var playSound:Void -> Void;
+		var playSound:Void -> Void = null;
 		playSound = function() {
 			if (snds.length > 0) {
 				var sndStr = snds.shift();
