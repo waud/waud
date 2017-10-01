@@ -270,7 +270,13 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 			if(this._options.autostop) this.stop(this.spriteName); else {
 				var n;
 				n = js_Boot.__cast(this._snd.cloneNode(true) , HTMLAudioElement);
-				haxe_Timer.delay($bind(n,n.play),100);
+				if(n.readyState == 4) {
+					n.currentTime = 0;
+					n.play();
+				} else n.oncanplay = function() {
+					n.currentTime = 0;
+					n.play();
+				};
 			}
 		}
 		if(this._muted) return -1;
@@ -281,7 +287,9 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 				if(soundProps.loop != null && soundProps.loop) _g.play(_g.spriteName,soundProps); else _g.stop(_g.spriteName);
 			},Math.ceil(soundProps.duration * 1000));
 		}
-		haxe_Timer.delay(($_=this._snd,$bind($_,$_.play)),100);
+		if(this._snd.readyState == 4) this._snd.play(); else this._snd.oncanplay = function() {
+			_g._snd.play();
+		};
 		this._pauseTime = null;
 		return 0;
 	}
@@ -4445,7 +4453,7 @@ var Uint8Array = $global.Uint8Array || js_html_compat_Uint8Array._new;
 AudioManager.AUDIO_CONTEXT = "this.audioContext";
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.9.13";
+Waud.version = "0.9.14";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1, playbackRate : 1};
 Waud.preferredSampleRate = 44100;
