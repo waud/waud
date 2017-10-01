@@ -1,32 +1,32 @@
 {
-    "name": "waud",
-    "license": "MIT",
-    "classPath": "src",
-    "tags": [
-	"web audio",
-	"web audio api",
-	"haxe",
-	"javascript",
-	"js",
-	"audio",
-	"web",
-	"sounds",
-	"audiocontext",
-	"library",
-	"waud.js",
-	"waud",
-	"audiosprite",
-	"sprite",
-	"audio sprite",
-	"base64",
-	"dataURI"
-    ],
-    "description": "Web Audio Library",
-    "contributors": [
-	"adireddy"
-    ],
-    "releasenote": "bug fixes",
-    "version": "0.9.13",
-    "url": "https://github.com/waud/waud",
-    "dependencies": {}
+	"name": "waud",
+	"license": "MIT",
+	"classPath": "src",
+	"tags": [
+		"web audio",
+		"web audio api",
+		"haxe",
+		"javascript",
+		"js",
+		"audio",
+		"web",
+		"sounds",
+		"audiocontext",
+		"library",
+		"waud.js",
+		"waud",
+		"audiosprite",
+		"sprite",
+		"audio sprite",
+		"base64",
+		"dataURI"
+	],
+	"description": "Web Audio Library",
+	"contributors": [
+		"adireddy"
+	],
+	"releasenote": "HTML5 audio IE 11 bug fix",
+	"version": "0.9.14",
+	"url": "https://github.com/waud/waud",
+	"dependencies": {}
 }

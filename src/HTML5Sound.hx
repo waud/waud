@@ -119,7 +119,16 @@ import js.html.AudioElement;
 			if (_options.autostop) stop(spriteName);
 			else {
 				var n = cast(_snd.cloneNode(true), AudioElement);
-				Timer.delay(n.play, 100);
+				if (n.readyState == 4) {
+					n.currentTime = 0;
+					n.play();
+				}
+				else {
+					n.oncanplay = function() {
+						n.currentTime = 0;
+						n.play();
+					};
+				}
 			}
 		}
 		if (_muted) return -1;
@@ -134,7 +143,13 @@ import js.html.AudioElement;
 			},
 			Math.ceil(soundProps.duration * 1000));
 		}
-		Timer.delay(_snd.play, 100);
+
+		if (_snd.readyState == 4) _snd.play();
+		else {
+			_snd.oncanplay = function() {
+				_snd.play();
+			};
+		}
 		_pauseTime = null;
 		return 0;
 	}
