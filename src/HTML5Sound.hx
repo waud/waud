@@ -118,16 +118,19 @@ import js.html.AudioElement;
 		if (_isPlaying) {
 			if (_options.autostop) stop(spriteName);
 			else {
-				var n = cast(_snd.cloneNode(true), AudioElement);
-				if (n.readyState == 4) {
-					n.currentTime = 0;
-					n.play();
+				var nsnd = cast(_snd.cloneNode(true), AudioElement);
+				if (nsnd.readyState == 4) {
+					nsnd.currentTime = 0;
+					nsnd.play();
 				}
 				else {
-					n.oncanplay = function() {
-						n.currentTime = 0;
-						n.play();
+					nsnd.oncanplay = function() {
+						nsnd.currentTime = 0;
+						nsnd.play();
 					};
+				}
+				nsnd.onended = function() {
+					Waud.dom.removeChild(nsnd);
 				}
 			}
 		}
