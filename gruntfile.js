@@ -36,7 +36,7 @@ module.exports = function (grunt) {
         yuidoc: {
         compile: {
             name: '<%= pkg.name %>',
-                description: '<%= pkg.description %>',
+            description: '<%= pkg.description %>',
                 version: '<%= pkg.version %>',
                 url: '<%= pkg.repository.url %>',
                 options: {

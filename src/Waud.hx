@@ -1,3 +1,4 @@
+import haxe.Timer;
 import js.html.audio.AudioContext;
 import js.html.HTMLDocument;
 import js.html.AudioElement;
@@ -20,7 +21,7 @@ import js.Browser;
 	* @static
 	* @type {String}
 	*/
-	public static var version:String = "0.9.14";
+	public static var version:String = "0.9.15";
 
 	/**
 	* Tells whether to use web audio api or not.
@@ -382,17 +383,20 @@ import js.Browser;
 	* @param {Array<String>} snds - Array of sounds to play sequentially
 	* @param {Function} [onComplete] - Optional callback that triggers after playing all sounds in the sequence.
 	* @param {Function} [onSoundComplete] - Optional callback that triggers after playing each sounds in the sequence.
+	* @param {Int} [interval] - Optional interval in milliseconds to play sequence. Use this to play sounds in
+	* 							set interval instead of waiting for the previous sound to finish.
 	* @example
 	*     Waud.playSequence(["snd1", "snd2", "snd3"]);
 	*     Waud.playSequence(["snd1", "snd2", "snd3"], onComplete);
 	*     Waud.playSequence(["snd1", "snd2", "snd3"], onComplete, onSoundComplete);
+	*     Waud.playSequence(["snd1", "snd2", "snd3"], 500);
 	*/
-	public static function playSequence(snds:Array<String>, ?onComplete:Void -> Void, ?onSoundComplete:String -> Void) {
+	public static function playSequence(snds:Array<String>, ?onComplete:Void -> Void, ?onSoundComplete:String -> Void, ?interval:Int = -1) {
 		if (snds == null || snds.length == 0) return;
-		for (snd in snds) {
-			if (sounds.get(snd) == null) {
-				trace("Unable to find \"" + snd + "\" to play sequence");
-				return;
+		for (i in 0 ... snds.length) {
+			if (sounds.get(snds[i]) == null) {
+				trace("Unable to find \"" + snds[i] + "\" in the sequence, skipping it");
+				snds.splice(i, 1);
 			}
 		}
 
@@ -402,10 +406,19 @@ import js.Browser;
 				var sndStr = snds.shift();
 				var sndToPlay:IWaudSound = sounds.get(sndStr);
 				sndToPlay.play();
-				sndToPlay.onEnd(function(snd:IWaudSound) {
-					if (onSoundComplete != null) onSoundComplete(sndStr);
-					playSound();
-				});
+				if (interval > 0) {
+					Timer.delay(function() {
+						if (onSoundComplete != null) onSoundComplete(sndStr);
+						playSound();
+					},
+					interval);
+				}
+				else {
+					sndToPlay.onEnd(function(snd:IWaudSound) {
+						if (onSoundComplete != null) onSoundComplete(sndStr);
+						playSound();
+					});
+				}
 			}
 			else {
 				if (onComplete != null) onComplete();

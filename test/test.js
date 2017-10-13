@@ -268,14 +268,17 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 		}
 		if(this._isPlaying) {
 			if(this._options.autostop) this.stop(this.spriteName); else {
-				var n;
-				n = js_Boot.__cast(this._snd.cloneNode(true) , HTMLAudioElement);
-				if(n.readyState == 4) {
-					n.currentTime = 0;
-					n.play();
-				} else n.oncanplay = function() {
-					n.currentTime = 0;
-					n.play();
+				var nsnd;
+				nsnd = js_Boot.__cast(this._snd.cloneNode(true) , HTMLAudioElement);
+				if(nsnd.readyState == 4) {
+					nsnd.currentTime = 0;
+					nsnd.play();
+				} else nsnd.oncanplay = function() {
+					nsnd.currentTime = 0;
+					nsnd.play();
+				};
+				nsnd.onended = function() {
+					Waud.dom.removeChild(nsnd);
 				};
 			}
 		}
@@ -867,15 +870,16 @@ Waud.pause = function() {
 		}
 	}
 };
-Waud.playSequence = function(snds,onComplete,onSoundComplete) {
+Waud.playSequence = function(snds,onComplete,onSoundComplete,interval) {
+	if(interval == null) interval = -1;
 	if(snds == null || snds.length == 0) return;
-	var _g = 0;
-	while(_g < snds.length) {
-		var snd = snds[_g];
-		++_g;
-		if(Waud.sounds.get(snd) == null) {
-			haxe_Log.trace("Unable to find \"" + snd + "\" to play sequence",{ fileName : "Waud.hx", lineNumber : 394, className : "Waud", methodName : "playSequence"});
-			return;
+	var _g1 = 0;
+	var _g = snds.length;
+	while(_g1 < _g) {
+		var i = _g1++;
+		if(Waud.sounds.get(snds[i]) == null) {
+			haxe_Log.trace("Unable to find \"" + snds[i] + "\" in the sequence, skipping it",{ fileName : "Waud.hx", lineNumber : 398, className : "Waud", methodName : "playSequence"});
+			snds.splice(i,1);
 		}
 	}
 	var playSound = null;
@@ -884,7 +888,10 @@ Waud.playSequence = function(snds,onComplete,onSoundComplete) {
 			var sndStr = snds.shift();
 			var sndToPlay = Waud.sounds.get(sndStr);
 			sndToPlay.play();
-			sndToPlay.onEnd(function(snd1) {
+			if(interval > 0) haxe_Timer.delay(function() {
+				if(onSoundComplete != null) onSoundComplete(sndStr);
+				playSound();
+			},interval); else sndToPlay.onEnd(function(snd) {
 				if(onSoundComplete != null) onSoundComplete(sndStr);
 				playSound();
 			});
@@ -4453,7 +4460,7 @@ var Uint8Array = $global.Uint8Array || js_html_compat_Uint8Array._new;
 AudioManager.AUDIO_CONTEXT = "this.audioContext";
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.9.14";
+Waud.version = "0.9.15";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1, playbackRate : 1};
 Waud.preferredSampleRate = 44100;

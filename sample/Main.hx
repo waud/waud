@@ -136,7 +136,10 @@ class Main extends Application {
 		_addButton("2.0", 320, 550, 60, 30, function() { Waud.playbackRate(2.0); });
 		_addButton("4.0", 380, 550, 60, 30, function() { Waud.playbackRate(4.0); });
 
-		_addButton("DESTROY", 200, 600, 180, 30, function() { Waud.destroy(); });
+		_addButton("PLAY SEQUENCE", 200, 600, 250, 30, function() { Waud.playSequence(["assets/bell.aac", "assets/l1.m4a", "assets/l2.m4a"]); });
+		_addButton("PLAY SEQUENCE INTERVAL (500ms)", 200, 650, 250, 30, function() { Waud.playSequence(["assets/bell.aac", "assets/l1.m4a", "assets/l2.m4a"], 500); });
+
+		_addButton("DESTROY", 200, 700, 250, 30, function() { Waud.destroy(); });
 
 		_ua = new Text(Browser.navigator.userAgent, { font: "12px Tahoma", fill:"#FFFFFF" });
 		stage.addChild(_ua);
