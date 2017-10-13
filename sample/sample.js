@@ -293,14 +293,17 @@ HTML5Sound.prototype = $extend(BaseSound.prototype,{
 		}
 		if(this._isPlaying) {
 			if(this._options.autostop) this.stop(this.spriteName); else {
-				var n;
-				n = js_Boot.__cast(this._snd.cloneNode(true) , HTMLAudioElement);
-				if(n.readyState == 4) {
-					n.currentTime = 0;
-					n.play();
-				} else n.oncanplay = function() {
-					n.currentTime = 0;
-					n.play();
+				var nsnd;
+				nsnd = js_Boot.__cast(this._snd.cloneNode(true) , HTMLAudioElement);
+				if(nsnd.readyState == 4) {
+					nsnd.currentTime = 0;
+					nsnd.play();
+				} else nsnd.oncanplay = function() {
+					nsnd.currentTime = 0;
+					nsnd.play();
+				};
+				nsnd.onended = function() {
+					Waud.dom.removeChild(nsnd);
 				};
 			}
 		}
@@ -639,7 +642,13 @@ var Main = function() {
 	this._addButton("4.0",380,550,60,30,function() {
 		Waud.playbackRate(4.0);
 	});
-	this._addButton("DESTROY",200,600,180,30,function() {
+	this._addButton("PLAY SEQUENCE",200,600,250,30,function() {
+		Waud.playSequence(["assets/bell.aac","assets/l1.m4a","assets/l2.m4a"]);
+	});
+	this._addButton("PLAY SEQUENCE INTERVAL (500ms)",200,650,250,30,function() {
+		Waud.playSequence(["assets/bell.aac","assets/l1.m4a","assets/l2.m4a"],null,null,500);
+	});
+	this._addButton("DESTROY",200,700,250,30,function() {
 		Waud.destroy();
 	});
 	this._ua = new PIXI.Text(window.navigator.userAgent,{ font : "12px Tahoma", fill : "#FFFFFF"});
@@ -992,15 +1001,16 @@ Waud.pause = function() {
 		}
 	}
 };
-Waud.playSequence = function(snds,onComplete,onSoundComplete) {
+Waud.playSequence = function(snds,onComplete,onSoundComplete,interval) {
+	if(interval == null) interval = -1;
 	if(snds == null || snds.length == 0) return;
-	var _g = 0;
-	while(_g < snds.length) {
-		var snd = snds[_g];
-		++_g;
-		if(Waud.sounds.get(snd) == null) {
-			console.log("Unable to find \"" + snd + "\" to play sequence");
-			return;
+	var _g1 = 0;
+	var _g = snds.length;
+	while(_g1 < _g) {
+		var i = _g1++;
+		if(Waud.sounds.get(snds[i]) == null) {
+			console.log("Unable to find \"" + snds[i] + "\" in the sequence, skipping it");
+			snds.splice(i,1);
 		}
 	}
 	var playSound = null;
@@ -1009,7 +1019,10 @@ Waud.playSequence = function(snds,onComplete,onSoundComplete) {
 			var sndStr = snds.shift();
 			var sndToPlay = Waud.sounds.get(sndStr);
 			sndToPlay.play();
-			sndToPlay.onEnd(function(snd1) {
+			if(interval > 0) haxe_Timer.delay(function() {
+				if(onSoundComplete != null) onSoundComplete(sndStr);
+				playSound();
+			},interval); else sndToPlay.onEnd(function(snd) {
 				if(onSoundComplete != null) onSoundComplete(sndStr);
 				playSound();
 			});
@@ -2255,7 +2268,7 @@ Perf.INFO_TXT_CLR = "#000000";
 Perf.DELAY_TIME = 4000;
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.9.14";
+Waud.version = "0.9.15";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1, playbackRate : 1};
 Waud.preferredSampleRate = 44100;

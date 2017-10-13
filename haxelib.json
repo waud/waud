@@ -25,8 +25,8 @@
 	"contributors": [
 		"adireddy"
 	],
-	"releasenote": "HTML5 audio IE 11 bug fix",
-	"version": "0.9.14",
+	"releasenote": "imploved playSequence functionality",
+	"version": "0.9.15",
 	"url": "https://github.com/waud/waud",
 	"dependencies": {}
 }
