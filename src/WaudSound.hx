@@ -295,9 +295,13 @@ import haxe.Json;
 	*/
 	public function isReady():Bool {
 		if (isSpriteSound) {
-			for (snd in _spriteSounds) return snd.isReady();
+			if (_spriteData == null) return false;
+			for (snd in _spriteSounds) {
+				if (!snd.isReady()) return false;
+			}
+			return true;
 		}
-		return _snd.isReady();
+		return _snd != null && _snd.isReady();
 	}
 
 	/**
