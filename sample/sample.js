@@ -1294,13 +1294,15 @@ WaudSound.prototype = {
 	}
 	,isReady: function() {
 		if(this.isSpriteSound) {
+			if(this._spriteData == null) return false;
 			var $it0 = this._spriteSounds.iterator();
 			while( $it0.hasNext() ) {
 				var snd = $it0.next();
-				return snd.isReady();
+				if(!snd.isReady()) return false;
 			}
+			return true;
 		}
-		return this._snd.isReady();
+		return this._snd != null && this._snd.isReady();
 	}
 	,play: function(spriteName,soundProps) {
 		if(this.isSpriteSound) {
@@ -2268,7 +2270,7 @@ Perf.INFO_TXT_CLR = "#000000";
 Perf.DELAY_TIME = 4000;
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.9.15";
+Waud.version = "0.9.16";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1, playbackRate : 1};
 Waud.preferredSampleRate = 44100;

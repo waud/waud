@@ -1292,13 +1292,15 @@ WaudSound.prototype = {
 	}
 	,isReady: function() {
 		if(this.isSpriteSound) {
+			if(this._spriteData == null) return false;
 			var $it0 = this._spriteSounds.iterator();
 			while( $it0.hasNext() ) {
 				var snd = $it0.next();
-				return snd.isReady();
+				if(!snd.isReady()) return false;
 			}
+			return true;
 		}
-		return this._snd.isReady();
+		return this._snd != null && this._snd.isReady();
 	}
 	,play: function(spriteName,soundProps) {
 		if(this.isSpriteSound) {
@@ -2806,18 +2808,17 @@ utest_Assert.same = function(expected,value,recursive,msg,approx,pos) {
 	if(utest_Assert.sameAs(expected,value,status,approx)) utest_Assert.pass(msg,pos); else utest_Assert.fail(msg == null?status.error:msg,pos);
 };
 utest_Assert.raises = function(method,type,msgNotThrown,msgWrongType,pos) {
+	var name;
+	if(type != null) name = Type.getClassName(type); else name = "Dynamic";
 	try {
 		method();
-		var name = Type.getClassName(type);
-		if(name == null) name = "Dynamic";
 		if(null == msgNotThrown) msgNotThrown = "exception of type " + name + " not raised";
 		utest_Assert.fail(msgNotThrown,pos);
 	} catch( ex ) {
 		haxe_CallStack.lastException = ex;
 		if (ex instanceof js__$Boot_HaxeError) ex = ex.val;
 		if(null == type) utest_Assert.pass(null,pos); else {
-			var name1 = Type.getClassName(type);
-			if(null == msgWrongType) msgWrongType = "expected throw of type " + name1 + " but it is " + Std.string(ex);
+			if(null == msgWrongType) msgWrongType = "expected throw of type " + name + " but it is " + Std.string(ex);
 			utest_Assert.isTrue(js_Boot.__instanceof(ex,type),msgWrongType,pos);
 		}
 	}
@@ -4409,7 +4410,7 @@ utest_ui_text_PlainTextReport.prototype = {
 	}
 	,complete: function(result) {
 		this.result = result;
-		this.handler(this);
+		if(this.handler != null) this.handler(this);
 		if(typeof process != "undefined") process.exit(result.stats.isOk?0:1);
 		if(typeof phantom != "undefined") phantom.exit(result.stats.isOk?0:1);
 	}
@@ -4429,7 +4430,7 @@ utest_ui_text_PrintReport.prototype = $extend(utest_ui_text_PlainTextReport.prot
 	,_trace: function(s) {
 		s = StringTools.replace(s,"  ",this.indent);
 		s = StringTools.replace(s,"\n",this.newline);
-		haxe_Log.trace(s,{ fileName : "PrintReport.hx", lineNumber : 57, className : "utest.ui.text.PrintReport", methodName : "_trace"});
+		haxe_Log.trace(s,{ fileName : "PrintReport.hx", lineNumber : 52, className : "utest.ui.text.PrintReport", methodName : "_trace"});
 	}
 	,__class__: utest_ui_text_PrintReport
 });
@@ -4460,7 +4461,7 @@ var Uint8Array = $global.Uint8Array || js_html_compat_Uint8Array._new;
 AudioManager.AUDIO_CONTEXT = "this.audioContext";
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.9.15";
+Waud.version = "0.9.16";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1, playbackRate : 1};
 Waud.preferredSampleRate = 44100;
