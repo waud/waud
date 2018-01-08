@@ -1,5 +1,6 @@
 -cmd haxelib newrepo
 -cmd haxelib install msignal
+-cmd haxelib install pixijs 3.1.3
 
 --next
 
