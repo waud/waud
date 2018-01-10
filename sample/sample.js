@@ -41,6 +41,7 @@ AudioManager.prototype = {
 			if(Waud.__touchUnlockCallback != null) Waud.__touchUnlockCallback();
 			Waud.dom.ontouchend = null;
 		}
+		if(this.audioContext.state == "suspended") this.audioContext.resume();
 	}
 	,_unlockCallback: function() {
 		if(Waud.__touchUnlockCallback != null) Waud.__touchUnlockCallback();
@@ -57,7 +58,7 @@ AudioManager.prototype = {
 		return this.audioContext;
 	}
 	,createGain: function() {
-		if(($_=this.audioContext,$bind($_,$_.createGain)) != null) return this.audioContext.createGain(); else return Reflect.callMethod(this.audioContext,Reflect.field(this.audioContext,"createGainNode"),[]);
+		if(this.audioContext.createGain != null) return this.audioContext.createGain(); else return Reflect.callMethod(this.audioContext,Reflect.field(this.audioContext,"createGainNode"),[]);
 	}
 	,destroy: function() {
 		if(this.audioContext != null && (this.audioContext.close != null && this.audioContext.close != "")) this.audioContext.close();
@@ -1603,7 +1604,12 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		this._manager.masterGainNode.connect(this._manager.audioContext.destination);
 		this._srcNodes.push(bufferSource);
 		this._gainNodes.push(this._gainNode);
-		if(this._muted) this._gainNode.gain.value = 0; else this._gainNode.gain.value = this._options.volume;
+		if(this._muted) this._gainNode.gain.value = 0; else try {
+			this._gainNode.gain.value = this._options.volume;
+			this._gainNode.gain.setTargetAtTime(this._options.volume,this._manager.audioContext.currentTime,0.015);
+		} catch( e ) {
+			if (e instanceof js__$Boot_HaxeError) e = e.val;
+		}
 		return bufferSource;
 	}
 	,getDuration: function() {
@@ -2270,7 +2276,7 @@ Perf.INFO_TXT_CLR = "#000000";
 Perf.DELAY_TIME = 4000;
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.9.16";
+Waud.version = "1.0.0";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1, playbackRate : 1};
 Waud.preferredSampleRate = 44100;

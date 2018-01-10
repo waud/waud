@@ -3,7 +3,6 @@ import js.html.Uint8Array;
 import js.html.ArrayBuffer;
 import js.html.XMLHttpRequestResponseType;
 import js.html.XMLHttpRequest;
-import js.html.audio.GainNode;
 import js.html.audio.AudioBufferSourceNode;
 import js.html.audio.AudioBuffer;
 
@@ -14,7 +13,7 @@ import js.html.audio.AudioBuffer;
 	var _srcNodes:Array<AudioBufferSourceNode>;
 	var _gainNodes:Array<Dynamic>;
 	var _manager:AudioManager;
-	var _gainNode:GainNode;
+	var _gainNode:Dynamic;
 	var _playStartTime:Float;
 	var _pauseTime:Float;
 	var _currentSoundProps:AudioSpriteSoundProperties;
@@ -100,7 +99,13 @@ import js.html.audio.AudioBuffer;
 		_gainNodes.push(_gainNode);
 
 		if (_muted) _gainNode.gain.value = 0;
-		else _gainNode.gain.value = _options.volume;
+		else {
+			try {
+				_gainNode.gain.value = _options.volume;
+				_gainNode.gain.setTargetAtTime(_options.volume, _manager.audioContext.currentTime, 0.015);
+			}
+			catch (e:Dynamic) {}
+		}
 
 		return bufferSource;
 	}

@@ -23,7 +23,7 @@ class AudioManager {
 	* @protected
 	* @type {AudioContext}
 	*/
-	public var audioContext(default, null):AudioContext;
+	public var audioContext(default, null):Dynamic;
 
 	/**
 	* Master Gain Node
@@ -112,6 +112,7 @@ class AudioManager {
 			audio.play();
 			_unlockCallback();
 		}
+		if (audioContext.state == "suspended") audioContext.resume();
 	}
 
 	inline function _unlockCallback() {

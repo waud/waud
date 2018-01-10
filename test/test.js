@@ -46,6 +46,7 @@ AudioManager.prototype = {
 			if(Waud.__touchUnlockCallback != null) Waud.__touchUnlockCallback();
 			Waud.dom.ontouchend = null;
 		}
+		if(this.audioContext.state == "suspended") this.audioContext.resume();
 	}
 	,_unlockCallback: function() {
 		if(Waud.__touchUnlockCallback != null) Waud.__touchUnlockCallback();
@@ -63,7 +64,7 @@ AudioManager.prototype = {
 		return this.audioContext;
 	}
 	,createGain: function() {
-		if(($_=this.audioContext,$bind($_,$_.createGain)) != null) return this.audioContext.createGain(); else return Reflect.callMethod(this.audioContext,Reflect.field(this.audioContext,"createGainNode"),[]);
+		if(this.audioContext.createGain != null) return this.audioContext.createGain(); else return Reflect.callMethod(this.audioContext,Reflect.field(this.audioContext,"createGainNode"),[]);
 	}
 	,destroy: function() {
 		if(this.audioContext != null && (this.audioContext.close != null && this.audioContext.close != "")) this.audioContext.close();
@@ -482,6 +483,10 @@ Reflect.field = function(o,field) {
 		if (e instanceof js__$Boot_HaxeError) e = e.val;
 		return null;
 	}
+};
+Reflect.getProperty = function(o,field) {
+	var tmp;
+	if(o == null) return null; else if(o.__properties__ && (tmp = o.__properties__["get_" + field])) return o[tmp](); else return o[field];
 };
 Reflect.callMethod = function(o,func,args) {
 	return func.apply(o,args);
@@ -1589,7 +1594,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 	}
 	,_decodeSuccess: function(buffer) {
 		if(buffer == null) {
-			haxe_Log.trace("empty buffer: " + this.url,{ fileName : "WebAudioAPISound.hx", lineNumber : 77, className : "WebAudioAPISound", methodName : "_decodeSuccess"});
+			haxe_Log.trace("empty buffer: " + this.url,{ fileName : "WebAudioAPISound.hx", lineNumber : 76, className : "WebAudioAPISound", methodName : "_decodeSuccess"});
 			this._error();
 			return;
 		}
@@ -1609,7 +1614,13 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		this._manager.masterGainNode.connect(this._manager.audioContext.destination);
 		this._srcNodes.push(bufferSource);
 		this._gainNodes.push(this._gainNode);
-		if(this._muted) this._gainNode.gain.value = 0; else this._gainNode.gain.value = this._options.volume;
+		if(this._muted) this._gainNode.gain.value = 0; else try {
+			this._gainNode.gain.value = this._options.volume;
+			this._gainNode.gain.setTargetAtTime(this._options.volume,this._manager.audioContext.currentTime,0.015);
+		} catch( e ) {
+			haxe_CallStack.lastException = e;
+			if (e instanceof js__$Boot_HaxeError) e = e.val;
+		}
 		return bufferSource;
 	}
 	,getDuration: function() {
@@ -1621,7 +1632,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		this.spriteName = sprite;
 		if(this._isPlaying && this._options.autostop) this.stop(this.spriteName);
 		if(!this._isLoaded) {
-			haxe_Log.trace("sound not loaded",{ fileName : "WebAudioAPISound.hx", lineNumber : 117, className : "WebAudioAPISound", methodName : "play"});
+			haxe_Log.trace("sound not loaded",{ fileName : "WebAudioAPISound.hx", lineNumber : 122, className : "WebAudioAPISound", methodName : "play"});
 			return -1;
 		}
 		var start = 0;
@@ -1693,7 +1704,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		if(this.source == null || !this._isLoaded || !this._isPlaying) return;
 		this.destroy();
 		this._pauseTime += this._manager.audioContext.currentTime - this._playStartTime;
-		haxe_Log.trace("pause: " + this._pauseTime,{ fileName : "WebAudioAPISound.hx", lineNumber : 215, className : "WebAudioAPISound", methodName : "pause"});
+		haxe_Log.trace("pause: " + this._pauseTime,{ fileName : "WebAudioAPISound.hx", lineNumber : 220, className : "WebAudioAPISound", methodName : "pause"});
 	}
 	,playbackRate: function(val,spriteName) {
 		if(val == null) return this.rate;
@@ -2058,6 +2069,15 @@ haxe_io_FPHelper.doubleToI64 = function(v) {
 		i64.high = (v < 0?-2147483648:0) | exp + 1023 << 20 | sig_h;
 	}
 	return i64;
+};
+var haxe_rtti_Meta = function() { };
+haxe_rtti_Meta.__name__ = ["haxe","rtti","Meta"];
+haxe_rtti_Meta.getMeta = function(t) {
+	return t.__meta__;
+};
+haxe_rtti_Meta.getFields = function(t) {
+	var meta = haxe_rtti_Meta.getMeta(t);
+	if(meta == null || meta.fields == null) return { }; else return meta.fields;
 };
 var js__$Boot_HaxeError = function(val) {
 	Error.call(this);
@@ -2922,7 +2942,7 @@ utest_Assert.typeToString = function(t) {
 	}
 	return "<unable to retrieve type name>";
 };
-var utest_Assertation = { __ename__ : ["utest","Assertation"], __constructs__ : ["Success","Failure","Error","SetupError","TeardownError","TimeoutError","AsyncError","Warning"] };
+var utest_Assertation = { __ename__ : ["utest","Assertation"], __constructs__ : ["Success","Failure","Error","SetupError","TeardownError","TimeoutError","AsyncError","Warning","Ignore"] };
 utest_Assertation.Success = function(pos) { var $x = ["Success",0,pos]; $x.__enum__ = utest_Assertation; $x.toString = $estr; return $x; };
 utest_Assertation.Failure = function(msg,pos) { var $x = ["Failure",1,msg,pos]; $x.__enum__ = utest_Assertation; $x.toString = $estr; return $x; };
 utest_Assertation.Error = function(e,stack) { var $x = ["Error",2,e,stack]; $x.__enum__ = utest_Assertation; $x.toString = $estr; return $x; };
@@ -2931,6 +2951,7 @@ utest_Assertation.TeardownError = function(e,stack) { var $x = ["TeardownError",
 utest_Assertation.TimeoutError = function(missedAsyncs,stack) { var $x = ["TimeoutError",5,missedAsyncs,stack]; $x.__enum__ = utest_Assertation; $x.toString = $estr; return $x; };
 utest_Assertation.AsyncError = function(e,stack) { var $x = ["AsyncError",6,e,stack]; $x.__enum__ = utest_Assertation; $x.toString = $estr; return $x; };
 utest_Assertation.Warning = function(msg) { var $x = ["Warning",7,msg]; $x.__enum__ = utest_Assertation; $x.toString = $estr; return $x; };
+utest_Assertation.Ignore = function(reason) { var $x = ["Ignore",8,reason]; $x.__enum__ = utest_Assertation; $x.toString = $estr; return $x; };
 var utest__$Dispatcher_EventException = { __ename__ : ["utest","_Dispatcher","EventException"], __constructs__ : ["StopPropagation"] };
 utest__$Dispatcher_EventException.StopPropagation = ["StopPropagation",0];
 utest__$Dispatcher_EventException.StopPropagation.toString = $estr;
@@ -3031,6 +3052,24 @@ utest_Notifier.prototype = {
 	}
 	,__class__: utest_Notifier
 };
+var utest__$IgnoredFixture_IgnoredFixture_$Impl_$ = {};
+utest__$IgnoredFixture_IgnoredFixture_$Impl_$.__name__ = ["utest","_IgnoredFixture","IgnoredFixture_Impl_"];
+utest__$IgnoredFixture_IgnoredFixture_$Impl_$.__properties__ = {get_ignoreReason:"get_ignoreReason",get_isIgnored:"get_isIgnored"}
+utest__$IgnoredFixture_IgnoredFixture_$Impl_$.NotIgnored = function() {
+	return null;
+};
+utest__$IgnoredFixture_IgnoredFixture_$Impl_$.Ignored = function(reason) {
+	return reason != null?reason:"";
+};
+utest__$IgnoredFixture_IgnoredFixture_$Impl_$._new = function(reason) {
+	return reason;
+};
+utest__$IgnoredFixture_IgnoredFixture_$Impl_$.get_isIgnored = function(this1) {
+	return this1 != null;
+};
+utest__$IgnoredFixture_IgnoredFixture_$Impl_$.get_ignoreReason = function(this1) {
+	return this1;
+};
 var utest_Runner = function() {
 	this.globalPattern = null;
 	this.fixtures = [];
@@ -3065,26 +3104,19 @@ utest_Runner.prototype = {
 		if(!this.isMethod(test,teardown)) teardown = null;
 		if(!this.isMethod(test,teardownAsync)) teardownAsync = null;
 		var fields = Type.getInstanceFields(Type.getClass(test));
-		if(this.globalPattern == null && pattern == null) {
-			var _g = 0;
-			while(_g < fields.length) {
-				var field = fields[_g];
-				++_g;
-				if(!StringTools.startsWith(field,prefix)) continue;
-				if(!this.isMethod(test,field)) continue;
-				this.addFixture(new utest_TestFixture(test,field,setup,teardown,setupAsync,teardownAsync));
-			}
-		} else {
-			if(this.globalPattern != null) pattern = this.globalPattern; else pattern = pattern;
-			var _g1 = 0;
-			while(_g1 < fields.length) {
-				var field1 = fields[_g1];
-				++_g1;
-				if(!pattern.match(field1)) continue;
-				if(!this.isMethod(test,field1)) continue;
-				this.addFixture(new utest_TestFixture(test,field1,setup,teardown,setupAsync,teardownAsync));
-			}
+		var _g = 0;
+		while(_g < fields.length) {
+			var field = fields[_g];
+			++_g;
+			if(!this.isMethod(test,field)) continue;
+			if(!this.isTestFixtureName(field,prefix,pattern,this.globalPattern)) continue;
+			this.addFixture(new utest_TestFixture(test,field,setup,teardown,setupAsync,teardownAsync));
 		}
+	}
+	,isTestFixtureName: function(name,prefix,pattern,globalPattern) {
+		if(pattern == null && globalPattern == null) return StringTools.startsWith(name,prefix);
+		if(pattern == null) pattern = globalPattern;
+		return pattern.match(name);
 	}
 	,addFixture: function(fixture) {
 		this.fixtures.push(fixture);
@@ -3132,6 +3164,7 @@ var utest_TestFixture = function(target,method,setup,teardown,setupAsync,teardow
 	this.setupAsync = setupAsync;
 	this.teardown = teardown;
 	this.teardownAsync = teardownAsync;
+	this.ignoringInfo = this.getIgnored();
 };
 utest_TestFixture.__name__ = ["utest","TestFixture"];
 utest_TestFixture.prototype = {
@@ -3141,14 +3174,25 @@ utest_TestFixture.prototype = {
 	,setupAsync: null
 	,teardown: null
 	,teardownAsync: null
+	,ignoringInfo: null
 	,checkMethod: function(name,arg) {
 		var field = Reflect.field(this.target,name);
 		if(field == null) throw new js__$Boot_HaxeError(arg + " function " + name + " is not a field of target");
 		if(!Reflect.isFunction(field)) throw new js__$Boot_HaxeError(arg + " function " + name + " is not a function");
 	}
+	,getIgnored: function() {
+		var metas = haxe_rtti_Meta.getFields(Type.getClass(this.target));
+		var metasForTestMetas = Reflect.getProperty(metas,this.method);
+		if(metasForTestMetas == null || !Object.prototype.hasOwnProperty.call(metasForTestMetas,"Ignored")) return utest__$IgnoredFixture_IgnoredFixture_$Impl_$.NotIgnored();
+		var ignoredArgs = Reflect.getProperty(metasForTestMetas,"Ignored");
+		if(ignoredArgs == null || ignoredArgs.length == 0 || ignoredArgs[0] == null) return utest__$IgnoredFixture_IgnoredFixture_$Impl_$.Ignored();
+		var ignoredReason = Std.string(ignoredArgs[0]);
+		return utest__$IgnoredFixture_IgnoredFixture_$Impl_$.Ignored(ignoredReason);
+	}
 	,__class__: utest_TestFixture
 };
 var utest_TestHandler = function(fixture) {
+	this.wasBound = false;
 	if(fixture == null) throw new js__$Boot_HaxeError("fixture argument is null");
 	this.fixture = fixture;
 	this.results = new List();
@@ -3157,6 +3201,7 @@ var utest_TestHandler = function(fixture) {
 	this.onTimeout = new utest_Dispatcher();
 	this.onComplete = new utest_Dispatcher();
 	this.onPrecheck = new utest_Dispatcher();
+	if(fixture.ignoringInfo != null) this.results.add(utest_Assertation.Ignore(fixture.ignoringInfo));
 };
 utest_TestHandler.__name__ = ["utest","TestHandler"];
 utest_TestHandler.exceptionStack = function(pops) {
@@ -3174,7 +3219,12 @@ utest_TestHandler.prototype = {
 	,onComplete: null
 	,onPrecheck: null
 	,precheck: null
+	,wasBound: null
 	,execute: function() {
+		if(this.fixture.ignoringInfo != null) {
+			this.executeFinally();
+			return;
+		}
 		try {
 			this.executeMethod(this.fixture.setup);
 			this.executeAsyncMethod(this.fixture.setupAsync,(function(f) {
@@ -3204,19 +3254,22 @@ utest_TestHandler.prototype = {
 		this.checkTested();
 	}
 	,checkTested: function() {
-		if(this.expireson == null || this.asyncStack.length == 0) this.tested(); else if(haxe_Timer.stamp() > this.expireson) this.timeout(); else haxe_Timer.delay($bind(this,this.checkTested),10);
+		if(this.expiration == null || this.asyncStack.length == 0) this.tested(); else if(haxe_Timer.stamp() > this.expiration) this.timeout(); else haxe_Timer.delay($bind(this,this.checkTested),10);
 	}
-	,expireson: null
+	,expiration: null
 	,setTimeout: function(timeout) {
 		var newexpire = haxe_Timer.stamp() + timeout / 1000;
-		if(this.expireson == null) this.expireson = newexpire; else if(newexpire > this.expireson) this.expireson = newexpire; else this.expireson = this.expireson;
+		if(this.expiration == null) this.expiration = newexpire; else if(newexpire > this.expiration) this.expiration = newexpire; else this.expiration = this.expiration;
 	}
 	,bindHandler: function() {
+		if(this.wasBound) return;
 		utest_Assert.results = this.results;
 		utest_Assert.createAsync = $bind(this,this.addAsync);
 		utest_Assert.createEvent = $bind(this,this.addEvent);
+		this.wasBound = true;
 	}
 	,unbindHandler: function() {
+		if(!this.wasBound) return;
 		utest_Assert.results = null;
 		utest_Assert.createAsync = function(f,t) {
 			return function() {
@@ -3226,6 +3279,7 @@ utest_TestHandler.prototype = {
 			return function(e) {
 			};
 		};
+		this.wasBound = false;
 	}
 	,addAsync: function(f,timeout) {
 		if(timeout == null) timeout = 250;
@@ -3293,6 +3347,10 @@ utest_TestHandler.prototype = {
 		this.completed();
 	}
 	,completed: function() {
+		if(this.fixture.ignoringInfo != null) {
+			this.completedFinally();
+			return;
+		}
 		try {
 			this.executeMethod(this.fixture.teardown);
 			this.executeAsyncMethod(this.fixture.teardownAsync,(function(f) {
@@ -3480,6 +3538,9 @@ utest_ui_common_FixtureResult.prototype = {
 			break;
 		case 7:
 			this.stats.addWarnings(1);
+			break;
+		case 8:
+			this.stats.addIgnores(1);
 			break;
 		}
 	}
@@ -3746,14 +3807,17 @@ var utest_ui_common_ResultStats = function() {
 	this.failures = 0;
 	this.errors = 0;
 	this.warnings = 0;
+	this.ignores = 0;
 	this.isOk = true;
 	this.hasFailures = false;
 	this.hasErrors = false;
 	this.hasWarnings = false;
+	this.hasIgnores = false;
 	this.onAddSuccesses = new utest_Dispatcher();
 	this.onAddFailures = new utest_Dispatcher();
 	this.onAddErrors = new utest_Dispatcher();
 	this.onAddWarnings = new utest_Dispatcher();
+	this.onAddIgnores = new utest_Dispatcher();
 };
 utest_ui_common_ResultStats.__name__ = ["utest","ui","common","ResultStats"];
 utest_ui_common_ResultStats.prototype = {
@@ -3762,14 +3826,17 @@ utest_ui_common_ResultStats.prototype = {
 	,failures: null
 	,errors: null
 	,warnings: null
+	,ignores: null
 	,onAddSuccesses: null
 	,onAddFailures: null
 	,onAddErrors: null
 	,onAddWarnings: null
+	,onAddIgnores: null
 	,isOk: null
 	,hasFailures: null
 	,hasErrors: null
 	,hasWarnings: null
+	,hasIgnores: null
 	,addSuccesses: function(v) {
 		if(v == 0) return;
 		this.assertations += v;
@@ -3792,6 +3859,13 @@ utest_ui_common_ResultStats.prototype = {
 		this.isOk = !(this.hasFailures || this.hasErrors || this.hasWarnings);
 		this.onAddErrors.dispatch(v);
 	}
+	,addIgnores: function(v) {
+		if(v == 0) return;
+		this.assertations += v;
+		this.ignores += v;
+		this.hasIgnores = this.ignores > 0;
+		this.onAddIgnores.dispatch(v);
+	}
 	,addWarnings: function(v) {
 		if(v == 0) return;
 		this.assertations += v;
@@ -3805,18 +3879,21 @@ utest_ui_common_ResultStats.prototype = {
 		this.addFailures(other.failures);
 		this.addErrors(other.errors);
 		this.addWarnings(other.warnings);
+		this.addIgnores(other.ignores);
 	}
 	,subtract: function(other) {
 		this.addSuccesses(-other.successes);
 		this.addFailures(-other.failures);
 		this.addErrors(-other.errors);
 		this.addWarnings(-other.warnings);
+		this.addIgnores(-other.ignores);
 	}
 	,wire: function(dependant) {
 		dependant.onAddSuccesses.add($bind(this,this.addSuccesses));
 		dependant.onAddFailures.add($bind(this,this.addFailures));
 		dependant.onAddErrors.add($bind(this,this.addErrors));
 		dependant.onAddWarnings.add($bind(this,this.addWarnings));
+		dependant.onAddIgnores.add($bind(this,this.addIgnores));
 		this.sum(dependant);
 	}
 	,unwire: function(dependant) {
@@ -3824,6 +3901,7 @@ utest_ui_common_ResultStats.prototype = {
 		dependant.onAddFailures.remove($bind(this,this.addFailures));
 		dependant.onAddErrors.remove($bind(this,this.addErrors));
 		dependant.onAddWarnings.remove($bind(this,this.addWarnings));
+		dependant.onAddIgnores.remove($bind(this,this.addIgnores));
 		this.subtract(dependant);
 	}
 	,__class__: utest_ui_common_ResultStats
@@ -3970,6 +4048,10 @@ utest_ui_text_HtmlReport.prototype = {
 			case 7:
 				var msg1 = assertation[2];
 				messages.push(StringTools.htmlEscape(msg1));
+				break;
+			case 8:
+				var reason = assertation[2];
+				messages.push(StringTools.htmlEscape(reason));
 				break;
 			}
 		}
@@ -4142,6 +4224,11 @@ utest_ui_text_HtmlReport.prototype = {
 							var msg1 = assertation[2];
 							buf.b += "W";
 							messages += indents(2) + msg1 + newline;
+							break;
+						case 8:
+							var reason = assertation[2];
+							buf.b += "I";
+							if(reason != null && reason != "") messages += indents(2) + ("With reason: " + reason) + newline;
 							break;
 						}
 					}
@@ -4399,6 +4486,11 @@ utest_ui_text_PlainTextReport.prototype = {
 							buf.b += "W";
 							messages += this.indents(2) + msg1 + this.newline;
 							break;
+						case 8:
+							var reason = assertation[2];
+							buf.b += "I";
+							if(reason != null && reason != "") messages += this.indents(2) + ("With reason: " + reason) + this.newline;
+							break;
 						}
 					}
 					buf.b += Std.string(this.newline);
@@ -4461,7 +4553,7 @@ var Uint8Array = $global.Uint8Array || js_html_compat_Uint8Array._new;
 AudioManager.AUDIO_CONTEXT = "this.audioContext";
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "0.9.16";
+Waud.version = "1.0.0";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1, playbackRate : 1};
 Waud.preferredSampleRate = 44100;
