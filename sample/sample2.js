@@ -27,7 +27,7 @@ AudioManager.prototype = {
 			src.connect(this.audioContext.destination);
 			if(Reflect.field(src,"start") != null) src.start(0); else src.noteOn(0);
 			if(src.onended != null) src.onended = $bind(this,this._unlockCallback); else haxe_Timer.delay($bind(this,this._unlockCallback),1);
-			if(this.audioContext.state == "suspended") this.audioContext.resume();
+			if(this.audioContext.state != null && this.audioContext.state == "suspended" && this.audioContext.resume != null) this.audioContext.resume();
 		} else {
 			var audio;
 			var _this = window.document;

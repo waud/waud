@@ -102,7 +102,7 @@ class AudioManager {
 			else untyped __js__("src").noteOn(0);
 			if (src.onended != null) src.onended = _unlockCallback;
 			else haxe.Timer.delay(_unlockCallback, 1);
-			if (audioContext.state == "suspended") audioContext.resume();
+			if (audioContext.state != null && audioContext.state == "suspended" && audioContext.resume != null) audioContext.resume();
 		}
 		else {
 			var audio:AudioElement = Browser.document.createAudioElement();
