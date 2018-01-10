@@ -27,6 +27,7 @@ AudioManager.prototype = {
 			src.connect(this.audioContext.destination);
 			if(Reflect.field(src,"start") != null) src.start(0); else src.noteOn(0);
 			if(src.onended != null) src.onended = $bind(this,this._unlockCallback); else haxe_Timer.delay($bind(this,this._unlockCallback),1);
+			if(this.audioContext.state == "suspended") this.audioContext.resume();
 		} else {
 			var audio;
 			var _this = window.document;
@@ -41,7 +42,6 @@ AudioManager.prototype = {
 			if(Waud.__touchUnlockCallback != null) Waud.__touchUnlockCallback();
 			Waud.dom.ontouchend = null;
 		}
-		if(this.audioContext.state == "suspended") this.audioContext.resume();
 	}
 	,_unlockCallback: function() {
 		if(Waud.__touchUnlockCallback != null) Waud.__touchUnlockCallback();
@@ -1551,7 +1551,7 @@ var Enum = { };
 var __map_reserved = {}
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "1.0.0";
+Waud.version = "1.0.1";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1, playbackRate : 1};
 Waud.preferredSampleRate = 44100;
