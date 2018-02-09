@@ -20,7 +20,7 @@ import js.Browser;
 	* @static
 	* @type {String}
 	*/
-	public static var version:String = "1.0.2";
+	public static var version:String = "1.0.3";
 
 	/**
 	* Tells whether to use web audio api or not.
@@ -266,7 +266,7 @@ import js.Browser;
  	*     Waud.autoMute();
 	*/
 	public static function autoMute() {
-		_focusManager = new WaudFocusManager();
+		_focusManager = new WaudFocusManager(dom);
 		_focusManager.focus = function() {
 			mute(false);
 			audioManager.resumeContext();

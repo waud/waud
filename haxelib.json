@@ -26,7 +26,7 @@
 		"adireddy"
 	],
 	"releasenote": "fixed audio context issues in autoMute",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"url": "https://github.com/waud/waud",
 	"dependencies": {}
 }

@@ -805,7 +805,7 @@ Waud._sayHello = function() {
 	} else window.console.log("WAUD.JS v" + Waud.version + " - " + support + " - http://www.waudjs.com");
 };
 Waud.autoMute = function() {
-	Waud._focusManager = new WaudFocusManager();
+	Waud._focusManager = new WaudFocusManager(Waud.dom);
 	Waud._focusManager.focus = function() {
 		Waud.mute(false);
 		Waud.audioManager.resumeContext();
@@ -1075,41 +1075,43 @@ WaudBase64Pack.prototype = {
 	}
 	,__class__: WaudBase64Pack
 };
-var WaudFocusManager = $hx_exports.WaudFocusManager = function() {
+var WaudFocusManager = $hx_exports.WaudFocusManager = function(dom) {
 	var _g = this;
 	this._hidden = "";
 	this._visibilityChange = "";
 	this._currentState = "";
-	if(Reflect.field(window.document,"hidden") != null) {
+	if(dom == null) dom = window.document;
+	this._dom = dom;
+	if(this._dom.hidden != null) {
 		this._hidden = "hidden";
 		this._visibilityChange = "visibilitychange";
-	} else if(Reflect.field(window.document,"mozHidden") != null) {
+	} else if(this._dom.mozHidden != null) {
 		this._hidden = "mozHidden";
 		this._visibilityChange = "mozvisibilitychange";
-	} else if(Reflect.field(window.document,"msHidden") != null) {
+	} else if(this._dom.msHidden != null) {
 		this._hidden = "msHidden";
 		this._visibilityChange = "msvisibilitychange";
-	} else if(Reflect.field(window.document,"webkitHidden") != null) {
+	} else if(this._dom.webkitHidden != null) {
 		this._hidden = "webkitHidden";
 		this._visibilityChange = "webkitvisibilitychange";
 	}
-	if(Reflect.field(window,"addEventListener") != null) {
-		window.addEventListener("focus",$bind(this,this._focus));
-		window.addEventListener("blur",$bind(this,this._blur));
-		window.addEventListener("pageshow",$bind(this,this._focus));
-		window.addEventListener("pagehide",$bind(this,this._blur));
-		document.addEventListener(this._visibilityChange,$bind(this,this._handleVisibilityChange));
-	} else if(Reflect.field(window,"attachEvent") != null) {
-		window.attachEvent("onfocus",$bind(this,this._focus));
-		window.attachEvent("onblur",$bind(this,this._blur));
-		window.attachEvent("pageshow",$bind(this,this._focus));
-		window.attachEvent("pagehide",$bind(this,this._blur));
-		document.attachEvent(this._visibilityChange,$bind(this,this._handleVisibilityChange));
-	} else window.onload = function() {
-		window.onfocus = $bind(_g,_g._focus);
-		window.onblur = $bind(_g,_g._blur);
-		window.onpageshow = $bind(_g,_g._focus);
-		window.onpagehide = $bind(_g,_g._blur);
+	if(this._dom.addEventListener != null) {
+		this._dom.addEventListener("focus",$bind(this,this._focus));
+		this._dom.addEventListener("blur",$bind(this,this._blur));
+		this._dom.addEventListener("pageshow",$bind(this,this._focus));
+		this._dom.addEventListener("pagehide",$bind(this,this._blur));
+		this._dom.addEventListener(this._visibilityChange,$bind(this,this._handleVisibilityChange));
+	} else if(this._dom.attachEvent != null) {
+		this._dom.attachEvent("onfocus",$bind(this,this._focus));
+		this._dom.attachEvent("onblur",$bind(this,this._blur));
+		this._dom.attachEvent("pageshow",$bind(this,this._focus));
+		this._dom.attachEvent("pagehide",$bind(this,this._blur));
+		this._dom.attachEvent(this._visibilityChange,$bind(this,this._handleVisibilityChange));
+	} else this._dom.onload = function() {
+		_g._dom.onfocus = $bind(_g,_g._focus);
+		_g._dom.onblur = $bind(_g,_g._blur);
+		_g._dom.onpageshow = $bind(_g,_g._focus);
+		_g._dom.onpagehide = $bind(_g,_g._blur);
 	};
 };
 WaudFocusManager.__name__ = ["WaudFocusManager"];
@@ -1119,8 +1121,9 @@ WaudFocusManager.prototype = {
 	,_hidden: null
 	,_visibilityChange: null
 	,_currentState: null
+	,_dom: null
 	,_handleVisibilityChange: function() {
-		if(Reflect.field(window.document,this._hidden) != null && Reflect.field(window.document,this._hidden) && this.blur != null) this.blur(); else if(this.focus != null) this.focus();
+		if(Reflect.field(this._dom,this._hidden) != null && Reflect.field(this._dom,this._hidden) && this.blur != null) this.blur(); else if(this.focus != null) this.focus();
 	}
 	,_focus: function() {
 		if(this._currentState != "focus" && this.focus != null) this.focus();
@@ -1131,23 +1134,23 @@ WaudFocusManager.prototype = {
 		this._currentState = "blur";
 	}
 	,clearEvents: function() {
-		if(Reflect.field(window,"removeEventListener") != null) {
-			window.removeEventListener("focus",$bind(this,this._focus));
-			window.removeEventListener("blur",$bind(this,this._blur));
-			window.removeEventListener("pageshow",$bind(this,this._focus));
-			window.removeEventListener("pagehide",$bind(this,this._blur));
-			window.removeEventListener(this._visibilityChange,$bind(this,this._handleVisibilityChange));
-		} else if(Reflect.field(window,"removeEvent") != null) {
-			window.removeEvent("onfocus",$bind(this,this._focus));
-			window.removeEvent("onblur",$bind(this,this._blur));
-			window.removeEvent("pageshow",$bind(this,this._focus));
-			window.removeEvent("pagehide",$bind(this,this._blur));
-			window.removeEvent(this._visibilityChange,$bind(this,this._handleVisibilityChange));
+		if(this._dom.removeEventListener != null) {
+			this._dom.removeEventListener("focus",$bind(this,this._focus));
+			this._dom.removeEventListener("blur",$bind(this,this._blur));
+			this._dom.removeEventListener("pageshow",$bind(this,this._focus));
+			this._dom.removeEventListener("pagehide",$bind(this,this._blur));
+			this._dom.removeEventListener(this._visibilityChange,$bind(this,this._handleVisibilityChange));
+		} else if(this._dom.removeEvent != null) {
+			this._dom.removeEvent("onfocus",$bind(this,this._focus));
+			this._dom.removeEvent("onblur",$bind(this,this._blur));
+			this._dom.removeEvent("pageshow",$bind(this,this._focus));
+			this._dom.removeEvent("pagehide",$bind(this,this._blur));
+			this._dom.removeEvent(this._visibilityChange,$bind(this,this._handleVisibilityChange));
 		} else {
-			window.onfocus = null;
-			window.onblur = null;
-			window.onpageshow = null;
-			window.onpagehide = null;
+			this._dom.onfocus = null;
+			this._dom.onblur = null;
+			this._dom.onpageshow = null;
+			this._dom.onpagehide = null;
 		}
 	}
 	,__class__: WaudFocusManager
@@ -4553,7 +4556,7 @@ var Uint8Array = $global.Uint8Array || js_html_compat_Uint8Array._new;
 AudioManager.AUDIO_CONTEXT = "this.audioContext";
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "1.0.2";
+Waud.version = "1.0.3";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1, playbackRate : 1};
 Waud.preferredSampleRate = 44100;

@@ -196,11 +196,11 @@ class Main extends Application {
 	}
 
 	function touchUnlock() {
-		if (!_bgSnd.isPlaying()) _bgSnd.play();
+		//if (!_bgSnd.isPlaying()) _bgSnd.play();
 	}
 
 	function _playBgSound(snd:IWaudSound) {
-		if (!snd.isPlaying()) snd.play();
+		//if (!snd.isPlaying()) snd.play();
 	}
 
 	function _mute() {
