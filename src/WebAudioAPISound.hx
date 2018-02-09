@@ -98,11 +98,10 @@ import js.html.audio.AudioBuffer;
 		_srcNodes.push(bufferSource);
 		_gainNodes.push(_gainNode);
 
-		if (_muted) _gainNode.gain.value = 0;
+		if (_muted) _setGain(0);
 		else {
 			try {
-				_gainNode.gain.value = _options.volume;
-				_gainNode.gain.setTargetAtTime(_options.volume, _manager.audioContext.currentTime, 0.015);
+				_setGain(_options.volume);
 			}
 			catch (e:Dynamic) {}
 		}
@@ -168,6 +167,11 @@ import js.html.audio.AudioBuffer;
 		}
 	}
 
+	function _setGain(val:Float) {
+		if (_gainNode.gain.setValueAtTime != null) _gainNode.gain.setValueAtTime(val, _manager.audioContext.currentTime);
+		else _gainNode.gain.value = val;
+	}
+
 	public function togglePlay(?spriteName:String) {
 		if (_isPlaying) pause();
 		else play();
@@ -185,7 +189,7 @@ import js.html.audio.AudioBuffer;
 	public function setVolume(val:Float, ?spriteName:String) {
 		_options.volume = val;
 		if (_gainNode == null || !_isLoaded || _muted) return;
-		_gainNode.gain.value = _options.volume;
+		_setGain(_options.volume);
 	}
 
 	public function getVolume(?spriteName:String):Float {
@@ -195,8 +199,8 @@ import js.html.audio.AudioBuffer;
 	public function mute(val:Bool, ?spriteName:String) {
 		_muted = val;
 		if (_gainNode == null || !_isLoaded) return;
-		if (val) _gainNode.gain.value = 0;
-		else _gainNode.gain.value = _options.volume;
+		if (val) _setGain(0);
+		else _setGain(_options.volume);
 	}
 
 	public function toggleMute(?spriteName:String) {
@@ -217,7 +221,6 @@ import js.html.audio.AudioBuffer;
 		if (source == null || !_isLoaded || !_isPlaying) return;
 		destroy();
 		_pauseTime += _manager.audioContext.currentTime - _playStartTime;
-		trace("pause: " + _pauseTime);
 	}
 
 	public function playbackRate(?val:Float, ?spriteName:String):Float {
