@@ -102,7 +102,7 @@ class AudioManager {
 			else untyped __js__("src").noteOn(0);
 			if (src.onended != null) src.onended = _unlockCallback;
 			else haxe.Timer.delay(_unlockCallback, 1);
-			if (audioContext.state != null && audioContext.state == "suspended" && audioContext.resume != null) audioContext.resume();
+			resumeContext();
 		}
 		else {
 			var audio:AudioElement = Browser.document.createAudioElement();
@@ -176,8 +176,8 @@ class AudioManager {
 	*     Waud.audioManager.suspendContext();
 	*/
 	public function suspendContext() {
-		if (audioContext != null) {
-			if (untyped __js__(AUDIO_CONTEXT).suspend != null) untyped __js__(AUDIO_CONTEXT).suspend();
+		if (audioContext != null && audioContext.state != null && audioContext.suspend != null) {
+			audioContext.suspend();
 		}
 	}
 
@@ -189,8 +189,8 @@ class AudioManager {
 	*     Waud.audioManager.resumeContext();
 	*/
 	public function resumeContext() {
-		if (audioContext != null) {
-			if (untyped __js__(AUDIO_CONTEXT).resume != null) untyped __js__(AUDIO_CONTEXT).resume();
+		if (audioContext != null && audioContext.state != null && audioContext.resume != null) {
+			audioContext.resume();
 		}
 	}
 }

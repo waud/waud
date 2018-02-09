@@ -1,5 +1,4 @@
 import haxe.Timer;
-import js.html.audio.AudioContext;
 import js.html.HTMLDocument;
 import js.html.AudioElement;
 import js.Browser;
@@ -21,7 +20,7 @@ import js.Browser;
 	* @static
 	* @type {String}
 	*/
-	public static var version:String = "1.0.1";
+	public static var version:String = "1.0.2";
 
 	/**
 	* Tells whether to use web audio api or not.
@@ -127,7 +126,7 @@ import js.Browser;
 	* @type {AudioContext}
 	* @readOnly
 	*/
-	public static var audioContext:AudioContext;
+	public static var audioContext:Dynamic;
 
 	/**
 	* Document dom element used for appending sounds and touch events.
@@ -268,8 +267,14 @@ import js.Browser;
 	*/
 	public static function autoMute() {
 		_focusManager = new WaudFocusManager();
-		_focusManager.focus = function() mute(false);
-		_focusManager.blur = function() mute(true);
+		_focusManager.focus = function() {
+			mute(false);
+			audioManager.resumeContext();
+		}
+		_focusManager.blur = function() {
+			mute(true);
+			audioManager.suspendContext();
+		}
 	}
 
 	/**
@@ -332,6 +337,8 @@ import js.Browser;
 	public static function mute(?val:Bool = true) {
 		isMuted = val;
 		if (sounds != null) for (sound in sounds) sound.mute(val);
+		if (val) audioManager.suspendContext();
+		else audioManager.resumeContext();
 	}
 
 	/**

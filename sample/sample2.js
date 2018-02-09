@@ -27,7 +27,7 @@ AudioManager.prototype = {
 			src.connect(this.audioContext.destination);
 			if(Reflect.field(src,"start") != null) src.start(0); else src.noteOn(0);
 			if(src.onended != null) src.onended = $bind(this,this._unlockCallback); else haxe_Timer.delay($bind(this,this._unlockCallback),1);
-			if(this.audioContext.state != null && this.audioContext.state == "suspended" && this.audioContext.resume != null) this.audioContext.resume();
+			this.resumeContext();
 		} else {
 			var audio;
 			var _this = window.document;
@@ -65,6 +65,12 @@ AudioManager.prototype = {
 		this.audioContext = null;
 		this.bufferList = null;
 		this.types = null;
+	}
+	,suspendContext: function() {
+		if(this.audioContext != null && this.audioContext.state != null && this.audioContext.suspend != null) this.audioContext.suspend();
+	}
+	,resumeContext: function() {
+		if(this.audioContext != null && this.audioContext.state != null && this.audioContext.resume != null) this.audioContext.resume();
 	}
 	,__class__: AudioManager
 };
@@ -607,9 +613,11 @@ Waud.autoMute = function() {
 	Waud._focusManager = new WaudFocusManager();
 	Waud._focusManager.focus = function() {
 		Waud.mute(false);
+		Waud.audioManager.resumeContext();
 	};
 	Waud._focusManager.blur = function() {
 		Waud.mute(true);
+		Waud.audioManager.suspendContext();
 	};
 };
 Waud.enableTouchUnlock = function(callback) {
@@ -641,6 +649,7 @@ Waud.mute = function(val) {
 			sound.mute(val);
 		}
 	}
+	if(val) Waud.audioManager.suspendContext(); else Waud.audioManager.resumeContext();
 };
 Waud.playbackRate = function(val) {
 	if(val == null) return Waud._playbackRate; else if(Waud.sounds != null) {
@@ -1272,9 +1281,8 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		this._manager.masterGainNode.connect(this._manager.audioContext.destination);
 		this._srcNodes.push(bufferSource);
 		this._gainNodes.push(this._gainNode);
-		if(this._muted) this._gainNode.gain.value = 0; else try {
-			this._gainNode.gain.value = this._options.volume;
-			this._gainNode.gain.setTargetAtTime(this._options.volume,this._manager.audioContext.currentTime,0.015);
+		if(this._muted) this._setGain(0); else try {
+			this._setGain(this._options.volume);
 		} catch( e ) {
 			if (e instanceof js__$Boot_HaxeError) e = e.val;
 		}
@@ -1323,6 +1331,9 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 	,_start: function(when,offset,duration) {
 		if(Reflect.field(this.source,"start") != null) this.source.start(when,offset,duration); else if(Reflect.field(this.source,"noteGrainOn") != null) Reflect.callMethod(this.source,Reflect.field(this.source,"noteGrainOn"),[when,offset,duration]); else if(Reflect.field(this.source,"noteOn") != null) Reflect.callMethod(this.source,Reflect.field(this.source,"noteOn"),[when,offset,duration]);
 	}
+	,_setGain: function(val) {
+		if(this._gainNode.gain.setValueAtTime != null) this._gainNode.gain.setValueAtTime(val,this._manager.audioContext.currentTime); else this._gainNode.gain.value = val;
+	}
 	,togglePlay: function(spriteName) {
 		if(this._isPlaying) this.pause(); else this.play();
 	}
@@ -1336,7 +1347,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 	,setVolume: function(val,spriteName) {
 		this._options.volume = val;
 		if(this._gainNode == null || !this._isLoaded || this._muted) return;
-		this._gainNode.gain.value = this._options.volume;
+		this._setGain(this._options.volume);
 	}
 	,getVolume: function(spriteName) {
 		return this._options.volume;
@@ -1344,7 +1355,7 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 	,mute: function(val,spriteName) {
 		this._muted = val;
 		if(this._gainNode == null || !this._isLoaded) return;
-		if(val) this._gainNode.gain.value = 0; else this._gainNode.gain.value = this._options.volume;
+		if(val) this._setGain(0); else this._setGain(this._options.volume);
 	}
 	,toggleMute: function(spriteName) {
 		this.mute(!this._muted);
@@ -1361,7 +1372,6 @@ WebAudioAPISound.prototype = $extend(BaseSound.prototype,{
 		if(this.source == null || !this._isLoaded || !this._isPlaying) return;
 		this.destroy();
 		this._pauseTime += this._manager.audioContext.currentTime - this._playStartTime;
-		console.log("pause: " + this._pauseTime);
 	}
 	,playbackRate: function(val,spriteName) {
 		if(val == null) return this.rate;
@@ -1931,7 +1941,7 @@ var __map_reserved = {}
 msignal_SlotList.NIL = new msignal_SlotList(null,null);
 Waud.PROBABLY = "probably";
 Waud.MAYBE = "maybe";
-Waud.version = "1.0.1";
+Waud.version = "1.0.2";
 Waud.useWebAudio = true;
 Waud.defaults = { autoplay : false, autostop : true, loop : false, preload : true, webaudio : true, volume : 1, playbackRate : 1};
 Waud.preferredSampleRate = 44100;
