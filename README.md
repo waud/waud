@@ -128,7 +128,7 @@ var bgSnd = new WaudSound("loop.mp3", {
     "loop": true
 });
 
-// Touch unlock callback for iOS devices to start playing bgSnd it it's not already playing
+// Touch unlock callback for iOS devices to start playing bgSnd if it's not already playing
 function touchUnlock() {
     if (!bgSnd.isPlaying()) bgSnd.play();
 }
